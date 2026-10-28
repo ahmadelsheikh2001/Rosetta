@@ -32,6 +32,8 @@ const INTERNAL_TLDS = [
 ];
 const IPV4 = /\b(?:(?:25[0-5]|2[0-4]\d|1?\d?\d)\.){3}(?:25[0-5]|2[0-4]\d|1?\d?\d)\b/;
 
+const UUID = /\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\b/gi;
+
 /** Returns true for hosts that look like they belong to a private network. */
 export function isInternalHost(rawHost) {
   const host = rawHost.toLowerCase().replace(/:\d+$/, '');
@@ -63,7 +65,9 @@ export const rules = [
   {
     id: 'unc-path',
     description: 'network share path',
-    find: (text) => text.match(/\\{2,}[A-Za-z0-9._-]+\\{1,2}[A-Za-z0-9$._-]+/g) ?? [],
+    // Not after `X:` or another backslash, so a JSON-escaped drive path (`C:\\Dir\\file`) is not a share.
+    find: (text) =>
+      text.match(/(?<![A-Za-z]:|\\)\\{2,}[A-Za-z0-9._-]+\\{1,2}[A-Za-z0-9$._-]+/g) ?? [],
   },
   {
     id: 'iban',
@@ -93,7 +97,9 @@ export const rules = [
 export function scanText(text, { timestampFields = new Set() } = {}) {
   /** @type {Finding[]} */
   const findings = [];
-  text.split(/\r?\n/).forEach((lineText, i) => {
+  text.split(/\r?\n/).forEach((rawLine, i) => {
+    // UUIDs (e.g. A360 node `uid`s) are random ids; their digit groups are not account numbers.
+    const lineText = rawLine.replace(UUID, (u) => u.replace(/[0-9a-f]/gi, 'x'));
     for (const rule of rules) {
       for (const value of rule.find(lineText, { timestampFields })) {
         findings.push({ rule: rule.id, value, line: i + 1 });

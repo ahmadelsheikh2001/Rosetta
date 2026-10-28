@@ -58,6 +58,16 @@ describe('scanText', () => {
     expect(rulesFound('"\\\\\\\\fileserver\\\\share"')).toEqual(['unc-path']);
   });
 
+  it('does not mistake a JSON-escaped drive path for a network share', () => {
+    expect(rulesFound('"C:\\\\RosettaTest\\\\missing.txt"')).toEqual([]);
+    expect(rulesFound('"C:\\RosettaTest\\file"')).toEqual([]);
+  });
+
+  it('ignores digit groups inside UUIDs but not the same digits elsewhere', () => {
+    expect(rulesFound('"uid":"07c0d7fc-c7ec-4d40-8a65-113955667302"')).toEqual([]);
+    expect(rulesFound('"account":"113955667302"')).toEqual(['long-digits']);
+  });
+
   it('flags IBAN-like values and long digit sequences', () => {
     expect(rulesFound('EG380019000500000000263180002')).toContain('iban');
     expect(rulesFound('account 123456789012')).toEqual(['long-digits']);
