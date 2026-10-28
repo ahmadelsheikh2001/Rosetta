@@ -1,0 +1,10 @@
+# Corpus safety scan allow-list (scripts/scan-corpus.mjs).
+# Add only values you have checked are NOT real data. One entry per line:
+#   <value>                 allowed in any corpus file
+#   <path>::<value>         allowed in that file only
+#   <path>::*               skip that file entirely (only after checking it by hand)
+#   timestamp-field:<key>   epoch timestamps (10 or 13 digits) under this JSON key are not reported
+#
+# A360 timestamp keys: add them from the first real export (ADR-017, no guessing), e.g.
+#   timestamp-field:<key seen in export>
+# Paths are repo-relative with forward slashes, e.g. corpus/a360/01-variables/export.zip

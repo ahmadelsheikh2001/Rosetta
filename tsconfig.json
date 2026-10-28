@@ -1,0 +1,14 @@
+{
+  "files": [],
+  "references": [
+    { "path": "packages/design-tokens" },
+    { "path": "packages/ir" },
+    { "path": "packages/expr" },
+    { "path": "packages/source-a360" },
+    { "path": "packages/mappings" },
+    { "path": "packages/standards" },
+    { "path": "packages/assessment" },
+    { "path": "packages/report" },
+    { "path": "packages/cli" }
+  ]
+}

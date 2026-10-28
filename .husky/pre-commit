@@ -1,0 +1,1 @@
+node scripts/scan-corpus.mjs && npx --no -- prettier --check . && npx --no -- eslint .

@@ -1,0 +1,8 @@
+* text=auto eol=lf
+
+# Corpus files are kept byte-for-byte as exported / written in Studio
+corpus/** -text
+*.zip binary
+*.wal -text
+*.woff2 binary
+*.svg text eol=lf

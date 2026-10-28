@@ -1,0 +1,11 @@
+node_modules/
+dist/
+coverage/
+*.tsbuildinfo
+.vitest/
+out/
+.DS_Store
+Thumbs.db
+
+# Real client material must never be committed (see corpus/README.md)
+corpus/**/private/
