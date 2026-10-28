@@ -9,7 +9,8 @@ Synthetic or fully sanitised sample bots used for format discovery and golden te
 corpus/
   a360/
     01-variables/
-      export.zip        # as exported from Control Room, byte-for-byte
+      bot.json          # raw bot content (Community Edition), byte-for-byte
+      export.zip        # official export, when an Enterprise/partner Control Room is available
       expected.wal      # hand-written IBM RPA equivalent (golden output)
       NOTES.md          # what the bot does, package versions, anything unusual
     02-control-flow/

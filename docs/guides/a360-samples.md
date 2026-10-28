@@ -11,7 +11,7 @@ the **exact** package and command name you used in `NOTES.md`; that is part of t
 - Build it in a fresh folder, e.g. `Bots/Rosetta/01-variables`.
 - **Run it once** before exporting, and record the visible result (message boxes, log file
   content) in `NOTES.md`. That becomes the behaviour the converted WAL must reproduce.
-- Export with **Export bots** from Control Room as a zip, unchanged. Don't unzip and re-zip.
+- **Community Edition has no "Export bots".** Save the raw bot content instead (`GET /v2/repository/files/{id}/content`, the call the editor makes) as `bot.json`, byte-for-byte, and record its size and SHA-256 in `NOTES.md`. Where an Enterprise/partner Control Room is available, also export the bot as a zip, unchanged.
 - Write `expected.wal`: how you would write the same bot by hand in IBM RPA Studio 30.0.2.
 - Follow the [sanitisation checklist](../../corpus/README.md#sanitisation-checklist).
 - Drop the files into `corpus/a360/<sample>/`.
@@ -63,9 +63,9 @@ no default. One variable per type is enough.
 5. A **Comment** with a recognisable text, e.g. `ROSETTA-COMMENT-01`
 6. One command **disabled**
 7. A **Message box** showing a few variables
-8. **Log to file**, one line, to a generic path such as `C:\Rosetta\Output\01.log`
+8. **Logging → Log text to file** (there is no action called "Log to file"), one line, to a generic path such as `C:\Rosetta\Output\01.log`
 
-**Export twice**, if Control Room allows it: once normally (`export.zip`) and once with a
+**Export twice** (Enterprise/partner Control Room only): once normally (`export.zip`) and once with a
 password (`export-protected.zip`, put the password in NOTES.md, it's synthetic).
 
 ## 02: Control flow
@@ -146,7 +146,7 @@ A minimal `08-subbot-credentials` is enough:
   and uses it in one command
 - The parent also has a **hardcoded password literal** in one command (a fake one, e.g.
   `NotARealPassword1`), for the quality rule
-- Export the parent **with dependencies** (`export.zip`) and **without** (`export-nodeps.zip`)
+- Save `bot.json` for the parent and the child. If an Enterprise/partner Control Room is available, also export the parent **with dependencies** (`export.zip`) and **without** (`export-nodeps.zip`)
 
 The full 08 (and samples 05–07, 09) can come later: A-11 (recorder) and A-12 (Excel) were moved
 to Phase 3, because the Assessment only needs package and command names, which any sample shows.
