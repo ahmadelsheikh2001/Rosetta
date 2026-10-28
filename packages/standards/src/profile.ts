@@ -109,7 +109,27 @@ export const standardsProfile = z
     quality: z
       .object({
         rules: z.record(qualityRuleId, ruleSetting),
+        /** Deepest allowed nesting of if/loop/try; Steps (groups) do not count. */
         maxNestingDepth: z.number().int().positive(),
+        /** Bots with more statements than this need at least one comment or Step. */
+        commentsRequiredAbove: z.number().int().nonnegative(),
+        /** Points subtracted from 100 per finding, by severity, for the Source Quality Score. */
+        scorePenalty: z
+          .object({
+            error: z.number().nonnegative(),
+            warning: z.number().nonnegative(),
+            info: z.number().nonnegative(),
+          })
+          .strict(),
+      })
+      .strict(),
+
+    /** Names of the standard script stages (ADR-008: stage split is a Guarded transform). */
+    stages: z
+      .object({
+        init: z.string().min(1),
+        process: z.string().min(1),
+        end: z.string().min(1),
       })
       .strict(),
 

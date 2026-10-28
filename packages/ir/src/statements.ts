@@ -30,6 +30,8 @@ export interface ActionStmt extends StatementBase {
   /** The session/handle variable this action works on, if any. */
   readonly resource?: VarRefExpr;
   readonly target?: UITarget;
+  /** Id of the registry entry the lifter used; absent when the command is not in the registry. */
+  readonly mappingId?: string;
 }
 
 export interface IfBranch {

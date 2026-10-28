@@ -7,3 +7,5 @@ export type * from './statements.js';
 export type * from './types.js';
 export type * from './ui-target.js';
 export * from './visit.js';
+export * from './exprs.js';
+export * from './build.js';

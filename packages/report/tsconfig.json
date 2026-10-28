@@ -5,5 +5,18 @@
     "outDir": "dist"
   },
   "include": ["src"],
-  "references": [{ "path": "../assessment" }, { "path": "../design-tokens" }]
+  "references": [
+    {
+      "path": "../ir"
+    },
+    {
+      "path": "../assessment"
+    },
+    {
+      "path": "../design-tokens"
+    },
+    {
+      "path": "../standards"
+    }
+  ]
 }

@@ -1,2 +1,2 @@
-// Implemented in Phase 1. See README.md.
-export {};
+export * from './catalog.js';
+export { renderHtml, renderJson, type RenderOptions } from './render.js';

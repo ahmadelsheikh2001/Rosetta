@@ -73,13 +73,27 @@ You don't need it. Use one of these instead:
 The git hooks and `pnpm check` call the tools directly (`npx`, `prettier`, `eslint`, `tsc`,
 `vitest`), so they work whichever option you pick.
 
-| Script             | Does                                     |
-| ------------------ | ---------------------------------------- |
-| `pnpm build`       | Type-check and compile all packages      |
-| `pnpm test`        | Run all tests once                       |
-| `pnpm lint`        | ESLint (type-checked)                    |
-| `pnpm format`      | Prettier, write                          |
-| `pnpm scan:corpus` | Corpus safety scan over all of `corpus/` |
+| Script                   | Does                                                                |
+| ------------------------ | ------------------------------------------------------------------- |
+| `pnpm build`             | Type-check and compile all packages                                 |
+| `pnpm test`              | Run all tests once                                                  |
+| `pnpm lint`              | ESLint (type-checked)                                               |
+| `pnpm format`            | Prettier, write                                                     |
+| `pnpm scan:corpus`       | Corpus safety scan over all of `corpus/`                            |
+| `pnpm preview:report`    | Build, then render the report from synthetic data to `out/preview/` |
+| `pnpm rosetta -- <args>` | Run the CLI, e.g. `pnpm rosetta -- assess exports/`                 |
+
+## CLI
+
+```sh
+rosetta assess <input-dir> [--out <dir>] [--profile <company.yaml>] [--client-profile <client.yaml>] [--overrides <rosetta.project.yaml>]
+rosetta preview-report [--out <dir>] [profile options]
+rosetta help [command]
+```
+
+Exit codes: `0` ok · `1` internal error · `2` usage error · `3` invalid profile · `4` input
+problem · `5` not implemented yet. Until the A360 parser exists, `assess` validates its inputs
+and profile and exits `5`.
 
 Commits follow [Conventional Commits](https://www.conventionalcommits.org/); a hook checks the
 message. See [CONTRIBUTING.md](CONTRIBUTING.md).

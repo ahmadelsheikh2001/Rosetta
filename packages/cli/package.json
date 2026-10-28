@@ -22,5 +22,8 @@
     "@rosetta/standards": "workspace:*",
     "@rosetta/assessment": "workspace:*",
     "@rosetta/report": "workspace:*"
+  },
+  "bin": {
+    "rosetta": "./dist/main.js"
   }
 }

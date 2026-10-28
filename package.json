@@ -19,7 +19,9 @@
     "test:watch": "vitest",
     "check": "prettier --check . && eslint . && tsc -b && vitest run",
     "scan:corpus": "node scripts/scan-corpus.mjs --all",
-    "prepare": "husky"
+    "prepare": "husky",
+    "rosetta": "node packages/cli/dist/main.js",
+    "preview:report": "tsc -b && node packages/cli/dist/main.js preview-report"
   },
   "devDependencies": {
     "@commitlint/cli": "^21.2.4",

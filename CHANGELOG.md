@@ -24,6 +24,25 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: Se
 - ADR-001 to ADR-018, Assumptions Register, IR and standards-profile docs, corpus layout and
   sanitisation checklist, CONTRIBUTING, corepack workaround for machines without admin rights.
 
+#### Phase 1 early start (format-independent)
+
+- `@rosetta/ir`: expression traversal (`walkExpr`, `statementExprs`, `referencedVariables`),
+  hand-built IR factories, `mappingId` on actions.
+- `@rosetta/standards`: profile layering (defaults → company → client → project) with
+  provenance and errors that name the layer and file; `rosetta.project.yaml` envelope;
+  rule engine with six IR-only quality rules (missing error handling, empty catch, deep nesting,
+  disabled code, unused variables, missing comments) and pending slots for five rules that need
+  verified A360 samples. Profile gains `quality.commentsRequiredAbove`,
+  `quality.scorePenalty` and `stages`.
+- `@rosetta/assessment`: registry coverage, complexity score, S/M/L/XL sizing and hours,
+  Source Quality Score, portfolio summary; synthetic six-bot portfolio for previews.
+- `@rosetta/report`: offline, branded HTML (management summary, per-bot drill-down, print
+  stylesheet, embedded Montserrat/Chakra Petch) and JSON; English string catalog with plurals;
+  "Synthetic data" banner.
+- `@rosetta/cli`: `rosetta assess` (validates inputs and profile, parser stub exits 5),
+  `rosetta preview-report`, help, version, stable exit codes.
+- `docs/guides/conventions-template.md` for company profile v0.
+
 ### Planned (deferred by ADR-016)
 
 - dependency-cruiser layer enforcement

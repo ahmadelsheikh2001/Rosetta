@@ -53,7 +53,10 @@ export const defaultProfile: StandardsProfile = {
       'unused-variable': { enabled: true, severity: 'info' },
     },
     maxNestingDepth: 4,
+    commentsRequiredAbove: 15,
+    scorePenalty: { error: 10, warning: 4, info: 1 },
   },
+  stages: { init: 'Initialization', process: 'Processing', end: 'End' },
   sizing: {
     calibrated: false,
     weights: {
