@@ -96,6 +96,16 @@ export function renderHtml(result: AssessmentResult, options: RenderOptions = {}
   };
 
   const p = result.portfolio;
+  const botFiles = new Set(result.bots.map((b) => b.file));
+  const unread = result.diagnostics.filter((d) => !d.source || !botFiles.has(d.source.file));
+  const notesFor = (file: string) => result.diagnostics.filter((d) => d.source?.file === file);
+  const notesTable = (notes: readonly Diagnostic[]) =>
+    `<div class="table-scroll"><table><thead><tr><th>${t('col.status')}</th><th>${t('col.detail')}</th><th>${t('col.location')}</th></tr></thead><tbody>${notes
+      .map(
+        (d) =>
+          `<tr><td>${chip(severityStatus[d.severity], t(`severity.${d.severity}`))}</td><td>${t(d.messageId, d.params)}</td><td>${location(d.source, d.nodeId === undefined)}</td></tr>`,
+      )
+      .join('')}</tbody></table></div>`;
   const generated = t('report.generated', {
     date: when(result.generatedAt),
     profile: result.profile.name,
@@ -145,6 +155,7 @@ export function renderHtml(result: AssessmentResult, options: RenderOptions = {}
       <tbody>${p.packages.map((pk) => `<tr><td>${esc(pk.name)}</td><td class="num">${esc(pk.version)}</td><td class="num">${n(pk.bots)}</td></tr>`).join('')}</tbody></table></div></div>
     <div class="card"><h3>${chip('info', t('summary.pending.title'))}</h3><p class="caption muted">${t('summary.pending.body', { rules: result.pendingRules.map((r) => translate(catalog, `rule.${r}`)).join(', ') })}</p></div>
   </div>
+  ${unread.length ? `<div class="card block"><h3>${t('summary.unread.title')}</h3>${notesTable(unread)}</div>` : ''}
 </section>`;
 
   const finding = (d: Diagnostic) =>
@@ -183,6 +194,7 @@ export function renderHtml(result: AssessmentResult, options: RenderOptions = {}
   </div>
   <div class="card block"><h3>${t('bot.conversion.title')}</h3>${items}</div>
   <div class="card block"><h3>${t('bot.quality.title')}</h3>${findings}</div>
+  ${notesFor(b.file).length ? `<div class="card block"><h3>${t('bot.reading.title')}</h3>${notesTable(notesFor(b.file))}</div>` : ''}
 </section>`;
   };
 

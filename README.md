@@ -5,7 +5,8 @@ vendor-neutral Intermediate Representation, with a migration and quality report 
 
 **First direction:** Automation Anywhere A360 → IBM RPA (Studio 30.0.2).
 
-> Status: **Phase 0, Foundation & Discovery.** Nothing converts yet. See [Roadmap](#roadmap).
+> Status: **Phase 1, Assessment.** `rosetta assess` reads real A360 bot files and writes the
+> assessment report. Nothing converts to WAL yet. See [Roadmap](#roadmap).
 
 ## How it works
 
@@ -73,15 +74,15 @@ You don't need it. Use one of these instead:
 The git hooks and `pnpm check` call the tools directly (`npx`, `prettier`, `eslint`, `tsc`,
 `vitest`), so they work whichever option you pick.
 
-| Script                   | Does                                                                |
-| ------------------------ | ------------------------------------------------------------------- |
-| `pnpm build`             | Type-check and compile all packages                                 |
-| `pnpm test`              | Run all tests once                                                  |
-| `pnpm lint`              | ESLint (type-checked)                                               |
-| `pnpm format`            | Prettier, write                                                     |
-| `pnpm scan:corpus`       | Corpus safety scan over all of `corpus/`                            |
-| `pnpm preview:report`    | Build, then render the report from synthetic data to `out/preview/` |
-| `pnpm rosetta -- <args>` | Run the CLI, e.g. `pnpm rosetta -- assess exports/`                 |
+| Script                | Does                                                                |
+| --------------------- | ------------------------------------------------------------------- |
+| `pnpm build`          | Type-check and compile all packages                                 |
+| `pnpm test`           | Run all tests once                                                  |
+| `pnpm lint`           | ESLint (type-checked)                                               |
+| `pnpm format`         | Prettier, write                                                     |
+| `pnpm scan:corpus`    | Corpus safety scan over all of `corpus/`                            |
+| `pnpm preview:report` | Build, then render the report from synthetic data to `out/preview/` |
+| `pnpm rosetta <args>` | Run the CLI, e.g. `pnpm rosetta assess exports/`                    |
 
 ## CLI
 

@@ -1,0 +1,753 @@
+{
+  "id": "01-variables/bot.json",
+  "name": "01-variables",
+  "source": {
+    "platform": "a360",
+    "file": "01-variables/bot.json",
+    "nodePath": []
+  },
+  "variables": [
+    {
+      "name": "SampleNumber",
+      "type": {
+        "kind": "number"
+      },
+      "direction": "local",
+      "sensitive": false
+    },
+    {
+      "name": "SampleString",
+      "type": {
+        "kind": "string"
+      },
+      "direction": "local",
+      "sensitive": false
+    },
+    {
+      "name": "vStr",
+      "type": {
+        "kind": "string"
+      },
+      "direction": "input",
+      "sensitive": false,
+      "defaultValue": {
+        "kind": "literal",
+        "value": "Test User"
+      }
+    },
+    {
+      "name": "vNum",
+      "type": {
+        "kind": "number"
+      },
+      "direction": "output",
+      "sensitive": false,
+      "defaultValue": {
+        "kind": "literal",
+        "value": 12345
+      }
+    },
+    {
+      "name": "vBool",
+      "type": {
+        "kind": "boolean"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "defaultValue": {
+        "kind": "literal",
+        "value": true
+      }
+    },
+    {
+      "name": "vDate",
+      "type": {
+        "kind": "datetime"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "defaultValue": {
+        "kind": "literal",
+        "value": "2026-01-01T09:00:00+02:00[Africa/Cairo]"
+      }
+    },
+    {
+      "name": "vList",
+      "type": {
+        "kind": "list",
+        "of": {
+          "kind": "string"
+        }
+      },
+      "direction": "local",
+      "sensitive": false,
+      "defaultValue": {
+        "kind": "call",
+        "fn": "list.of",
+        "args": [
+          {
+            "kind": "literal",
+            "value": "Alpha"
+          },
+          {
+            "kind": "literal",
+            "value": "Beta"
+          }
+        ]
+      }
+    },
+    {
+      "name": "vDict",
+      "type": {
+        "kind": "dict",
+        "of": {
+          "kind": "string"
+        }
+      },
+      "direction": "local",
+      "sensitive": false,
+      "defaultValue": {
+        "kind": "call",
+        "fn": "dict.of",
+        "args": [
+          {
+            "kind": "literal",
+            "value": "name"
+          },
+          {
+            "kind": "literal",
+            "value": "Test User"
+          },
+          {
+            "kind": "literal",
+            "value": "city"
+          },
+          {
+            "kind": "literal",
+            "value": "Test City"
+          }
+        ]
+      }
+    },
+    {
+      "name": "vTable",
+      "type": {
+        "kind": "table"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "defaultValue": {
+        "kind": "call",
+        "fn": "table.of",
+        "args": [
+          {
+            "kind": "literal",
+            "value": "{\"schema\":[{\"name\":\"ColA\",\"type\":\"STRING\"},{\"name\":\"ColB\",\"type\":\"STRING\"}],\"rows\":[{\"values\":[{\"type\":\"STRING\",\"string\":\"A1\"},{\"type\":\"STRING\",\"string\":\"B1\"}]},{\"values\":[{\"type\":\"STRING\",\"string\":\"A2\"},{\"type\":\"STRING\",\"string\":\"B2\"}]}]}"
+          }
+        ]
+      }
+    },
+    {
+      "name": "vCred",
+      "type": {
+        "kind": "credential"
+      },
+      "direction": "local",
+      "sensitive": true,
+      "defaultValue": {
+        "kind": "literal",
+        "value": "DUMMY_TEST_VALUE"
+      }
+    }
+  ],
+  "packages": [
+    {
+      "name": "Boolean",
+      "version": "2.13.3"
+    },
+    {
+      "name": "Comment",
+      "version": "2.17.0"
+    },
+    {
+      "name": "Dictionary",
+      "version": "3.16.2"
+    },
+    {
+      "name": "List",
+      "version": "2.16.2"
+    },
+    {
+      "name": "LogToFile",
+      "version": "3.11.1"
+    },
+    {
+      "name": "MessageBox",
+      "version": "3.8.1"
+    },
+    {
+      "name": "Number",
+      "version": "3.11.5"
+    },
+    {
+      "name": "Step",
+      "version": "2.7.0"
+    },
+    {
+      "name": "String",
+      "version": "5.12.6"
+    }
+  ],
+  "body": [
+    {
+      "id": "acd4e214-7e90-4df7-b080-ec7659e16df3",
+      "source": {
+        "platform": "a360",
+        "file": "01-variables/bot.json",
+        "nodePath": [
+          0
+        ],
+        "nodeId": "acd4e214-7e90-4df7-b080-ec7659e16df3",
+        "label": "Assign new values"
+      },
+      "kind": "group",
+      "label": "Assign new values",
+      "body": [
+        {
+          "id": "60a88710-dd37-431d-a533-5562987cc133",
+          "source": {
+            "platform": "a360",
+            "file": "01-variables/bot.json",
+            "nodePath": [
+              0,
+              0
+            ],
+            "nodeId": "60a88710-dd37-431d-a533-5562987cc133",
+            "label": "Comment/Comment"
+          },
+          "kind": "comment",
+          "text": "RR_01: assign a new value to each variable type"
+        },
+        {
+          "id": "75a99686-98b9-4b3e-be15-2a1c2a188e9a",
+          "source": {
+            "platform": "a360",
+            "file": "01-variables/bot.json",
+            "nodePath": [
+              0,
+              1
+            ],
+            "nodeId": "75a99686-98b9-4b3e-be15-2a1c2a188e9a",
+            "label": "String/assign"
+          },
+          "kind": "action",
+          "op": "vendor:a360/String/assign",
+          "args": {
+            "sourceString": {
+              "kind": "literal",
+              "value": "Updated Test User"
+            }
+          },
+          "outputs": {
+            "result": {
+              "kind": "var",
+              "name": "vStr",
+              "path": []
+            }
+          }
+        },
+        {
+          "id": "7ab897c0-c80d-45aa-874c-c650f2989bcf",
+          "source": {
+            "platform": "a360",
+            "file": "01-variables/bot.json",
+            "nodePath": [
+              0,
+              2
+            ],
+            "nodeId": "7ab897c0-c80d-45aa-874c-c650f2989bcf",
+            "label": "Number/assignToNumber"
+          },
+          "kind": "action",
+          "op": "vendor:a360/Number/assignToNumber",
+          "args": {
+            "input": {
+              "kind": "literal",
+              "value": 100
+            }
+          },
+          "outputs": {
+            "result": {
+              "kind": "var",
+              "name": "vNum",
+              "path": []
+            }
+          }
+        },
+        {
+          "id": "f7f89ffc-fd46-42ca-9df1-ef83e596df5f",
+          "source": {
+            "platform": "a360",
+            "file": "01-variables/bot.json",
+            "nodePath": [
+              0,
+              3
+            ],
+            "nodeId": "f7f89ffc-fd46-42ca-9df1-ef83e596df5f",
+            "label": "Number/increment"
+          },
+          "kind": "action",
+          "op": "vendor:a360/Number/increment",
+          "args": {
+            "source": {
+              "kind": "var",
+              "name": "vNum",
+              "path": []
+            },
+            "by": {
+              "kind": "literal",
+              "value": 5
+            }
+          },
+          "outputs": {
+            "result": {
+              "kind": "var",
+              "name": "vNum",
+              "path": []
+            }
+          }
+        },
+        {
+          "id": "fdd65c4a-dc20-43a3-8602-6aca5e2ee7c5",
+          "source": {
+            "platform": "a360",
+            "file": "01-variables/bot.json",
+            "nodePath": [
+              0,
+              4
+            ],
+            "nodeId": "fdd65c4a-dc20-43a3-8602-6aca5e2ee7c5",
+            "label": "Boolean/assign"
+          },
+          "kind": "action",
+          "op": "vendor:a360/Boolean/assign",
+          "args": {
+            "source": {
+              "kind": "literal",
+              "value": "constant"
+            },
+            "userDefined": {
+              "kind": "literal",
+              "value": "false"
+            }
+          },
+          "outputs": {
+            "result": {
+              "kind": "var",
+              "name": "vBool",
+              "path": []
+            }
+          }
+        },
+        {
+          "id": "b29a2042-ac6a-444d-bc6c-5b7213af6dc3",
+          "source": {
+            "platform": "a360",
+            "file": "01-variables/bot.json",
+            "nodePath": [
+              0,
+              5
+            ],
+            "nodeId": "b29a2042-ac6a-444d-bc6c-5b7213af6dc3",
+            "label": "List/addItem"
+          },
+          "kind": "action",
+          "op": "vendor:a360/List/addItem",
+          "args": {
+            "sourceList": {
+              "kind": "var",
+              "name": "vList",
+              "path": []
+            },
+            "listItem": {
+              "kind": "var",
+              "name": "vStr",
+              "path": []
+            },
+            "itemPosition": {
+              "kind": "literal",
+              "value": "END"
+            }
+          },
+          "outputs": {}
+        },
+        {
+          "id": "86125329-0d0b-4514-9841-f5a283b9e66b",
+          "source": {
+            "platform": "a360",
+            "file": "01-variables/bot.json",
+            "nodePath": [
+              0,
+              6
+            ],
+            "nodeId": "86125329-0d0b-4514-9841-f5a283b9e66b",
+            "label": "Dictionary/put"
+          },
+          "kind": "action",
+          "op": "vendor:a360/Dictionary/put",
+          "args": {
+            "sourceMap": {
+              "kind": "var",
+              "name": "vDict",
+              "path": []
+            },
+            "key": {
+              "kind": "literal",
+              "value": "country"
+            },
+            "varOrManual": {
+              "kind": "literal",
+              "value": "Manual"
+            },
+            "subtype": {
+              "kind": "literal",
+              "value": "String"
+            },
+            "stringVal": {
+              "kind": "literal",
+              "value": "Testland"
+            }
+          },
+          "outputs": {}
+        }
+      ]
+    },
+    {
+      "id": "ec91fe5e-45f5-4b66-9908-714cca666371",
+      "source": {
+        "platform": "a360",
+        "file": "01-variables/bot.json",
+        "nodePath": [
+          1
+        ],
+        "nodeId": "ec91fe5e-45f5-4b66-9908-714cca666371",
+        "label": "Show and log values"
+      },
+      "kind": "group",
+      "label": "Show and log values",
+      "body": [
+        {
+          "id": "fe0038fa-af71-4db8-8095-3d6ec93cf586",
+          "source": {
+            "platform": "a360",
+            "file": "01-variables/bot.json",
+            "nodePath": [
+              1,
+              0
+            ],
+            "nodeId": "fe0038fa-af71-4db8-8095-3d6ec93cf586",
+            "label": "Comment/Comment"
+          },
+          "kind": "comment",
+          "text": "RR_01: display and log selected variables"
+        },
+        {
+          "id": "13fb28fd-59cd-498d-bba2-2b5aa3c58a98",
+          "source": {
+            "platform": "a360",
+            "file": "01-variables/bot.json",
+            "nodePath": [
+              1,
+              1
+            ],
+            "nodeId": "13fb28fd-59cd-498d-bba2-2b5aa3c58a98",
+            "label": "MessageBox/messageBox"
+          },
+          "kind": "action",
+          "op": "vendor:a360/MessageBox/messageBox",
+          "args": {
+            "title": {
+              "kind": "literal",
+              "value": "RR_01 Variables"
+            },
+            "content": {
+              "kind": "template",
+              "parts": [
+                {
+                  "kind": "literal",
+                  "value": "vStr="
+                },
+                {
+                  "kind": "var",
+                  "name": "vStr",
+                  "path": []
+                },
+                {
+                  "kind": "literal",
+                  "value": " | vNum="
+                },
+                {
+                  "kind": "call",
+                  "fn": "convert.toString",
+                  "args": [
+                    {
+                      "kind": "var",
+                      "name": "vNum",
+                      "path": []
+                    }
+                  ]
+                },
+                {
+                  "kind": "literal",
+                  "value": " | vBool="
+                },
+                {
+                  "kind": "call",
+                  "fn": "convert.toString",
+                  "args": [
+                    {
+                      "kind": "var",
+                      "name": "vBool",
+                      "path": []
+                    }
+                  ]
+                },
+                {
+                  "kind": "literal",
+                  "value": " | first item="
+                },
+                {
+                  "kind": "var",
+                  "name": "vList",
+                  "path": [
+                    {
+                      "kind": "index",
+                      "index": {
+                        "kind": "literal",
+                        "value": 0
+                      }
+                    }
+                  ]
+                },
+                {
+                  "kind": "literal",
+                  "value": " | name="
+                },
+                {
+                  "kind": "var",
+                  "name": "vDict",
+                  "path": [
+                    {
+                      "kind": "key",
+                      "key": {
+                        "kind": "literal",
+                        "value": "name"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "scrollLines": {
+              "kind": "literal",
+              "value": 30
+            },
+            "closeMsgBox": {
+              "kind": "literal",
+              "value": false
+            }
+          },
+          "outputs": {}
+        },
+        {
+          "id": "3e0191d8-a143-4fa9-bc64-e5d763292789",
+          "source": {
+            "platform": "a360",
+            "file": "01-variables/bot.json",
+            "nodePath": [
+              1,
+              2
+            ],
+            "nodeId": "3e0191d8-a143-4fa9-bc64-e5d763292789",
+            "label": "LogToFile/logToFile"
+          },
+          "kind": "action",
+          "op": "vendor:a360/LogToFile/logToFile",
+          "args": {
+            "filePath": {
+              "kind": "literal",
+              "value": "file:///C:/RosettaTest/log.txt"
+            },
+            "logContent": {
+              "kind": "template",
+              "parts": [
+                {
+                  "kind": "literal",
+                  "value": "vStr="
+                },
+                {
+                  "kind": "var",
+                  "name": "vStr",
+                  "path": []
+                },
+                {
+                  "kind": "literal",
+                  "value": " | vNum="
+                },
+                {
+                  "kind": "call",
+                  "fn": "convert.toString",
+                  "args": [
+                    {
+                      "kind": "var",
+                      "name": "vNum",
+                      "path": []
+                    }
+                  ]
+                },
+                {
+                  "kind": "literal",
+                  "value": " | city="
+                },
+                {
+                  "kind": "var",
+                  "name": "vDict",
+                  "path": [
+                    {
+                      "kind": "key",
+                      "key": {
+                        "kind": "literal",
+                        "value": "city"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "kind": "literal",
+                  "value": " | item1="
+                },
+                {
+                  "kind": "var",
+                  "name": "vList",
+                  "path": [
+                    {
+                      "kind": "index",
+                      "index": {
+                        "kind": "literal",
+                        "value": 1
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "appendTimestamp": {
+              "kind": "literal",
+              "value": true
+            },
+            "logOption": {
+              "kind": "literal",
+              "value": "APPEND_FILE"
+            },
+            "encodingValue": {
+              "kind": "literal",
+              "value": "ANSI"
+            }
+          },
+          "outputs": {}
+        },
+        {
+          "id": "b413bfa1-71b7-48af-859f-ed360fd3ef8b",
+          "source": {
+            "platform": "a360",
+            "file": "01-variables/bot.json",
+            "nodePath": [
+              1,
+              3
+            ],
+            "nodeId": "b413bfa1-71b7-48af-859f-ed360fd3ef8b",
+            "label": "LogToFile/logVariablesToFile"
+          },
+          "kind": "action",
+          "op": "vendor:a360/LogToFile/logVariablesToFile",
+          "args": {
+            "filePath": {
+              "kind": "literal",
+              "value": "file:///C:/RosettaTest/log.txt"
+            },
+            "logOption": {
+              "kind": "literal",
+              "value": "APPEND_FILE"
+            },
+            "appendTimestamp": {
+              "kind": "literal",
+              "value": false
+            },
+            "variables": {
+              "kind": "call",
+              "fn": "list.of",
+              "args": [
+                {
+                  "kind": "var",
+                  "name": "vBool",
+                  "path": []
+                },
+                {
+                  "kind": "var",
+                  "name": "vDate",
+                  "path": []
+                },
+                {
+                  "kind": "var",
+                  "name": "vNum",
+                  "path": []
+                },
+                {
+                  "kind": "var",
+                  "name": "vStr",
+                  "path": []
+                }
+              ]
+            }
+          },
+          "outputs": {}
+        },
+        {
+          "id": "cdc6a229-2e98-410e-97e6-cfd78d1eef0d",
+          "source": {
+            "platform": "a360",
+            "file": "01-variables/bot.json",
+            "nodePath": [
+              1,
+              4
+            ],
+            "nodeId": "cdc6a229-2e98-410e-97e6-cfd78d1eef0d",
+            "label": "MessageBox/messageBox"
+          },
+          "disabled": true,
+          "kind": "action",
+          "op": "vendor:a360/MessageBox/messageBox",
+          "args": {
+            "title": {
+              "kind": "literal",
+              "value": "Automation Anywhere Enterprise Client"
+            },
+            "content": {
+              "kind": "literal",
+              "value": "This action is disabled on purpose"
+            },
+            "scrollLines": {
+              "kind": "literal",
+              "value": 30
+            },
+            "closeMsgBox": {
+              "kind": "literal",
+              "value": false
+            }
+          },
+          "outputs": {}
+        }
+      ]
+    }
+  ]
+}

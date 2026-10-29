@@ -1,0 +1,12 @@
+id: a360.string.assign
+source:
+  platform: a360
+  package: String
+  command: assign
+status: planned
+evidence:
+  - corpus/a360/01-variables/bot.json
+  - corpus/a360/02-control-flow/bot.json
+  - corpus/a360/03-strings-expressions/bot.json
+  - corpus/a360/04-error-handling/bot.json
+notes: Seen in the corpus. The IBM RPA target is chosen after the WAL probe (ADR-017).

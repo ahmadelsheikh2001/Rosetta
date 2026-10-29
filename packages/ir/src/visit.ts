@@ -25,6 +25,8 @@ export function childBlocks(stmt: Statement): readonly Block[] {
         ...stmt.catches.map((c) => c.body),
         ...(stmt.finally ? [stmt.finally] : []),
       ];
+    case 'unknown':
+      return stmt.body ? [stmt.body] : [];
     case 'action':
     case 'break':
     case 'continue':
@@ -32,7 +34,6 @@ export function childBlocks(stmt: Statement): readonly Block[] {
     case 'callBot':
     case 'stop':
     case 'comment':
-    case 'unknown':
       return [];
   }
 }

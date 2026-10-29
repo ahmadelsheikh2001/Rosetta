@@ -6,6 +6,7 @@ import { assess, syntheticProject, syntheticRegistry } from '@rosetta/assessment
 import { loadRegistry, registryDir } from '@rosetta/mappings';
 import { renderHtml, renderJson } from '@rosetta/report';
 import { loadProfile, ProfileError, type ResolvedProfile } from '@rosetta/standards';
+import { assessFolder } from './assess-folder.js';
 import { ExitCode } from './exit-codes.js';
 import { assessHelp, mainHelp, previewHelp } from './help.js';
 import type { Io } from './io.js';
@@ -84,7 +85,7 @@ function assessCommand(args: readonly string[], io: Io): number {
     io.err(`Input folder not found: ${input}\n`);
     return ExitCode.Input;
   }
-  resolveProfileFrom(values, io); // validate early, so profile problems surface now
+  const { profile } = resolveProfileFrom(values, io);
   const registry = loadRegistry(registryDir);
   if (registry.problems.length > 0) {
     io.err(
@@ -92,15 +93,30 @@ function assessCommand(args: readonly string[], io: Io): number {
     );
     return ExitCode.Internal;
   }
-  io.err(
-    [
-      'The A360 export parser is not available yet.',
-      'It is built once verified sample exports exist (docs/assumptions.md, A-01 to A-17).',
-      'Inputs and profile are valid. To review the report design now, run: rosetta preview-report',
-      '',
-    ].join('\n'),
+
+  const result = assessFolder(
+    input,
+    profile,
+    registry.entries.map((e) => e.entry),
+    new Date().toISOString(),
   );
-  return ExitCode.NotImplemented;
+  const unreadable = result.diagnostics.filter((d) => d.severity === 'error').length;
+  if (result.bots.length === 0) {
+    io.err(
+      `No A360 bot files found in ${input}${unreadable ? ` (${unreadable} file(s) could not be read)` : ''}.\n`,
+    );
+    return ExitCode.Input;
+  }
+  writeReport(
+    resolve(io.cwd, values.out ?? 'rosetta-report'),
+    renderHtml(result),
+    renderJson(result),
+    io,
+  );
+  io.out(
+    `Assessed ${result.bots.length} bot(s)${unreadable ? `; ${unreadable} file(s) could not be read` : ''}.\n`,
+  );
+  return ExitCode.Ok;
 }
 
 /**

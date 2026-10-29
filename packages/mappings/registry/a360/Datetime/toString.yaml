@@ -1,0 +1,9 @@
+id: a360.datetime.tostring
+source:
+  platform: a360
+  package: Datetime
+  command: toString
+status: planned
+evidence:
+  - corpus/a360/03-strings-expressions/bot.json
+notes: Seen in the corpus. The IBM RPA target is chosen after the WAL probe (ADR-017).

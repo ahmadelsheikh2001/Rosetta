@@ -1,0 +1,1546 @@
+{
+  "generatedAt": "2026-10-29T00:00:00.000Z",
+  "synthetic": false,
+  "profile": {
+    "name": "rosetta-defaults",
+    "version": 1
+  },
+  "pendingRules": [
+    "fixed-delay",
+    "hardcoded-url",
+    "hardcoded-path",
+    "hardcoded-email"
+  ],
+  "portfolio": {
+    "bots": 4,
+    "statements": 58,
+    "coverage": {
+      "mapped": 0,
+      "partial": 0,
+      "manual": 43,
+      "total": 43,
+      "percent": 0
+    },
+    "qualityScore": 92,
+    "effort": {
+      "bySize": {
+        "S": {
+          "bots": 0,
+          "hours": 0
+        },
+        "M": {
+          "bots": 3,
+          "hours": 36
+        },
+        "L": {
+          "bots": 1,
+          "hours": 32
+        },
+        "XL": {
+          "bots": 0,
+          "hours": 0
+        }
+      },
+      "totalHours": 68,
+      "calibrated": false
+    },
+    "topManual": [
+      {
+        "key": "vendor:a360/String/assign",
+        "occurrences": 11,
+        "bots": 4
+      },
+      {
+        "key": "vendor:a360/MessageBox/messageBox",
+        "occurrences": 6,
+        "bots": 4
+      },
+      {
+        "key": "vendor:a360/LogToFile/logToFile",
+        "occurrences": 4,
+        "bots": 2
+      },
+      {
+        "key": "vendor:a360/Number/increment",
+        "occurrences": 2,
+        "bots": 2
+      },
+      {
+        "key": "vendor:a360/Boolean/assign",
+        "occurrences": 1,
+        "bots": 1
+      },
+      {
+        "key": "vendor:a360/CsvTxt/OpenCSVTXT",
+        "occurrences": 1,
+        "bots": 1
+      },
+      {
+        "key": "vendor:a360/CsvTxt/ReadFromCsvTxt",
+        "occurrences": 1,
+        "bots": 1
+      },
+      {
+        "key": "vendor:a360/Datetime/add",
+        "occurrences": 1,
+        "bots": 1
+      },
+      {
+        "key": "vendor:a360/Datetime/assign",
+        "occurrences": 1,
+        "bots": 1
+      },
+      {
+        "key": "vendor:a360/Datetime/toString",
+        "occurrences": 1,
+        "bots": 1
+      }
+    ],
+    "topQuality": [
+      {
+        "key": "QUAL-UNUSED-VARIABLE",
+        "occurrences": 10,
+        "bots": 4
+      },
+      {
+        "key": "QUAL-DISABLED-CODE",
+        "occurrences": 4,
+        "bots": 4
+      },
+      {
+        "key": "QUAL-MISSING-ERROR-HANDLING",
+        "occurrences": 3,
+        "bots": 3
+      },
+      {
+        "key": "QUAL-HARDCODED-CREDENTIAL",
+        "occurrences": 1,
+        "bots": 1
+      }
+    ],
+    "packages": [
+      {
+        "name": "Comment",
+        "version": "2.17.0",
+        "bots": 4
+      },
+      {
+        "name": "MessageBox",
+        "version": "3.8.1",
+        "bots": 4
+      },
+      {
+        "name": "Number",
+        "version": "3.11.5",
+        "bots": 4
+      },
+      {
+        "name": "Step",
+        "version": "2.7.0",
+        "bots": 4
+      },
+      {
+        "name": "String",
+        "version": "5.12.6",
+        "bots": 4
+      },
+      {
+        "name": "Boolean",
+        "version": "2.13.3",
+        "bots": 3
+      },
+      {
+        "name": "Dictionary",
+        "version": "3.16.2",
+        "bots": 2
+      },
+      {
+        "name": "If",
+        "version": "3.8.0-20241115-115929",
+        "bots": 2
+      },
+      {
+        "name": "List",
+        "version": "2.16.2",
+        "bots": 2
+      },
+      {
+        "name": "LogToFile",
+        "version": "3.11.1",
+        "bots": 2
+      },
+      {
+        "name": "CsvTxt",
+        "version": "2.15.1",
+        "bots": 1
+      },
+      {
+        "name": "Datetime",
+        "version": "2.17.3",
+        "bots": 1
+      },
+      {
+        "name": "ErrorHandler",
+        "version": "2.13.0-20241115-120032",
+        "bots": 1
+      },
+      {
+        "name": "File",
+        "version": "6.16.2",
+        "bots": 1
+      },
+      {
+        "name": "Loop",
+        "version": "3.10.0-20251030-061555",
+        "bots": 1
+      },
+      {
+        "name": "System",
+        "version": "3.18.2",
+        "bots": 1
+      }
+    ]
+  },
+  "bots": [
+    {
+      "id": "01-variables/bot.json",
+      "name": "01-variables",
+      "file": "01-variables/bot.json",
+      "metrics": {
+        "nodes": 10,
+        "maxDepth": 0,
+        "packages": 9,
+        "uiActions": 0,
+        "subBotCalls": 0,
+        "unmapped": 10,
+        "errorHandlers": 0
+      },
+      "complexity": {
+        "score": 117,
+        "size": "M",
+        "hours": 12
+      },
+      "coverage": {
+        "mapped": 0,
+        "partial": 0,
+        "manual": 10,
+        "total": 10,
+        "percent": 0
+      },
+      "conversionItems": [
+        {
+          "nodeId": "75a99686-98b9-4b3e-be15-2a1c2a188e9a",
+          "source": {
+            "platform": "a360",
+            "file": "01-variables/bot.json",
+            "nodePath": [
+              0,
+              1
+            ],
+            "nodeId": "75a99686-98b9-4b3e-be15-2a1c2a188e9a",
+            "label": "String/assign"
+          },
+          "op": "vendor:a360/String/assign",
+          "bucket": "manual",
+          "reason": "planned",
+          "mappingId": "a360.string.assign"
+        },
+        {
+          "nodeId": "7ab897c0-c80d-45aa-874c-c650f2989bcf",
+          "source": {
+            "platform": "a360",
+            "file": "01-variables/bot.json",
+            "nodePath": [
+              0,
+              2
+            ],
+            "nodeId": "7ab897c0-c80d-45aa-874c-c650f2989bcf",
+            "label": "Number/assignToNumber"
+          },
+          "op": "vendor:a360/Number/assignToNumber",
+          "bucket": "manual",
+          "reason": "planned",
+          "mappingId": "a360.number.assigntonumber"
+        },
+        {
+          "nodeId": "f7f89ffc-fd46-42ca-9df1-ef83e596df5f",
+          "source": {
+            "platform": "a360",
+            "file": "01-variables/bot.json",
+            "nodePath": [
+              0,
+              3
+            ],
+            "nodeId": "f7f89ffc-fd46-42ca-9df1-ef83e596df5f",
+            "label": "Number/increment"
+          },
+          "op": "vendor:a360/Number/increment",
+          "bucket": "manual",
+          "reason": "planned",
+          "mappingId": "a360.number.increment"
+        },
+        {
+          "nodeId": "fdd65c4a-dc20-43a3-8602-6aca5e2ee7c5",
+          "source": {
+            "platform": "a360",
+            "file": "01-variables/bot.json",
+            "nodePath": [
+              0,
+              4
+            ],
+            "nodeId": "fdd65c4a-dc20-43a3-8602-6aca5e2ee7c5",
+            "label": "Boolean/assign"
+          },
+          "op": "vendor:a360/Boolean/assign",
+          "bucket": "manual",
+          "reason": "planned",
+          "mappingId": "a360.boolean.assign"
+        },
+        {
+          "nodeId": "b29a2042-ac6a-444d-bc6c-5b7213af6dc3",
+          "source": {
+            "platform": "a360",
+            "file": "01-variables/bot.json",
+            "nodePath": [
+              0,
+              5
+            ],
+            "nodeId": "b29a2042-ac6a-444d-bc6c-5b7213af6dc3",
+            "label": "List/addItem"
+          },
+          "op": "vendor:a360/List/addItem",
+          "bucket": "manual",
+          "reason": "planned",
+          "mappingId": "a360.list.additem"
+        },
+        {
+          "nodeId": "86125329-0d0b-4514-9841-f5a283b9e66b",
+          "source": {
+            "platform": "a360",
+            "file": "01-variables/bot.json",
+            "nodePath": [
+              0,
+              6
+            ],
+            "nodeId": "86125329-0d0b-4514-9841-f5a283b9e66b",
+            "label": "Dictionary/put"
+          },
+          "op": "vendor:a360/Dictionary/put",
+          "bucket": "manual",
+          "reason": "planned",
+          "mappingId": "a360.dictionary.put"
+        },
+        {
+          "nodeId": "13fb28fd-59cd-498d-bba2-2b5aa3c58a98",
+          "source": {
+            "platform": "a360",
+            "file": "01-variables/bot.json",
+            "nodePath": [
+              1,
+              1
+            ],
+            "nodeId": "13fb28fd-59cd-498d-bba2-2b5aa3c58a98",
+            "label": "MessageBox/messageBox"
+          },
+          "op": "vendor:a360/MessageBox/messageBox",
+          "bucket": "manual",
+          "reason": "planned",
+          "mappingId": "a360.messagebox.messagebox"
+        },
+        {
+          "nodeId": "3e0191d8-a143-4fa9-bc64-e5d763292789",
+          "source": {
+            "platform": "a360",
+            "file": "01-variables/bot.json",
+            "nodePath": [
+              1,
+              2
+            ],
+            "nodeId": "3e0191d8-a143-4fa9-bc64-e5d763292789",
+            "label": "LogToFile/logToFile"
+          },
+          "op": "vendor:a360/LogToFile/logToFile",
+          "bucket": "manual",
+          "reason": "planned",
+          "mappingId": "a360.logtofile.logtofile"
+        },
+        {
+          "nodeId": "b413bfa1-71b7-48af-859f-ed360fd3ef8b",
+          "source": {
+            "platform": "a360",
+            "file": "01-variables/bot.json",
+            "nodePath": [
+              1,
+              3
+            ],
+            "nodeId": "b413bfa1-71b7-48af-859f-ed360fd3ef8b",
+            "label": "LogToFile/logVariablesToFile"
+          },
+          "op": "vendor:a360/LogToFile/logVariablesToFile",
+          "bucket": "manual",
+          "reason": "planned",
+          "mappingId": "a360.logtofile.logvariablestofile"
+        },
+        {
+          "nodeId": "cdc6a229-2e98-410e-97e6-cfd78d1eef0d",
+          "source": {
+            "platform": "a360",
+            "file": "01-variables/bot.json",
+            "nodePath": [
+              1,
+              4
+            ],
+            "nodeId": "cdc6a229-2e98-410e-97e6-cfd78d1eef0d",
+            "label": "MessageBox/messageBox"
+          },
+          "op": "vendor:a360/MessageBox/messageBox",
+          "bucket": "manual",
+          "reason": "planned",
+          "mappingId": "a360.messagebox.messagebox"
+        }
+      ],
+      "quality": {
+        "score": 81,
+        "findings": [
+          {
+            "code": "QUAL-MISSING-ERROR-HANDLING",
+            "severity": "warning",
+            "category": "quality",
+            "messageId": "quality.missing-error-handling",
+            "params": {
+              "bot": "01-variables",
+              "actions": 10
+            },
+            "source": {
+              "platform": "a360",
+              "file": "01-variables/bot.json",
+              "nodePath": []
+            }
+          },
+          {
+            "code": "QUAL-DISABLED-CODE",
+            "severity": "info",
+            "category": "quality",
+            "messageId": "quality.disabled-code",
+            "params": {
+              "bot": "01-variables",
+              "kind": "action"
+            },
+            "source": {
+              "platform": "a360",
+              "file": "01-variables/bot.json",
+              "nodePath": [
+                1,
+                4
+              ],
+              "nodeId": "cdc6a229-2e98-410e-97e6-cfd78d1eef0d",
+              "label": "MessageBox/messageBox"
+            },
+            "nodeId": "cdc6a229-2e98-410e-97e6-cfd78d1eef0d"
+          },
+          {
+            "code": "QUAL-UNUSED-VARIABLE",
+            "severity": "info",
+            "category": "quality",
+            "messageId": "quality.unused-variable",
+            "params": {
+              "bot": "01-variables",
+              "variable": "SampleNumber"
+            },
+            "source": {
+              "platform": "a360",
+              "file": "01-variables/bot.json",
+              "nodePath": []
+            }
+          },
+          {
+            "code": "QUAL-UNUSED-VARIABLE",
+            "severity": "info",
+            "category": "quality",
+            "messageId": "quality.unused-variable",
+            "params": {
+              "bot": "01-variables",
+              "variable": "SampleString"
+            },
+            "source": {
+              "platform": "a360",
+              "file": "01-variables/bot.json",
+              "nodePath": []
+            }
+          },
+          {
+            "code": "QUAL-UNUSED-VARIABLE",
+            "severity": "info",
+            "category": "quality",
+            "messageId": "quality.unused-variable",
+            "params": {
+              "bot": "01-variables",
+              "variable": "vTable"
+            },
+            "source": {
+              "platform": "a360",
+              "file": "01-variables/bot.json",
+              "nodePath": []
+            }
+          },
+          {
+            "code": "QUAL-UNUSED-VARIABLE",
+            "severity": "info",
+            "category": "quality",
+            "messageId": "quality.unused-variable",
+            "params": {
+              "bot": "01-variables",
+              "variable": "vCred"
+            },
+            "source": {
+              "platform": "a360",
+              "file": "01-variables/bot.json",
+              "nodePath": []
+            }
+          },
+          {
+            "code": "QUAL-HARDCODED-CREDENTIAL",
+            "severity": "error",
+            "category": "quality",
+            "messageId": "quality.hardcoded-credential",
+            "params": {
+              "bot": "01-variables",
+              "variable": "vCred"
+            },
+            "source": {
+              "platform": "a360",
+              "file": "01-variables/bot.json",
+              "nodePath": []
+            }
+          }
+        ]
+      },
+      "packages": [
+        {
+          "name": "Boolean",
+          "version": "2.13.3"
+        },
+        {
+          "name": "Comment",
+          "version": "2.17.0"
+        },
+        {
+          "name": "Dictionary",
+          "version": "3.16.2"
+        },
+        {
+          "name": "List",
+          "version": "2.16.2"
+        },
+        {
+          "name": "LogToFile",
+          "version": "3.11.1"
+        },
+        {
+          "name": "MessageBox",
+          "version": "3.8.1"
+        },
+        {
+          "name": "Number",
+          "version": "3.11.5"
+        },
+        {
+          "name": "Step",
+          "version": "2.7.0"
+        },
+        {
+          "name": "String",
+          "version": "5.12.6"
+        }
+      ]
+    },
+    {
+      "id": "02-control-flow/bot.json",
+      "name": "02-control-flow",
+      "file": "02-control-flow/bot.json",
+      "metrics": {
+        "nodes": 20,
+        "maxDepth": 2,
+        "packages": 11,
+        "uiActions": 0,
+        "subBotCalls": 0,
+        "unmapped": 9,
+        "errorHandlers": 0
+      },
+      "complexity": {
+        "score": 135,
+        "size": "M",
+        "hours": 12
+      },
+      "coverage": {
+        "mapped": 0,
+        "partial": 0,
+        "manual": 9,
+        "total": 9,
+        "percent": 0
+      },
+      "conversionItems": [
+        {
+          "nodeId": "12a4e4a1-cb99-4e8c-b204-720ad7930614",
+          "source": {
+            "platform": "a360",
+            "file": "02-control-flow/bot.json",
+            "nodePath": [
+              0,
+              1,
+              0,
+              0
+            ],
+            "nodeId": "12a4e4a1-cb99-4e8c-b204-720ad7930614",
+            "label": "String/assign"
+          },
+          "op": "vendor:a360/String/assign",
+          "bucket": "manual",
+          "reason": "planned",
+          "mappingId": "a360.string.assign"
+        },
+        {
+          "nodeId": "4ab6d3c9-6883-4611-8100-b8771d58dc1e",
+          "source": {
+            "platform": "a360",
+            "file": "02-control-flow/bot.json",
+            "nodePath": [
+              0,
+              1,
+              0,
+              1,
+              0
+            ],
+            "nodeId": "4ab6d3c9-6883-4611-8100-b8771d58dc1e",
+            "label": "String/assign"
+          },
+          "op": "vendor:a360/String/assign",
+          "bucket": "manual",
+          "reason": "planned",
+          "mappingId": "a360.string.assign"
+        },
+        {
+          "nodeId": "7c246db8-5aa9-42e4-a031-c3c1a37f1f4b",
+          "source": {
+            "platform": "a360",
+            "file": "02-control-flow/bot.json",
+            "nodePath": [
+              0,
+              1,
+              1,
+              0
+            ],
+            "nodeId": "7c246db8-5aa9-42e4-a031-c3c1a37f1f4b",
+            "label": "String/assign"
+          },
+          "op": "vendor:a360/String/assign",
+          "bucket": "manual",
+          "reason": "planned",
+          "mappingId": "a360.string.assign"
+        },
+        {
+          "nodeId": "3717ee06-d22a-4ba2-b31f-88b19fc7c673",
+          "source": {
+            "platform": "a360",
+            "file": "02-control-flow/bot.json",
+            "nodePath": [
+              0,
+              1,
+              2,
+              0
+            ],
+            "nodeId": "3717ee06-d22a-4ba2-b31f-88b19fc7c673",
+            "label": "String/assign"
+          },
+          "op": "vendor:a360/String/assign",
+          "bucket": "manual",
+          "reason": "planned",
+          "mappingId": "a360.string.assign"
+        },
+        {
+          "nodeId": "0bc02ea9-3c64-4925-a9d7-9cfd028affa9",
+          "source": {
+            "platform": "a360",
+            "file": "02-control-flow/bot.json",
+            "nodePath": [
+              1,
+              2,
+              0
+            ],
+            "nodeId": "0bc02ea9-3c64-4925-a9d7-9cfd028affa9",
+            "label": "Number/increment"
+          },
+          "op": "vendor:a360/Number/increment",
+          "bucket": "manual",
+          "reason": "planned",
+          "mappingId": "a360.number.increment"
+        },
+        {
+          "nodeId": "26502a0f-48c0-420a-9670-3a651ae4850e",
+          "source": {
+            "platform": "a360",
+            "file": "02-control-flow/bot.json",
+            "nodePath": [
+              1,
+              3,
+              1
+            ],
+            "nodeId": "26502a0f-48c0-420a-9670-3a651ae4850e",
+            "label": "String/assign"
+          },
+          "op": "vendor:a360/String/assign",
+          "bucket": "manual",
+          "reason": "planned",
+          "mappingId": "a360.string.assign"
+        },
+        {
+          "nodeId": "179c1d77-3d5b-41a1-92e7-aabeaa6e3253",
+          "source": {
+            "platform": "a360",
+            "file": "02-control-flow/bot.json",
+            "nodePath": [
+              1,
+              4,
+              0
+            ],
+            "nodeId": "179c1d77-3d5b-41a1-92e7-aabeaa6e3253",
+            "label": "String/assign"
+          },
+          "op": "vendor:a360/String/assign",
+          "bucket": "manual",
+          "reason": "planned",
+          "mappingId": "a360.string.assign"
+        },
+        {
+          "nodeId": "2f1cb4c8-77bc-4e87-a370-f4d2460e67e7",
+          "source": {
+            "platform": "a360",
+            "file": "02-control-flow/bot.json",
+            "nodePath": [
+              1,
+              5,
+              0
+            ],
+            "nodeId": "2f1cb4c8-77bc-4e87-a370-f4d2460e67e7",
+            "label": "String/assign"
+          },
+          "op": "vendor:a360/String/assign",
+          "bucket": "manual",
+          "reason": "planned",
+          "mappingId": "a360.string.assign"
+        },
+        {
+          "nodeId": "3427b516-7e45-4062-9ab0-1cdbf0e29733",
+          "source": {
+            "platform": "a360",
+            "file": "02-control-flow/bot.json",
+            "nodePath": [
+              1,
+              6
+            ],
+            "nodeId": "3427b516-7e45-4062-9ab0-1cdbf0e29733",
+            "label": "MessageBox/messageBox"
+          },
+          "op": "vendor:a360/MessageBox/messageBox",
+          "bucket": "manual",
+          "reason": "planned",
+          "mappingId": "a360.messagebox.messagebox"
+        }
+      ],
+      "quality": {
+        "score": 93,
+        "findings": [
+          {
+            "code": "QUAL-MISSING-ERROR-HANDLING",
+            "severity": "warning",
+            "category": "quality",
+            "messageId": "quality.missing-error-handling",
+            "params": {
+              "bot": "02-control-flow",
+              "actions": 9
+            },
+            "source": {
+              "platform": "a360",
+              "file": "02-control-flow/bot.json",
+              "nodePath": []
+            }
+          },
+          {
+            "code": "QUAL-DISABLED-CODE",
+            "severity": "info",
+            "category": "quality",
+            "messageId": "quality.disabled-code",
+            "params": {
+              "bot": "02-control-flow",
+              "kind": "action"
+            },
+            "source": {
+              "platform": "a360",
+              "file": "02-control-flow/bot.json",
+              "nodePath": [
+                1,
+                6
+              ],
+              "nodeId": "3427b516-7e45-4062-9ab0-1cdbf0e29733",
+              "label": "MessageBox/messageBox"
+            },
+            "nodeId": "3427b516-7e45-4062-9ab0-1cdbf0e29733"
+          },
+          {
+            "code": "QUAL-UNUSED-VARIABLE",
+            "severity": "info",
+            "category": "quality",
+            "messageId": "quality.unused-variable",
+            "params": {
+              "bot": "02-control-flow",
+              "variable": "SampleNumber"
+            },
+            "source": {
+              "platform": "a360",
+              "file": "02-control-flow/bot.json",
+              "nodePath": []
+            }
+          },
+          {
+            "code": "QUAL-UNUSED-VARIABLE",
+            "severity": "info",
+            "category": "quality",
+            "messageId": "quality.unused-variable",
+            "params": {
+              "bot": "02-control-flow",
+              "variable": "SampleString"
+            },
+            "source": {
+              "platform": "a360",
+              "file": "02-control-flow/bot.json",
+              "nodePath": []
+            }
+          }
+        ]
+      },
+      "packages": [
+        {
+          "name": "Boolean",
+          "version": "2.13.3"
+        },
+        {
+          "name": "Comment",
+          "version": "2.17.0"
+        },
+        {
+          "name": "Dictionary",
+          "version": "3.16.2"
+        },
+        {
+          "name": "File",
+          "version": "6.16.2"
+        },
+        {
+          "name": "If",
+          "version": "3.8.0-20241115-115929"
+        },
+        {
+          "name": "List",
+          "version": "2.16.2"
+        },
+        {
+          "name": "Loop",
+          "version": "3.10.0-20251030-061555"
+        },
+        {
+          "name": "MessageBox",
+          "version": "3.8.1"
+        },
+        {
+          "name": "Number",
+          "version": "3.11.5"
+        },
+        {
+          "name": "Step",
+          "version": "2.7.0"
+        },
+        {
+          "name": "String",
+          "version": "5.12.6"
+        }
+      ]
+    },
+    {
+      "id": "03-strings-expressions/bot.json",
+      "name": "03-strings-expressions",
+      "file": "03-strings-expressions/bot.json",
+      "metrics": {
+        "nodes": 17,
+        "maxDepth": 0,
+        "packages": 7,
+        "uiActions": 0,
+        "subBotCalls": 0,
+        "unmapped": 17,
+        "errorHandlers": 0
+      },
+      "complexity": {
+        "score": 174,
+        "size": "L",
+        "hours": 32
+      },
+      "coverage": {
+        "mapped": 0,
+        "partial": 0,
+        "manual": 17,
+        "total": 17,
+        "percent": 0
+      },
+      "conversionItems": [
+        {
+          "nodeId": "8e739a92-da84-48d5-9475-05bf5c725168",
+          "source": {
+            "platform": "a360",
+            "file": "03-strings-expressions/bot.json",
+            "nodePath": [
+              0,
+              0
+            ],
+            "nodeId": "8e739a92-da84-48d5-9475-05bf5c725168",
+            "label": "String/assign"
+          },
+          "op": "vendor:a360/String/assign",
+          "bucket": "manual",
+          "reason": "planned",
+          "mappingId": "a360.string.assign"
+        },
+        {
+          "nodeId": "da44211d-329c-486f-a3b9-f367ed43af3d",
+          "source": {
+            "platform": "a360",
+            "file": "03-strings-expressions/bot.json",
+            "nodePath": [
+              0,
+              1
+            ],
+            "nodeId": "da44211d-329c-486f-a3b9-f367ed43af3d",
+            "label": "String/trim"
+          },
+          "op": "vendor:a360/String/trim",
+          "bucket": "manual",
+          "reason": "planned",
+          "mappingId": "a360.string.trim"
+        },
+        {
+          "nodeId": "3da82ed5-d302-4ee6-bff2-fb42e23197bf",
+          "source": {
+            "platform": "a360",
+            "file": "03-strings-expressions/bot.json",
+            "nodePath": [
+              0,
+              2
+            ],
+            "nodeId": "3da82ed5-d302-4ee6-bff2-fb42e23197bf",
+            "label": "String/subString"
+          },
+          "op": "vendor:a360/String/subString",
+          "bucket": "manual",
+          "reason": "planned",
+          "mappingId": "a360.string.substring"
+        },
+        {
+          "nodeId": "cb682288-032e-4965-8c33-3db4610598ff",
+          "source": {
+            "platform": "a360",
+            "file": "03-strings-expressions/bot.json",
+            "nodePath": [
+              0,
+              3
+            ],
+            "nodeId": "cb682288-032e-4965-8c33-3db4610598ff",
+            "label": "String/replace"
+          },
+          "op": "vendor:a360/String/replace",
+          "bucket": "manual",
+          "reason": "planned",
+          "mappingId": "a360.string.replace"
+        },
+        {
+          "nodeId": "1cb5a0ae-63bb-428c-985c-f1c5d3353705",
+          "source": {
+            "platform": "a360",
+            "file": "03-strings-expressions/bot.json",
+            "nodePath": [
+              0,
+              4
+            ],
+            "nodeId": "1cb5a0ae-63bb-428c-985c-f1c5d3353705",
+            "label": "String/split"
+          },
+          "op": "vendor:a360/String/split",
+          "bucket": "manual",
+          "reason": "planned",
+          "mappingId": "a360.string.split"
+        },
+        {
+          "nodeId": "e6f3100c-4d37-4da7-a0f3-51e2e50fea95",
+          "source": {
+            "platform": "a360",
+            "file": "03-strings-expressions/bot.json",
+            "nodePath": [
+              0,
+              5
+            ],
+            "nodeId": "e6f3100c-4d37-4da7-a0f3-51e2e50fea95",
+            "label": "String/uppercase"
+          },
+          "op": "vendor:a360/String/uppercase",
+          "bucket": "manual",
+          "reason": "planned",
+          "mappingId": "a360.string.uppercase"
+        },
+        {
+          "nodeId": "90f5e137-0880-4684-bba7-4e1017aaf5f1",
+          "source": {
+            "platform": "a360",
+            "file": "03-strings-expressions/bot.json",
+            "nodePath": [
+              0,
+              6
+            ],
+            "nodeId": "90f5e137-0880-4684-bba7-4e1017aaf5f1",
+            "label": "String/lowercase"
+          },
+          "op": "vendor:a360/String/lowercase",
+          "bucket": "manual",
+          "reason": "planned",
+          "mappingId": "a360.string.lowercase"
+        },
+        {
+          "nodeId": "96a3ce59-cdcd-49a8-9bc4-6060dd02eb91",
+          "source": {
+            "platform": "a360",
+            "file": "03-strings-expressions/bot.json",
+            "nodePath": [
+              0,
+              7
+            ],
+            "nodeId": "96a3ce59-cdcd-49a8-9bc4-6060dd02eb91",
+            "label": "String/find"
+          },
+          "op": "vendor:a360/String/find",
+          "bucket": "manual",
+          "reason": "planned",
+          "mappingId": "a360.string.find"
+        },
+        {
+          "nodeId": "520eae2f-c8b5-4636-9ae5-06ef8a322311",
+          "source": {
+            "platform": "a360",
+            "file": "03-strings-expressions/bot.json",
+            "nodePath": [
+              0,
+              8
+            ],
+            "nodeId": "520eae2f-c8b5-4636-9ae5-06ef8a322311",
+            "label": "String/length"
+          },
+          "op": "vendor:a360/String/length",
+          "bucket": "manual",
+          "reason": "planned",
+          "mappingId": "a360.string.length"
+        },
+        {
+          "nodeId": "18656c55-90ce-4f1e-9e65-05a0a8a90ffc",
+          "source": {
+            "platform": "a360",
+            "file": "03-strings-expressions/bot.json",
+            "nodePath": [
+              1,
+              1
+            ],
+            "nodeId": "18656c55-90ce-4f1e-9e65-05a0a8a90ffc",
+            "label": "String/toNumber"
+          },
+          "op": "vendor:a360/String/toNumber",
+          "bucket": "manual",
+          "reason": "planned",
+          "mappingId": "a360.string.tonumber"
+        },
+        {
+          "nodeId": "0dca96a3-ddc0-4f39-99d5-503d636d1232",
+          "source": {
+            "platform": "a360",
+            "file": "03-strings-expressions/bot.json",
+            "nodePath": [
+              1,
+              2
+            ],
+            "nodeId": "0dca96a3-ddc0-4f39-99d5-503d636d1232",
+            "label": "Number/toString"
+          },
+          "op": "vendor:a360/Number/toString",
+          "bucket": "manual",
+          "reason": "planned",
+          "mappingId": "a360.number.tostring"
+        },
+        {
+          "nodeId": "d77f8799-aa01-49e6-87fc-abca6525c366",
+          "source": {
+            "platform": "a360",
+            "file": "03-strings-expressions/bot.json",
+            "nodePath": [
+              1,
+              3
+            ],
+            "nodeId": "d77f8799-aa01-49e6-87fc-abca6525c366",
+            "label": "Datetime/assign"
+          },
+          "op": "vendor:a360/Datetime/assign",
+          "bucket": "manual",
+          "reason": "planned",
+          "mappingId": "a360.datetime.assign"
+        },
+        {
+          "nodeId": "405a5907-5268-4130-97e4-7d7799da423d",
+          "source": {
+            "platform": "a360",
+            "file": "03-strings-expressions/bot.json",
+            "nodePath": [
+              1,
+              4
+            ],
+            "nodeId": "405a5907-5268-4130-97e4-7d7799da423d",
+            "label": "Datetime/add"
+          },
+          "op": "vendor:a360/Datetime/add",
+          "bucket": "manual",
+          "reason": "planned",
+          "mappingId": "a360.datetime.add"
+        },
+        {
+          "nodeId": "afba232a-1697-4dca-879d-8d3876435e1e",
+          "source": {
+            "platform": "a360",
+            "file": "03-strings-expressions/bot.json",
+            "nodePath": [
+              1,
+              5
+            ],
+            "nodeId": "afba232a-1697-4dca-879d-8d3876435e1e",
+            "label": "Datetime/toString"
+          },
+          "op": "vendor:a360/Datetime/toString",
+          "bucket": "manual",
+          "reason": "planned",
+          "mappingId": "a360.datetime.tostring"
+        },
+        {
+          "nodeId": "a8e71fb8-ad88-4d65-809f-a5636102b5b3",
+          "source": {
+            "platform": "a360",
+            "file": "03-strings-expressions/bot.json",
+            "nodePath": [
+              2,
+              1
+            ],
+            "nodeId": "a8e71fb8-ad88-4d65-809f-a5636102b5b3",
+            "label": "String/assign"
+          },
+          "op": "vendor:a360/String/assign",
+          "bucket": "manual",
+          "reason": "planned",
+          "mappingId": "a360.string.assign"
+        },
+        {
+          "nodeId": "cd5240b5-8276-4c7d-ab7d-6854e367030b",
+          "source": {
+            "platform": "a360",
+            "file": "03-strings-expressions/bot.json",
+            "nodePath": [
+              2,
+              2
+            ],
+            "nodeId": "cd5240b5-8276-4c7d-ab7d-6854e367030b",
+            "label": "MessageBox/messageBox"
+          },
+          "op": "vendor:a360/MessageBox/messageBox",
+          "bucket": "manual",
+          "reason": "planned",
+          "mappingId": "a360.messagebox.messagebox"
+        },
+        {
+          "nodeId": "bbb30c08-a8d7-42ff-8c96-36665ec72700",
+          "source": {
+            "platform": "a360",
+            "file": "03-strings-expressions/bot.json",
+            "nodePath": [
+              2,
+              3
+            ],
+            "nodeId": "bbb30c08-a8d7-42ff-8c96-36665ec72700",
+            "label": "MessageBox/messageBox"
+          },
+          "op": "vendor:a360/MessageBox/messageBox",
+          "bucket": "manual",
+          "reason": "planned",
+          "mappingId": "a360.messagebox.messagebox"
+        }
+      ],
+      "quality": {
+        "score": 93,
+        "findings": [
+          {
+            "code": "QUAL-MISSING-ERROR-HANDLING",
+            "severity": "warning",
+            "category": "quality",
+            "messageId": "quality.missing-error-handling",
+            "params": {
+              "bot": "03-strings-expressions",
+              "actions": 17
+            },
+            "source": {
+              "platform": "a360",
+              "file": "03-strings-expressions/bot.json",
+              "nodePath": []
+            }
+          },
+          {
+            "code": "QUAL-DISABLED-CODE",
+            "severity": "info",
+            "category": "quality",
+            "messageId": "quality.disabled-code",
+            "params": {
+              "bot": "03-strings-expressions",
+              "kind": "action"
+            },
+            "source": {
+              "platform": "a360",
+              "file": "03-strings-expressions/bot.json",
+              "nodePath": [
+                2,
+                3
+              ],
+              "nodeId": "bbb30c08-a8d7-42ff-8c96-36665ec72700",
+              "label": "MessageBox/messageBox"
+            },
+            "nodeId": "bbb30c08-a8d7-42ff-8c96-36665ec72700"
+          },
+          {
+            "code": "QUAL-UNUSED-VARIABLE",
+            "severity": "info",
+            "category": "quality",
+            "messageId": "quality.unused-variable",
+            "params": {
+              "bot": "03-strings-expressions",
+              "variable": "SampleNumber"
+            },
+            "source": {
+              "platform": "a360",
+              "file": "03-strings-expressions/bot.json",
+              "nodePath": []
+            }
+          },
+          {
+            "code": "QUAL-UNUSED-VARIABLE",
+            "severity": "info",
+            "category": "quality",
+            "messageId": "quality.unused-variable",
+            "params": {
+              "bot": "03-strings-expressions",
+              "variable": "SampleString"
+            },
+            "source": {
+              "platform": "a360",
+              "file": "03-strings-expressions/bot.json",
+              "nodePath": []
+            }
+          }
+        ]
+      },
+      "packages": [
+        {
+          "name": "Comment",
+          "version": "2.17.0"
+        },
+        {
+          "name": "Datetime",
+          "version": "2.17.3"
+        },
+        {
+          "name": "MessageBox",
+          "version": "3.8.1"
+        },
+        {
+          "name": "Number",
+          "version": "3.11.5"
+        },
+        {
+          "name": "Step",
+          "version": "2.7.0"
+        },
+        {
+          "name": "String",
+          "version": "5.12.6"
+        },
+        {
+          "name": "System",
+          "version": "3.18.2"
+        }
+      ]
+    },
+    {
+      "id": "04-error-handling/bot.json",
+      "name": "04-error-handling",
+      "file": "04-error-handling/bot.json",
+      "metrics": {
+        "nodes": 11,
+        "maxDepth": 2,
+        "packages": 10,
+        "uiActions": 0,
+        "subBotCalls": 0,
+        "unmapped": 7,
+        "errorHandlers": 2
+      },
+      "complexity": {
+        "score": 109,
+        "size": "M",
+        "hours": 12
+      },
+      "coverage": {
+        "mapped": 0,
+        "partial": 0,
+        "manual": 7,
+        "total": 7,
+        "percent": 0
+      },
+      "conversionItems": [
+        {
+          "nodeId": "75b16e75-6c2f-4e13-afc0-16e95479b3bf",
+          "source": {
+            "platform": "a360",
+            "file": "04-error-handling/bot.json",
+            "nodePath": [
+              0,
+              1,
+              0,
+              0
+            ],
+            "nodeId": "75b16e75-6c2f-4e13-afc0-16e95479b3bf",
+            "label": "CsvTxt/OpenCSVTXT"
+          },
+          "op": "vendor:a360/CsvTxt/OpenCSVTXT",
+          "bucket": "manual",
+          "reason": "planned",
+          "mappingId": "a360.csvtxt.opencsvtxt"
+        },
+        {
+          "nodeId": "07c0d7fc-c7ec-4d40-8a65-113955667302",
+          "source": {
+            "platform": "a360",
+            "file": "04-error-handling/bot.json",
+            "nodePath": [
+              0,
+              1,
+              0,
+              1
+            ],
+            "nodeId": "07c0d7fc-c7ec-4d40-8a65-113955667302",
+            "label": "CsvTxt/ReadFromCsvTxt"
+          },
+          "op": "vendor:a360/CsvTxt/ReadFromCsvTxt",
+          "bucket": "manual",
+          "reason": "planned",
+          "mappingId": "a360.csvtxt.readfromcsvtxt"
+        },
+        {
+          "nodeId": "4ea84825-e3bf-4fa8-8da1-f988f0722a5f",
+          "source": {
+            "platform": "a360",
+            "file": "04-error-handling/bot.json",
+            "nodePath": [
+              0,
+              1,
+              0,
+              2,
+              0
+            ],
+            "nodeId": "4ea84825-e3bf-4fa8-8da1-f988f0722a5f",
+            "label": "LogToFile/logToFile"
+          },
+          "op": "vendor:a360/LogToFile/logToFile",
+          "bucket": "manual",
+          "reason": "planned",
+          "mappingId": "a360.logtofile.logtofile"
+        },
+        {
+          "nodeId": "4169a913-eff1-4a5d-a77b-01247fd56a69",
+          "source": {
+            "platform": "a360",
+            "file": "04-error-handling/bot.json",
+            "nodePath": [
+              0,
+              1,
+              2,
+              0
+            ],
+            "nodeId": "4169a913-eff1-4a5d-a77b-01247fd56a69",
+            "label": "LogToFile/logToFile"
+          },
+          "op": "vendor:a360/LogToFile/logToFile",
+          "bucket": "manual",
+          "reason": "planned",
+          "mappingId": "a360.logtofile.logtofile"
+        },
+        {
+          "nodeId": "9b66b71e-f3c9-4a0e-ab81-74c75fbc4f1c",
+          "source": {
+            "platform": "a360",
+            "file": "04-error-handling/bot.json",
+            "nodePath": [
+              0,
+              1,
+              3,
+              0
+            ],
+            "nodeId": "9b66b71e-f3c9-4a0e-ab81-74c75fbc4f1c",
+            "label": "LogToFile/logToFile"
+          },
+          "op": "vendor:a360/LogToFile/logToFile",
+          "bucket": "manual",
+          "reason": "planned",
+          "mappingId": "a360.logtofile.logtofile"
+        },
+        {
+          "nodeId": "0fe170b7-22f6-4cff-b5bd-5dcc98ff4448",
+          "source": {
+            "platform": "a360",
+            "file": "04-error-handling/bot.json",
+            "nodePath": [
+              0,
+              1,
+              3,
+              1
+            ],
+            "nodeId": "0fe170b7-22f6-4cff-b5bd-5dcc98ff4448",
+            "label": "String/assign"
+          },
+          "op": "vendor:a360/String/assign",
+          "bucket": "manual",
+          "reason": "planned",
+          "mappingId": "a360.string.assign"
+        },
+        {
+          "nodeId": "3e9381a2-4ea4-40a0-a998-c43849543335",
+          "source": {
+            "platform": "a360",
+            "file": "04-error-handling/bot.json",
+            "nodePath": [
+              1,
+              1
+            ],
+            "nodeId": "3e9381a2-4ea4-40a0-a998-c43849543335",
+            "label": "MessageBox/messageBox"
+          },
+          "op": "vendor:a360/MessageBox/messageBox",
+          "bucket": "manual",
+          "reason": "planned",
+          "mappingId": "a360.messagebox.messagebox"
+        }
+      ],
+      "quality": {
+        "score": 97,
+        "findings": [
+          {
+            "code": "QUAL-DISABLED-CODE",
+            "severity": "info",
+            "category": "quality",
+            "messageId": "quality.disabled-code",
+            "params": {
+              "bot": "04-error-handling",
+              "kind": "action"
+            },
+            "source": {
+              "platform": "a360",
+              "file": "04-error-handling/bot.json",
+              "nodePath": [
+                1,
+                1
+              ],
+              "nodeId": "3e9381a2-4ea4-40a0-a998-c43849543335",
+              "label": "MessageBox/messageBox"
+            },
+            "nodeId": "3e9381a2-4ea4-40a0-a998-c43849543335"
+          },
+          {
+            "code": "QUAL-UNUSED-VARIABLE",
+            "severity": "info",
+            "category": "quality",
+            "messageId": "quality.unused-variable",
+            "params": {
+              "bot": "04-error-handling",
+              "variable": "SampleNumber"
+            },
+            "source": {
+              "platform": "a360",
+              "file": "04-error-handling/bot.json",
+              "nodePath": []
+            }
+          },
+          {
+            "code": "QUAL-UNUSED-VARIABLE",
+            "severity": "info",
+            "category": "quality",
+            "messageId": "quality.unused-variable",
+            "params": {
+              "bot": "04-error-handling",
+              "variable": "SampleString"
+            },
+            "source": {
+              "platform": "a360",
+              "file": "04-error-handling/bot.json",
+              "nodePath": []
+            }
+          }
+        ]
+      },
+      "packages": [
+        {
+          "name": "Boolean",
+          "version": "2.13.3"
+        },
+        {
+          "name": "Comment",
+          "version": "2.17.0"
+        },
+        {
+          "name": "CsvTxt",
+          "version": "2.15.1"
+        },
+        {
+          "name": "ErrorHandler",
+          "version": "2.13.0-20241115-120032"
+        },
+        {
+          "name": "If",
+          "version": "3.8.0-20241115-115929"
+        },
+        {
+          "name": "LogToFile",
+          "version": "3.11.1"
+        },
+        {
+          "name": "MessageBox",
+          "version": "3.8.1"
+        },
+        {
+          "name": "Number",
+          "version": "3.11.5"
+        },
+        {
+          "name": "Step",
+          "version": "2.7.0"
+        },
+        {
+          "name": "String",
+          "version": "5.12.6"
+        }
+      ]
+    }
+  ],
+  "diagnostics": []
+}

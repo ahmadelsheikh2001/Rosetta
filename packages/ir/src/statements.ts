@@ -46,11 +46,18 @@ export interface IfStmt extends StatementBase {
   readonly else?: Block;
 }
 
-export type CollectionKind = 'list' | 'dict' | 'tableRow' | 'file' | 'folder' | 'other';
+/** `dictKeys` iterates a dictionary's keys; `dict` its entries. */
+export type CollectionKind =
+  'list' | 'dict' | 'dictKeys' | 'tableRow' | 'file' | 'folder' | 'other';
 
 export type LoopSpec =
   | { readonly kind: 'times'; readonly count: Expr; readonly indexVar?: VarRefExpr }
-  | { readonly kind: 'while'; readonly condition: Expr }
+  | {
+      readonly kind: 'while';
+      readonly condition: Expr;
+      /** Condition checked after each pass (do-while), so the body runs at least once. */
+      readonly checkAtEnd?: boolean;
+    }
   | {
       readonly kind: 'forEach';
       readonly collection: CollectionKind;
@@ -63,14 +70,20 @@ export interface LoopStmt extends StatementBase {
   readonly kind: 'loop';
   readonly loop: LoopSpec;
   readonly body: Block;
+  /** Source label; `break` / `continue` may target it. */
+  readonly label?: string;
 }
 
 export interface BreakStmt extends StatementBase {
   readonly kind: 'break';
+  /** Label of the loop to leave; the innermost loop when absent. */
+  readonly target?: string;
 }
 
 export interface ContinueStmt extends StatementBase {
   readonly kind: 'continue';
+  /** Label of the loop to continue; the innermost loop when absent. */
+  readonly target?: string;
 }
 
 /** Business vs system classification. Defaults to `system` unless overridden (ADR-012). */
@@ -81,6 +94,8 @@ export interface CatchClause {
   readonly errorVar?: VarRefExpr;
   /** Source-specific exception type name, kept verbatim. */
   readonly errorType?: string;
+  /** Variable receiving the line number of the failing statement, if the source declares one. */
+  readonly lineVar?: VarRefExpr;
   readonly body: Block;
 }
 
@@ -132,6 +147,8 @@ export interface UnknownStmt extends StatementBase {
   readonly kind: 'unknown';
   readonly raw: JsonValue;
   readonly reason: string;
+  /** Nested statements lifted on a best-effort basis, so they are still assessed. */
+  readonly body?: Block;
 }
 
 export type Statement =

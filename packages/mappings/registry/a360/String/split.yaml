@@ -1,0 +1,9 @@
+id: a360.string.split
+source:
+  platform: a360
+  package: String
+  command: split
+status: planned
+evidence:
+  - corpus/a360/03-strings-expressions/bot.json
+notes: Seen in the corpus. The IBM RPA target is chosen after the WAL probe (ADR-017).

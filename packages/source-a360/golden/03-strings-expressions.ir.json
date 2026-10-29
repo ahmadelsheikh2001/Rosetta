@@ -1,0 +1,1062 @@
+{
+  "id": "03-strings-expressions/bot.json",
+  "name": "03-strings-expressions",
+  "source": {
+    "platform": "a360",
+    "file": "03-strings-expressions/bot.json",
+    "nodePath": []
+  },
+  "variables": [
+    {
+      "name": "SampleNumber",
+      "type": {
+        "kind": "number"
+      },
+      "direction": "local",
+      "sensitive": false
+    },
+    {
+      "name": "SampleString",
+      "type": {
+        "kind": "string"
+      },
+      "direction": "local",
+      "sensitive": false
+    },
+    {
+      "name": "vText",
+      "type": {
+        "kind": "string"
+      },
+      "direction": "input",
+      "sensitive": false,
+      "defaultValue": {
+        "kind": "literal",
+        "value": "  Hello Rosetta Test  "
+      }
+    },
+    {
+      "name": "vOut",
+      "type": {
+        "kind": "string"
+      },
+      "direction": "output",
+      "sensitive": false,
+      "defaultValue": {
+        "kind": "literal",
+        "value": "none"
+      }
+    },
+    {
+      "name": "vNumStr",
+      "type": {
+        "kind": "string"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "defaultValue": {
+        "kind": "literal",
+        "value": "42"
+      }
+    },
+    {
+      "name": "vDateStr",
+      "type": {
+        "kind": "string"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "defaultValue": {
+        "kind": "literal",
+        "value": ""
+      }
+    },
+    {
+      "name": "vNum",
+      "type": {
+        "kind": "number"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "defaultValue": {
+        "kind": "literal",
+        "value": 0
+      }
+    },
+    {
+      "name": "vIndex",
+      "type": {
+        "kind": "number"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "defaultValue": {
+        "kind": "literal",
+        "value": 0
+      }
+    },
+    {
+      "name": "vLen",
+      "type": {
+        "kind": "number"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "defaultValue": {
+        "kind": "literal",
+        "value": 0
+      }
+    },
+    {
+      "name": "vDate",
+      "type": {
+        "kind": "datetime"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "defaultValue": {
+        "kind": "literal",
+        "value": ""
+      }
+    },
+    {
+      "name": "vParts",
+      "type": {
+        "kind": "list",
+        "of": {
+          "kind": "string"
+        }
+      },
+      "direction": "local",
+      "sensitive": false,
+      "defaultValue": {
+        "kind": "call",
+        "fn": "list.of",
+        "args": []
+      }
+    },
+    {
+      "name": "vList",
+      "type": {
+        "kind": "list",
+        "of": {
+          "kind": "string"
+        }
+      },
+      "direction": "local",
+      "sensitive": false,
+      "defaultValue": {
+        "kind": "call",
+        "fn": "list.of",
+        "args": [
+          {
+            "kind": "literal",
+            "value": "Alpha"
+          },
+          {
+            "kind": "literal",
+            "value": "Beta"
+          }
+        ]
+      }
+    },
+    {
+      "name": "vDict",
+      "type": {
+        "kind": "dict",
+        "of": {
+          "kind": "string"
+        }
+      },
+      "direction": "local",
+      "sensitive": false,
+      "defaultValue": {
+        "kind": "call",
+        "fn": "dict.of",
+        "args": [
+          {
+            "kind": "literal",
+            "value": "name"
+          },
+          {
+            "kind": "literal",
+            "value": "Test User"
+          }
+        ]
+      }
+    }
+  ],
+  "packages": [
+    {
+      "name": "Comment",
+      "version": "2.17.0"
+    },
+    {
+      "name": "Datetime",
+      "version": "2.17.3"
+    },
+    {
+      "name": "MessageBox",
+      "version": "3.8.1"
+    },
+    {
+      "name": "Number",
+      "version": "3.11.5"
+    },
+    {
+      "name": "Step",
+      "version": "2.7.0"
+    },
+    {
+      "name": "String",
+      "version": "5.12.6"
+    },
+    {
+      "name": "System",
+      "version": "3.18.2"
+    }
+  ],
+  "body": [
+    {
+      "id": "fe514bbf-693b-4074-b755-a9ce776f4917",
+      "source": {
+        "platform": "a360",
+        "file": "03-strings-expressions/bot.json",
+        "nodePath": [
+          0
+        ],
+        "nodeId": "fe514bbf-693b-4074-b755-a9ce776f4917",
+        "label": "String operations"
+      },
+      "kind": "group",
+      "label": "String operations",
+      "body": [
+        {
+          "id": "8e739a92-da84-48d5-9475-05bf5c725168",
+          "source": {
+            "platform": "a360",
+            "file": "03-strings-expressions/bot.json",
+            "nodePath": [
+              0,
+              0
+            ],
+            "nodeId": "8e739a92-da84-48d5-9475-05bf5c725168",
+            "label": "String/assign"
+          },
+          "kind": "action",
+          "op": "vendor:a360/String/assign",
+          "args": {
+            "sourceString": {
+              "kind": "template",
+              "parts": [
+                {
+                  "kind": "literal",
+                  "value": "Prefix-"
+                },
+                {
+                  "kind": "var",
+                  "name": "vText",
+                  "path": []
+                },
+                {
+                  "kind": "literal",
+                  "value": "-"
+                },
+                {
+                  "kind": "var",
+                  "name": "vNumStr",
+                  "path": []
+                },
+                {
+                  "kind": "literal",
+                  "value": "-Suffix"
+                }
+              ]
+            }
+          },
+          "outputs": {
+            "result": {
+              "kind": "var",
+              "name": "vOut",
+              "path": []
+            }
+          }
+        },
+        {
+          "id": "da44211d-329c-486f-a3b9-f367ed43af3d",
+          "source": {
+            "platform": "a360",
+            "file": "03-strings-expressions/bot.json",
+            "nodePath": [
+              0,
+              1
+            ],
+            "nodeId": "da44211d-329c-486f-a3b9-f367ed43af3d",
+            "label": "String/trim"
+          },
+          "kind": "action",
+          "op": "vendor:a360/String/trim",
+          "args": {
+            "sourceString": {
+              "kind": "var",
+              "name": "vText",
+              "path": []
+            },
+            "trimAtBeginning": {
+              "kind": "literal",
+              "value": true
+            },
+            "trimAtEnd": {
+              "kind": "literal",
+              "value": true
+            }
+          },
+          "outputs": {
+            "result": {
+              "kind": "var",
+              "name": "vText",
+              "path": []
+            }
+          }
+        },
+        {
+          "id": "3da82ed5-d302-4ee6-bff2-fb42e23197bf",
+          "source": {
+            "platform": "a360",
+            "file": "03-strings-expressions/bot.json",
+            "nodePath": [
+              0,
+              2
+            ],
+            "nodeId": "3da82ed5-d302-4ee6-bff2-fb42e23197bf",
+            "label": "String/subString"
+          },
+          "kind": "action",
+          "op": "vendor:a360/String/subString",
+          "args": {
+            "sourceString": {
+              "kind": "var",
+              "name": "vText",
+              "path": []
+            },
+            "startIndex": {
+              "kind": "literal",
+              "value": 1
+            },
+            "subStringLength": {
+              "kind": "literal",
+              "value": 5
+            },
+            "returnBlankIfRangeNotFound": {
+              "kind": "literal",
+              "value": false
+            }
+          },
+          "outputs": {
+            "result": {
+              "kind": "var",
+              "name": "vOut",
+              "path": []
+            }
+          }
+        },
+        {
+          "id": "cb682288-032e-4965-8c33-3db4610598ff",
+          "source": {
+            "platform": "a360",
+            "file": "03-strings-expressions/bot.json",
+            "nodePath": [
+              0,
+              3
+            ],
+            "nodeId": "cb682288-032e-4965-8c33-3db4610598ff",
+            "label": "String/replace"
+          },
+          "kind": "action",
+          "op": "vendor:a360/String/replace",
+          "args": {
+            "sourceString": {
+              "kind": "var",
+              "name": "vText",
+              "path": []
+            },
+            "find": {
+              "kind": "literal",
+              "value": "Rosetta"
+            },
+            "isCaseSensitive": {
+              "kind": "literal",
+              "value": "false"
+            },
+            "isRegularExpression": {
+              "kind": "literal",
+              "value": "false"
+            },
+            "startIndex": {
+              "kind": "literal",
+              "value": 1
+            },
+            "count": {
+              "kind": "literal",
+              "value": -1
+            },
+            "replaceWith": {
+              "kind": "literal",
+              "value": "IBM"
+            }
+          },
+          "outputs": {
+            "result": {
+              "kind": "var",
+              "name": "vOut",
+              "path": []
+            }
+          }
+        },
+        {
+          "id": "1cb5a0ae-63bb-428c-985c-f1c5d3353705",
+          "source": {
+            "platform": "a360",
+            "file": "03-strings-expressions/bot.json",
+            "nodePath": [
+              0,
+              4
+            ],
+            "nodeId": "1cb5a0ae-63bb-428c-985c-f1c5d3353705",
+            "label": "String/split"
+          },
+          "kind": "action",
+          "op": "vendor:a360/String/split",
+          "args": {
+            "sourceString": {
+              "kind": "var",
+              "name": "vText",
+              "path": []
+            },
+            "delimiter": {
+              "kind": "literal",
+              "value": " "
+            },
+            "isCaseSensitive": {
+              "kind": "literal",
+              "value": "false"
+            },
+            "substrings": {
+              "kind": "literal",
+              "value": "ALL"
+            }
+          },
+          "outputs": {
+            "result": {
+              "kind": "var",
+              "name": "vParts",
+              "path": []
+            }
+          }
+        },
+        {
+          "id": "e6f3100c-4d37-4da7-a0f3-51e2e50fea95",
+          "source": {
+            "platform": "a360",
+            "file": "03-strings-expressions/bot.json",
+            "nodePath": [
+              0,
+              5
+            ],
+            "nodeId": "e6f3100c-4d37-4da7-a0f3-51e2e50fea95",
+            "label": "String/uppercase"
+          },
+          "kind": "action",
+          "op": "vendor:a360/String/uppercase",
+          "args": {
+            "sourceString": {
+              "kind": "var",
+              "name": "vText",
+              "path": []
+            }
+          },
+          "outputs": {
+            "result": {
+              "kind": "var",
+              "name": "vOut",
+              "path": []
+            }
+          }
+        },
+        {
+          "id": "90f5e137-0880-4684-bba7-4e1017aaf5f1",
+          "source": {
+            "platform": "a360",
+            "file": "03-strings-expressions/bot.json",
+            "nodePath": [
+              0,
+              6
+            ],
+            "nodeId": "90f5e137-0880-4684-bba7-4e1017aaf5f1",
+            "label": "String/lowercase"
+          },
+          "kind": "action",
+          "op": "vendor:a360/String/lowercase",
+          "args": {
+            "sourceString": {
+              "kind": "var",
+              "name": "vText",
+              "path": []
+            }
+          },
+          "outputs": {
+            "result": {
+              "kind": "var",
+              "name": "vOut",
+              "path": []
+            }
+          }
+        },
+        {
+          "id": "96a3ce59-cdcd-49a8-9bc4-6060dd02eb91",
+          "source": {
+            "platform": "a360",
+            "file": "03-strings-expressions/bot.json",
+            "nodePath": [
+              0,
+              7
+            ],
+            "nodeId": "96a3ce59-cdcd-49a8-9bc4-6060dd02eb91",
+            "label": "String/find"
+          },
+          "kind": "action",
+          "op": "vendor:a360/String/find",
+          "args": {
+            "sourceString": {
+              "kind": "var",
+              "name": "vText",
+              "path": []
+            },
+            "find": {
+              "kind": "literal",
+              "value": "Rosetta"
+            },
+            "isCaseSensitive": {
+              "kind": "literal",
+              "value": "false"
+            },
+            "isRegularExpression": {
+              "kind": "literal",
+              "value": "false"
+            },
+            "startIndex": {
+              "kind": "literal",
+              "value": 1
+            }
+          },
+          "outputs": {
+            "result": {
+              "kind": "var",
+              "name": "vIndex",
+              "path": []
+            }
+          }
+        },
+        {
+          "id": "520eae2f-c8b5-4636-9ae5-06ef8a322311",
+          "source": {
+            "platform": "a360",
+            "file": "03-strings-expressions/bot.json",
+            "nodePath": [
+              0,
+              8
+            ],
+            "nodeId": "520eae2f-c8b5-4636-9ae5-06ef8a322311",
+            "label": "String/length"
+          },
+          "kind": "action",
+          "op": "vendor:a360/String/length",
+          "args": {
+            "sourceString": {
+              "kind": "var",
+              "name": "vText",
+              "path": []
+            }
+          },
+          "outputs": {
+            "result": {
+              "kind": "var",
+              "name": "vLen",
+              "path": []
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "12b62275-b557-4868-a179-d7161f9dad9a",
+      "source": {
+        "platform": "a360",
+        "file": "03-strings-expressions/bot.json",
+        "nodePath": [
+          1
+        ],
+        "nodeId": "12b62275-b557-4868-a179-d7161f9dad9a",
+        "label": "Conversions and dates"
+      },
+      "kind": "group",
+      "label": "Conversions and dates",
+      "body": [
+        {
+          "id": "b9d98e3a-8305-4aa4-9a6b-a832c87d4392",
+          "source": {
+            "platform": "a360",
+            "file": "03-strings-expressions/bot.json",
+            "nodePath": [
+              1,
+              0
+            ],
+            "nodeId": "b9d98e3a-8305-4aa4-9a6b-a832c87d4392",
+            "label": "Comment/Comment"
+          },
+          "kind": "comment",
+          "text": "RR_03: number/string conversions and datetime add + custom format"
+        },
+        {
+          "id": "18656c55-90ce-4f1e-9e65-05a0a8a90ffc",
+          "source": {
+            "platform": "a360",
+            "file": "03-strings-expressions/bot.json",
+            "nodePath": [
+              1,
+              1
+            ],
+            "nodeId": "18656c55-90ce-4f1e-9e65-05a0a8a90ffc",
+            "label": "String/toNumber"
+          },
+          "kind": "action",
+          "op": "vendor:a360/String/toNumber",
+          "args": {
+            "sourceString": {
+              "kind": "var",
+              "name": "vNumStr",
+              "path": []
+            }
+          },
+          "outputs": {
+            "result": {
+              "kind": "var",
+              "name": "vNum",
+              "path": []
+            }
+          }
+        },
+        {
+          "id": "0dca96a3-ddc0-4f39-99d5-503d636d1232",
+          "source": {
+            "platform": "a360",
+            "file": "03-strings-expressions/bot.json",
+            "nodePath": [
+              1,
+              2
+            ],
+            "nodeId": "0dca96a3-ddc0-4f39-99d5-503d636d1232",
+            "label": "Number/toString"
+          },
+          "kind": "action",
+          "op": "vendor:a360/Number/toString",
+          "args": {
+            "input": {
+              "kind": "var",
+              "name": "vNum",
+              "path": []
+            },
+            "numFormatDigits": {
+              "kind": "literal",
+              "value": 0
+            }
+          },
+          "outputs": {
+            "result": {
+              "kind": "var",
+              "name": "vOut",
+              "path": []
+            }
+          }
+        },
+        {
+          "id": "d77f8799-aa01-49e6-87fc-abca6525c366",
+          "source": {
+            "platform": "a360",
+            "file": "03-strings-expressions/bot.json",
+            "nodePath": [
+              1,
+              3
+            ],
+            "nodeId": "d77f8799-aa01-49e6-87fc-abca6525c366",
+            "label": "Datetime/assign"
+          },
+          "kind": "action",
+          "op": "vendor:a360/Datetime/assign",
+          "args": {
+            "option": {
+              "kind": "literal",
+              "value": "variable"
+            },
+            "dateTime": {
+              "kind": "system",
+              "name": "a360:Date"
+            }
+          },
+          "outputs": {
+            "result": {
+              "kind": "var",
+              "name": "vDate",
+              "path": []
+            }
+          }
+        },
+        {
+          "id": "405a5907-5268-4130-97e4-7d7799da423d",
+          "source": {
+            "platform": "a360",
+            "file": "03-strings-expressions/bot.json",
+            "nodePath": [
+              1,
+              4
+            ],
+            "nodeId": "405a5907-5268-4130-97e4-7d7799da423d",
+            "label": "Datetime/add"
+          },
+          "kind": "action",
+          "op": "vendor:a360/Datetime/add",
+          "args": {
+            "source": {
+              "kind": "var",
+              "name": "vDate",
+              "path": []
+            },
+            "val": {
+              "kind": "literal",
+              "value": 7
+            },
+            "unit": {
+              "kind": "literal",
+              "value": "DAYS"
+            }
+          },
+          "outputs": {
+            "result": {
+              "kind": "var",
+              "name": "vDate",
+              "path": []
+            }
+          }
+        },
+        {
+          "id": "afba232a-1697-4dca-879d-8d3876435e1e",
+          "source": {
+            "platform": "a360",
+            "file": "03-strings-expressions/bot.json",
+            "nodePath": [
+              1,
+              5
+            ],
+            "nodeId": "afba232a-1697-4dca-879d-8d3876435e1e",
+            "label": "Datetime/toString"
+          },
+          "kind": "action",
+          "op": "vendor:a360/Datetime/toString",
+          "args": {
+            "source": {
+              "kind": "var",
+              "name": "vDate",
+              "path": []
+            },
+            "selectPattern": {
+              "kind": "literal",
+              "value": "CUSTOM"
+            },
+            "patternInput": {
+              "kind": "literal",
+              "value": "dd/MM/yyyy"
+            }
+          },
+          "outputs": {
+            "result": {
+              "kind": "var",
+              "name": "vDateStr",
+              "path": []
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "af7ca833-3d5d-4707-9c4b-3fbe9c156d12",
+      "source": {
+        "platform": "a360",
+        "file": "03-strings-expressions/bot.json",
+        "nodePath": [
+          2
+        ],
+        "nodeId": "af7ca833-3d5d-4707-9c4b-3fbe9c156d12",
+        "label": "System variables and expressions"
+      },
+      "kind": "group",
+      "label": "System variables and expressions",
+      "body": [
+        {
+          "id": "133a44bc-a7e5-4951-8a1d-873a7045387d",
+          "source": {
+            "platform": "a360",
+            "file": "03-strings-expressions/bot.json",
+            "nodePath": [
+              2,
+              0
+            ],
+            "nodeId": "133a44bc-a7e5-4951-8a1d-873a7045387d",
+            "label": "Comment/Comment"
+          },
+          "kind": "comment",
+          "text": "RR_03: system variables plus list index and dictionary key expressions"
+        },
+        {
+          "id": "a8e71fb8-ad88-4d65-809f-a5636102b5b3",
+          "source": {
+            "platform": "a360",
+            "file": "03-strings-expressions/bot.json",
+            "nodePath": [
+              2,
+              1
+            ],
+            "nodeId": "a8e71fb8-ad88-4d65-809f-a5636102b5b3",
+            "label": "String/assign"
+          },
+          "kind": "action",
+          "op": "vendor:a360/String/assign",
+          "args": {
+            "sourceString": {
+              "kind": "template",
+              "parts": [
+                {
+                  "kind": "literal",
+                  "value": "Machine="
+                },
+                {
+                  "kind": "system",
+                  "name": "a360:Machine"
+                },
+                {
+                  "kind": "literal",
+                  "value": " | Bot="
+                },
+                {
+                  "kind": "system",
+                  "name": "a360:AATaskName"
+                },
+                {
+                  "kind": "literal",
+                  "value": " | CR="
+                },
+                {
+                  "kind": "system",
+                  "name": "a360:AAControlRoom"
+                }
+              ]
+            }
+          },
+          "outputs": {
+            "result": {
+              "kind": "var",
+              "name": "vOut",
+              "path": []
+            }
+          }
+        },
+        {
+          "id": "cd5240b5-8276-4c7d-ab7d-6854e367030b",
+          "source": {
+            "platform": "a360",
+            "file": "03-strings-expressions/bot.json",
+            "nodePath": [
+              2,
+              2
+            ],
+            "nodeId": "cd5240b5-8276-4c7d-ab7d-6854e367030b",
+            "label": "MessageBox/messageBox"
+          },
+          "kind": "action",
+          "op": "vendor:a360/MessageBox/messageBox",
+          "args": {
+            "title": {
+              "kind": "literal",
+              "value": "RR_03 Expressions"
+            },
+            "content": {
+              "kind": "template",
+              "parts": [
+                {
+                  "kind": "literal",
+                  "value": "part0="
+                },
+                {
+                  "kind": "var",
+                  "name": "vParts",
+                  "path": [
+                    {
+                      "kind": "index",
+                      "index": {
+                        "kind": "literal",
+                        "value": 0
+                      }
+                    }
+                  ]
+                },
+                {
+                  "kind": "literal",
+                  "value": " | list1="
+                },
+                {
+                  "kind": "var",
+                  "name": "vList",
+                  "path": [
+                    {
+                      "kind": "index",
+                      "index": {
+                        "kind": "literal",
+                        "value": 1
+                      }
+                    }
+                  ]
+                },
+                {
+                  "kind": "literal",
+                  "value": " | name="
+                },
+                {
+                  "kind": "var",
+                  "name": "vDict",
+                  "path": [
+                    {
+                      "kind": "key",
+                      "key": {
+                        "kind": "literal",
+                        "value": "name"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "kind": "literal",
+                  "value": " | date="
+                },
+                {
+                  "kind": "var",
+                  "name": "vDateStr",
+                  "path": []
+                },
+                {
+                  "kind": "literal",
+                  "value": " | len="
+                },
+                {
+                  "kind": "call",
+                  "fn": "convert.toString",
+                  "args": [
+                    {
+                      "kind": "var",
+                      "name": "vLen",
+                      "path": []
+                    }
+                  ]
+                },
+                {
+                  "kind": "literal",
+                  "value": " | idx="
+                },
+                {
+                  "kind": "call",
+                  "fn": "convert.toString",
+                  "args": [
+                    {
+                      "kind": "var",
+                      "name": "vIndex",
+                      "path": []
+                    }
+                  ]
+                },
+                {
+                  "kind": "literal",
+                  "value": " | out="
+                },
+                {
+                  "kind": "var",
+                  "name": "vOut",
+                  "path": []
+                }
+              ]
+            },
+            "scrollLines": {
+              "kind": "literal",
+              "value": 30
+            },
+            "closeMsgBox": {
+              "kind": "literal",
+              "value": false
+            }
+          },
+          "outputs": {}
+        },
+        {
+          "id": "bbb30c08-a8d7-42ff-8c96-36665ec72700",
+          "source": {
+            "platform": "a360",
+            "file": "03-strings-expressions/bot.json",
+            "nodePath": [
+              2,
+              3
+            ],
+            "nodeId": "bbb30c08-a8d7-42ff-8c96-36665ec72700",
+            "label": "MessageBox/messageBox"
+          },
+          "disabled": true,
+          "kind": "action",
+          "op": "vendor:a360/MessageBox/messageBox",
+          "args": {
+            "title": {
+              "kind": "literal",
+              "value": "Automation Anywhere Enterprise Client"
+            },
+            "content": {
+              "kind": "template",
+              "parts": [
+                {
+                  "kind": "literal",
+                  "value": "Disabled on purpose: "
+                },
+                {
+                  "kind": "var",
+                  "name": "vList",
+                  "path": [
+                    {
+                      "kind": "index",
+                      "index": {
+                        "kind": "literal",
+                        "value": 0
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "scrollLines": {
+              "kind": "literal",
+              "value": 30
+            },
+            "closeMsgBox": {
+              "kind": "literal",
+              "value": false
+            }
+          },
+          "outputs": {}
+        }
+      ]
+    }
+  ]
+}

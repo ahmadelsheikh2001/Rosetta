@@ -1,0 +1,9 @@
+id: a360.boolean.assign
+source:
+  platform: a360
+  package: Boolean
+  command: assign
+status: planned
+evidence:
+  - corpus/a360/01-variables/bot.json
+notes: Seen in the corpus. The IBM RPA target is chosen after the WAL probe (ADR-017).

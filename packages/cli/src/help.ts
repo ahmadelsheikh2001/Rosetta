@@ -31,9 +31,8 @@ Options:
 ${profileOptions}
   -h, --help                Show this help
 
-Note: the A360 export parser is not available yet; it is built once verified
-sample exports exist. Until then this command validates its inputs and
-profile, then exits with code 5.
+Input: raw A360 bot files (*.json, e.g. bot.json saved from the Control Room).
+A file named bot.json takes its folder's name. Export zips are not supported yet.
 `;
 
 export const previewHelp = `rosetta preview-report [options]

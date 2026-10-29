@@ -1,0 +1,9 @@
+id: a360.logtofile.logvariablestofile
+source:
+  platform: a360
+  package: LogToFile
+  command: logVariablesToFile
+status: planned
+evidence:
+  - corpus/a360/01-variables/bot.json
+notes: Seen in the corpus. The IBM RPA target is chosen after the WAL probe (ADR-017).

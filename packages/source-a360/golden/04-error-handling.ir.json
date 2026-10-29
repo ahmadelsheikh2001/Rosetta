@@ -1,0 +1,707 @@
+{
+  "id": "04-error-handling/bot.json",
+  "name": "04-error-handling",
+  "source": {
+    "platform": "a360",
+    "file": "04-error-handling/bot.json",
+    "nodePath": []
+  },
+  "variables": [
+    {
+      "name": "SampleNumber",
+      "type": {
+        "kind": "number"
+      },
+      "direction": "local",
+      "sensitive": false
+    },
+    {
+      "name": "SampleString",
+      "type": {
+        "kind": "string"
+      },
+      "direction": "local",
+      "sensitive": false
+    },
+    {
+      "name": "vFilePath",
+      "type": {
+        "kind": "string"
+      },
+      "direction": "input",
+      "sensitive": false,
+      "defaultValue": {
+        "kind": "literal",
+        "value": "C:\\RosettaTest\\missing.txt"
+      }
+    },
+    {
+      "name": "vStatus",
+      "type": {
+        "kind": "string"
+      },
+      "direction": "output",
+      "sensitive": false,
+      "defaultValue": {
+        "kind": "literal",
+        "value": "not started"
+      }
+    },
+    {
+      "name": "vErrMsg",
+      "type": {
+        "kind": "string"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "defaultValue": {
+        "kind": "literal",
+        "value": ""
+      }
+    },
+    {
+      "name": "vOuterErr",
+      "type": {
+        "kind": "string"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "defaultValue": {
+        "kind": "literal",
+        "value": ""
+      }
+    },
+    {
+      "name": "vErrLine",
+      "type": {
+        "kind": "number"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "defaultValue": {
+        "kind": "literal",
+        "value": 0
+      }
+    },
+    {
+      "name": "vDoThrow",
+      "type": {
+        "kind": "boolean"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "defaultValue": {
+        "kind": "literal",
+        "value": true
+      }
+    },
+    {
+      "name": "vFileTable",
+      "type": {
+        "kind": "table"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "defaultValue": {
+        "kind": "call",
+        "fn": "table.of",
+        "args": [
+          {
+            "kind": "literal",
+            "value": "{\"schema\":[{\"type\":\"STRING\"}],\"rows\":[{\"values\":[{\"type\":\"STRING\",\"string\":\"\"}]}]}"
+          }
+        ]
+      }
+    }
+  ],
+  "packages": [
+    {
+      "name": "Boolean",
+      "version": "2.13.3"
+    },
+    {
+      "name": "Comment",
+      "version": "2.17.0"
+    },
+    {
+      "name": "CsvTxt",
+      "version": "2.15.1"
+    },
+    {
+      "name": "ErrorHandler",
+      "version": "2.13.0-20241115-120032"
+    },
+    {
+      "name": "If",
+      "version": "3.8.0-20241115-115929"
+    },
+    {
+      "name": "LogToFile",
+      "version": "3.11.1"
+    },
+    {
+      "name": "MessageBox",
+      "version": "3.8.1"
+    },
+    {
+      "name": "Number",
+      "version": "3.11.5"
+    },
+    {
+      "name": "Step",
+      "version": "2.7.0"
+    },
+    {
+      "name": "String",
+      "version": "5.12.6"
+    }
+  ],
+  "body": [
+    {
+      "id": "4acb7b6e-298e-4544-8357-bbc74c97dab3",
+      "source": {
+        "platform": "a360",
+        "file": "04-error-handling/bot.json",
+        "nodePath": [
+          0
+        ],
+        "nodeId": "4acb7b6e-298e-4544-8357-bbc74c97dab3",
+        "label": "Try Catch Finally"
+      },
+      "kind": "group",
+      "label": "Try Catch Finally",
+      "body": [
+        {
+          "id": "58de5388-98ea-4498-871d-9a4db298d7a0",
+          "source": {
+            "platform": "a360",
+            "file": "04-error-handling/bot.json",
+            "nodePath": [
+              0,
+              0
+            ],
+            "nodeId": "58de5388-98ea-4498-871d-9a4db298d7a0",
+            "label": "Comment/Comment"
+          },
+          "kind": "comment",
+          "text": "RR_04: outer Try with nested inner Try, Catch, Throw and Finally"
+        },
+        {
+          "id": "da9b4836-5bb1-4130-b7ea-3b7b632b5482",
+          "source": {
+            "platform": "a360",
+            "file": "04-error-handling/bot.json",
+            "nodePath": [
+              0,
+              1
+            ],
+            "nodeId": "da9b4836-5bb1-4130-b7ea-3b7b632b5482",
+            "label": "ErrorHandler/try"
+          },
+          "kind": "try",
+          "body": [
+            {
+              "id": "bc1cfa82-de05-4a2e-8a35-26ce0322ffbc",
+              "source": {
+                "platform": "a360",
+                "file": "04-error-handling/bot.json",
+                "nodePath": [
+                  0,
+                  1,
+                  0
+                ],
+                "nodeId": "bc1cfa82-de05-4a2e-8a35-26ce0322ffbc",
+                "label": "ErrorHandler/try"
+              },
+              "kind": "try",
+              "body": [
+                {
+                  "id": "75b16e75-6c2f-4e13-afc0-16e95479b3bf",
+                  "source": {
+                    "platform": "a360",
+                    "file": "04-error-handling/bot.json",
+                    "nodePath": [
+                      0,
+                      1,
+                      0,
+                      0
+                    ],
+                    "nodeId": "75b16e75-6c2f-4e13-afc0-16e95479b3bf",
+                    "label": "CsvTxt/OpenCSVTXT"
+                  },
+                  "kind": "action",
+                  "op": "vendor:a360/CsvTxt/OpenCSVTXT",
+                  "args": {
+                    "session": {
+                      "kind": "literal",
+                      "value": "Default"
+                    },
+                    "filePath": {
+                      "kind": "template",
+                      "parts": [
+                        {
+                          "kind": "literal",
+                          "value": "file://"
+                        },
+                        {
+                          "kind": "var",
+                          "name": "vFilePath",
+                          "path": []
+                        }
+                      ]
+                    },
+                    "containsHeader": {
+                      "kind": "literal",
+                      "value": false
+                    },
+                    "delimeter": {
+                      "kind": "literal",
+                      "value": "comma"
+                    },
+                    "trimLeadingSpace": {
+                      "kind": "literal",
+                      "value": false
+                    },
+                    "trimTrailingSpace": {
+                      "kind": "literal",
+                      "value": false
+                    },
+                    "encoding": {
+                      "kind": "literal",
+                      "value": "UTF-8"
+                    }
+                  },
+                  "outputs": {}
+                },
+                {
+                  "id": "07c0d7fc-c7ec-4d40-8a65-113955667302",
+                  "source": {
+                    "platform": "a360",
+                    "file": "04-error-handling/bot.json",
+                    "nodePath": [
+                      0,
+                      1,
+                      0,
+                      1
+                    ],
+                    "nodeId": "07c0d7fc-c7ec-4d40-8a65-113955667302",
+                    "label": "CsvTxt/ReadFromCsvTxt"
+                  },
+                  "kind": "action",
+                  "op": "vendor:a360/CsvTxt/ReadFromCsvTxt",
+                  "args": {
+                    "session": {
+                      "kind": "literal",
+                      "value": "Default"
+                    }
+                  },
+                  "outputs": {
+                    "result": {
+                      "kind": "var",
+                      "name": "vFileTable",
+                      "path": []
+                    }
+                  }
+                }
+              ],
+              "catches": [
+                {
+                  "body": [
+                    {
+                      "id": "4ea84825-e3bf-4fa8-8da1-f988f0722a5f",
+                      "source": {
+                        "platform": "a360",
+                        "file": "04-error-handling/bot.json",
+                        "nodePath": [
+                          0,
+                          1,
+                          0,
+                          2,
+                          0
+                        ],
+                        "nodeId": "4ea84825-e3bf-4fa8-8da1-f988f0722a5f",
+                        "label": "LogToFile/logToFile"
+                      },
+                      "kind": "action",
+                      "op": "vendor:a360/LogToFile/logToFile",
+                      "args": {
+                        "filePath": {
+                          "kind": "literal",
+                          "value": "file:///C:/RosettaTest/log.txt"
+                        },
+                        "logContent": {
+                          "kind": "template",
+                          "parts": [
+                            {
+                              "kind": "literal",
+                              "value": "Inner catch: "
+                            },
+                            {
+                              "kind": "var",
+                              "name": "vErrMsg",
+                              "path": []
+                            },
+                            {
+                              "kind": "literal",
+                              "value": " (line "
+                            },
+                            {
+                              "kind": "call",
+                              "fn": "convert.toString",
+                              "args": [
+                                {
+                                  "kind": "var",
+                                  "name": "vErrLine",
+                                  "path": []
+                                }
+                              ]
+                            },
+                            {
+                              "kind": "literal",
+                              "value": ")"
+                            }
+                          ]
+                        },
+                        "appendTimestamp": {
+                          "kind": "literal",
+                          "value": false
+                        },
+                        "logOption": {
+                          "kind": "literal",
+                          "value": "APPEND_FILE"
+                        },
+                        "encodingValue": {
+                          "kind": "literal",
+                          "value": "ANSI"
+                        }
+                      },
+                      "outputs": {}
+                    }
+                  ],
+                  "errorVar": {
+                    "kind": "var",
+                    "name": "vErrMsg",
+                    "path": []
+                  },
+                  "lineVar": {
+                    "kind": "var",
+                    "name": "vErrLine",
+                    "path": []
+                  },
+                  "errorType": "BotException"
+                }
+              ]
+            },
+            {
+              "id": "e134d1cd-01eb-4f4d-a6b9-ce59d00053e4",
+              "source": {
+                "platform": "a360",
+                "file": "04-error-handling/bot.json",
+                "nodePath": [
+                  0,
+                  1,
+                  1
+                ],
+                "nodeId": "e134d1cd-01eb-4f4d-a6b9-ce59d00053e4",
+                "label": "If/if"
+              },
+              "kind": "if",
+              "branches": [
+                {
+                  "condition": {
+                    "kind": "binary",
+                    "op": "eq",
+                    "left": {
+                      "kind": "var",
+                      "name": "vDoThrow",
+                      "path": []
+                    },
+                    "right": {
+                      "kind": "literal",
+                      "value": true
+                    }
+                  },
+                  "body": [
+                    {
+                      "id": "9263113e-a167-49cb-a575-20a0eca270c8",
+                      "source": {
+                        "platform": "a360",
+                        "file": "04-error-handling/bot.json",
+                        "nodePath": [
+                          0,
+                          1,
+                          1,
+                          0
+                        ],
+                        "nodeId": "9263113e-a167-49cb-a575-20a0eca270c8",
+                        "label": "ErrorHandler/throw"
+                      },
+                      "kind": "throw",
+                      "message": {
+                        "kind": "literal",
+                        "value": "Custom RR_04 error thrown on purpose"
+                      },
+                      "category": "system"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "catches": [
+            {
+              "body": [
+                {
+                  "id": "4169a913-eff1-4a5d-a77b-01247fd56a69",
+                  "source": {
+                    "platform": "a360",
+                    "file": "04-error-handling/bot.json",
+                    "nodePath": [
+                      0,
+                      1,
+                      2,
+                      0
+                    ],
+                    "nodeId": "4169a913-eff1-4a5d-a77b-01247fd56a69",
+                    "label": "LogToFile/logToFile"
+                  },
+                  "kind": "action",
+                  "op": "vendor:a360/LogToFile/logToFile",
+                  "args": {
+                    "filePath": {
+                      "kind": "literal",
+                      "value": "file:///C:/RosettaTest/log.txt"
+                    },
+                    "logContent": {
+                      "kind": "template",
+                      "parts": [
+                        {
+                          "kind": "literal",
+                          "value": "Outer catch: "
+                        },
+                        {
+                          "kind": "var",
+                          "name": "vOuterErr",
+                          "path": []
+                        },
+                        {
+                          "kind": "literal",
+                          "value": " (line "
+                        },
+                        {
+                          "kind": "call",
+                          "fn": "convert.toString",
+                          "args": [
+                            {
+                              "kind": "var",
+                              "name": "vErrLine",
+                              "path": []
+                            }
+                          ]
+                        },
+                        {
+                          "kind": "literal",
+                          "value": ")"
+                        }
+                      ]
+                    },
+                    "appendTimestamp": {
+                      "kind": "literal",
+                      "value": false
+                    },
+                    "logOption": {
+                      "kind": "literal",
+                      "value": "APPEND_FILE"
+                    },
+                    "encodingValue": {
+                      "kind": "literal",
+                      "value": "ANSI"
+                    }
+                  },
+                  "outputs": {}
+                }
+              ],
+              "errorVar": {
+                "kind": "var",
+                "name": "vOuterErr",
+                "path": []
+              },
+              "lineVar": {
+                "kind": "var",
+                "name": "vErrLine",
+                "path": []
+              },
+              "errorType": "BotException"
+            }
+          ],
+          "finally": [
+            {
+              "id": "9b66b71e-f3c9-4a0e-ab81-74c75fbc4f1c",
+              "source": {
+                "platform": "a360",
+                "file": "04-error-handling/bot.json",
+                "nodePath": [
+                  0,
+                  1,
+                  3,
+                  0
+                ],
+                "nodeId": "9b66b71e-f3c9-4a0e-ab81-74c75fbc4f1c",
+                "label": "LogToFile/logToFile"
+              },
+              "kind": "action",
+              "op": "vendor:a360/LogToFile/logToFile",
+              "args": {
+                "filePath": {
+                  "kind": "literal",
+                  "value": "file:///C:/RosettaTest/log.txt"
+                },
+                "logContent": {
+                  "kind": "literal",
+                  "value": "cleanup done"
+                },
+                "appendTimestamp": {
+                  "kind": "literal",
+                  "value": false
+                },
+                "logOption": {
+                  "kind": "literal",
+                  "value": "APPEND_FILE"
+                },
+                "encodingValue": {
+                  "kind": "literal",
+                  "value": "ANSI"
+                }
+              },
+              "outputs": {}
+            },
+            {
+              "id": "0fe170b7-22f6-4cff-b5bd-5dcc98ff4448",
+              "source": {
+                "platform": "a360",
+                "file": "04-error-handling/bot.json",
+                "nodePath": [
+                  0,
+                  1,
+                  3,
+                  1
+                ],
+                "nodeId": "0fe170b7-22f6-4cff-b5bd-5dcc98ff4448",
+                "label": "String/assign"
+              },
+              "kind": "action",
+              "op": "vendor:a360/String/assign",
+              "args": {
+                "sourceString": {
+                  "kind": "literal",
+                  "value": "finished"
+                }
+              },
+              "outputs": {
+                "result": {
+                  "kind": "var",
+                  "name": "vStatus",
+                  "path": []
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "35dafc29-2e50-43bc-8b9c-b6a85d1e76d4",
+      "source": {
+        "platform": "a360",
+        "file": "04-error-handling/bot.json",
+        "nodePath": [
+          1
+        ],
+        "nodeId": "35dafc29-2e50-43bc-8b9c-b6a85d1e76d4",
+        "label": "Wrap up"
+      },
+      "kind": "group",
+      "label": "Wrap up",
+      "body": [
+        {
+          "id": "54594207-86a3-478d-a9a0-30f01c4f21d0",
+          "source": {
+            "platform": "a360",
+            "file": "04-error-handling/bot.json",
+            "nodePath": [
+              1,
+              0
+            ],
+            "nodeId": "54594207-86a3-478d-a9a0-30f01c4f21d0",
+            "label": "Comment/Comment"
+          },
+          "kind": "comment",
+          "text": "RR_04: wrap up after error handling"
+        },
+        {
+          "id": "3e9381a2-4ea4-40a0-a998-c43849543335",
+          "source": {
+            "platform": "a360",
+            "file": "04-error-handling/bot.json",
+            "nodePath": [
+              1,
+              1
+            ],
+            "nodeId": "3e9381a2-4ea4-40a0-a998-c43849543335",
+            "label": "MessageBox/messageBox"
+          },
+          "disabled": true,
+          "kind": "action",
+          "op": "vendor:a360/MessageBox/messageBox",
+          "args": {
+            "title": {
+              "kind": "literal",
+              "value": "Automation Anywhere Enterprise Client"
+            },
+            "content": {
+              "kind": "template",
+              "parts": [
+                {
+                  "kind": "literal",
+                  "value": "Disabled on purpose: status="
+                },
+                {
+                  "kind": "var",
+                  "name": "vStatus",
+                  "path": []
+                },
+                {
+                  "kind": "literal",
+                  "value": " inner="
+                },
+                {
+                  "kind": "var",
+                  "name": "vErrMsg",
+                  "path": []
+                },
+                {
+                  "kind": "literal",
+                  "value": " outer="
+                },
+                {
+                  "kind": "var",
+                  "name": "vOuterErr",
+                  "path": []
+                }
+              ]
+            },
+            "scrollLines": {
+              "kind": "literal",
+              "value": 30
+            },
+            "closeMsgBox": {
+              "kind": "literal",
+              "value": false
+            }
+          },
+          "outputs": {}
+        }
+      ]
+    }
+  ]
+}

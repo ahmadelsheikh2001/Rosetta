@@ -1,5 +1,6 @@
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
+import { fileURLToPath } from 'node:url';
 import { join } from 'node:path';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { ExitCode } from './exit-codes.js';
@@ -68,10 +69,32 @@ describe('rosetta assess', () => {
     expect(err).toMatch(/company profile .*company\.yaml.* at "logging\.format"/);
   });
 
-  it('validates inputs, then stops at the parser stub', () => {
+  it('reports a folder without bot files as an input problem', () => {
     mkdirSync(join(dir, 'exports'));
-    expect(cli('assess', 'exports')).toBe(ExitCode.NotImplemented);
-    expect(err).toContain('not available yet');
+    writeFileSync(join(dir, 'exports', 'notes.txt'), 'hello');
+    expect(cli('assess', 'exports')).toBe(ExitCode.Input);
+    expect(err).toContain('No A360 bot files found');
+  });
+
+  it('assesses the real corpus and writes a non-synthetic report', () => {
+    const corpus = fileURLToPath(new URL('../../../corpus/a360', import.meta.url));
+    expect(cli('assess', corpus, '--out', 'report')).toBe(ExitCode.Ok);
+    expect(out).toContain('Assessed 4 bot(s)');
+    const html = readFileSync(join(dir, 'report', 'report.html'), 'utf8');
+    expect(html).not.toContain('class="banner"');
+    expect(html).toContain('>04-error-handling</h2>');
+  });
+
+  it('lists unreadable files in the report and keeps going', () => {
+    mkdirSync(join(dir, 'exports', 'good'), { recursive: true });
+    writeFileSync(join(dir, 'exports', 'good', 'bot.json'), '{"nodes":[],"variables":[]}');
+    writeFileSync(join(dir, 'exports', 'broken.json'), '{ nope');
+    writeFileSync(join(dir, 'exports', 'export.zip'), 'PK');
+    expect(cli('assess', 'exports', '--out', 'r')).toBe(ExitCode.Ok);
+    expect(out).toContain('2 file(s) could not be read');
+    const html = readFileSync(join(dir, 'r', 'report.html'), 'utf8');
+    expect(html).toContain('Files that could not be read');
+    expect(html).toContain('Export zips are not supported yet');
   });
 });
 

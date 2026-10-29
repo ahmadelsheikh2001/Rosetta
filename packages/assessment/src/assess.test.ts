@@ -231,7 +231,7 @@ describe('assess', () => {
 
   it('carries provenance flags for the report', () => {
     expect(result.synthetic).toBe(true);
-    expect(result.pendingRules).toContain('hardcoded-credential');
+    expect(result.pendingRules).toContain('fixed-delay');
     expect(result.profile.name).toBe('rosetta-defaults');
   });
 });

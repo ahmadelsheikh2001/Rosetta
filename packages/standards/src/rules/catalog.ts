@@ -2,6 +2,7 @@ import type { QualityRuleId } from '../profile.js';
 import { deepNesting } from './deep-nesting.js';
 import { disabledCode } from './disabled-code.js';
 import { emptyCatch } from './empty-catch.js';
+import { hardcodedCredential } from './hardcoded-credential.js';
 import { missingComments } from './missing-comments.js';
 import { missingErrorHandling } from './missing-error-handling.js';
 import type { QualityRule, RuleCatalogEntry } from './types.js';
@@ -17,11 +18,7 @@ export const ruleCatalog = {
   'disabled-code': implemented(disabledCode),
   'unused-variable': implemented(unusedVariable),
   'missing-comments': implemented(missingComments),
-  'hardcoded-credential': {
-    status: 'pending',
-    area: 'security',
-    waitingFor: 'A-05, A-10: attribute value and credential reference shapes',
-  },
+  'hardcoded-credential': implemented(hardcodedCredential),
   'fixed-delay': {
     status: 'pending',
     area: 'robustness',

@@ -1,0 +1,10 @@
+id: a360.number.increment
+source:
+  platform: a360
+  package: Number
+  command: increment
+status: planned
+evidence:
+  - corpus/a360/01-variables/bot.json
+  - corpus/a360/02-control-flow/bot.json
+notes: Seen in the corpus. The IBM RPA target is chosen after the WAL probe (ADR-017).

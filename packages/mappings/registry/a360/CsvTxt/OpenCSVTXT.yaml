@@ -1,0 +1,9 @@
+id: a360.csvtxt.opencsvtxt
+source:
+  platform: a360
+  package: CsvTxt
+  command: OpenCSVTXT
+status: planned
+evidence:
+  - corpus/a360/04-error-handling/bot.json
+notes: Seen in the corpus. The IBM RPA target is chosen after the WAL probe (ADR-017).

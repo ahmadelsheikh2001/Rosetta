@@ -60,6 +60,16 @@ Text is resolved from the report string catalog, so the report can be translated
 `walk(block, visitor)` visits statements depth-first in source order with depth and ancestors;
 `childBlocks(stmt)` returns a statement's nested blocks. Checkers and the assessment are built on these.
 
+## v0.2 additions (from the real corpus)
+
+- Loops carry an optional `label`; `break` / `continue` an optional `target` label (A360 `anchor`).
+- `while` loops may set `checkAtEnd` (do-while).
+- `forEach` collection `dictKeys` iterates a dictionary's keys.
+- Catch clauses may bind `lineVar` (line number of the failing statement).
+- `unknown` statements may carry a best-effort `body`, so nested statements are still assessed.
+- Actions carry `mappingId` when the lifter found the command in the registry.
+- Branch nodes (Else, Catch, Finally) are addressed after the children in `SourceRef.nodePath`.
+
 ## Open points for v1
 
 - Canonical op vocabulary per family: defined from corpus usage.

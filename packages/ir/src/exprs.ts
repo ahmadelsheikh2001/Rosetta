@@ -56,7 +56,10 @@ export function statementExprs(stmt: Statement): readonly Expr[] {
       break;
     }
     case 'try':
-      return stmt.catches.flatMap((c) => (c.errorVar ? [c.errorVar] : []));
+      return stmt.catches.flatMap((c) => [
+        ...(c.errorVar ? [c.errorVar] : []),
+        ...(c.lineVar ? [c.lineVar] : []),
+      ]);
     case 'throw':
       return [stmt.message];
     case 'callBot':

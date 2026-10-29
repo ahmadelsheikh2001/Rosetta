@@ -1,0 +1,1003 @@
+{
+  "id": "02-control-flow/bot.json",
+  "name": "02-control-flow",
+  "source": {
+    "platform": "a360",
+    "file": "02-control-flow/bot.json",
+    "nodePath": []
+  },
+  "variables": [
+    {
+      "name": "SampleNumber",
+      "type": {
+        "kind": "number"
+      },
+      "direction": "local",
+      "sensitive": false
+    },
+    {
+      "name": "SampleString",
+      "type": {
+        "kind": "string"
+      },
+      "direction": "local",
+      "sensitive": false
+    },
+    {
+      "name": "vTextIn",
+      "type": {
+        "kind": "string"
+      },
+      "direction": "input",
+      "sensitive": false,
+      "defaultValue": {
+        "kind": "literal",
+        "value": "Test User"
+      }
+    },
+    {
+      "name": "vResult",
+      "type": {
+        "kind": "string"
+      },
+      "direction": "output",
+      "sensitive": false,
+      "defaultValue": {
+        "kind": "literal",
+        "value": "none"
+      }
+    },
+    {
+      "name": "vItem",
+      "type": {
+        "kind": "string"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "defaultValue": {
+        "kind": "literal",
+        "value": ""
+      }
+    },
+    {
+      "name": "vKey",
+      "type": {
+        "kind": "string"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "defaultValue": {
+        "kind": "literal",
+        "value": ""
+      }
+    },
+    {
+      "name": "vNumIn",
+      "type": {
+        "kind": "number"
+      },
+      "direction": "input",
+      "sensitive": false,
+      "defaultValue": {
+        "kind": "literal",
+        "value": 7
+      }
+    },
+    {
+      "name": "vCounter",
+      "type": {
+        "kind": "number"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "defaultValue": {
+        "kind": "literal",
+        "value": 0
+      }
+    },
+    {
+      "name": "vFlag",
+      "type": {
+        "kind": "boolean"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "defaultValue": {
+        "kind": "literal",
+        "value": true
+      }
+    },
+    {
+      "name": "vList",
+      "type": {
+        "kind": "list",
+        "of": {
+          "kind": "string"
+        }
+      },
+      "direction": "local",
+      "sensitive": false,
+      "defaultValue": {
+        "kind": "call",
+        "fn": "list.of",
+        "args": [
+          {
+            "kind": "literal",
+            "value": "Alpha"
+          },
+          {
+            "kind": "literal",
+            "value": "Skip"
+          },
+          {
+            "kind": "literal",
+            "value": "Gamma"
+          }
+        ]
+      }
+    },
+    {
+      "name": "vDict",
+      "type": {
+        "kind": "dict",
+        "of": {
+          "kind": "string"
+        }
+      },
+      "direction": "local",
+      "sensitive": false,
+      "defaultValue": {
+        "kind": "call",
+        "fn": "dict.of",
+        "args": [
+          {
+            "kind": "literal",
+            "value": "k1"
+          },
+          {
+            "kind": "literal",
+            "value": "v1"
+          },
+          {
+            "kind": "literal",
+            "value": "k2"
+          },
+          {
+            "kind": "literal",
+            "value": "v2"
+          }
+        ]
+      }
+    },
+    {
+      "name": "vFileInfo",
+      "type": {
+        "kind": "dict",
+        "of": {
+          "kind": "string"
+        }
+      },
+      "direction": "local",
+      "sensitive": false,
+      "defaultValue": {
+        "kind": "call",
+        "fn": "dict.of",
+        "args": []
+      }
+    }
+  ],
+  "packages": [
+    {
+      "name": "Boolean",
+      "version": "2.13.3"
+    },
+    {
+      "name": "Comment",
+      "version": "2.17.0"
+    },
+    {
+      "name": "Dictionary",
+      "version": "3.16.2"
+    },
+    {
+      "name": "File",
+      "version": "6.16.2"
+    },
+    {
+      "name": "If",
+      "version": "3.8.0-20241115-115929"
+    },
+    {
+      "name": "List",
+      "version": "2.16.2"
+    },
+    {
+      "name": "Loop",
+      "version": "3.10.0-20251030-061555"
+    },
+    {
+      "name": "MessageBox",
+      "version": "3.8.1"
+    },
+    {
+      "name": "Number",
+      "version": "3.11.5"
+    },
+    {
+      "name": "Step",
+      "version": "2.7.0"
+    },
+    {
+      "name": "String",
+      "version": "5.12.6"
+    }
+  ],
+  "body": [
+    {
+      "id": "34282a97-b0e1-4f4d-b5fb-5db68fb540eb",
+      "source": {
+        "platform": "a360",
+        "file": "02-control-flow/bot.json",
+        "nodePath": [
+          0
+        ],
+        "nodeId": "34282a97-b0e1-4f4d-b5fb-5db68fb540eb",
+        "label": "Nested conditions"
+      },
+      "kind": "group",
+      "label": "Nested conditions",
+      "body": [
+        {
+          "id": "bc208012-4465-426d-bf93-f22050b1228b",
+          "source": {
+            "platform": "a360",
+            "file": "02-control-flow/bot.json",
+            "nodePath": [
+              0,
+              0
+            ],
+            "nodeId": "bc208012-4465-426d-bf93-f22050b1228b",
+            "label": "Comment/Comment"
+          },
+          "kind": "comment",
+          "text": "RR_02: nested If / Else If / Else on Number, String and Boolean"
+        },
+        {
+          "id": "53deb5a3-aa79-413e-a886-268749b0e8b3",
+          "source": {
+            "platform": "a360",
+            "file": "02-control-flow/bot.json",
+            "nodePath": [
+              0,
+              1
+            ],
+            "nodeId": "53deb5a3-aa79-413e-a886-268749b0e8b3",
+            "label": "If/if"
+          },
+          "kind": "if",
+          "branches": [
+            {
+              "condition": {
+                "kind": "binary",
+                "op": "gt",
+                "left": {
+                  "kind": "var",
+                  "name": "vNumIn",
+                  "path": []
+                },
+                "right": {
+                  "kind": "literal",
+                  "value": 5
+                }
+              },
+              "body": [
+                {
+                  "id": "dd354f49-32e0-4923-9bdd-00ef763db792",
+                  "source": {
+                    "platform": "a360",
+                    "file": "02-control-flow/bot.json",
+                    "nodePath": [
+                      0,
+                      1,
+                      0
+                    ],
+                    "nodeId": "dd354f49-32e0-4923-9bdd-00ef763db792",
+                    "label": "If/if"
+                  },
+                  "kind": "if",
+                  "branches": [
+                    {
+                      "condition": {
+                        "kind": "binary",
+                        "op": "eq",
+                        "left": {
+                          "kind": "var",
+                          "name": "vTextIn",
+                          "path": []
+                        },
+                        "right": {
+                          "kind": "literal",
+                          "value": "Test User"
+                        }
+                      },
+                      "body": [
+                        {
+                          "id": "12a4e4a1-cb99-4e8c-b204-720ad7930614",
+                          "source": {
+                            "platform": "a360",
+                            "file": "02-control-flow/bot.json",
+                            "nodePath": [
+                              0,
+                              1,
+                              0,
+                              0
+                            ],
+                            "nodeId": "12a4e4a1-cb99-4e8c-b204-720ad7930614",
+                            "label": "String/assign"
+                          },
+                          "kind": "action",
+                          "op": "vendor:a360/String/assign",
+                          "args": {
+                            "sourceString": {
+                              "kind": "literal",
+                              "value": "Number above 5 and text matches"
+                            }
+                          },
+                          "outputs": {
+                            "result": {
+                              "kind": "var",
+                              "name": "vResult",
+                              "path": []
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ],
+                  "else": [
+                    {
+                      "id": "4ab6d3c9-6883-4611-8100-b8771d58dc1e",
+                      "source": {
+                        "platform": "a360",
+                        "file": "02-control-flow/bot.json",
+                        "nodePath": [
+                          0,
+                          1,
+                          0,
+                          1,
+                          0
+                        ],
+                        "nodeId": "4ab6d3c9-6883-4611-8100-b8771d58dc1e",
+                        "label": "String/assign"
+                      },
+                      "kind": "action",
+                      "op": "vendor:a360/String/assign",
+                      "args": {
+                        "sourceString": {
+                          "kind": "literal",
+                          "value": "Number above 5 but text differs"
+                        }
+                      },
+                      "outputs": {
+                        "result": {
+                          "kind": "var",
+                          "name": "vResult",
+                          "path": []
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "condition": {
+                "kind": "binary",
+                "op": "eq",
+                "left": {
+                  "kind": "var",
+                  "name": "vFlag",
+                  "path": []
+                },
+                "right": {
+                  "kind": "literal",
+                  "value": true
+                }
+              },
+              "body": [
+                {
+                  "id": "7c246db8-5aa9-42e4-a031-c3c1a37f1f4b",
+                  "source": {
+                    "platform": "a360",
+                    "file": "02-control-flow/bot.json",
+                    "nodePath": [
+                      0,
+                      1,
+                      1,
+                      0
+                    ],
+                    "nodeId": "7c246db8-5aa9-42e4-a031-c3c1a37f1f4b",
+                    "label": "String/assign"
+                  },
+                  "kind": "action",
+                  "op": "vendor:a360/String/assign",
+                  "args": {
+                    "sourceString": {
+                      "kind": "literal",
+                      "value": "Flag is true"
+                    }
+                  },
+                  "outputs": {
+                    "result": {
+                      "kind": "var",
+                      "name": "vResult",
+                      "path": []
+                    }
+                  }
+                }
+              ]
+            }
+          ],
+          "else": [
+            {
+              "id": "3717ee06-d22a-4ba2-b31f-88b19fc7c673",
+              "source": {
+                "platform": "a360",
+                "file": "02-control-flow/bot.json",
+                "nodePath": [
+                  0,
+                  1,
+                  2,
+                  0
+                ],
+                "nodeId": "3717ee06-d22a-4ba2-b31f-88b19fc7c673",
+                "label": "String/assign"
+              },
+              "kind": "action",
+              "op": "vendor:a360/String/assign",
+              "args": {
+                "sourceString": {
+                  "kind": "literal",
+                  "value": "Else branch reached"
+                }
+              },
+              "outputs": {
+                "result": {
+                  "kind": "var",
+                  "name": "vResult",
+                  "path": []
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "1810b86e-1938-43ac-ac43-6ce8cc6ee785",
+      "source": {
+        "platform": "a360",
+        "file": "02-control-flow/bot.json",
+        "nodePath": [
+          1
+        ],
+        "nodeId": "1810b86e-1938-43ac-ac43-6ce8cc6ee785",
+        "label": "Loops"
+      },
+      "kind": "group",
+      "label": "Loops",
+      "body": [
+        {
+          "id": "aa83a30e-21aa-46fe-83a0-981d7cbcc6a8",
+          "source": {
+            "platform": "a360",
+            "file": "02-control-flow/bot.json",
+            "nodePath": [
+              1,
+              0
+            ],
+            "nodeId": "aa83a30e-21aa-46fe-83a0-981d7cbcc6a8",
+            "label": "Comment/Comment"
+          },
+          "kind": "comment",
+          "text": "RR_02: loop types, with Break and Continue under If"
+        },
+        {
+          "id": "76067c4b-52f2-4750-85f6-eedf081c00ed",
+          "source": {
+            "platform": "a360",
+            "file": "02-control-flow/bot.json",
+            "nodePath": [
+              1,
+              1
+            ],
+            "nodeId": "76067c4b-52f2-4750-85f6-eedf081c00ed",
+            "label": "Loop/loop.commands.start"
+          },
+          "kind": "loop",
+          "loop": {
+            "kind": "times",
+            "count": {
+              "kind": "literal",
+              "value": 5
+            },
+            "indexVar": {
+              "kind": "var",
+              "name": "vCounter",
+              "path": []
+            }
+          },
+          "body": [
+            {
+              "id": "2d5ddfda-ec26-4980-a0a7-3eb67d90e52f",
+              "source": {
+                "platform": "a360",
+                "file": "02-control-flow/bot.json",
+                "nodePath": [
+                  1,
+                  1,
+                  0
+                ],
+                "nodeId": "2d5ddfda-ec26-4980-a0a7-3eb67d90e52f",
+                "label": "If/if"
+              },
+              "kind": "if",
+              "branches": [
+                {
+                  "condition": {
+                    "kind": "binary",
+                    "op": "eq",
+                    "left": {
+                      "kind": "var",
+                      "name": "vCounter",
+                      "path": []
+                    },
+                    "right": {
+                      "kind": "literal",
+                      "value": 3
+                    }
+                  },
+                  "body": [
+                    {
+                      "id": "b38d8d5d-71e7-4234-9264-26e41f847d97",
+                      "source": {
+                        "platform": "a360",
+                        "file": "02-control-flow/bot.json",
+                        "nodePath": [
+                          1,
+                          1,
+                          0,
+                          0
+                        ],
+                        "nodeId": "b38d8d5d-71e7-4234-9264-26e41f847d97",
+                        "label": "Loop/loop.commands.break"
+                      },
+                      "kind": "break",
+                      "target": "LoopNTimes"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "label": "LoopNTimes"
+        },
+        {
+          "id": "e7d9a73c-42c0-4695-b652-be08cb24f984",
+          "source": {
+            "platform": "a360",
+            "file": "02-control-flow/bot.json",
+            "nodePath": [
+              1,
+              2
+            ],
+            "nodeId": "e7d9a73c-42c0-4695-b652-be08cb24f984",
+            "label": "Loop/loop.commands.start"
+          },
+          "kind": "loop",
+          "loop": {
+            "kind": "while",
+            "condition": {
+              "kind": "binary",
+              "op": "lt",
+              "left": {
+                "kind": "var",
+                "name": "vCounter",
+                "path": []
+              },
+              "right": {
+                "kind": "literal",
+                "value": 10
+              }
+            }
+          },
+          "body": [
+            {
+              "id": "0bc02ea9-3c64-4925-a9d7-9cfd028affa9",
+              "source": {
+                "platform": "a360",
+                "file": "02-control-flow/bot.json",
+                "nodePath": [
+                  1,
+                  2,
+                  0
+                ],
+                "nodeId": "0bc02ea9-3c64-4925-a9d7-9cfd028affa9",
+                "label": "Number/increment"
+              },
+              "kind": "action",
+              "op": "vendor:a360/Number/increment",
+              "args": {
+                "source": {
+                  "kind": "var",
+                  "name": "vCounter",
+                  "path": []
+                },
+                "by": {
+                  "kind": "literal",
+                  "value": 1
+                }
+              },
+              "outputs": {
+                "result": {
+                  "kind": "var",
+                  "name": "vCounter",
+                  "path": []
+                }
+              }
+            }
+          ],
+          "label": "LoopWhile"
+        },
+        {
+          "id": "c47be633-f328-4287-9455-804731a746c3",
+          "source": {
+            "platform": "a360",
+            "file": "02-control-flow/bot.json",
+            "nodePath": [
+              1,
+              3
+            ],
+            "nodeId": "c47be633-f328-4287-9455-804731a746c3",
+            "label": "Loop/loop.commands.start"
+          },
+          "kind": "loop",
+          "loop": {
+            "kind": "forEach",
+            "collection": "list",
+            "source": {
+              "kind": "var",
+              "name": "vList",
+              "path": []
+            },
+            "itemVar": {
+              "kind": "var",
+              "name": "vItem",
+              "path": []
+            }
+          },
+          "body": [
+            {
+              "id": "6168c322-b358-4d81-af5e-77ff3c78c113",
+              "source": {
+                "platform": "a360",
+                "file": "02-control-flow/bot.json",
+                "nodePath": [
+                  1,
+                  3,
+                  0
+                ],
+                "nodeId": "6168c322-b358-4d81-af5e-77ff3c78c113",
+                "label": "If/if"
+              },
+              "kind": "if",
+              "branches": [
+                {
+                  "condition": {
+                    "kind": "binary",
+                    "op": "eq",
+                    "left": {
+                      "kind": "var",
+                      "name": "vItem",
+                      "path": []
+                    },
+                    "right": {
+                      "kind": "literal",
+                      "value": "Skip"
+                    }
+                  },
+                  "body": [
+                    {
+                      "id": "4bbfdef9-5ce6-42e8-b002-657fd91848ef",
+                      "source": {
+                        "platform": "a360",
+                        "file": "02-control-flow/bot.json",
+                        "nodePath": [
+                          1,
+                          3,
+                          0,
+                          0
+                        ],
+                        "nodeId": "4bbfdef9-5ce6-42e8-b002-657fd91848ef",
+                        "label": "Loop/loop.commands.continue"
+                      },
+                      "kind": "continue",
+                      "target": "LoopListItems"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "26502a0f-48c0-420a-9670-3a651ae4850e",
+              "source": {
+                "platform": "a360",
+                "file": "02-control-flow/bot.json",
+                "nodePath": [
+                  1,
+                  3,
+                  1
+                ],
+                "nodeId": "26502a0f-48c0-420a-9670-3a651ae4850e",
+                "label": "String/assign"
+              },
+              "kind": "action",
+              "op": "vendor:a360/String/assign",
+              "args": {
+                "sourceString": {
+                  "kind": "template",
+                  "parts": [
+                    {
+                      "kind": "literal",
+                      "value": "Processed "
+                    },
+                    {
+                      "kind": "var",
+                      "name": "vItem",
+                      "path": []
+                    }
+                  ]
+                }
+              },
+              "outputs": {
+                "result": {
+                  "kind": "var",
+                  "name": "vResult",
+                  "path": []
+                }
+              }
+            }
+          ],
+          "label": "LoopListItems"
+        },
+        {
+          "id": "a32a5405-4840-41fb-9b98-4b426ddb0df5",
+          "source": {
+            "platform": "a360",
+            "file": "02-control-flow/bot.json",
+            "nodePath": [
+              1,
+              4
+            ],
+            "nodeId": "a32a5405-4840-41fb-9b98-4b426ddb0df5",
+            "label": "Loop/loop.commands.start"
+          },
+          "kind": "loop",
+          "loop": {
+            "kind": "forEach",
+            "collection": "dictKeys",
+            "source": {
+              "kind": "var",
+              "name": "vDict",
+              "path": []
+            },
+            "itemVar": {
+              "kind": "var",
+              "name": "vKey",
+              "path": []
+            }
+          },
+          "body": [
+            {
+              "id": "179c1d77-3d5b-41a1-92e7-aabeaa6e3253",
+              "source": {
+                "platform": "a360",
+                "file": "02-control-flow/bot.json",
+                "nodePath": [
+                  1,
+                  4,
+                  0
+                ],
+                "nodeId": "179c1d77-3d5b-41a1-92e7-aabeaa6e3253",
+                "label": "String/assign"
+              },
+              "kind": "action",
+              "op": "vendor:a360/String/assign",
+              "args": {
+                "sourceString": {
+                  "kind": "template",
+                  "parts": [
+                    {
+                      "kind": "literal",
+                      "value": "Key "
+                    },
+                    {
+                      "kind": "var",
+                      "name": "vKey",
+                      "path": []
+                    },
+                    {
+                      "kind": "literal",
+                      "value": " has value "
+                    },
+                    {
+                      "kind": "var",
+                      "name": "vDict",
+                      "path": [
+                        {
+                          "kind": "key",
+                          "key": {
+                            "kind": "var",
+                            "name": "vKey",
+                            "path": []
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              },
+              "outputs": {
+                "result": {
+                  "kind": "var",
+                  "name": "vResult",
+                  "path": []
+                }
+              }
+            }
+          ],
+          "label": "LoopDictKeys"
+        },
+        {
+          "id": "9f4ff98b-66ad-411b-ba83-88d4d5be4c85",
+          "source": {
+            "platform": "a360",
+            "file": "02-control-flow/bot.json",
+            "nodePath": [
+              1,
+              5
+            ],
+            "nodeId": "9f4ff98b-66ad-411b-ba83-88d4d5be4c85",
+            "label": "Loop/loop.commands.start"
+          },
+          "kind": "loop",
+          "loop": {
+            "kind": "forEach",
+            "collection": "file",
+            "source": {
+              "kind": "literal",
+              "value": "C:\\RosettaTest\\"
+            },
+            "itemVar": {
+              "kind": "var",
+              "name": "vFileInfo",
+              "path": []
+            }
+          },
+          "body": [
+            {
+              "id": "2f1cb4c8-77bc-4e87-a370-f4d2460e67e7",
+              "source": {
+                "platform": "a360",
+                "file": "02-control-flow/bot.json",
+                "nodePath": [
+                  1,
+                  5,
+                  0
+                ],
+                "nodeId": "2f1cb4c8-77bc-4e87-a370-f4d2460e67e7",
+                "label": "String/assign"
+              },
+              "kind": "action",
+              "op": "vendor:a360/String/assign",
+              "args": {
+                "sourceString": {
+                  "kind": "template",
+                  "parts": [
+                    {
+                      "kind": "literal",
+                      "value": "File found: "
+                    },
+                    {
+                      "kind": "var",
+                      "name": "vFileInfo",
+                      "path": [
+                        {
+                          "kind": "key",
+                          "key": {
+                            "kind": "literal",
+                            "value": "name"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "kind": "literal",
+                      "value": "."
+                    },
+                    {
+                      "kind": "var",
+                      "name": "vFileInfo",
+                      "path": [
+                        {
+                          "kind": "key",
+                          "key": {
+                            "kind": "literal",
+                            "value": "extension"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              },
+              "outputs": {
+                "result": {
+                  "kind": "var",
+                  "name": "vResult",
+                  "path": []
+                }
+              }
+            }
+          ],
+          "label": "LoopFiles"
+        },
+        {
+          "id": "3427b516-7e45-4062-9ab0-1cdbf0e29733",
+          "source": {
+            "platform": "a360",
+            "file": "02-control-flow/bot.json",
+            "nodePath": [
+              1,
+              6
+            ],
+            "nodeId": "3427b516-7e45-4062-9ab0-1cdbf0e29733",
+            "label": "MessageBox/messageBox"
+          },
+          "disabled": true,
+          "kind": "action",
+          "op": "vendor:a360/MessageBox/messageBox",
+          "args": {
+            "title": {
+              "kind": "literal",
+              "value": "Automation Anywhere Enterprise Client"
+            },
+            "content": {
+              "kind": "template",
+              "parts": [
+                {
+                  "kind": "literal",
+                  "value": "Disabled on purpose: "
+                },
+                {
+                  "kind": "var",
+                  "name": "vResult",
+                  "path": []
+                }
+              ]
+            },
+            "scrollLines": {
+              "kind": "literal",
+              "value": 30
+            },
+            "closeMsgBox": {
+              "kind": "literal",
+              "value": false
+            }
+          },
+          "outputs": {}
+        }
+      ]
+    }
+  ]
+}

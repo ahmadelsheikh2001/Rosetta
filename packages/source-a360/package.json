@@ -15,7 +15,8 @@
     "dist"
   ],
   "dependencies": {
+    "@rosetta/expr": "workspace:*",
     "@rosetta/ir": "workspace:*",
-    "@rosetta/expr": "workspace:*"
+    "zod": "4.6.7"
   }
 }

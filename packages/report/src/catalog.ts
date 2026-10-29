@@ -109,7 +109,8 @@ export const en = {
   'quality.unused-variable': 'Variable "{variable}" is declared but never used.',
   'quality.missing-comments':
     '{statements} statements with no comment or Step; the standard asks for one above {threshold}.',
-  'quality.hardcoded-credential': 'Hardcoded credential.',
+  'quality.hardcoded-credential':
+    'Credential "{variable}" holds a hardcoded value instead of a vault reference.',
   'quality.fixed-delay': 'Fixed delay instead of an explicit wait.',
   'quality.hardcoded-url': 'Hardcoded URL; should come from configuration.',
   'quality.hardcoded-path': 'Hardcoded path; should come from configuration.',
@@ -128,6 +129,21 @@ export const en = {
   'rule.hardcoded-email': 'Hardcoded emails',
 
   'op.unknown': 'Unreadable node',
+
+  'summary.unread.title': 'Files that could not be read',
+  'bot.reading.title': 'Reading notes',
+
+  'lift.json': 'Not valid JSON: {detail}',
+  'lift.schema': 'Not a recognised A360 bot file (at "{path}": {detail}).',
+  'lift.zip': 'Export zips are not supported yet; provide the bot JSON files instead.',
+  'lift.unknownValue': 'A value of type {type} was not understood and is kept as is.',
+  'lift.rawExpression': 'The expression "{text}" could not be read ({reason}) and is kept as is.',
+  'lift.condition':
+    'The condition {condition} with operator {operator} was not understood and is kept as is.',
+  'lift.iterator': 'The loop type {iterator} was not understood; its body is still assessed.',
+  'lift.semantic': 'Option {option} may behave differently after conversion; review it.',
+  'lift.variableType': 'Variable "{variable}" has type {type}, which is not understood yet.',
+  'lift.structure': '{node} was not expected inside {parent} and is kept as is.',
 } as const;
 
 export type MessageId = keyof typeof en;

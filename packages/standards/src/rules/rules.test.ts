@@ -19,6 +19,7 @@ import { ruleCatalog } from './catalog.js';
 import { deepNesting } from './deep-nesting.js';
 import { disabledCode } from './disabled-code.js';
 import { emptyCatch } from './empty-catch.js';
+import { hardcodedCredential } from './hardcoded-credential.js';
 import { checkBot, pendingRules } from './engine.js';
 import { missingComments } from './missing-comments.js';
 import { missingErrorHandling } from './missing-error-handling.js';
@@ -159,6 +160,39 @@ describe('missing-comments', () => {
   });
 });
 
+describe('hardcoded-credential', () => {
+  const cred = (defaultValue?: string) =>
+    variable(
+      'secret',
+      { kind: 'credential' },
+      {
+        sensitive: true,
+        ...(defaultValue === undefined ? {} : { defaultValue: lit(defaultValue) }),
+      },
+    );
+
+  it('flags a credential variable with a literal value', () => {
+    const findings = hardcodedCredential.check(
+      bot('b', [], { variables: [cred('hunter2')] }),
+      defaultProfile,
+    );
+    expect(findings.map((f) => [f.variable?.name, f.params])).toEqual([
+      ['secret', { variable: 'secret' }],
+    ]);
+  });
+
+  it('passes credentials without a value or with an empty one, and non-credentials', () => {
+    const vars = [
+      cred(),
+      cred(''),
+      variable('name', { kind: 'string' }, { defaultValue: lit('x') }),
+    ];
+    expect(hardcodedCredential.check(bot('b', [], { variables: vars }), defaultProfile)).toEqual(
+      [],
+    );
+  });
+});
+
 describe('checkBot', () => {
   const messy = bot('messy', [work(), { ...work(), disabled: true }], {
     variables: [variable('orphan')],
@@ -210,7 +244,6 @@ describe('rule catalog', () => {
   it('keeps platform-specific rules as pending slots until samples arrive', () => {
     expect(pendingRules().sort()).toEqual([
       'fixed-delay',
-      'hardcoded-credential',
       'hardcoded-email',
       'hardcoded-path',
       'hardcoded-url',
