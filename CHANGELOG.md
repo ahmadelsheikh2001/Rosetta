@@ -58,6 +58,17 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: Se
 - `@rosetta/report`: reading notes per bot and a list of files that could not be read.
 - `rosetta assess` now reads real bot files and writes the report; golden assessment of the corpus.
 
+#### Phase 2 start: draft WAL generation (ADR-019)
+
+- `@rosetta/target-wal`: IR → IBM RPA WAL draft (variables, Steps, comments, If/Else If/Else,
+  loops, break/continue, Try/Catch with emulated Finally, Throw, 18 of 24 corpus commands), with
+  per-line notes (syntax to verify, behaviour differences, manual work). Credentials are never
+  written as literals; disabled code is kept as comments.
+- `rosetta convert <input-dir>`: writes `<bot>.wal`, `<bot>.notes.md` and `CONVERSION.md`.
+- Registry: the 24 corpus commands now lift to canonical ops (`partial`), each with a fixture
+  from the corpus and a fixture runner test.
+- Golden WAL tests over corpus 01–04.
+
 ### Planned (deferred by ADR-016)
 
 - dependency-cruiser layer enforcement

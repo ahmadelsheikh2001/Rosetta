@@ -36,25 +36,26 @@ Nothing marked **Open** may be relied on in code or in the mapping registry.
 
 To be answered by the probe script and the gold standard WAL. **No WAL command name is assumed until verified.**
 
-| ID   | Assumption / question                                                                                 | Blocks  | Status | Evidence |
-| ---- | ----------------------------------------------------------------------------------------------------- | ------- | ------ | -------- |
-| W-01 | A `.wal` file is plain text that Studio opens directly (not a packaged or compressed format)          | Phase 2 | Open   |          |
-| W-02 | File header / metadata lines (Studio version etc.) and encoding                                       | Phase 2 | Open   |          |
-| W-03 | Variable declaration syntax, type names (incl. list / table types), script input/output parameters    | Phase 2 | Open   |          |
-| W-04 | Variable reference syntax inside arguments; quoting and escaping rules                                | Phase 2 | Open   |          |
-| W-05 | Control flow: if / else-if / else, loops (count, while, for-each), break / continue, condition syntax | Phase 2 | Open   |          |
-| W-06 | Subroutines vs calling another script with parameters                                                 | Phase 2 | Open   |          |
-| W-07 | Variable scoping inside subroutines                                                                   | Phase 2 | Open   |          |
-| W-08 | Error handling constructs and their exact semantics                                                   | Phase 2 | Open   |          |
-| W-09 | Rethrow inside a catch block (needed for transparent wrappers, ADR-008)                               | Phase 2 | Open   |          |
-| W-10 | Logging command(s) and their destination                                                              | Phase 2 | Open   |          |
-| W-11 | Screenshot command                                                                                    | Phase 2 | Open   |          |
-| W-12 | Vault / credential access                                                                             | Phase 2 | Open   |          |
-| W-13 | Config options: config file, script parameters, server/tenant parameters                              | Phase 2 | Open   |          |
-| W-14 | Explicit waits and timeouts                                                                           | Phase 2 | Open   |          |
-| W-15 | Comment syntax; any grouping/region construct visible in Studio                                       | Phase 2 | Open   |          |
-| W-16 | How Studio reacts to unknown commands or parameters (rejects the file, or ignores them)               | Phase 2 | Open   |          |
-| W-17 | Business-exception signalling style used in company bots                                              | Phase 2 | Open   |          |
+| ID   | Assumption / question                                                                                                                | Blocks  | Status | Evidence                                                                |
+| ---- | ------------------------------------------------------------------------------------------------------------------------------------ | ------- | ------ | ----------------------------------------------------------------------- |
+| W-01 | A `.wal` file is plain text that Studio opens directly (not a packaged or compressed format)                                         | Phase 2 | Open   |                                                                         |
+| W-02 | File header / metadata lines (Studio version etc.) and encoding                                                                      | Phase 2 | Open   |                                                                         |
+| W-03 | Variable declaration syntax, type names (incl. list / table types), script input/output parameters                                   | Phase 2 | Open   |                                                                         |
+| W-04 | Variable reference syntax inside arguments; quoting and escaping rules                                                               | Phase 2 | Open   |                                                                         |
+| W-05 | Control flow: if / else-if / else, loops (count, while, for-each), break / continue, condition syntax                                | Phase 2 | Open   |                                                                         |
+| W-06 | Subroutines vs calling another script with parameters                                                                                | Phase 2 | Open   |                                                                         |
+| W-07 | Variable scoping inside subroutines                                                                                                  | Phase 2 | Open   |                                                                         |
+| W-08 | Error handling constructs and their exact semantics                                                                                  | Phase 2 | Open   |                                                                         |
+| W-09 | Rethrow inside a catch block (needed for transparent wrappers, ADR-008)                                                              | Phase 2 | Open   |                                                                         |
+| W-10 | Logging command(s) and their destination                                                                                             | Phase 2 | Open   |                                                                         |
+| W-11 | Screenshot command                                                                                                                   | Phase 2 | Open   |                                                                         |
+| W-12 | Vault / credential access                                                                                                            | Phase 2 | Open   |                                                                         |
+| W-13 | Config options: config file, script parameters, server/tenant parameters                                                             | Phase 2 | Open   |                                                                         |
+| W-14 | Explicit waits and timeouts                                                                                                          | Phase 2 | Open   |                                                                         |
+| W-15 | Comment syntax; any grouping/region construct visible in Studio                                                                      | Phase 2 | Open   |                                                                         |
+| W-16 | How Studio reacts to unknown commands or parameters (rejects the file, or ignores them)                                              | Phase 2 | Open   |                                                                         |
+| W-17 | Business-exception signalling style used in company bots                                                                             | Phase 2 | Open   |                                                                         |
+| W-18 | Command names and parameters used by the draft generator (`packages/target-wal/src/commands.ts`, `syntax.ts`) are accepted by Studio | Phase 2 | Open   | Generated scripts in `out/wal`; each line is listed in `<bot>.notes.md` |
 
 ## Brand (ADR-018)
 

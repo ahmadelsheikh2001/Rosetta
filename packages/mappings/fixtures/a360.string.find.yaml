@@ -1,0 +1,33 @@
+id: a360.string.find
+from: corpus/a360/03-strings-expressions/bot.json
+node:
+  uid: 96a3ce59-cdcd-49a8-9bc4-6060dd02eb91
+  commandName: find
+  packageName: String
+  disabled: false
+  attributes:
+    - name: sourceString
+      value:
+        type: STRING
+        expression: $vText$
+    - name: find
+      value:
+        type: STRING
+        string: Rosetta
+    - name: isCaseSensitive
+      value:
+        type: STRING
+        string: 'false'
+    - name: isRegularExpression
+      value:
+        type: STRING
+        string: 'false'
+    - name: startIndex
+      value:
+        type: NUMBER
+        number: '1'
+  returnTo:
+    type: VARIABLE
+    variableName: vIndex
+expect:
+  op: string.indexOf

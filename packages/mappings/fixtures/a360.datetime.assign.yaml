@@ -1,0 +1,21 @@
+id: a360.datetime.assign
+from: corpus/a360/03-strings-expressions/bot.json
+node:
+  uid: d77f8799-aa01-49e6-87fc-abca6525c366
+  commandName: assign
+  packageName: Datetime
+  disabled: false
+  attributes:
+    - name: option
+      value:
+        type: STRING
+        string: variable
+    - name: dateTime
+      value:
+        type: DATETIME
+        expression: $System:Date$
+  returnTo:
+    type: VARIABLE
+    variableName: vDate
+expect:
+  op: datetime.assign

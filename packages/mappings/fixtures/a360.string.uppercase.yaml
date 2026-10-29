@@ -1,0 +1,17 @@
+id: a360.string.uppercase
+from: corpus/a360/03-strings-expressions/bot.json
+node:
+  uid: e6f3100c-4d37-4da7-a0f3-51e2e50fea95
+  commandName: uppercase
+  packageName: String
+  disabled: false
+  attributes:
+    - name: sourceString
+      value:
+        type: STRING
+        expression: $vText$
+  returnTo:
+    type: VARIABLE
+    variableName: vOut
+expect:
+  op: string.upper

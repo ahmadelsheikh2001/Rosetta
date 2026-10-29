@@ -1,0 +1,38 @@
+id: a360.csvtxt.opencsvtxt
+from: corpus/a360/04-error-handling/bot.json
+node:
+  uid: 75b16e75-6c2f-4e13-afc0-16e95479b3bf
+  commandName: OpenCSVTXT
+  packageName: CsvTxt
+  disabled: false
+  attributes:
+    - name: session
+      value:
+        type: STRING
+        string: Default
+    - name: filePath
+      value:
+        type: FILE
+        expression: file://$vFilePath$
+    - name: containsHeader
+      value:
+        type: BOOLEAN
+        boolean: false
+    - name: delimeter
+      value:
+        type: STRING
+        string: comma
+    - name: trimLeadingSpace
+      value:
+        type: BOOLEAN
+        boolean: false
+    - name: trimTrailingSpace
+      value:
+        type: BOOLEAN
+        boolean: false
+    - name: encoding
+      value:
+        type: STRING
+        string: UTF-8
+expect:
+  op: csv.open

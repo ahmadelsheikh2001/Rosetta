@@ -1,0 +1,62 @@
+// ======================================================================
+// Bot:         02-control-flow
+// Source:      02-control-flow/bot.json (Automation Anywhere A360)
+// Converted:   2026-10-29T00:00:00.000Z
+// Generator:   RPA Rosetta 0.0.0
+// Inputs:      vTextIn (String), vNumIn (Numeric)
+// Outputs:     vResult (String)
+// Status:      DRAFT - WAL syntax not yet verified in IBM RPA Studio 30.0.2
+// ======================================================================
+defVar --name SampleNumber --type Numeric
+defVar --name SampleString --type String
+defVar --name vTextIn --type String --value "Test User" --parameter
+defVar --name vResult --type String --value "none" --output
+defVar --name vItem --type String
+defVar --name vKey --type String
+defVar --name vNumIn --type Numeric --value 7 --parameter
+defVar --name vCounter --type Numeric --value 0
+defVar --name vFlag --type Boolean --value True
+defVar --name vList --type List --innertype String
+defVar --name vDict --type StringDictionary --innertype String
+defVar --name vFileInfo --type StringDictionary --innertype String
+// ---- Initial values of collections ----
+add --collection "${vList}" --value "Alpha"
+add --collection "${vList}" --value "Skip"
+add --collection "${vList}" --value "Gamma"
+add --collection "${vDict}" --key "k1" --value "v1"
+add --collection "${vDict}" --key "k2" --value "v2"
+// ---- Nested conditions ----
+// RR_02: nested If / Else If / Else on Number, String and Boolean
+if --left "${vNumIn}" --operator "Greater_Than" --right 5
+if --left "${vTextIn}" --operator "Equal_To" --right "Test User"
+setVar --name "${vResult}" --value "Number above 5 and text matches"
+else
+setVar --name "${vResult}" --value "Number above 5 but text differs"
+endIf
+elseIf --left "${vFlag}" --operator "Is_True"
+setVar --name "${vResult}" --value "Flag is true"
+else
+setVar --name "${vResult}" --value "Else branch reached"
+endIf
+// ---- Loops ----
+// RR_02: loop types, with Break and Continue under If
+for --variable ${vCounter} --from 1 --to 5 --step 1
+if --left "${vCounter}" --operator "Equal_To" --right 3
+break
+endIf
+next
+while --left "${vCounter}" --operator "Less_Than" --right 10
+evaluate --expression "${vCounter} + 1" vCounter=value
+endWhile
+foreach --collection "${vList}" --variable "${vItem}"
+if --left "${vItem}" --operator "Equal_To" --right "Skip"
+continue
+endIf
+setVar --name "${vResult}" --value "Processed ${vItem}"
+endFor
+foreach --collection "${vDict}" --variable "${vKey}"
+setVar --name "${vResult}" --value "Key ${vKey} has value ${vDict[${vKey}]}"
+endFor
+// TODO [ROSETTA] loop over file not converted yet; source kept below as comments.
+// setVar --name "${vResult}" --value "File found: ${vFileInfo[name]}.${vFileInfo[extension]}"
+// [DISABLED] messageBox --title "Automation Anywhere Enterprise Client" --text "Disabled on purpose: ${vResult}" --icon "Information" --buttons "OK" --defaultbutton "FirstButton"

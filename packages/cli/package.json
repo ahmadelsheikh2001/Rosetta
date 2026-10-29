@@ -15,15 +15,19 @@
     "dist"
   ],
   "dependencies": {
-    "@rosetta/ir": "workspace:*",
-    "@rosetta/expr": "workspace:*",
-    "@rosetta/source-a360": "workspace:*",
-    "@rosetta/mappings": "workspace:*",
-    "@rosetta/standards": "workspace:*",
     "@rosetta/assessment": "workspace:*",
-    "@rosetta/report": "workspace:*"
+    "@rosetta/expr": "workspace:*",
+    "@rosetta/ir": "workspace:*",
+    "@rosetta/mappings": "workspace:*",
+    "@rosetta/report": "workspace:*",
+    "@rosetta/source-a360": "workspace:*",
+    "@rosetta/standards": "workspace:*",
+    "@rosetta/target-wal": "workspace:*"
   },
   "bin": {
     "rosetta": "./dist/main.js"
+  },
+  "devDependencies": {
+    "yaml": "2.9.1"
   }
 }

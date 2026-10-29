@@ -1,0 +1,25 @@
+id: a360.datetime.add
+from: corpus/a360/03-strings-expressions/bot.json
+node:
+  uid: 405a5907-5268-4130-97e4-7d7799da423d
+  commandName: add
+  packageName: Datetime
+  disabled: false
+  attributes:
+    - name: source
+      value:
+        type: DATETIME
+        expression: $vDate$
+    - name: val
+      value:
+        type: NUMBER
+        number: '7'
+    - name: unit
+      value:
+        type: STRING
+        string: DAYS
+  returnTo:
+    type: VARIABLE
+    variableName: vDate
+expect:
+  op: datetime.add

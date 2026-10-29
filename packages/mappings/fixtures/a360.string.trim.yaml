@@ -1,0 +1,25 @@
+id: a360.string.trim
+from: corpus/a360/03-strings-expressions/bot.json
+node:
+  uid: da44211d-329c-486f-a3b9-f367ed43af3d
+  commandName: trim
+  packageName: String
+  disabled: false
+  attributes:
+    - name: sourceString
+      value:
+        type: STRING
+        expression: $vText$
+    - name: trimAtBeginning
+      value:
+        type: BOOLEAN
+        boolean: true
+    - name: trimAtEnd
+      value:
+        type: BOOLEAN
+        boolean: true
+  returnTo:
+    type: VARIABLE
+    variableName: vText
+expect:
+  op: string.trim

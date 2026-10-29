@@ -1,0 +1,29 @@
+id: a360.string.substring
+from: corpus/a360/03-strings-expressions/bot.json
+node:
+  uid: 3da82ed5-d302-4ee6-bff2-fb42e23197bf
+  commandName: subString
+  packageName: String
+  disabled: false
+  attributes:
+    - name: sourceString
+      value:
+        type: STRING
+        expression: $vText$
+    - name: startIndex
+      value:
+        type: NUMBER
+        number: '1'
+    - name: subStringLength
+      value:
+        type: NUMBER
+        number: '5'
+    - name: returnBlankIfRangeNotFound
+      value:
+        type: BOOLEAN
+        boolean: false
+  returnTo:
+    type: VARIABLE
+    variableName: vOut
+expect:
+  op: string.substring

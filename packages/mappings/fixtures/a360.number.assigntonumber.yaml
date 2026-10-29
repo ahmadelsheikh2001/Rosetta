@@ -1,0 +1,17 @@
+id: a360.number.assigntonumber
+from: corpus/a360/01-variables/bot.json
+node:
+  uid: 7ab897c0-c80d-45aa-874c-c650f2989bcf
+  commandName: assignToNumber
+  packageName: Number
+  disabled: false
+  attributes:
+    - name: input
+      value:
+        type: NUMBER
+        number: '100'
+  returnTo:
+    type: VARIABLE
+    variableName: vNum
+expect:
+  op: variable.assign

@@ -1,0 +1,17 @@
+id: a360.string.assign
+from: corpus/a360/01-variables/bot.json
+node:
+  uid: 75a99686-98b9-4b3e-be15-2a1c2a188e9a
+  commandName: assign
+  packageName: String
+  disabled: false
+  attributes:
+    - name: sourceString
+      value:
+        type: STRING
+        string: Updated Test User
+  returnTo:
+    type: VARIABLE
+    variableName: vStr
+expect:
+  op: variable.assign

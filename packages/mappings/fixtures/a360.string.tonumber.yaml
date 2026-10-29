@@ -1,0 +1,17 @@
+id: a360.string.tonumber
+from: corpus/a360/03-strings-expressions/bot.json
+node:
+  uid: 18656c55-90ce-4f1e-9e65-05a0a8a90ffc
+  commandName: toNumber
+  packageName: String
+  disabled: false
+  attributes:
+    - name: sourceString
+      value:
+        type: STRING
+        expression: $vNumStr$
+  returnTo:
+    type: VARIABLE
+    variableName: vNum
+expect:
+  op: string.toNumber

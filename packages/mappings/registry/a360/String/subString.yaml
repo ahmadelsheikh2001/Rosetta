@@ -3,7 +3,8 @@ source:
   platform: a360
   package: String
   command: subString
-status: planned
+status: partial
+irOp: string.substring
 evidence:
   - corpus/a360/03-strings-expressions/bot.json
-notes: Seen in the corpus. The IBM RPA target is chosen after the WAL probe (ADR-017).
+notes: Lifted to a canonical op; the WAL form is a draft until verified in IBM RPA Studio (ADR-017).

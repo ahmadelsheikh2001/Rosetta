@@ -1,0 +1,30 @@
+id: a360.logtofile.logvariablestofile
+from: corpus/a360/01-variables/bot.json
+node:
+  uid: b413bfa1-71b7-48af-859f-ed360fd3ef8b
+  commandName: logVariablesToFile
+  packageName: LogToFile
+  disabled: false
+  attributes:
+    - name: filePath
+      value:
+        type: FILE
+        string: file:///C:/RosettaTest/log.txt
+    - name: logOption
+      value:
+        type: STRING
+        string: APPEND_FILE
+    - name: appendTimestamp
+      value:
+        type: BOOLEAN
+        boolean: false
+    - name: variables
+      value:
+        type: VARIABLEMAP
+        variableMapNames:
+          - vbool
+          - vdate
+          - vnum
+          - vstr
+expect:
+  op: file.appendVariables

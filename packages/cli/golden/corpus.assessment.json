@@ -16,86 +16,35 @@
     "statements": 58,
     "coverage": {
       "mapped": 0,
-      "partial": 0,
-      "manual": 43,
+      "partial": 43,
+      "manual": 0,
       "total": 43,
-      "percent": 0
+      "percent": 100
     },
     "qualityScore": 92,
     "effort": {
       "bySize": {
         "S": {
-          "bots": 0,
-          "hours": 0
+          "bots": 2,
+          "hours": 8
         },
         "M": {
-          "bots": 3,
-          "hours": 36
+          "bots": 2,
+          "hours": 24
         },
         "L": {
-          "bots": 1,
-          "hours": 32
+          "bots": 0,
+          "hours": 0
         },
         "XL": {
           "bots": 0,
           "hours": 0
         }
       },
-      "totalHours": 68,
+      "totalHours": 32,
       "calibrated": false
     },
-    "topManual": [
-      {
-        "key": "vendor:a360/String/assign",
-        "occurrences": 11,
-        "bots": 4
-      },
-      {
-        "key": "vendor:a360/MessageBox/messageBox",
-        "occurrences": 6,
-        "bots": 4
-      },
-      {
-        "key": "vendor:a360/LogToFile/logToFile",
-        "occurrences": 4,
-        "bots": 2
-      },
-      {
-        "key": "vendor:a360/Number/increment",
-        "occurrences": 2,
-        "bots": 2
-      },
-      {
-        "key": "vendor:a360/Boolean/assign",
-        "occurrences": 1,
-        "bots": 1
-      },
-      {
-        "key": "vendor:a360/CsvTxt/OpenCSVTXT",
-        "occurrences": 1,
-        "bots": 1
-      },
-      {
-        "key": "vendor:a360/CsvTxt/ReadFromCsvTxt",
-        "occurrences": 1,
-        "bots": 1
-      },
-      {
-        "key": "vendor:a360/Datetime/add",
-        "occurrences": 1,
-        "bots": 1
-      },
-      {
-        "key": "vendor:a360/Datetime/assign",
-        "occurrences": 1,
-        "bots": 1
-      },
-      {
-        "key": "vendor:a360/Datetime/toString",
-        "occurrences": 1,
-        "bots": 1
-      }
-    ],
+    "topManual": [],
     "topQuality": [
       {
         "key": "QUAL-UNUSED-VARIABLE",
@@ -212,20 +161,20 @@
         "packages": 9,
         "uiActions": 0,
         "subBotCalls": 0,
-        "unmapped": 10,
+        "unmapped": 0,
         "errorHandlers": 0
       },
       "complexity": {
-        "score": 117,
-        "size": "M",
-        "hours": 12
+        "score": 37,
+        "size": "S",
+        "hours": 4
       },
       "coverage": {
         "mapped": 0,
-        "partial": 0,
-        "manual": 10,
+        "partial": 10,
+        "manual": 0,
         "total": 10,
-        "percent": 0
+        "percent": 100
       },
       "conversionItems": [
         {
@@ -240,9 +189,9 @@
             "nodeId": "75a99686-98b9-4b3e-be15-2a1c2a188e9a",
             "label": "String/assign"
           },
-          "op": "vendor:a360/String/assign",
-          "bucket": "manual",
-          "reason": "planned",
+          "op": "variable.assign",
+          "bucket": "partial",
+          "reason": "partial",
           "mappingId": "a360.string.assign"
         },
         {
@@ -257,9 +206,9 @@
             "nodeId": "7ab897c0-c80d-45aa-874c-c650f2989bcf",
             "label": "Number/assignToNumber"
           },
-          "op": "vendor:a360/Number/assignToNumber",
-          "bucket": "manual",
-          "reason": "planned",
+          "op": "variable.assign",
+          "bucket": "partial",
+          "reason": "partial",
           "mappingId": "a360.number.assigntonumber"
         },
         {
@@ -274,9 +223,9 @@
             "nodeId": "f7f89ffc-fd46-42ca-9df1-ef83e596df5f",
             "label": "Number/increment"
           },
-          "op": "vendor:a360/Number/increment",
-          "bucket": "manual",
-          "reason": "planned",
+          "op": "number.increment",
+          "bucket": "partial",
+          "reason": "partial",
           "mappingId": "a360.number.increment"
         },
         {
@@ -291,9 +240,9 @@
             "nodeId": "fdd65c4a-dc20-43a3-8602-6aca5e2ee7c5",
             "label": "Boolean/assign"
           },
-          "op": "vendor:a360/Boolean/assign",
-          "bucket": "manual",
-          "reason": "planned",
+          "op": "variable.assign",
+          "bucket": "partial",
+          "reason": "partial",
           "mappingId": "a360.boolean.assign"
         },
         {
@@ -308,9 +257,9 @@
             "nodeId": "b29a2042-ac6a-444d-bc6c-5b7213af6dc3",
             "label": "List/addItem"
           },
-          "op": "vendor:a360/List/addItem",
-          "bucket": "manual",
-          "reason": "planned",
+          "op": "list.add",
+          "bucket": "partial",
+          "reason": "partial",
           "mappingId": "a360.list.additem"
         },
         {
@@ -325,9 +274,9 @@
             "nodeId": "86125329-0d0b-4514-9841-f5a283b9e66b",
             "label": "Dictionary/put"
           },
-          "op": "vendor:a360/Dictionary/put",
-          "bucket": "manual",
-          "reason": "planned",
+          "op": "dict.put",
+          "bucket": "partial",
+          "reason": "partial",
           "mappingId": "a360.dictionary.put"
         },
         {
@@ -342,9 +291,9 @@
             "nodeId": "13fb28fd-59cd-498d-bba2-2b5aa3c58a98",
             "label": "MessageBox/messageBox"
           },
-          "op": "vendor:a360/MessageBox/messageBox",
-          "bucket": "manual",
-          "reason": "planned",
+          "op": "dialog.message",
+          "bucket": "partial",
+          "reason": "partial",
           "mappingId": "a360.messagebox.messagebox"
         },
         {
@@ -359,9 +308,9 @@
             "nodeId": "3e0191d8-a143-4fa9-bc64-e5d763292789",
             "label": "LogToFile/logToFile"
           },
-          "op": "vendor:a360/LogToFile/logToFile",
-          "bucket": "manual",
-          "reason": "planned",
+          "op": "file.appendText",
+          "bucket": "partial",
+          "reason": "partial",
           "mappingId": "a360.logtofile.logtofile"
         },
         {
@@ -376,9 +325,9 @@
             "nodeId": "b413bfa1-71b7-48af-859f-ed360fd3ef8b",
             "label": "LogToFile/logVariablesToFile"
           },
-          "op": "vendor:a360/LogToFile/logVariablesToFile",
-          "bucket": "manual",
-          "reason": "planned",
+          "op": "file.appendVariables",
+          "bucket": "partial",
+          "reason": "partial",
           "mappingId": "a360.logtofile.logvariablestofile"
         },
         {
@@ -393,9 +342,9 @@
             "nodeId": "cdc6a229-2e98-410e-97e6-cfd78d1eef0d",
             "label": "MessageBox/messageBox"
           },
-          "op": "vendor:a360/MessageBox/messageBox",
-          "bucket": "manual",
-          "reason": "planned",
+          "op": "dialog.message",
+          "bucket": "partial",
+          "reason": "partial",
           "mappingId": "a360.messagebox.messagebox"
         }
       ],
@@ -564,20 +513,20 @@
         "packages": 11,
         "uiActions": 0,
         "subBotCalls": 0,
-        "unmapped": 9,
+        "unmapped": 0,
         "errorHandlers": 0
       },
       "complexity": {
-        "score": 135,
+        "score": 63,
         "size": "M",
         "hours": 12
       },
       "coverage": {
         "mapped": 0,
-        "partial": 0,
-        "manual": 9,
+        "partial": 9,
+        "manual": 0,
         "total": 9,
-        "percent": 0
+        "percent": 100
       },
       "conversionItems": [
         {
@@ -594,9 +543,9 @@
             "nodeId": "12a4e4a1-cb99-4e8c-b204-720ad7930614",
             "label": "String/assign"
           },
-          "op": "vendor:a360/String/assign",
-          "bucket": "manual",
-          "reason": "planned",
+          "op": "variable.assign",
+          "bucket": "partial",
+          "reason": "partial",
           "mappingId": "a360.string.assign"
         },
         {
@@ -614,9 +563,9 @@
             "nodeId": "4ab6d3c9-6883-4611-8100-b8771d58dc1e",
             "label": "String/assign"
           },
-          "op": "vendor:a360/String/assign",
-          "bucket": "manual",
-          "reason": "planned",
+          "op": "variable.assign",
+          "bucket": "partial",
+          "reason": "partial",
           "mappingId": "a360.string.assign"
         },
         {
@@ -633,9 +582,9 @@
             "nodeId": "7c246db8-5aa9-42e4-a031-c3c1a37f1f4b",
             "label": "String/assign"
           },
-          "op": "vendor:a360/String/assign",
-          "bucket": "manual",
-          "reason": "planned",
+          "op": "variable.assign",
+          "bucket": "partial",
+          "reason": "partial",
           "mappingId": "a360.string.assign"
         },
         {
@@ -652,9 +601,9 @@
             "nodeId": "3717ee06-d22a-4ba2-b31f-88b19fc7c673",
             "label": "String/assign"
           },
-          "op": "vendor:a360/String/assign",
-          "bucket": "manual",
-          "reason": "planned",
+          "op": "variable.assign",
+          "bucket": "partial",
+          "reason": "partial",
           "mappingId": "a360.string.assign"
         },
         {
@@ -670,9 +619,9 @@
             "nodeId": "0bc02ea9-3c64-4925-a9d7-9cfd028affa9",
             "label": "Number/increment"
           },
-          "op": "vendor:a360/Number/increment",
-          "bucket": "manual",
-          "reason": "planned",
+          "op": "number.increment",
+          "bucket": "partial",
+          "reason": "partial",
           "mappingId": "a360.number.increment"
         },
         {
@@ -688,9 +637,9 @@
             "nodeId": "26502a0f-48c0-420a-9670-3a651ae4850e",
             "label": "String/assign"
           },
-          "op": "vendor:a360/String/assign",
-          "bucket": "manual",
-          "reason": "planned",
+          "op": "variable.assign",
+          "bucket": "partial",
+          "reason": "partial",
           "mappingId": "a360.string.assign"
         },
         {
@@ -706,9 +655,9 @@
             "nodeId": "179c1d77-3d5b-41a1-92e7-aabeaa6e3253",
             "label": "String/assign"
           },
-          "op": "vendor:a360/String/assign",
-          "bucket": "manual",
-          "reason": "planned",
+          "op": "variable.assign",
+          "bucket": "partial",
+          "reason": "partial",
           "mappingId": "a360.string.assign"
         },
         {
@@ -724,9 +673,9 @@
             "nodeId": "2f1cb4c8-77bc-4e87-a370-f4d2460e67e7",
             "label": "String/assign"
           },
-          "op": "vendor:a360/String/assign",
-          "bucket": "manual",
-          "reason": "planned",
+          "op": "variable.assign",
+          "bucket": "partial",
+          "reason": "partial",
           "mappingId": "a360.string.assign"
         },
         {
@@ -741,9 +690,9 @@
             "nodeId": "3427b516-7e45-4062-9ab0-1cdbf0e29733",
             "label": "MessageBox/messageBox"
           },
-          "op": "vendor:a360/MessageBox/messageBox",
-          "bucket": "manual",
-          "reason": "planned",
+          "op": "dialog.message",
+          "bucket": "partial",
+          "reason": "partial",
           "mappingId": "a360.messagebox.messagebox"
         }
       ],
@@ -875,20 +824,20 @@
         "packages": 7,
         "uiActions": 0,
         "subBotCalls": 0,
-        "unmapped": 17,
+        "unmapped": 0,
         "errorHandlers": 0
       },
       "complexity": {
-        "score": 174,
-        "size": "L",
-        "hours": 32
+        "score": 38,
+        "size": "S",
+        "hours": 4
       },
       "coverage": {
         "mapped": 0,
-        "partial": 0,
-        "manual": 17,
+        "partial": 17,
+        "manual": 0,
         "total": 17,
-        "percent": 0
+        "percent": 100
       },
       "conversionItems": [
         {
@@ -903,9 +852,9 @@
             "nodeId": "8e739a92-da84-48d5-9475-05bf5c725168",
             "label": "String/assign"
           },
-          "op": "vendor:a360/String/assign",
-          "bucket": "manual",
-          "reason": "planned",
+          "op": "variable.assign",
+          "bucket": "partial",
+          "reason": "partial",
           "mappingId": "a360.string.assign"
         },
         {
@@ -920,9 +869,9 @@
             "nodeId": "da44211d-329c-486f-a3b9-f367ed43af3d",
             "label": "String/trim"
           },
-          "op": "vendor:a360/String/trim",
-          "bucket": "manual",
-          "reason": "planned",
+          "op": "string.trim",
+          "bucket": "partial",
+          "reason": "partial",
           "mappingId": "a360.string.trim"
         },
         {
@@ -937,9 +886,9 @@
             "nodeId": "3da82ed5-d302-4ee6-bff2-fb42e23197bf",
             "label": "String/subString"
           },
-          "op": "vendor:a360/String/subString",
-          "bucket": "manual",
-          "reason": "planned",
+          "op": "string.substring",
+          "bucket": "partial",
+          "reason": "partial",
           "mappingId": "a360.string.substring"
         },
         {
@@ -954,9 +903,9 @@
             "nodeId": "cb682288-032e-4965-8c33-3db4610598ff",
             "label": "String/replace"
           },
-          "op": "vendor:a360/String/replace",
-          "bucket": "manual",
-          "reason": "planned",
+          "op": "string.replace",
+          "bucket": "partial",
+          "reason": "partial",
           "mappingId": "a360.string.replace"
         },
         {
@@ -971,9 +920,9 @@
             "nodeId": "1cb5a0ae-63bb-428c-985c-f1c5d3353705",
             "label": "String/split"
           },
-          "op": "vendor:a360/String/split",
-          "bucket": "manual",
-          "reason": "planned",
+          "op": "string.split",
+          "bucket": "partial",
+          "reason": "partial",
           "mappingId": "a360.string.split"
         },
         {
@@ -988,9 +937,9 @@
             "nodeId": "e6f3100c-4d37-4da7-a0f3-51e2e50fea95",
             "label": "String/uppercase"
           },
-          "op": "vendor:a360/String/uppercase",
-          "bucket": "manual",
-          "reason": "planned",
+          "op": "string.upper",
+          "bucket": "partial",
+          "reason": "partial",
           "mappingId": "a360.string.uppercase"
         },
         {
@@ -1005,9 +954,9 @@
             "nodeId": "90f5e137-0880-4684-bba7-4e1017aaf5f1",
             "label": "String/lowercase"
           },
-          "op": "vendor:a360/String/lowercase",
-          "bucket": "manual",
-          "reason": "planned",
+          "op": "string.lower",
+          "bucket": "partial",
+          "reason": "partial",
           "mappingId": "a360.string.lowercase"
         },
         {
@@ -1022,9 +971,9 @@
             "nodeId": "96a3ce59-cdcd-49a8-9bc4-6060dd02eb91",
             "label": "String/find"
           },
-          "op": "vendor:a360/String/find",
-          "bucket": "manual",
-          "reason": "planned",
+          "op": "string.indexOf",
+          "bucket": "partial",
+          "reason": "partial",
           "mappingId": "a360.string.find"
         },
         {
@@ -1039,9 +988,9 @@
             "nodeId": "520eae2f-c8b5-4636-9ae5-06ef8a322311",
             "label": "String/length"
           },
-          "op": "vendor:a360/String/length",
-          "bucket": "manual",
-          "reason": "planned",
+          "op": "string.length",
+          "bucket": "partial",
+          "reason": "partial",
           "mappingId": "a360.string.length"
         },
         {
@@ -1056,9 +1005,9 @@
             "nodeId": "18656c55-90ce-4f1e-9e65-05a0a8a90ffc",
             "label": "String/toNumber"
           },
-          "op": "vendor:a360/String/toNumber",
-          "bucket": "manual",
-          "reason": "planned",
+          "op": "string.toNumber",
+          "bucket": "partial",
+          "reason": "partial",
           "mappingId": "a360.string.tonumber"
         },
         {
@@ -1073,9 +1022,9 @@
             "nodeId": "0dca96a3-ddc0-4f39-99d5-503d636d1232",
             "label": "Number/toString"
           },
-          "op": "vendor:a360/Number/toString",
-          "bucket": "manual",
-          "reason": "planned",
+          "op": "number.toString",
+          "bucket": "partial",
+          "reason": "partial",
           "mappingId": "a360.number.tostring"
         },
         {
@@ -1090,9 +1039,9 @@
             "nodeId": "d77f8799-aa01-49e6-87fc-abca6525c366",
             "label": "Datetime/assign"
           },
-          "op": "vendor:a360/Datetime/assign",
-          "bucket": "manual",
-          "reason": "planned",
+          "op": "datetime.assign",
+          "bucket": "partial",
+          "reason": "partial",
           "mappingId": "a360.datetime.assign"
         },
         {
@@ -1107,9 +1056,9 @@
             "nodeId": "405a5907-5268-4130-97e4-7d7799da423d",
             "label": "Datetime/add"
           },
-          "op": "vendor:a360/Datetime/add",
-          "bucket": "manual",
-          "reason": "planned",
+          "op": "datetime.add",
+          "bucket": "partial",
+          "reason": "partial",
           "mappingId": "a360.datetime.add"
         },
         {
@@ -1124,9 +1073,9 @@
             "nodeId": "afba232a-1697-4dca-879d-8d3876435e1e",
             "label": "Datetime/toString"
           },
-          "op": "vendor:a360/Datetime/toString",
-          "bucket": "manual",
-          "reason": "planned",
+          "op": "datetime.format",
+          "bucket": "partial",
+          "reason": "partial",
           "mappingId": "a360.datetime.tostring"
         },
         {
@@ -1141,9 +1090,9 @@
             "nodeId": "a8e71fb8-ad88-4d65-809f-a5636102b5b3",
             "label": "String/assign"
           },
-          "op": "vendor:a360/String/assign",
-          "bucket": "manual",
-          "reason": "planned",
+          "op": "variable.assign",
+          "bucket": "partial",
+          "reason": "partial",
           "mappingId": "a360.string.assign"
         },
         {
@@ -1158,9 +1107,9 @@
             "nodeId": "cd5240b5-8276-4c7d-ab7d-6854e367030b",
             "label": "MessageBox/messageBox"
           },
-          "op": "vendor:a360/MessageBox/messageBox",
-          "bucket": "manual",
-          "reason": "planned",
+          "op": "dialog.message",
+          "bucket": "partial",
+          "reason": "partial",
           "mappingId": "a360.messagebox.messagebox"
         },
         {
@@ -1175,9 +1124,9 @@
             "nodeId": "bbb30c08-a8d7-42ff-8c96-36665ec72700",
             "label": "MessageBox/messageBox"
           },
-          "op": "vendor:a360/MessageBox/messageBox",
-          "bucket": "manual",
-          "reason": "planned",
+          "op": "dialog.message",
+          "bucket": "partial",
+          "reason": "partial",
           "mappingId": "a360.messagebox.messagebox"
         }
       ],
@@ -1293,20 +1242,20 @@
         "packages": 10,
         "uiActions": 0,
         "subBotCalls": 0,
-        "unmapped": 7,
+        "unmapped": 0,
         "errorHandlers": 2
       },
       "complexity": {
-        "score": 109,
+        "score": 53,
         "size": "M",
         "hours": 12
       },
       "coverage": {
         "mapped": 0,
-        "partial": 0,
-        "manual": 7,
+        "partial": 7,
+        "manual": 0,
         "total": 7,
-        "percent": 0
+        "percent": 100
       },
       "conversionItems": [
         {
@@ -1323,9 +1272,9 @@
             "nodeId": "75b16e75-6c2f-4e13-afc0-16e95479b3bf",
             "label": "CsvTxt/OpenCSVTXT"
           },
-          "op": "vendor:a360/CsvTxt/OpenCSVTXT",
-          "bucket": "manual",
-          "reason": "planned",
+          "op": "csv.open",
+          "bucket": "partial",
+          "reason": "partial",
           "mappingId": "a360.csvtxt.opencsvtxt"
         },
         {
@@ -1342,9 +1291,9 @@
             "nodeId": "07c0d7fc-c7ec-4d40-8a65-113955667302",
             "label": "CsvTxt/ReadFromCsvTxt"
           },
-          "op": "vendor:a360/CsvTxt/ReadFromCsvTxt",
-          "bucket": "manual",
-          "reason": "planned",
+          "op": "csv.read",
+          "bucket": "partial",
+          "reason": "partial",
           "mappingId": "a360.csvtxt.readfromcsvtxt"
         },
         {
@@ -1362,9 +1311,9 @@
             "nodeId": "4ea84825-e3bf-4fa8-8da1-f988f0722a5f",
             "label": "LogToFile/logToFile"
           },
-          "op": "vendor:a360/LogToFile/logToFile",
-          "bucket": "manual",
-          "reason": "planned",
+          "op": "file.appendText",
+          "bucket": "partial",
+          "reason": "partial",
           "mappingId": "a360.logtofile.logtofile"
         },
         {
@@ -1381,9 +1330,9 @@
             "nodeId": "4169a913-eff1-4a5d-a77b-01247fd56a69",
             "label": "LogToFile/logToFile"
           },
-          "op": "vendor:a360/LogToFile/logToFile",
-          "bucket": "manual",
-          "reason": "planned",
+          "op": "file.appendText",
+          "bucket": "partial",
+          "reason": "partial",
           "mappingId": "a360.logtofile.logtofile"
         },
         {
@@ -1400,9 +1349,9 @@
             "nodeId": "9b66b71e-f3c9-4a0e-ab81-74c75fbc4f1c",
             "label": "LogToFile/logToFile"
           },
-          "op": "vendor:a360/LogToFile/logToFile",
-          "bucket": "manual",
-          "reason": "planned",
+          "op": "file.appendText",
+          "bucket": "partial",
+          "reason": "partial",
           "mappingId": "a360.logtofile.logtofile"
         },
         {
@@ -1419,9 +1368,9 @@
             "nodeId": "0fe170b7-22f6-4cff-b5bd-5dcc98ff4448",
             "label": "String/assign"
           },
-          "op": "vendor:a360/String/assign",
-          "bucket": "manual",
-          "reason": "planned",
+          "op": "variable.assign",
+          "bucket": "partial",
+          "reason": "partial",
           "mappingId": "a360.string.assign"
         },
         {
@@ -1436,9 +1385,9 @@
             "nodeId": "3e9381a2-4ea4-40a0-a998-c43849543335",
             "label": "MessageBox/messageBox"
           },
-          "op": "vendor:a360/MessageBox/messageBox",
-          "bucket": "manual",
-          "reason": "planned",
+          "op": "dialog.message",
+          "bucket": "partial",
+          "reason": "partial",
           "mappingId": "a360.messagebox.messagebox"
         }
       ],

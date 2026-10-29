@@ -1,0 +1,48 @@
+// ======================================================================
+// Bot:         03-strings-expressions
+// Source:      03-strings-expressions/bot.json (Automation Anywhere A360)
+// Converted:   2026-10-29T00:00:00.000Z
+// Generator:   RPA Rosetta 0.0.0
+// Inputs:      vText (String)
+// Outputs:     vOut (String)
+// Status:      DRAFT - WAL syntax not yet verified in IBM RPA Studio 30.0.2
+// ======================================================================
+defVar --name SampleNumber --type Numeric
+defVar --name SampleString --type String
+defVar --name vText --type String --value "  Hello Rosetta Test  " --parameter
+defVar --name vOut --type String --value "none" --output
+defVar --name vNumStr --type String --value "42"
+defVar --name vDateStr --type String
+defVar --name vNum --type Numeric --value 0
+defVar --name vIndex --type Numeric --value 0
+defVar --name vLen --type Numeric --value 0
+defVar --name vDate --type DateTime
+defVar --name vParts --type List --innertype String
+defVar --name vList --type List --innertype String
+defVar --name vDict --type StringDictionary --innertype String
+// ---- Initial values of collections ----
+add --collection "${vList}" --value "Alpha"
+add --collection "${vList}" --value "Beta"
+add --collection "${vDict}" --key "name" --value "Test User"
+// ---- String operations ----
+setVar --name "${vOut}" --value "Prefix-${vText}-${vNumStr}-Suffix"
+trimString --text "${vText}" --trimoption "TrimStartAndEnd" vText=value
+getSubString --text "${vText}" --start 1 --length 5 vOut=value
+replaceText --texttoparse "${vText}" --textpattern "Rosetta" --replacement "IBM" vOut=value
+splitString --text "${vText}" --delimiteroption "CustomDelimiter" --customdelimiter " " vParts=value
+toUpper --text "${vText}" vOut=value
+toLower --text "${vText}" vOut=value
+// TODO [ROSETTA] string.indexOf: WAL "find text position" command not identified yet
+getStringLength --text "${vText}" vLen=value
+// ---- Conversions and dates ----
+// RR_03: number/string conversions and datetime add + custom format
+// TODO [ROSETTA] string.toNumber: WAL text-to-number command not identified yet
+setVar --name "${vOut}" --value "${vNum}"
+getCurrentDateAndTime --localorutc "LocalTime" vDate=value
+// TODO [ROSETTA] datetime.add: WAL date arithmetic command not identified yet
+// TODO [ROSETTA] datetime.format: WAL date formatting command not identified yet
+// ---- System variables and expressions ----
+// RR_03: system variables plus list index and dictionary key expressions
+setVar --name "${vOut}" --value "Machine={{ROSETTA: a360:Machine}} | Bot={{ROSETTA: a360:AATaskName}} | CR={{ROSETTA: a360:AAControlRoom}}"
+messageBox --title "RR_03 Expressions" --text "part0=${vParts[1]} | list1=${vList[2]} | name=${vDict[name]} | date=${vDateStr} | len=${vLen} | idx=${vIndex} | out=${vOut}" --icon "Information" --buttons "OK" --defaultbutton "FirstButton"
+// [DISABLED] messageBox --title "Automation Anywhere Enterprise Client" --text "Disabled on purpose: ${vList[1]}" --icon "Information" --buttons "OK" --defaultbutton "FirstButton"

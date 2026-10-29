@@ -1,0 +1,21 @@
+id: a360.number.increment
+from: corpus/a360/01-variables/bot.json
+node:
+  uid: f7f89ffc-fd46-42ca-9df1-ef83e596df5f
+  commandName: increment
+  packageName: Number
+  disabled: false
+  attributes:
+    - name: source
+      value:
+        type: NUMBER
+        expression: $vNum$
+    - name: by
+      value:
+        type: NUMBER
+        number: '5'
+  returnTo:
+    type: VARIABLE
+    variableName: vNum
+expect:
+  op: number.increment

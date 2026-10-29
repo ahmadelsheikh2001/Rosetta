@@ -19,6 +19,7 @@ export default {
         'report',
         'cli',
         'design-tokens',
+        'target-wal',
       ],
     ],
   },

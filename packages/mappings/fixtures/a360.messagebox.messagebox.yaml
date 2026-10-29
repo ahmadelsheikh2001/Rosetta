@@ -1,0 +1,28 @@
+id: a360.messagebox.messagebox
+from: corpus/a360/01-variables/bot.json
+node:
+  uid: 13fb28fd-59cd-498d-bba2-2b5aa3c58a98
+  commandName: messageBox
+  packageName: MessageBox
+  disabled: false
+  attributes:
+    - name: title
+      value:
+        type: STRING
+        string: RR_01 Variables
+    - name: content
+      value:
+        type: STRING
+        expression: vStr=$vStr$ | vNum=$vNum.Number:toString$ |
+          vBool=$vBool.Boolean:toString$ | first item=$vList[0]$ |
+          name=$vDict{name}$
+    - name: scrollLines
+      value:
+        type: NUMBER
+        number: '30'
+    - name: closeMsgBox
+      value:
+        type: BOOLEAN
+        boolean: false
+expect:
+  op: dialog.message

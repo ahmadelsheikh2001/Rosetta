@@ -1,0 +1,29 @@
+id: a360.string.split
+from: corpus/a360/03-strings-expressions/bot.json
+node:
+  uid: 1cb5a0ae-63bb-428c-985c-f1c5d3353705
+  commandName: split
+  packageName: String
+  disabled: false
+  attributes:
+    - name: sourceString
+      value:
+        type: STRING
+        expression: $vText$
+    - name: delimiter
+      value:
+        type: STRING
+        string: ' '
+    - name: isCaseSensitive
+      value:
+        type: STRING
+        string: 'false'
+    - name: substrings
+      value:
+        type: STRING
+        string: ALL
+  returnTo:
+    type: VARIABLE
+    variableName: vParts
+expect:
+  op: string.split

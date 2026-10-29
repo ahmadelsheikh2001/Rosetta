@@ -1,0 +1,31 @@
+id: a360.logtofile.logtofile
+from: corpus/a360/01-variables/bot.json
+node:
+  uid: 3e0191d8-a143-4fa9-bc64-e5d763292789
+  commandName: logToFile
+  packageName: LogToFile
+  disabled: false
+  attributes:
+    - name: filePath
+      value:
+        type: FILE
+        string: file:///C:/RosettaTest/log.txt
+    - name: logContent
+      value:
+        type: STRING
+        expression: vStr=$vStr$ | vNum=$vNum.Number:toString$ | city=$vDict{city}$ |
+          item1=$vList[1]$
+    - name: appendTimestamp
+      value:
+        type: BOOLEAN
+        boolean: true
+    - name: logOption
+      value:
+        type: STRING
+        string: APPEND_FILE
+    - name: encodingValue
+      value:
+        type: STRING
+        string: ANSI
+expect:
+  op: file.appendText

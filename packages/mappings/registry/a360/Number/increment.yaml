@@ -3,8 +3,9 @@ source:
   platform: a360
   package: Number
   command: increment
-status: planned
+status: partial
+irOp: number.increment
 evidence:
   - corpus/a360/01-variables/bot.json
   - corpus/a360/02-control-flow/bot.json
-notes: Seen in the corpus. The IBM RPA target is chosen after the WAL probe (ADR-017).
+notes: Lifted to a canonical op; the WAL form is a draft until verified in IBM RPA Studio (ADR-017).

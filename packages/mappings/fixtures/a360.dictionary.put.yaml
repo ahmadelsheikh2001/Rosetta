@@ -1,0 +1,30 @@
+id: a360.dictionary.put
+from: corpus/a360/01-variables/bot.json
+node:
+  uid: 86125329-0d0b-4514-9841-f5a283b9e66b
+  commandName: put
+  packageName: Dictionary
+  disabled: false
+  attributes:
+    - name: sourceMap
+      value:
+        type: VARIABLE
+        variableName: vDict
+    - name: key
+      value:
+        type: STRING
+        string: country
+    - name: varOrManual
+      value:
+        type: STRING
+        string: Manual
+    - name: subtype
+      value:
+        type: STRING
+        string: String
+    - name: stringVal
+      value:
+        type: STRING
+        string: Testland
+expect:
+  op: dict.put

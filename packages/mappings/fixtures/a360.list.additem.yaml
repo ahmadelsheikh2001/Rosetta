@@ -1,0 +1,22 @@
+id: a360.list.additem
+from: corpus/a360/01-variables/bot.json
+node:
+  uid: b29a2042-ac6a-444d-bc6c-5b7213af6dc3
+  commandName: addItem
+  packageName: List
+  disabled: false
+  attributes:
+    - name: sourceList
+      value:
+        type: VARIABLE
+        variableName: vList
+    - name: listItem
+      value:
+        type: VARIABLE
+        variableName: vStr
+    - name: itemPosition
+      value:
+        type: STRING
+        string: END
+expect:
+  op: list.add

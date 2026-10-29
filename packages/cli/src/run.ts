@@ -1,45 +1,15 @@
 import { existsSync, mkdirSync, statSync, writeFileSync } from 'node:fs';
-import { createRequire } from 'node:module';
 import { join, resolve } from 'node:path';
-import { parseArgs, type ParseArgsConfig } from 'node:util';
 import { assess, syntheticProject, syntheticRegistry } from '@rosetta/assessment';
 import { loadRegistry, registryDir } from '@rosetta/mappings';
 import { renderHtml, renderJson } from '@rosetta/report';
-import { loadProfile, ProfileError, type ResolvedProfile } from '@rosetta/standards';
+import { ProfileError } from '@rosetta/standards';
 import { assessFolder } from './assess-folder.js';
 import { ExitCode } from './exit-codes.js';
-import { assessHelp, mainHelp, previewHelp } from './help.js';
+import { convertCommand } from './convert.js';
+import { assessHelp, convertHelp, mainHelp, previewHelp } from './help.js';
 import type { Io } from './io.js';
-
-const { version } = createRequire(import.meta.url)('../package.json') as { version: string };
-
-const profileOptions = {
-  profile: { type: 'string' },
-  'client-profile': { type: 'string' },
-  overrides: { type: 'string' },
-  out: { type: 'string' },
-  help: { type: 'boolean', short: 'h' },
-} as const satisfies ParseArgsConfig['options'];
-
-class UsageError extends Error {}
-
-function parse(args: readonly string[], allowPositionals: boolean) {
-  try {
-    return parseArgs({ args: [...args], options: profileOptions, allowPositionals, strict: true });
-  } catch (err) {
-    throw new UsageError(err instanceof Error ? err.message : String(err));
-  }
-}
-
-function resolveProfileFrom(values: ReturnType<typeof parse>['values'], io: Io): ResolvedProfile {
-  const abs = (p: string | undefined) => (p === undefined ? undefined : resolve(io.cwd, p));
-  const files = {
-    company: abs(values.profile),
-    client: abs(values['client-profile']),
-    project: abs(values.overrides),
-  };
-  return loadProfile(Object.fromEntries(Object.entries(files).filter(([, v]) => v !== undefined)));
-}
+import { parse, resolveProfileFrom, UsageError, version } from './options.js';
 
 function writeReport(dir: string, html: string, json: string, io: Io): void {
   mkdirSync(dir, { recursive: true });
@@ -133,7 +103,13 @@ export function run(args: readonly string[], io: Io): number {
       case '--help': {
         const topic = rest[0];
         io.out(
-          topic === 'assess' ? assessHelp : topic === 'preview-report' ? previewHelp : mainHelp,
+          topic === 'assess'
+            ? assessHelp
+            : topic === 'preview-report'
+              ? previewHelp
+              : topic === 'convert'
+                ? convertHelp
+                : mainHelp,
         );
         return ExitCode.Ok;
       }
@@ -145,6 +121,8 @@ export function run(args: readonly string[], io: Io): number {
         return assessCommand(rest, io);
       case 'preview-report':
         return previewReport(rest, io);
+      case 'convert':
+        return convertCommand(rest, io);
       default:
         throw new UsageError(`unknown command "${command}"`);
     }

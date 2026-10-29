@@ -1,0 +1,25 @@
+id: a360.datetime.tostring
+from: corpus/a360/03-strings-expressions/bot.json
+node:
+  uid: afba232a-1697-4dca-879d-8d3876435e1e
+  commandName: toString
+  packageName: Datetime
+  disabled: false
+  attributes:
+    - name: source
+      value:
+        type: DATETIME
+        expression: $vDate$
+    - name: selectPattern
+      value:
+        type: STRING
+        string: CUSTOM
+    - name: patternInput
+      value:
+        type: STRING
+        string: dd/MM/yyyy
+  returnTo:
+    type: VARIABLE
+    variableName: vDateStr
+expect:
+  op: datetime.format

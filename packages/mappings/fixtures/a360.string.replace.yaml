@@ -1,0 +1,41 @@
+id: a360.string.replace
+from: corpus/a360/03-strings-expressions/bot.json
+node:
+  uid: cb682288-032e-4965-8c33-3db4610598ff
+  commandName: replace
+  packageName: String
+  disabled: false
+  attributes:
+    - name: sourceString
+      value:
+        type: STRING
+        expression: $vText$
+    - name: find
+      value:
+        type: STRING
+        string: Rosetta
+    - name: isCaseSensitive
+      value:
+        type: STRING
+        string: 'false'
+    - name: isRegularExpression
+      value:
+        type: STRING
+        string: 'false'
+    - name: startIndex
+      value:
+        type: NUMBER
+        number: '1'
+    - name: count
+      value:
+        type: NUMBER
+        number: '-1'
+    - name: replaceWith
+      value:
+        type: STRING
+        string: IBM
+  returnTo:
+    type: VARIABLE
+    variableName: vOut
+expect:
+  op: string.replace

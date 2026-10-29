@@ -83,6 +83,13 @@ importers:
       '@rosetta/standards':
         specifier: workspace:*
         version: link:../standards
+      '@rosetta/target-wal':
+        specifier: workspace:*
+        version: link:../target-wal
+    devDependencies:
+      yaml:
+        specifier: 2.9.1
+        version: 2.9.1
 
   packages/design-tokens: {}
 
@@ -154,6 +161,15 @@ importers:
       zod:
         specifier: ^4.6.7
         version: 4.6.7
+
+  packages/target-wal:
+    dependencies:
+      '@rosetta/ir':
+        specifier: workspace:*
+        version: link:../ir
+      '@rosetta/standards':
+        specifier: workspace:*
+        version: link:../standards
 
 packages:
 

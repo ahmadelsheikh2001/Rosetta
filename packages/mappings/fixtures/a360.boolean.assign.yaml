@@ -1,0 +1,21 @@
+id: a360.boolean.assign
+from: corpus/a360/01-variables/bot.json
+node:
+  uid: fdd65c4a-dc20-43a3-8602-6aca5e2ee7c5
+  commandName: assign
+  packageName: Boolean
+  disabled: false
+  attributes:
+    - name: source
+      value:
+        type: STRING
+        string: constant
+    - name: userDefined
+      value:
+        type: STRING
+        string: 'false'
+  returnTo:
+    type: VARIABLE
+    variableName: vBool
+expect:
+  op: variable.assign

@@ -1,0 +1,21 @@
+id: a360.number.tostring
+from: corpus/a360/03-strings-expressions/bot.json
+node:
+  uid: 0dca96a3-ddc0-4f39-99d5-503d636d1232
+  commandName: toString
+  packageName: Number
+  disabled: false
+  attributes:
+    - name: input
+      value:
+        type: NUMBER
+        expression: $vNum$
+    - name: numFormatDigits
+      value:
+        type: NUMBER
+        number: '0'
+  returnTo:
+    type: VARIABLE
+    variableName: vOut
+expect:
+  op: number.toString

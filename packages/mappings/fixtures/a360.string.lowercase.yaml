@@ -1,0 +1,17 @@
+id: a360.string.lowercase
+from: corpus/a360/03-strings-expressions/bot.json
+node:
+  uid: 90f5e137-0880-4684-bba7-4e1017aaf5f1
+  commandName: lowercase
+  packageName: String
+  disabled: false
+  attributes:
+    - name: sourceString
+      value:
+        type: STRING
+        expression: $vText$
+  returnTo:
+    type: VARIABLE
+    variableName: vOut
+expect:
+  op: string.lower

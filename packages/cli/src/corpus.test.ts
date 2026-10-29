@@ -19,7 +19,7 @@ describe('assessment of the real corpus', () => {
 
   it('links every corpus action to a registry entry', () => {
     const reasons = new Set(result.bots.flatMap((b) => b.conversionItems.map((i) => i.reason)));
-    expect(reasons).toEqual(new Set(['planned']));
+    expect(reasons).toEqual(new Set(['partial']));
   });
 
   it('finds the quality issues built into the samples', () => {

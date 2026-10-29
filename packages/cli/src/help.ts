@@ -5,6 +5,7 @@ Usage:
 
 Commands:
   assess <input-dir>     Assess a folder of A360 exports and write the report
+  convert <input-dir>    Convert A360 bots to DRAFT IBM RPA WAL scripts
   preview-report         Render the report from SYNTHETIC data, to review the design
   help [command]         Show help for a command
 
@@ -43,6 +44,20 @@ and brand can be reviewed before real exports exist. The report carries a
 
 Options:
   --out <dir>               Output folder (default: ./out/preview)
+${profileOptions}
+  -h, --help                Show this help
+`;
+
+export const convertHelp = `rosetta convert <input-dir> [options]
+
+Converts every A360 bot file in <input-dir> to an IBM RPA WAL script. For each
+bot it writes <bot>.wal and <bot>.notes.md, the list of lines to check in
+Studio, behaviour differences and manual work. CONVERSION.md summarises all bots.
+
+The WAL syntax is a DRAFT until verified in IBM RPA Studio 30.0.2.
+
+Options:
+  --out <dir>               Output folder (default: ./rosetta-wal)
 ${profileOptions}
   -h, --help                Show this help
 `;

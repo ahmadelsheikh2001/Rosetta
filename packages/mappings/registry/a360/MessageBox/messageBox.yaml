@@ -3,10 +3,11 @@ source:
   platform: a360
   package: MessageBox
   command: messageBox
-status: planned
+status: partial
+irOp: dialog.message
 evidence:
   - corpus/a360/01-variables/bot.json
   - corpus/a360/02-control-flow/bot.json
   - corpus/a360/03-strings-expressions/bot.json
   - corpus/a360/04-error-handling/bot.json
-notes: Seen in the corpus. The IBM RPA target is chosen after the WAL probe (ADR-017).
+notes: Lifted to a canonical op; the WAL form is a draft until verified in IBM RPA Studio (ADR-017).

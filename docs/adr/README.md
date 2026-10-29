@@ -22,3 +22,4 @@ New decision: copy [`000-template.md`](000-template.md), take the next number, a
 | [016](016-tooling-scope.md)               | Tooling scope for Phase 0 and 1                           | Accepted (partly deferred)            |
 | [017](017-evidence-based-formats.md)      | Evidence-based file formats                               | Accepted                              |
 | [018](018-brand-design-system.md)         | Brand and design system (Valleysoft 2025)                 | Accepted (logo rules incomplete)      |
+| [019](019-draft-and-verify-wal.md)        | Draft-and-verify for WAL syntax                           | Accepted                              |

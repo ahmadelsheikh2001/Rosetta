@@ -40,8 +40,8 @@ describe('rosetta', () => {
   });
 
   it('rejects unknown commands and options with a usage error', () => {
-    expect(cli('convert')).toBe(ExitCode.Usage);
-    expect(err).toContain('unknown command "convert"');
+    expect(cli('translate')).toBe(ExitCode.Usage);
+    expect(err).toContain('unknown command "translate"');
     expect(cli('assess', 'x', '--bogus')).toBe(ExitCode.Usage);
   });
 });

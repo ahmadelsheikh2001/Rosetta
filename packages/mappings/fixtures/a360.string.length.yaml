@@ -1,0 +1,17 @@
+id: a360.string.length
+from: corpus/a360/03-strings-expressions/bot.json
+node:
+  uid: 520eae2f-c8b5-4636-9ae5-06ef8a322311
+  commandName: length
+  packageName: String
+  disabled: false
+  attributes:
+    - name: sourceString
+      value:
+        type: STRING
+        expression: $vText$
+  returnTo:
+    type: VARIABLE
+    variableName: vLen
+expect:
+  op: string.length

@@ -1,0 +1,17 @@
+id: a360.csvtxt.readfromcsvtxt
+from: corpus/a360/04-error-handling/bot.json
+node:
+  uid: 07c0d7fc-c7ec-4d40-8a65-113955667302
+  commandName: ReadFromCsvTxt
+  packageName: CsvTxt
+  disabled: false
+  attributes:
+    - name: session
+      value:
+        type: STRING
+        string: Default
+  returnTo:
+    type: VARIABLE
+    variableName: vFileTable
+expect:
+  op: csv.read

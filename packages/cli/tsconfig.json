@@ -6,12 +6,29 @@
   },
   "include": ["src"],
   "references": [
-    { "path": "../ir" },
-    { "path": "../expr" },
-    { "path": "../source-a360" },
-    { "path": "../mappings" },
-    { "path": "../standards" },
-    { "path": "../assessment" },
-    { "path": "../report" }
+    {
+      "path": "../ir"
+    },
+    {
+      "path": "../expr"
+    },
+    {
+      "path": "../source-a360"
+    },
+    {
+      "path": "../mappings"
+    },
+    {
+      "path": "../standards"
+    },
+    {
+      "path": "../assessment"
+    },
+    {
+      "path": "../report"
+    },
+    {
+      "path": "../target-wal"
+    }
   ]
 }
