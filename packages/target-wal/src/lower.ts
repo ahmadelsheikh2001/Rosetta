@@ -5,6 +5,7 @@ import { textOf, valueOf, type NoteSink } from './expr.js';
 import {
   errorLineRef,
   errorMessageRef,
+  quote,
   ref,
   walBoolean,
   walOperators,
@@ -225,10 +226,12 @@ class Lowerer {
 
   private tryCatch(s: Extract<Statement, { kind: 'try' }>): void {
     const w = this.w;
-    w.line('tryCatch', {
-      kind: 'verify',
+    // Refuted in round 1: Studio 30.0.2 has no tryCatch / catch / endTryCatch. Until the WAL
+    // error-handling construct is known, the block markers are written as comments.
+    w.comment('tryCatch (A360 Try: no WAL error handling written yet)', {
+      kind: 'manual',
       assumption: 'W-08',
-      text: 'tryCatch / catch / endTryCatch',
+      text: 'A360 Try/Catch is not converted yet: WAL has no tryCatch command (Studio round 1). The protected commands run without error handling.',
     });
     this.block(s.body);
     s.catches.forEach((c, i) => {
@@ -246,22 +249,28 @@ class Lowerer {
           kind: 'manual',
           text: 'Several catch blocks: only the first one is reached in WAL.',
         });
-      w.line('catch --all', ...notes);
-      if (c.errorVar)
-        w.line(`setVar --name "${ref(c.errorVar.name)}" --value "${errorMessageRef}"`, {
-          kind: 'verify',
-          assumption: 'W-08',
-          text: `error message system value ${errorMessageRef}`,
-        });
-      if (c.lineVar)
-        w.line(`setVar --name "${ref(c.lineVar.name)}" --value "${errorLineRef}"`, {
-          kind: 'verify',
-          assumption: 'W-08',
-          text: `error line system value ${errorLineRef}`,
-        });
-      this.block(c.body);
+      w.comment(
+        'catch (A360 Catch: kept as comments, they must only run after an error)',
+        ...notes,
+      );
+      // Without a WAL error-handling construct, the catch body must not run on the normal path.
+      w.commented('', () => {
+        if (c.errorVar)
+          w.line(`setVar --name "${ref(c.errorVar.name)}" --value "${errorMessageRef}"`, {
+            kind: 'verify',
+            assumption: 'W-08',
+            text: `error message system value ${errorMessageRef}`,
+          });
+        if (c.lineVar)
+          w.line(`setVar --name "${ref(c.lineVar.name)}" --value ${errorLineRef}`, {
+            kind: 'verify',
+            assumption: 'W-08',
+            text: `error line system value ${errorLineRef}`,
+          });
+        this.block(c.body);
+      });
     });
-    w.line('endTryCatch');
+    w.comment('endTryCatch');
     if (s.finally) {
       let throws = 0;
       for (const c of s.catches) {
@@ -315,7 +324,7 @@ class Lowerer {
             text: `DateTime default "${String(d.value)}" (A360 zoned format) not carried over.`,
           });
         } else {
-          line += ` --value ${typeof d.value === 'boolean' ? walBoolean(d.value) : typeof d.value === 'number' ? String(d.value) : `"${d.value}"`}`;
+          line += ` --value ${typeof d.value === 'boolean' ? walBoolean(d.value) : typeof d.value === 'number' ? String(d.value) : quote(d.value)}`;
         }
       } else if (
         d?.kind === 'call' &&

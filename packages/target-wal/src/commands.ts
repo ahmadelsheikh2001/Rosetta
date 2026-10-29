@@ -233,7 +233,11 @@ export const lowerers: Readonly<Record<string, Lowerer>> = {
     }
     h.emit(
       `readCSV --filepath ${pathOf(path, h.sink)} ${h.out() ?? '?'}=value`,
-      v('readCSV and its parameters'),
+      {
+        kind: 'manual',
+        assumption: 'W-18',
+        text: 'readCSV requires --delimiter (Studio round 1); its value syntax is not known yet.',
+      },
       semantic('A360 options (header, delimiter, trimming, encoding) are not applied.'),
     );
   },

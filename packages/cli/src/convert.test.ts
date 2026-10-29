@@ -52,9 +52,6 @@ describe('conversion of the real corpus', () => {
       'endFor',
       'break',
       'continue',
-      'tryCatch',
-      'catch',
-      'endTryCatch',
       'failTest',
     ]);
     for (const b of bots) {
@@ -65,13 +62,46 @@ describe('conversion of the real corpus', () => {
     }
   });
 
+  it('never writes commands that Studio 30.0.2 rejected (round 1)', () => {
+    const rejected = ['tryCatch', 'catch', 'endTryCatch'];
+    for (const b of bots) {
+      for (const line of b.script.text.split('\r\n')) {
+        if (line.startsWith('//')) continue;
+        expect(rejected, `${b.name}: ${line}`).not.toContain(line.split(' ')[0]);
+      }
+    }
+  });
+
+  it('writes no unescaped backslash in a quoted value (round 1: backslash escapes)', () => {
+    for (const b of bots) {
+      for (const line of b.script.text.split('\r\n')) {
+        if (line.startsWith('//')) continue;
+        for (const [, value = ''] of line.matchAll(/"((?:[^"\\]|\\.)*)"/g)) {
+          expect(value.replace(/\\\\|\\"/g, ''), `${b.name}: ${line}`).not.toContain('\\');
+        }
+      }
+    }
+  });
+
+  it('writes number values without quotes (round 1: "Not a number")', () => {
+    const text = bots.find((b) => b.name === '04-error-handling')?.script.text ?? '';
+    expect(text).toContain('--value ${wdg:error.LineNumber}');
+    expect(text).not.toContain('--value "${wdg:error.LineNumber}"');
+  });
+
+  it('keeps catch bodies as comments until WAL error handling is known', () => {
+    const text = bots.find((b) => b.name === '04-error-handling')?.script.text ?? '';
+    const catchLines = text.split('\r\n').filter((l) => l.includes('catch:'));
+    expect(catchLines).toHaveLength(2);
+    for (const line of catchLines) expect(line.startsWith('//')).toBe(true);
+  });
+
   it('balances every block', () => {
     const pairs: Record<string, string> = {
       if: 'endIf',
       for: 'next',
       while: 'endWhile',
       foreach: 'endFor',
-      tryCatch: 'endTryCatch',
     };
     for (const b of bots) {
       const stack: string[] = [];

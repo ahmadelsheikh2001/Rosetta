@@ -5,6 +5,8 @@
  * listed in the bot's notes so it can be checked in Studio and fixed here.
  */
 
+const BACKSLASH = String.fromCharCode(92);
+
 /** Line ending of generated files (W-02). */
 export const EOL = '\r\n';
 
@@ -43,5 +45,10 @@ export const errorLineRef = '${wdg:error.LineNumber}';
 /** Boolean literal spelling (W-03). */
 export const walBoolean = (b: boolean): string => (b ? 'True' : 'False');
 
-/** Quotes a value; inner double quotes are backslash-escaped (W-04, unverified). */
-export const quote = (text: string): string => `"${text.replace(/"/g, '\\"')}"`;
+/**
+ * Quotes a value. Backslash is an escape character in WAL strings (verified, round 1:
+ * `"C:\RosettaTest\log.txt"` was shown as `C:RosettaTestlog.txt`), so it is doubled.
+ * Escaping a double quote with a backslash follows from that but is not verified yet (W-04).
+ */
+export const quote = (text: string): string =>
+  `"${text.replaceAll(BACKSLASH, BACKSLASH + BACKSLASH).replaceAll('"', BACKSLASH + '"')}"`;

@@ -60,8 +60,11 @@ describe('expressions', () => {
     expect(valueOf(ref('x'), sink)).toBe('"${x}"');
   });
 
-  it('turns A360 file URIs into Windows paths', () => {
-    expect(pathOf(lit('file:///C:/RosettaTest/log.txt'), sink)).toBe('"C:\\RosettaTest\\log.txt"');
+  it('turns A360 file URIs into Windows paths, with backslashes escaped', () => {
+    // WAL: C:\RosettaTest\log.txt must be written C:\\RosettaTest\\log.txt (Studio round 1)
+    expect(pathOf(lit('file:///C:/RosettaTest/log.txt'), sink)).toBe(
+      String.raw`"C:\\RosettaTest\\log.txt"`,
+    );
     expect(pathOf({ kind: 'template', parts: [lit('file://'), ref('p')] }, sink)).toBe('"${p}"');
   });
 });
@@ -115,10 +118,10 @@ describe('lowerBot', () => {
       'endIf',
       'for --variable ${rosettaIndex} --from 1 --to 3 --step 1',
       'next',
-      'tryCatch',
-      'catch --all',
-      'setVar --name "${err}" --value "${wdg:error.Message}"',
-      'endTryCatch',
+      '// tryCatch (A360 Try: no WAL error handling written yet)',
+      '// catch (A360 Catch: kept as comments, they must only run after an error)',
+      '// setVar --name "${err}" --value "${wdg:error.Message}"',
+      '// endTryCatch',
     ]);
   });
 
