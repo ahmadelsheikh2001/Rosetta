@@ -46,12 +46,17 @@ describe('expressions', () => {
     expect(textOf({ kind: 'call', fn: 'convert.toString', args: [ref('n')] }, sink)).toBe('${n}');
   });
 
-  it('writes a visible placeholder and a manual note for unknown values', () => {
+  it('writes a visible placeholder and a manual note for values without a WAL equivalent', () => {
     notes.length = 0;
-    expect(textOf({ kind: 'system', name: 'a360:Machine' }, sink)).toBe(
-      '{{ROSETTA: a360:Machine}}',
+    expect(textOf({ kind: 'system', name: 'a360:AAControlRoom' }, sink)).toBe(
+      '{{ROSETTA: a360:AAControlRoom}}',
     );
     expect(notes[0]?.kind).toBe('manual');
+  });
+
+  it('maps A360 system variables that have a documented WAL equivalent', () => {
+    expect(textOf({ kind: 'system', name: 'a360:AATaskName' }, sink)).toBe('${rpa:scriptName}');
+    expect(textOf({ kind: 'system', name: 'a360:Machine' }, sink)).toBe('${rosettaMachineName}');
   });
 
   it('keeps numbers and booleans bare, quotes the rest', () => {
@@ -110,19 +115,107 @@ describe('lowerBot', () => {
       ]),
     ]);
     expect(body(b)).toEqual([
+      '// ---- Helper variables added by the conversion ----',
+      'defVar --name rosettaIndex1 --type Numeric',
+      'defVar --name rosettaTry1Failed --type Boolean',
       '// ---- Step ----',
       '// hello',
       'if --left "${n}" --operator "Greater_Than" --right 5',
       '// TODO [ROSETTA] vendor:a360/X/y: no conversion for this command yet',
       'else',
       'endIf',
-      'for --variable ${rosettaIndex} --from 1 --to 3 --step 1',
+      'for --variable ${rosettaIndex1} --from 1 --to 3 --step 1',
       'next',
-      '// tryCatch (A360 Try: no WAL error handling written yet)',
-      '// catch (A360 Catch: kept as comments, they must only run after an error)',
-      '// setVar --name "${err}" --value "${wdg:error.Message}"',
-      '// endTryCatch',
+      'setVar --name "${rosettaTry1Failed}" --value False',
+      'goSub --label Try1',
+      '// ---- Subroutines added by the conversion (A360 Try/Catch) ----',
+      '// A360 Try (source)',
+      'beginSub --name Try1',
+      'onError --label Catch1',
+      'endSub',
+      '// A360 Catch (all errors)',
+      'beginSub --name Catch1',
+      'setVar --name "${rosettaTry1Failed}" --value True',
+      'setVar --name "${err}" --value "${rpa:errorMessage}"',
+      'recover',
+      'endSub',
     ]);
+  });
+
+  it('skips the rest of a Try block after an error, like A360', () => {
+    const t = tryCatch(
+      [
+        action('string.upper', { args: { sourceString: ref('a') }, outputs: { result: ref('a') } }),
+        action('string.lower', { args: { sourceString: ref('a') }, outputs: { result: ref('a') } }),
+      ],
+      [
+        {
+          body: [
+            action('string.upper', {
+              args: { sourceString: ref('e') },
+              outputs: { result: ref('e') },
+            }),
+          ],
+        },
+      ],
+      [comment('cleanup')],
+    );
+    const lines = body(bot('b', [t]));
+    const sub = lines.slice(lines.indexOf('beginSub --name Try1'), lines.indexOf('endSub') + 1);
+    // a flag check follows every command of the protected block
+    expect(sub).toEqual([
+      'beginSub --name Try1',
+      'onError --label Catch1',
+      'changeTextCase --text "${a}" --type "Upper" a=value',
+      'if --left "${rosettaTry1Failed}" --operator "Is_True"',
+      'return',
+      'endIf',
+      'changeTextCase --text "${a}" --type "Lower" a=value',
+      'if --left "${rosettaTry1Failed}" --operator "Is_True"',
+      'return',
+      'endIf',
+      'endSub',
+    ]);
+    // Finally runs in the main flow, right after the protected block
+    expect(lines.indexOf('// cleanup')).toBe(lines.indexOf('goSub --label Try1') + 2);
+  });
+
+  it('ends every error handler with recover and never returns from it', () => {
+    const inner = tryCatch(
+      [action('vendor:a360/X/y')],
+      [
+        {
+          body: [
+            action('string.upper', {
+              args: { sourceString: ref('e') },
+              outputs: { result: ref('e') },
+            }),
+          ],
+        },
+      ],
+    );
+    const outer = tryCatch([inner], [{ body: [] }]);
+    const lines = body(bot('b', [outer]));
+    for (const name of ['Catch1', 'Catch2']) {
+      const start = lines.indexOf(`beginSub --name ${name}`);
+      const handler = lines.slice(start, lines.indexOf('endSub', start) + 1);
+      expect(handler.at(-2)).toBe('recover');
+      expect(handler).not.toContain('return');
+    }
+  });
+
+  it('fills the machine name once when the bot uses it', () => {
+    const b = bot('b', [
+      action('variable.assign', {
+        args: { sourceString: { kind: 'system', name: 'a360:Machine' } },
+        outputs: { result: ref('m') },
+      }),
+    ]);
+    const lines = body(b);
+    expect(lines).toContain(
+      'getEnvVar --name COMPUTERNAME --target "Process" rosettaMachineName=value',
+    );
+    expect(lines.at(-1)).toBe('setVar --name "${m}" --value "${rosettaMachineName}"');
   });
 
   it('keeps disabled statements as comments and lists them', () => {
@@ -136,7 +229,7 @@ describe('lowerBot', () => {
       },
     ]);
     const script = lowerBot(b, opts);
-    expect(body(b)).toEqual(['// [DISABLED] toUpper --text "${t}" t=value']);
+    expect(body(b)).toEqual(['// [DISABLED] changeTextCase --text "${t}" --type "Upper" t=value']);
     expect(script.notes.some((n) => n.text.startsWith('Disabled in the source'))).toBe(true);
   });
 
@@ -151,11 +244,16 @@ describe('lowerBot', () => {
   });
 
   it('attaches notes to the right line numbers', () => {
-    const b = bot('b', [action('string.indexOf')]);
+    const b = bot('b', [
+      tryCatch([action('vendor:a360/X/y')], [{ body: [action('vendor:a360/X/z')] }]),
+    ]);
     const script = lowerBot(b, opts);
     const all = script.text.split('\r\n');
-    const note = script.notes.find((n) => n.kind === 'manual');
-    expect(all[(note?.line ?? 0) - 1]).toContain('TODO [ROSETTA] string.indexOf');
+    // notes written inside subroutines are shifted when the subroutines are appended
+    for (const op of ['vendor:a360/X/y', 'vendor:a360/X/z']) {
+      const note = script.notes.find((n) => n.kind === 'manual' && n.text.startsWith(op));
+      expect(all[(note?.line ?? 0) - 1]).toContain(`TODO [ROSETTA] ${op}`);
+    }
   });
 });
 

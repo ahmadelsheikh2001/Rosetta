@@ -5,7 +5,7 @@
 // Generator:   RPA Rosetta 0.0.0
 // Inputs:      vFilePath (String)
 // Outputs:     vStatus (String)
-// Status:      DRAFT - WAL syntax not yet verified in IBM RPA Studio 30.0.2
+// Status:      DRAFT - syntax from the IBM RPA 30.0.x reference, being verified in Studio 30.0.2
 // ======================================================================
 defVar --name SampleNumber --type Numeric
 defVar --name SampleString --type String
@@ -16,28 +16,57 @@ defVar --name vOuterErr --type String
 defVar --name vErrLine --type Numeric --value 0
 defVar --name vDoThrow --type Boolean --value True
 defVar --name vFileTable --type DataTable
+// ---- Helper variables added by the conversion ----
+defVar --name rosettaTry1Failed --type Boolean
+defVar --name rosettaTry2Failed --type Boolean
 // ---- Try Catch Finally ----
 // RR_04: outer Try with nested inner Try, Catch, Throw and Finally
-// tryCatch (A360 Try: no WAL error handling written yet)
-// tryCatch (A360 Try: no WAL error handling written yet)
-// CSV session "Default" opened here; WAL reads the file in one step below.
-readCSV --filepath "${vFilePath}" vFileTable=value
-// catch (A360 Catch: kept as comments, they must only run after an error)
-// setVar --name "${vErrMsg}" --value "${wdg:error.Message}"
-// setVar --name "${vErrLine}" --value ${wdg:error.LineNumber}
-// writeToFile --value "Inner catch: ${vErrMsg} (line ${vErrLine})" --file "C:\\RosettaTest\\log.txt"
-// endTryCatch
-if --left "${vDoThrow}" --operator "Is_True"
-failTest --message "Custom RR_04 error thrown on purpose"
-endIf
-// catch (A360 Catch: kept as comments, they must only run after an error)
-// setVar --name "${vOuterErr}" --value "${wdg:error.Message}"
-// setVar --name "${vErrLine}" --value ${wdg:error.LineNumber}
-// writeToFile --value "Outer catch: ${vOuterErr} (line ${vErrLine})" --file "C:\\RosettaTest\\log.txt"
-// endTryCatch
-// finally (emulated: runs after the try/catch)
-writeToFile --value "cleanup done" --file "C:\\RosettaTest\\log.txt"
+setVar --name "${rosettaTry1Failed}" --value False
+goSub --label Try1
+// A360 Finally: runs after the protected block, with or without an error
+writeToFile --value "cleanup done" --file "C:\\RosettaTest\\log.txt" --encoding "Default" --writeasnewline
 setVar --name "${vStatus}" --value "finished"
 // ---- Wrap up ----
 // RR_04: wrap up after error handling
 // [DISABLED] messageBox --title "Automation Anywhere Enterprise Client" --text "Disabled on purpose: status=${vStatus} inner=${vErrMsg} outer=${vOuterErr}" --icon "Information" --buttons "OK" --defaultbutton "FirstButton"
+// ---- Subroutines added by the conversion (A360 Try/Catch) ----
+// A360 Try (ErrorHandler/try @ 1.2)
+beginSub --name Try1
+onError --label Catch1
+setVar --name "${rosettaTry2Failed}" --value False
+goSub --label Try2
+if --left "${rosettaTry1Failed}" --operator "Is_True"
+return
+endIf
+if --left "${vDoThrow}" --operator "Is_True"
+failTest --message "Custom RR_04 error thrown on purpose"
+if --left "${rosettaTry1Failed}" --operator "Is_True"
+return
+endIf
+endIf
+endSub
+// A360 Try (ErrorHandler/try @ 1.2.1)
+beginSub --name Try2
+onError --label Catch2
+// CSV session "Default" opened here; WAL reads the file in one step (readCSV) below.
+readCSV --filepath "${vFilePath}" --delimiter "," vFileTable=value
+if --left "${rosettaTry2Failed}" --operator "Is_True"
+return
+endIf
+endSub
+// A360 Catch (BotException)
+beginSub --name Catch2
+setVar --name "${rosettaTry2Failed}" --value True
+setVar --name "${vErrMsg}" --value "${rpa:errorMessage}"
+setVar --name "${vErrLine}" --value ${rpa:errorLineNumber}
+writeToFile --value "Inner catch: ${vErrMsg} (line ${vErrLine})" --file "C:\\RosettaTest\\log.txt" --encoding "Default" --writeasnewline
+recover
+endSub
+// A360 Catch (BotException)
+beginSub --name Catch1
+setVar --name "${rosettaTry1Failed}" --value True
+setVar --name "${vOuterErr}" --value "${rpa:errorMessage}"
+setVar --name "${vErrLine}" --value ${rpa:errorLineNumber}
+writeToFile --value "Outer catch: ${vOuterErr} (line ${vErrLine})" --file "C:\\RosettaTest\\log.txt" --encoding "Default" --writeasnewline
+recover
+endSub

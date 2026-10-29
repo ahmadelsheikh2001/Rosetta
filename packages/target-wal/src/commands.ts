@@ -1,21 +1,21 @@
 import type { ActionStmt, Expr } from '@rosetta/ir';
 import { pathOf, textOf, valueOf, type NoteSink } from './expr.js';
-import { quote, ref } from './syntax.js';
+import { quote, ref, regexLiteral } from './syntax.js';
 import type { NoteInput, WalWriter } from './writer.js';
 
 /** Lowering state shared across one bot. */
 export interface LowerState {
-  /** CSV session name → file path expression, from `csv.open` (A360 sessions, A-12-like). */
+  /** CSV session name → file path expression, from `csv.open`. */
   readonly csvSessions: Map<string, Expr>;
 }
 
 type Lowerer = (a: ActionStmt, w: WalWriter, s: LowerState) => void;
 
-const v = (n: string): NoteInput => ({ kind: 'verify', assumption: 'W-18', text: n });
-const verify = (assumption: string, text: string): NoteInput => ({
+/** Command taken from the IBM RPA 30.0.x reference, not yet seen in Studio (W-18). */
+const doc = (command: string): NoteInput => ({
   kind: 'verify',
-  assumption,
-  text,
+  assumption: 'W-18',
+  text: `${command} (documented in IBM RPA 30.0.x; confirm in Studio)`,
 });
 const semantic = (text: string): NoteInput => ({ kind: 'semantic', text });
 
@@ -27,14 +27,24 @@ function helpers(a: ActionStmt, w: WalWriter) {
     const e = arg(name);
     return e?.kind === 'literal' && e.value !== null ? String(e.value) : undefined;
   };
+  const flag = (name: string): boolean => {
+    const e = arg(name);
+    return e?.kind === 'literal' && (e.value === true || e.value === 'true');
+  };
   const val = (name: string) => valueOf(arg(name) ?? { kind: 'literal', value: '' }, sink);
   const text = (name: string) => quote(textOf(arg(name) ?? { kind: 'literal', value: '' }, sink));
-  const out = (key = 'result') => a.outputs[key]?.name;
+  /** Value of a Numeric parameter: a lone reference stays bare (round 1: "Not a number"). */
+  const num = (name: string) => {
+    const e = arg(name);
+    if (e?.kind === 'var') return textOf(e, sink);
+    return val(name);
+  };
+  const out = (key = 'result') => a.outputs[key]?.name ?? '?';
   /** Writes the line and flushes notes raised while building it. */
   const emit = (line: string, ...notes: NoteInput[]) => {
     w.line(line, ...pending.splice(0), ...notes);
   };
-  return { arg, str, val, text, out, emit, sink, pending };
+  return { arg, str, flag, val, text, num, out, emit, sink };
 }
 
 /** Writes a TODO for an action with no WAL form yet. */
@@ -42,45 +52,78 @@ export function manual(a: ActionStmt, w: WalWriter, why: string): void {
   w.comment(`TODO [ROSETTA] ${a.op}: ${why}`, { kind: 'manual', text: `${a.op}: ${why}` });
 }
 
-const assignment = (target: string | undefined, value: string) =>
-  `setVar --name "${ref(target ?? '?')}" --value ${value}`;
+/** `setVar` is verified in Studio (round 1). */
+const assignment = (target: string, value: string) =>
+  `setVar --name "${ref(target)}" --value ${value}`;
 
-/** Canonical op → WAL. Every command name and parameter here is a draft (W-xx). */
+/**
+ * A360 compares case-insensitively here; WAL plain search is case-sensitive, so the literal is
+ * searched as an escaped regular expression with IgnoreCase (documented regex options).
+ */
+function caseInsensitive(h: ReturnType<typeof helpers>, name: string): string | undefined {
+  const e = h.arg(name);
+  if (
+    h.str('isCaseSensitive') !== 'false' ||
+    e?.kind !== 'literal' ||
+    typeof e.value !== 'string'
+  ) {
+    return undefined;
+  }
+  return quote(regexLiteral(e.value));
+}
+
+const dateUnits: Readonly<Record<string, string>> = {
+  DAYS: 'Days',
+  HOURS: 'Hours',
+  MINUTES: 'Minutes',
+  MONTHS: 'Months',
+  SECONDS: 'Seconds',
+  YEARS: 'Years',
+};
+
+/** Canonical op → WAL (docs/formats/wal-30.0.2.md, docs/mappings/a360-to-ibm-rpa.md). */
 export const lowerers: Readonly<Record<string, Lowerer>> = {
   'variable.assign': (a, w) => {
     const h = helpers(a, w);
-    const value = a.args.sourceString
-      ? h.text('sourceString')
-      : a.args.input
-        ? h.val('input')
-        : undefined;
-    if (value !== undefined) {
-      h.emit(assignment(h.out(), value), verify('W-03', 'setVar'));
+    if (a.args.sourceString) {
+      h.emit(assignment(h.out(), h.text('sourceString')));
+      return;
+    }
+    if (a.args.input) {
+      h.emit(assignment(h.out(), h.num('input')));
       return;
     }
     if (h.str('source') === 'constant') {
-      h.emit(
-        assignment(h.out(), h.str('userDefined') === 'true' ? 'True' : 'False'),
-        verify('W-03', 'setVar with a boolean'),
-      );
+      h.emit(assignment(h.out(), h.str('userDefined') === 'true' ? 'True' : 'False'));
       return;
     }
     manual(a, w, 'assignment form not recognised');
   },
   'number.increment': (a, w) => {
     const h = helpers(a, w);
-    const expr = `${textOf(a.args.source ?? { kind: 'literal', value: 0 }, h.sink)} + ${textOf(a.args.by ?? { kind: 'literal', value: 1 }, h.sink)}`;
-    h.emit(
-      `evaluate --expression ${quote(expr)} ${h.out() ?? '?'}=value`,
-      verify('W-18', 'evaluate with an arithmetic expression and `var=value` output'),
-    );
+    const src = a.args.source;
+    const by = a.args.by;
+    if (src?.kind === 'var' && src.name === h.out() && by?.kind === 'literal' && by.value === 1) {
+      h.emit(`incrementVar --number ${ref(src.name)}`, doc('incrementVar'));
+      return;
+    }
+    const expr = `${textOf(src ?? { kind: 'literal', value: 0 }, h.sink)} + ${textOf(by ?? { kind: 'literal', value: 1 }, h.sink)}`;
+    h.emit(`evaluate --expression ${quote(expr)} ${h.out()}=value`, doc('evaluate'));
   },
   'number.toString': (a, w) => {
     const h = helpers(a, w);
     h.emit(
-      assignment(h.out(), h.text('input')),
+      `convertNumberToText --number ${h.num('input')} --conversiontype "Number" --decimals ${h.val('numFormatDigits')} ${h.out()}=value`,
+      doc('convertNumberToText (conversion type "Number")'),
+    );
+  },
+  'string.toNumber': (a, w) => {
+    const h = helpers(a, w);
+    h.emit(
+      `convertStringToNumber --text ${h.text('sourceString')} --allowleadingsign --allowdecimalpoint --culture en-US ${h.out()}=value`,
+      doc('convertStringToNumber'),
       semantic(
-        `Number to text through interpolation; A360 "digits after decimal" = ${h.str('numFormatDigits') ?? '?'} is not applied.`,
+        'A360 parses the number with the bot locale; WAL uses en-US with sign and decimal point allowed.',
       ),
     );
   },
@@ -89,12 +132,36 @@ export const lowerers: Readonly<Record<string, Lowerer>> = {
     const src = a.args.dateTime;
     if (src?.kind === 'system' && src.name === 'a360:Date') {
       h.emit(
-        `getCurrentDateAndTime --localorutc "LocalTime" ${h.out() ?? '?'}=value`,
-        v('getCurrentDateAndTime'),
+        `getCurrentDateAndTime --localorutc "LocalTime" ${h.out()}=value`,
+        doc('getCurrentDateAndTime'),
       );
       return;
     }
-    h.emit(assignment(h.out(), h.val('dateTime')), verify('W-03', 'setVar with a DateTime'));
+    h.emit(assignment(h.out(), h.val('dateTime')));
+  },
+  'datetime.add': (a, w) => {
+    const h = helpers(a, w);
+    const unit = dateUnits[h.str('unit') ?? ''];
+    if (!unit) {
+      manual(a, w, `date unit ${h.str('unit') ?? '?'} not supported`);
+      return;
+    }
+    h.emit(
+      `addToDateTime --date ${h.val('source')} --value ${h.num('val')} --type "${unit}" ${h.out()}=value`,
+      doc('addToDateTime'),
+    );
+  },
+  'datetime.format': (a, w) => {
+    const h = helpers(a, w);
+    if (h.str('selectPattern') !== 'CUSTOM') {
+      manual(a, w, 'only custom date patterns are supported');
+      return;
+    }
+    h.emit(
+      `dateTimeToText --date ${h.val('source')} --usecustomformat --customformat ${h.text('patternInput')} ${h.out()}=value`,
+      doc('dateTimeToText with a custom format'),
+      semantic('A360 and WAL both use dd/MM/yyyy-style patterns; check unusual pattern letters.'),
+    );
   },
   'list.add': (a, w) => {
     const h = helpers(a, w);
@@ -103,7 +170,10 @@ export const lowerers: Readonly<Record<string, Lowerer>> = {
       manual(a, w, 'only "add at end of list" is supported');
       return;
     }
-    h.emit(`add --collection "${ref(list.name)}" --value ${h.val('listItem')}`, v('add to a List'));
+    h.emit(
+      `add --collection "${ref(list.name)}" --value ${h.val('listItem')}`,
+      doc('add (Add to Collection)'),
+    );
   },
   'dict.put': (a, w) => {
     const h = helpers(a, w);
@@ -113,115 +183,138 @@ export const lowerers: Readonly<Record<string, Lowerer>> = {
       return;
     }
     h.emit(
-      `add --collection "${ref(dict.name)}" --key ${h.val('key')} --value ${h.val('stringVal')}`,
-      v('add to a StringDictionary'),
+      `strDictAdd --key ${h.val('key')} --value ${h.val('stringVal')} --dictionary ${ref(dict.name)}`,
+      doc('strDictAdd (Add to String Dictionary)'),
     );
   },
   'dialog.message': (a, w) => {
     const h = helpers(a, w);
-    const autoClose = a.args.closeMsgBox?.kind === 'literal' && a.args.closeMsgBox.value === true;
     h.emit(
       `messageBox --title ${h.text('title')} --text ${h.text('content')} --icon "Information" --buttons "OK" --defaultbutton "FirstButton"`,
-      v('messageBox parameters'),
-      ...(autoClose
-        ? [semantic('A360 closes this message box automatically; not reproduced.')]
+      doc('messageBox'),
+      ...(h.flag('closeMsgBox')
+        ? [semantic('A360 closes this message box automatically; WAL waits for the user.')]
         : []),
     );
   },
   'file.appendText': (a, w) => {
     const h = helpers(a, w);
-    const notes: NoteInput[] = [v('writeToFile; whether it appends or overwrites')];
-    if (a.args.appendTimestamp?.kind === 'literal' && a.args.appendTimestamp.value === true) {
-      notes.push(semantic('A360 prefixes each line with a timestamp; not reproduced.'));
-    }
-    if (h.str('encodingValue') && h.str('encodingValue') !== 'UTF-8') {
-      notes.push(
-        semantic(`A360 encoding ${h.str('encodingValue') ?? ''}; WAL default encoding used.`),
-      );
-    }
+    const notes: NoteInput[] = [
+      doc('writeToFile --encoding --writeasnewline (appends unless --overwrite)'),
+    ];
+    if (h.flag('appendTimestamp'))
+      notes.push(semantic('A360 prefixes the line with a timestamp; not reproduced.'));
+    if (h.str('logOption') !== 'APPEND_FILE')
+      notes.push(semantic('A360 overwrites the file here; add --overwrite if intended.'));
     h.emit(
-      `writeToFile --value ${h.text('logContent')} --file ${pathOf(a.args.filePath ?? { kind: 'literal', value: '' }, h.sink)}`,
+      `writeToFile --value ${h.text('logContent')} --file ${pathOf(a.args.filePath ?? { kind: 'literal', value: '' }, h.sink)} --encoding "Default" --writeasnewline`,
       ...notes,
     );
   },
   'file.appendVariables': (a, w) => {
-    manual(
-      a,
-      w,
-      'no WAL equivalent for "log variables to file"; write each variable with writeToFile',
+    const h = helpers(a, w);
+    const vars = a.args.variables;
+    const names =
+      vars?.kind === 'call' ? vars.args.filter((x) => x.kind === 'var').map((x) => x.name) : [];
+    if (names.length === 0) {
+      manual(a, w, 'variable list not recognised');
+      return;
+    }
+    const content = names.map((n) => `${n}=${ref(n)}`).join(' | ');
+    h.emit(
+      `writeToFile --value ${quote(content)} --file ${pathOf(a.args.filePath ?? { kind: 'literal', value: '' }, h.sink)} --encoding "Default" --writeasnewline`,
+      doc('writeToFile'),
+      semantic(
+        'A360 "Log variables to file" has its own line format; written here as name=value pairs.',
+      ),
     );
   },
   'string.trim': (a, w) => {
     const h = helpers(a, w);
-    const start =
-      a.args.trimAtBeginning?.kind === 'literal' && a.args.trimAtBeginning.value === true;
-    const end = a.args.trimAtEnd?.kind === 'literal' && a.args.trimAtEnd.value === true;
+    const start = h.flag('trimAtBeginning');
+    const end = h.flag('trimAtEnd');
     const option = start && end ? 'TrimStartAndEnd' : start ? 'TrimStart' : 'TrimEnd';
     h.emit(
-      `trimString --text ${h.text('sourceString')} --trimoption "${option}" ${h.out() ?? '?'}=value`,
-      v('trimString'),
+      `trimString --text ${h.text('sourceString')} --trimoption "${option}" ${h.out()}=value`,
+      doc('trimString'),
     );
   },
   'string.substring': (a, w) => {
     const h = helpers(a, w);
     h.emit(
-      `getSubString --text ${h.text('sourceString')} --start ${h.val('startIndex')} --length ${h.val('subStringLength')} ${h.out() ?? '?'}=value`,
-      v('getSubString'),
-      verify('A-19', 'A360 start index is 1-based; confirm WAL uses the same base.'),
+      `getSubString --text ${h.text('sourceString')} --start ${h.num('startIndex')} --length ${h.num('subStringLength')} ${h.out()}=value`,
+      doc('getSubString'),
+      {
+        kind: 'verify',
+        assumption: 'A-19',
+        text: 'A360 start index is 1-based; confirm getSubString --start is 1-based too.',
+      },
     );
   },
   'string.replace': (a, w) => {
     const h = helpers(a, w);
-    const notes: NoteInput[] = [v('replaceText')];
-    if (h.str('isCaseSensitive') === 'false')
-      notes.push(
-        semantic('A360 replace is case-insensitive here; WAL replaceText may be case-sensitive.'),
+    const pattern = caseInsensitive(h, 'find');
+    if (pattern) {
+      h.emit(
+        `replaceText --texttoparse ${h.text('sourceString')} --useregex --pattern ${pattern} --regexOptions "IgnoreCase" --replacement ${h.text('replaceWith')} ${h.out()}=value`,
+        doc('replaceText with --useregex and IgnoreCase (keeps A360 case-insensitive matching)'),
       );
-    if (h.str('isRegularExpression') === 'true')
-      notes.push(semantic('A360 uses a regular expression here.'));
+      return;
+    }
     h.emit(
-      `replaceText --texttoparse ${h.text('sourceString')} --textpattern ${h.text('find')} --replacement ${h.text('replaceWith')} ${h.out() ?? '?'}=value`,
-      ...notes,
+      `replaceText --texttoparse ${h.text('sourceString')} --textpattern ${h.text('find')} --replacement ${h.text('replaceWith')} ${h.out()}=value`,
+      doc('replaceText'),
     );
   },
   'string.split': (a, w) => {
     const h = helpers(a, w);
     h.emit(
-      `splitString --text ${h.text('sourceString')} --delimiteroption "CustomDelimiter" --customdelimiter ${h.text('delimiter')} ${h.out() ?? '?'}=value`,
-      v('splitString'),
+      `splitString --text ${h.text('sourceString')} --delimiteroption "CustomDelimiter" --customdelimiter ${h.text('delimiter')} ${h.out()}=value`,
+      doc('splitString'),
     );
   },
   'string.upper': (a, w) => {
     const h = helpers(a, w);
-    h.emit(`toUpper --text ${h.text('sourceString')} ${h.out() ?? '?'}=value`, v('toUpper'));
+    h.emit(
+      `changeTextCase --text ${h.text('sourceString')} --type "Upper" ${h.out()}=value`,
+      doc('changeTextCase'),
+    );
   },
   'string.lower': (a, w) => {
     const h = helpers(a, w);
-    h.emit(`toLower --text ${h.text('sourceString')} ${h.out() ?? '?'}=value`, v('toLower'));
+    h.emit(
+      `changeTextCase --text ${h.text('sourceString')} --type "Lower" ${h.out()}=value`,
+      doc('changeTextCase'),
+    );
   },
   'string.length': (a, w) => {
     const h = helpers(a, w);
     h.emit(
-      `getStringLength --text ${h.text('sourceString')} ${h.out() ?? '?'}=value`,
-      v('getStringLength'),
+      `getStringLength --text ${h.text('sourceString')} ${h.out()}=value`,
+      doc('getStringLength'),
     );
   },
   'string.indexOf': (a, w) => {
-    manual(a, w, 'WAL "find text position" command not identified yet');
-  },
-  'string.toNumber': (a, w) => {
-    manual(a, w, 'WAL text-to-number command not identified yet');
-  },
-  'datetime.add': (a, w) => {
-    manual(a, w, 'WAL date arithmetic command not identified yet');
-  },
-  'datetime.format': (a, w) => {
-    manual(a, w, 'WAL date formatting command not identified yet');
+    const h = helpers(a, w);
+    const pattern = caseInsensitive(h, 'find');
+    if (pattern) {
+      h.emit(
+        `parseText --text ${h.text('sourceString')} --useRegex --regexPattern ${pattern} --regexOptions "IgnoreCase" --startindex ${h.num('startIndex')} ${h.out()}=value`,
+        doc('parseText with --useRegex and IgnoreCase (keeps A360 case-insensitive matching)'),
+      );
+      return;
+    }
+    h.emit(
+      `parseText --text ${h.text('sourceString')} --query ${h.text('find')} --startindex ${h.num('startIndex')} ${h.out()}=value`,
+      doc('parseText (Find Occurrences in Text, 1-based)'),
+    );
   },
   'csv.open': (a, w, s) => {
     const session = a.args.session?.kind === 'literal' ? String(a.args.session.value) : 'Default';
     if (a.args.filePath) s.csvSessions.set(session, a.args.filePath);
-    w.comment(`CSV session "${session}" opened here; WAL reads the file in one step below.`);
+    w.comment(
+      `CSV session "${session}" opened here; WAL reads the file in one step (readCSV) below.`,
+    );
   },
   'csv.read': (a, w, s) => {
     const h = helpers(a, w);
@@ -232,13 +325,8 @@ export const lowerers: Readonly<Record<string, Lowerer>> = {
       return;
     }
     h.emit(
-      `readCSV --filepath ${pathOf(path, h.sink)} ${h.out() ?? '?'}=value`,
-      {
-        kind: 'manual',
-        assumption: 'W-18',
-        text: 'readCSV requires --delimiter (Studio round 1); its value syntax is not known yet.',
-      },
-      semantic('A360 options (header, delimiter, trimming, encoding) are not applied.'),
+      `readCSV --filepath ${pathOf(path, h.sink)} --delimiter "," ${h.out()}=value`,
+      doc('readCSV'),
     );
   },
 };

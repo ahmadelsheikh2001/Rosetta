@@ -23,22 +23,30 @@ describe('conversion of the real corpus', () => {
     for (const b of bots) expect(b.script.text).not.toContain('DUMMY_TEST_VALUE');
   });
 
-  it('writes only known draft commands outside comments', () => {
+  it('writes only commands documented for IBM RPA 30.0.x and present in the Studio toolbox', () => {
+    // docs/mappings/a360-to-ibm-rpa.md lists each command with its IBM documentation page
     const known = new Set([
       'defVar',
       'setVar',
       'add',
+      'strDictAdd',
       'evaluate',
+      'incrementVar',
+      'convertNumberToText',
+      'convertStringToNumber',
       'messageBox',
       'writeToFile',
       'trimString',
       'getSubString',
       'replaceText',
       'splitString',
-      'toUpper',
-      'toLower',
+      'changeTextCase',
       'getStringLength',
+      'parseText',
       'getCurrentDateAndTime',
+      'addToDateTime',
+      'dateTimeToText',
+      'getEnvVar',
       'readCSV',
       'if',
       'elseIf',
@@ -48,11 +56,19 @@ describe('conversion of the real corpus', () => {
       'next',
       'while',
       'endWhile',
+      'do',
+      'loopWhile',
       'foreach',
       'endFor',
       'break',
       'continue',
       'failTest',
+      'goSub',
+      'beginSub',
+      'endSub',
+      'return',
+      'onError',
+      'recover',
     ]);
     for (const b of bots) {
       for (const line of b.script.text.split('\r\n')) {
@@ -85,15 +101,32 @@ describe('conversion of the real corpus', () => {
 
   it('writes number values without quotes (round 1: "Not a number")', () => {
     const text = bots.find((b) => b.name === '04-error-handling')?.script.text ?? '';
-    expect(text).toContain('--value ${wdg:error.LineNumber}');
-    expect(text).not.toContain('--value "${wdg:error.LineNumber}"');
+    expect(text).toContain('--value ${rpa:errorLineNumber}');
+    expect(text).not.toContain('--value "${rpa:errorLineNumber}"');
   });
 
-  it('keeps catch bodies as comments until WAL error handling is known', () => {
-    const text = bots.find((b) => b.name === '04-error-handling')?.script.text ?? '';
-    const catchLines = text.split('\r\n').filter((l) => l.includes('catch:'));
-    expect(catchLines).toHaveLength(2);
-    for (const line of catchLines) expect(line.startsWith('//')).toBe(true);
+  it('converts the nested Try/Catch/Finally of sample 04 to onError subroutines', () => {
+    const lines = (bots.find((b) => b.name === '04-error-handling')?.script.text ?? '').split(
+      '\r\n',
+    );
+    // the catch bodies only run inside their handlers
+    for (const l of lines.filter((x) => x.includes('catch:'))) {
+      const handler = lines
+        .slice(0, lines.indexOf(l))
+        .reverse()
+        .find((x) => x.startsWith('beginSub'));
+      expect(handler).toMatch(/^beginSub --name Catch\d$/);
+    }
+    // Finally runs in the main flow, after the protected block
+    const goSub = lines.indexOf('goSub --label Try1');
+    expect(lines.findIndex((x) => x.includes('"cleanup done"'))).toBeGreaterThan(goSub);
+    expect(lines.findIndex((x) => x.includes('"cleanup done"'))).toBeLessThan(
+      lines.indexOf('beginSub --name Try1'),
+    );
+    // the inner Try is called from the outer one
+    expect(lines.indexOf('goSub --label Try2')).toBeGreaterThan(
+      lines.indexOf('beginSub --name Try1'),
+    );
   });
 
   it('balances every block', () => {

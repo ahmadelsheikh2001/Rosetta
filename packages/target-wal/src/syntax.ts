@@ -1,8 +1,8 @@
 /**
- * IBM RPA WAL syntax used by the generator: a DRAFT written from general
- * knowledge, not yet verified against Studio 30.0.2 (ADR-017). Every decision
- * names the assumption it depends on; each generated line that uses one is
- * listed in the bot's notes so it can be checked in Studio and fixed here.
+ * IBM RPA WAL syntax used by the generator. Sources, in order of strength:
+ * 1. Studio 30.0.2 round 1 (corpus/ibm/probe-30.0.2/round-1): verified.
+ * 2. IBM RPA 30.0.x command reference (docs/formats/wal-30.0.2.md): documented, to confirm in Studio.
+ * Every generated line that relies on (2) is listed in the bot's notes (ADR-017, ADR-019).
  */
 
 const BACKSLASH = String.fromCharCode(92);
@@ -10,16 +10,16 @@ const BACKSLASH = String.fromCharCode(92);
 /** Line ending of generated files (W-02). */
 export const EOL = '\r\n';
 
-/** Comment prefix (W-15). */
+/** Comment prefix. Verified, round 1 (W-15). */
 export const COMMENT = '// ';
 
-/** A360 list index 0 becomes this in WAL (W-04, A-19). */
+/** A360 list index 0 becomes this in WAL (W-04, A-19: unverified). */
 export const LIST_INDEX_BASE = 1;
 
-/** `${name}` variable reference inside values (W-04). */
+/** `${name}` variable reference. Verified, round 1. */
 export const ref = (name: string): string => `\${${name}}`;
 
-/** IR type kind → WAL `defVar --type` (W-03). */
+/** IR type kind → `defVar --type`. String/Numeric/Boolean/DataTable verified; others documented. */
 export const walTypes: Readonly<Record<string, string>> = {
   string: 'String',
   number: 'Numeric',
@@ -31,24 +31,47 @@ export const walTypes: Readonly<Record<string, string>> = {
   credential: 'SecureString',
 };
 
-/** Comparison operator names (W-05). */
+/** Conditional operators (documented: `loopWhile` operator options). */
 export const walOperators: Readonly<Record<string, string>> = {
   eq: 'Equal_To',
   gt: 'Greater_Than',
   lt: 'Less_Than',
+  ge: 'Greater_Than_Equal_To',
+  le: 'Less_Than_Equal_To',
 };
 
-/** System values available as WAL expressions (W-08). */
-export const errorMessageRef = '${wdg:error.Message}';
-export const errorLineRef = '${wdg:error.LineNumber}';
+/** Error environment variables (documented: "Environment variables", 30.0.x). */
+export const errorMessageRef = '${rpa:errorMessage}';
+export const errorLineRef = '${rpa:errorLineNumber}';
 
-/** Boolean literal spelling (W-03). */
+/**
+ * A360 system variables with a WAL equivalent. `init` lines run once at the
+ * start of the script to fill a helper variable (documented: Get Environment Variable).
+ */
+export const systemValues: Readonly<
+  Record<string, { readonly ref: string; readonly init?: readonly string[] }>
+> = {
+  'a360:AATaskName': { ref: '${rpa:scriptName}' },
+  'a360:Machine': {
+    ref: '${rosettaMachineName}',
+    init: [
+      'defVar --name rosettaMachineName --type String',
+      'getEnvVar --name COMPUTERNAME --target "Process" rosettaMachineName=value',
+    ],
+  },
+};
+
+/** Boolean literal spelling. Verified, round 1 (`--value True`). */
 export const walBoolean = (b: boolean): string => (b ? 'True' : 'False');
 
 /**
  * Quotes a value. Backslash is an escape character in WAL strings (verified, round 1:
  * `"C:\RosettaTest\log.txt"` was shown as `C:RosettaTestlog.txt`), so it is doubled.
- * Escaping a double quote with a backslash follows from that but is not verified yet (W-04).
+ * Escaping a double quote with a backslash is documented (IBM examples use `\"`).
  */
 export const quote = (text: string): string =>
   `"${text.replaceAll(BACKSLASH, BACKSLASH + BACKSLASH).replaceAll('"', BACKSLASH + '"')}"`;
+
+/** Escapes text so it matches literally inside a .NET regular expression. */
+export const regexLiteral = (text: string): string =>
+  text.replace(/[\\^$.|?*+()[\]{}]/g, (c) => BACKSLASH + c);

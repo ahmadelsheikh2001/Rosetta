@@ -7,6 +7,7 @@ import {
   errorMessageRef,
   quote,
   ref,
+  systemValues,
   walBoolean,
   walOperators,
   walTypes,
@@ -32,6 +33,8 @@ const label = (s: Statement): string | undefined =>
     ? `${s.source.label ?? s.kind} @ ${s.source.nodePath.map((i) => i + 1).join('.')}`
     : undefined;
 
+const docNote = (text: string): NoteInput => ({ kind: 'verify', assumption: 'W-18', text });
+
 function condition(expr: Expr, sink: NoteSink): string {
   if (
     expr.kind === 'binary' &&
@@ -39,6 +42,7 @@ function condition(expr: Expr, sink: NoteSink): string {
     expr.right.kind === 'literal' &&
     typeof expr.right.value === 'boolean'
   ) {
+    // "Is_True" verified in Studio, round 1.
     const negate = expr.right.value ? '' : ' --negate';
     return `--left ${valueOf(expr.left, sink)} --operator "Is_True"${negate}`;
   }
@@ -49,10 +53,25 @@ function condition(expr: Expr, sink: NoteSink): string {
   return `--left "{{ROSETTA: condition}}" --operator "Equal_To" --right "true"`;
 }
 
+/** Statements after which a protected block checks its "failed" flag. */
+const canFail = (s: Statement): boolean =>
+  (s.kind === 'action' && s.op !== 'csv.open') ||
+  s.kind === 'throw' ||
+  s.kind === 'callBot' ||
+  s.kind === 'try';
+
 class Lowerer {
-  readonly w = new WalWriter();
+  /** Writer for the main flow; subroutines are written separately and appended at the end. */
+  w = new WalWriter();
+  readonly subs: WalWriter[] = [];
+  /** Helper variables (defVar lines) the conversion needs, declared after the bot's own. */
+  readonly helperVars: string[] = [];
   readonly state: LowerState = { csvSessions: new Map() };
   private readonly loops: (string | undefined)[] = [];
+  /** "failed" flags of the protected blocks being written, innermost last. */
+  private readonly guards: string[] = [];
+  private tries = 0;
+  private helpers = 0;
 
   /** Writes a line with notes collected from expression lowering. */
   private emit(build: (sink: NoteSink) => string, ...notes: NoteInput[]): void {
@@ -61,8 +80,24 @@ class Lowerer {
     this.w.line(text, ...pending, ...notes);
   }
 
+  private helperVar(prefix: string, defVar: (name: string) => string): string {
+    const name = `rosetta${prefix}${++this.helpers}`;
+    this.helperVars.push(defVar(name));
+    return name;
+  }
+
   block(block: Block): void {
-    for (const s of block) this.statement(s);
+    for (const s of block) {
+      this.statement(s);
+      const guard = this.guards.at(-1);
+      if (guard && canFail(s) && !s.disabled && !this.w.inComment) {
+        // A360 leaves the Try block at the first error; WAL `recover` resumes at the next
+        // command, so the protected subroutine returns as soon as its handler ran.
+        this.w.line(`if --left "${ref(guard)}" --operator "Is_True"`);
+        this.w.line('return', docNote('return (Return from Subroutine)'));
+        this.w.line('endIf');
+      }
+    }
   }
 
   statement(s: Statement): void {
@@ -103,15 +138,14 @@ class Lowerer {
       }
       case 'if':
         s.branches.forEach((b, i) => {
-          this.emit((sink) => `${i === 0 ? 'if' : 'elseIf'} ${condition(b.condition, sink)}`, {
-            kind: 'verify',
-            assumption: 'W-05',
-            text: 'if / elseIf condition syntax',
-          });
+          this.emit(
+            (sink) => `${i === 0 ? 'if' : 'elseIf'} ${condition(b.condition, sink)}`,
+            ...(i > 0 ? [docNote('elseIf')] : []),
+          );
           this.block(b.body);
         });
         if (s.else) {
-          w.line('else');
+          w.line('else', docNote('else'));
           this.block(s.else);
         }
         w.line('endIf');
@@ -131,18 +165,20 @@ class Lowerer {
                 },
               ]
             : [];
-        w.line(s.kind, { kind: 'verify', assumption: 'W-05', text: s.kind }, ...notes);
+        w.line(
+          s.kind,
+          docNote(s.kind === 'break' ? 'break (Interrupt Loop)' : 'continue'),
+          ...notes,
+        );
         return;
       }
       case 'try':
         this.tryCatch(s);
         return;
       case 'throw':
-        this.emit((sink) => `failTest --message ${valueOf(s.message, sink)}`, {
-          kind: 'verify',
-          assumption: 'W-09',
-          text: 'failTest as "throw": confirm an enclosing tryCatch catches it instead of ending the bot.',
-        });
+        // failTest verified in Studio (round 1); documented as the way to raise exceptions
+        // that onError catches ("Raising your own exceptions").
+        this.emit((sink) => `failTest --message ${valueOf(s.message, sink)}`);
         return;
       case 'callBot':
       case 'stop':
@@ -162,49 +198,53 @@ class Lowerer {
   private loop(s: Extract<Statement, { kind: 'loop' }>): void {
     const w = this.w;
     const spec = s.loop;
-    const loopVerify: NoteInput = {
-      kind: 'verify',
-      assumption: 'W-05',
-      text: `${spec.kind} loop syntax`,
-    };
     this.loops.push(s.label);
     try {
       if (spec.kind === 'times') {
+        const index =
+          spec.indexVar?.name ??
+          this.helperVar('Index', (n) => `defVar --name ${n} --type Numeric`);
         this.emit(
           (sink) =>
-            `for --variable ${ref(spec.indexVar?.name ?? 'rosettaIndex')} --from 1 --to ${valueOf(spec.count, sink)} --step 1`,
-          loopVerify,
+            `for --variable ${ref(index)} --from 1 --to ${valueOf(spec.count, sink)} --step 1`,
+          docNote('for / next'),
         );
         this.block(s.body);
         w.line('next');
+      } else if (spec.kind === 'while' && spec.checkAtEnd) {
+        w.line('do', docNote('do / loopWhile (Do-While)'));
+        this.block(s.body);
+        this.emit((sink) => `loopWhile ${condition(spec.condition, sink)}`);
       } else if (spec.kind === 'while') {
-        const notes: NoteInput[] = spec.checkAtEnd
-          ? [
-              {
-                kind: 'semantic',
-                text: 'A360 checks this condition at the end (do-while); WAL while checks first.',
-              },
-            ]
-          : [];
-        this.emit((sink) => `while ${condition(spec.condition, sink)}`, loopVerify, ...notes);
+        this.emit(
+          (sink) => `while ${condition(spec.condition, sink)}`,
+          docNote('while / endWhile'),
+        );
         this.block(s.body);
         w.line('endWhile');
-      } else if (spec.collection === 'list' || spec.collection === 'dictKeys') {
-        const notes: NoteInput[] =
-          spec.collection === 'dictKeys'
-            ? [
-                {
-                  kind: 'semantic',
-                  text: 'A360 iterates the dictionary keys; confirm what WAL foreach yields for a StringDictionary.',
-                },
-              ]
-            : [];
+      } else if (spec.collection === 'list') {
         this.emit(
           (sink) =>
             `foreach --collection ${valueOf(spec.source, sink)} --variable "${ref(spec.itemVar.name)}"`,
-          loopVerify,
-          ...notes,
+          docNote('foreach / endFor'),
         );
+        this.block(s.body);
+        w.line('endFor');
+      } else if (spec.collection === 'dictKeys') {
+        // foreach over a StringDictionary yields key-value pairs; A360 yields the keys.
+        const pair = this.helperVar(
+          'Entry',
+          (n) => `defVar --name ${n} --type StringKeyValuePair --innertype String`,
+        );
+        this.emit(
+          (sink) => `foreach --collection ${valueOf(spec.source, sink)} --variable "${ref(pair)}"`,
+          docNote('foreach over a StringDictionary (documented collection type)'),
+        );
+        w.line(`setVar --name "${ref(spec.itemVar.name)}" --value "${ref(`${pair}.Key`)}"`, {
+          kind: 'verify',
+          assumption: 'W-04',
+          text: `Key of the current entry read as ${ref(`${pair}.Key`)}; confirm the property name.`,
+        });
         this.block(s.body);
         w.line('endFor');
       } else {
@@ -212,7 +252,7 @@ class Lowerer {
           `TODO [ROSETTA] loop over ${spec.collection} not converted yet; source kept below as comments.`,
           {
             kind: 'manual',
-            text: `Loop over ${spec.collection} (source: ${textOf(spec.source, () => undefined)}) not converted yet.`,
+            text: `Loop over ${spec.collection} (source: ${textOf(spec.source, () => undefined)}) not converted yet. WAL: getFiles returns paths, A360 gives a dictionary with name/extension.`,
           },
         );
         w.commented('', () => {
@@ -224,68 +264,108 @@ class Lowerer {
     }
   }
 
+  /**
+   * A360 Try/Catch/Finally → WAL (documented: Handle Error, Exception handling scope):
+   *
+   *   setVar flag False / goSub Try_n / <finally>            (main flow)
+   *   beginSub Try_n:   onError --label Catch_n, <body>, a flag check after each command
+   *   beginSub Catch_n: flag True, error variables, <catch>, recover
+   *
+   * onError watches the subroutine it is called in; `recover` resumes after the failing
+   * command, where the flag check returns from Try_n, so the rest of the body is skipped
+   * like in A360.
+   */
   private tryCatch(s: Extract<Statement, { kind: 'try' }>): void {
-    const w = this.w;
-    // Refuted in round 1: Studio 30.0.2 has no tryCatch / catch / endTryCatch. Until the WAL
-    // error-handling construct is known, the block markers are written as comments.
-    w.comment('tryCatch (A360 Try: no WAL error handling written yet)', {
-      kind: 'manual',
-      assumption: 'W-08',
-      text: 'A360 Try/Catch is not converted yet: WAL has no tryCatch command (Studio round 1). The protected commands run without error handling.',
-    });
+    const n = ++this.tries;
+    const flag = `rosettaTry${n}Failed`;
+    const trySub = `Try${n}`;
+    const catchSub = `Catch${n}`;
+    this.helperVars.push(`defVar --name ${flag} --type Boolean`);
+    const main = this.w;
+
+    main.line(`setVar --name "${ref(flag)}" --value False`);
+    main.line(`goSub --label ${trySub}`, docNote('goSub / beginSub / endSub'));
+
+    // Try subroutine
+    const tryW = new WalWriter();
+    this.subs.push(tryW);
+    this.w = tryW;
+    tryW.source = main.source;
+    tryW.comment(`A360 Try (${main.source ?? 'source'})`);
+    tryW.line(`beginSub --name ${trySub}`);
+    if (s.catches.length > 0) {
+      tryW.line(`onError --label ${catchSub}`, docNote('onError --label (Handle Error)'));
+      this.guards.push(flag);
+    }
     this.block(s.body);
-    s.catches.forEach((c, i) => {
-      const notes: NoteInput[] =
-        c.errorType && c.errorType !== 'BotException'
-          ? [
-              {
-                kind: 'semantic',
-                text: `Catches only ${c.errorType} in A360; WAL catches all errors.`,
-              },
-            ]
-          : [];
-      if (i > 0)
-        notes.push({
-          kind: 'manual',
-          text: 'Several catch blocks: only the first one is reached in WAL.',
-        });
-      w.comment(
-        'catch (A360 Catch: kept as comments, they must only run after an error)',
-        ...notes,
-      );
-      // Without a WAL error-handling construct, the catch body must not run on the normal path.
-      w.commented('', () => {
-        if (c.errorVar)
-          w.line(`setVar --name "${ref(c.errorVar.name)}" --value "${errorMessageRef}"`, {
-            kind: 'verify',
-            assumption: 'W-08',
-            text: `error message system value ${errorMessageRef}`,
-          });
-        if (c.lineVar)
-          w.line(`setVar --name "${ref(c.lineVar.name)}" --value ${errorLineRef}`, {
-            kind: 'verify',
-            assumption: 'W-08',
-            text: `error line system value ${errorLineRef}`,
-          });
-        this.block(c.body);
-      });
-    });
-    w.comment('endTryCatch');
-    if (s.finally) {
-      let throws = 0;
-      for (const c of s.catches) {
-        walk(c.body, (x) => {
-          if (x.kind === 'throw') throws++;
+    if (s.catches.length > 0) this.guards.pop();
+    tryW.line('endSub');
+
+    // Catch subroutine
+    const catchW = new WalWriter();
+    this.subs.push(catchW);
+    this.w = catchW;
+    catchW.source = main.source;
+    const [first, ...others] = s.catches;
+    if (first) {
+      catchW.comment(`A360 Catch (${first.errorType ?? 'all errors'})`);
+      catchW.line(`beginSub --name ${catchSub}`);
+      catchW.line(`setVar --name "${ref(flag)}" --value True`);
+      if (first.errorVar) {
+        catchW.line(
+          `setVar --name "${ref(first.errorVar.name)}" --value "${errorMessageRef}"`,
+          docNote(`${errorMessageRef} (error environment variable)`),
+        );
+      }
+      if (first.lineVar) {
+        catchW.line(
+          `setVar --name "${ref(first.lineVar.name)}" --value ${errorLineRef}`,
+          docNote(`${errorLineRef} (error environment variable)`),
+        );
+      }
+      if (first.errorType && first.errorType !== 'BotException') {
+        catchW.note({
+          kind: 'semantic',
+          text: `A360 catches only ${first.errorType}; WAL onError catches every error.`,
         });
       }
-      const rethrows = throws > 0;
-      w.comment('finally (emulated: runs after the try/catch)', {
-        kind: rethrows || s.catches.length === 0 ? 'manual' : 'semantic',
-        text:
-          rethrows || s.catches.length === 0
-            ? 'Finally is emulated after endTryCatch, but an error can leave the block first: the cleanup may not run.'
-            : 'Finally is emulated after endTryCatch; equivalent here because every catch handles the error.',
+      if (others.length > 0) {
+        catchW.note({
+          kind: 'manual',
+          text: 'Several A360 catch blocks: only the first is converted.',
+        });
+      }
+      let rethrows = 0;
+      walk(first.body, (x) => {
+        if (x.kind === 'throw') rethrows++;
       });
+      if (rethrows > 0) {
+        catchW.note({
+          kind: 'manual',
+          text: 'The catch block throws again; check how WAL handles an error raised inside an error handler.',
+        });
+      }
+      // An error handler must end with recover (documented), so no flag check returns from it.
+      const outer = this.guards.splice(0);
+      this.block(first.body);
+      this.guards.push(...outer);
+      catchW.line('recover', docNote('recover (Recover From Error)'));
+      catchW.line('endSub');
+    }
+    this.w = main;
+
+    if (s.finally) {
+      main.comment(
+        'A360 Finally: runs after the protected block, with or without an error',
+        ...(s.catches.length === 0
+          ? [
+              {
+                kind: 'manual' as const,
+                text: 'Try/Finally without Catch: an error leaves the bot before the Finally commands run.',
+              },
+            ]
+          : []),
+      );
       this.block(s.finally);
     }
   }
@@ -294,9 +374,7 @@ class Lowerer {
     const w = this.w;
     const init: (() => void)[] = [];
     for (const v of vars) {
-      const notes: NoteInput[] = [
-        { kind: 'verify', assumption: 'W-03', text: 'defVar and type name' },
-      ];
+      const notes: NoteInput[] = [];
       let type = walTypes[v.type.kind];
       if (!type) {
         type = 'String';
@@ -304,18 +382,19 @@ class Lowerer {
           kind: 'manual',
           text: `Variable ${v.name}: source type ${v.type.kind} has no WAL type yet; declared as String.`,
         });
+      } else if (!['string', 'number', 'boolean', 'table'].includes(v.type.kind)) {
+        notes.push(docNote(`defVar --type ${type}`));
       }
       let line = `defVar --name ${v.name} --type ${type}`;
-      if (v.type.kind === 'list' || v.type.kind === 'dict') {
+      if (v.type.kind === 'list' || v.type.kind === 'dict')
         line += ` --innertype ${walTypes[v.type.of.kind] ?? 'String'}`;
-      }
 
       const d = v.defaultValue;
       if (v.type.kind === 'credential') {
         if (d)
           notes.push({
             kind: 'manual',
-            text: `Credential ${v.name} had a hardcoded value in the source; not carried over. Read it from the vault.`,
+            text: `Credential ${v.name} had a hardcoded value in the source; not carried over. Read it from the vault (getVaultItem).`,
           });
       } else if (d?.kind === 'literal' && d.value !== null && d.value !== '') {
         if (v.type.kind === 'datetime') {
@@ -326,13 +405,34 @@ class Lowerer {
         } else {
           line += ` --value ${typeof d.value === 'boolean' ? walBoolean(d.value) : typeof d.value === 'number' ? String(d.value) : quote(d.value)}`;
         }
-      } else if (
-        d?.kind === 'call' &&
-        (d.fn === 'list.of' || d.fn === 'dict.of') &&
-        d.args.length > 0
-      ) {
+      } else if (d?.kind === 'call' && d.fn === 'list.of' && d.args.length > 0) {
+        const items = d.args.map((a) => (a.kind === 'literal' ? String(a.value) : undefined));
+        if (items.every((i): i is string => i !== undefined && !/[,[\]"]/.test(i))) {
+          // documented: defVar --type List --innertype String --value "[a,b,c]"
+          line += ` --value "[${items.join(',')}]"`;
+          notes.push(docNote('list initial value "[a,b,c]"'));
+        } else {
+          init.push(() => {
+            for (const item of d.args)
+              this.emit(
+                (sink) => `add --collection "${ref(v.name)}" --value ${valueOf(item, sink)}`,
+                docNote('add'),
+              );
+          });
+        }
+      } else if (d?.kind === 'call' && d.fn === 'dict.of' && d.args.length > 0) {
         init.push(() => {
-          this.collectionInit(v.name, d);
+          for (let i = 0; i + 1 < d.args.length; i += 2) {
+            const key = d.args[i];
+            const value = d.args[i + 1];
+            if (key && value) {
+              this.emit(
+                (sink) =>
+                  `strDictAdd --key ${valueOf(key, sink)} --value ${valueOf(value, sink)} --dictionary ${ref(v.name)}`,
+                docNote('strDictAdd'),
+              );
+            }
+          }
         });
       } else if (
         d?.kind === 'call' &&
@@ -351,63 +451,66 @@ class Lowerer {
       w.line(line, ...notes);
     }
     if (init.length) {
-      w.comment('---- Initial values of collections ----');
+      w.comment('---- Initial values of dictionaries ----');
       for (const f of init) f();
-    }
-  }
-
-  private collectionInit(name: string, d: Extract<Expr, { kind: 'call' }>): void {
-    const verify: NoteInput = {
-      kind: 'verify',
-      assumption: 'W-03',
-      text: 'filling a collection with add',
-    };
-    if (d.fn === 'list.of') {
-      for (const item of d.args)
-        this.emit(
-          (sink) => `add --collection "${ref(name)}" --value ${valueOf(item, sink)}`,
-          verify,
-        );
-      return;
-    }
-    for (let i = 0; i + 1 < d.args.length; i += 2) {
-      const key = d.args[i];
-      const value = d.args[i + 1];
-      if (key && value)
-        this.emit(
-          (sink) =>
-            `add --collection "${ref(name)}" --key ${valueOf(key, sink)} --value ${valueOf(value, sink)}`,
-          verify,
-        );
     }
   }
 }
 
-/** Generates a DRAFT WAL script for one bot, with notes for every line to check. */
+/** Collects the A360 system variables a bot uses. */
+function systemNames(bot: Bot): Set<string> {
+  const names = new Set<string>();
+  const json = JSON.stringify(bot.body);
+  for (const m of json.matchAll(/"kind":"system","name":"([^"]+)"/g)) if (m[1]) names.add(m[1]);
+  return names;
+}
+
+/** Generates a WAL script for one bot, with notes for every line to check. */
 export function lowerBot(bot: Bot, options: LowerOptions): WalScript {
   const l = new Lowerer();
-  const w = l.w;
+
+  // Body first: it decides which helper variables and subroutines are needed.
+  l.w = new WalWriter();
+  l.block(bot.body);
+  const body = l.w;
+
+  const out = new WalWriter();
   const fields = new Set(options.profile.header.fields);
   const io = (dir: 'input' | 'output') =>
     bot.variables
       .filter((v) => v.direction === dir || v.direction === 'inout')
       .map((v) => `${v.name} (${walTypes[v.type.kind] ?? v.type.kind})`)
       .join(', ') || 'none';
-
-  w.comment('='.repeat(70));
-  if (fields.has('name')) w.comment(`Bot:         ${bot.name}`);
-  if (fields.has('description') && bot.description) w.comment(`Description: ${bot.description}`);
+  out.comment('='.repeat(70));
+  if (fields.has('name')) out.comment(`Bot:         ${bot.name}`);
+  if (fields.has('description') && bot.description) out.comment(`Description: ${bot.description}`);
   if (fields.has('sourceRef'))
-    w.comment(`Source:      ${bot.source.file} (Automation Anywhere A360)`);
-  if (fields.has('convertedAt')) w.comment(`Converted:   ${options.generatedAt}`);
-  if (fields.has('rosettaVersion')) w.comment(`Generator:   RPA Rosetta ${options.rosettaVersion}`);
-  if (fields.has('inputs')) w.comment(`Inputs:      ${io('input')}`);
-  if (fields.has('outputs')) w.comment(`Outputs:     ${io('output')}`);
-  w.comment('Status:      DRAFT - WAL syntax not yet verified in IBM RPA Studio 30.0.2');
-  w.comment('='.repeat(70));
+    out.comment(`Source:      ${bot.source.file} (Automation Anywhere A360)`);
+  if (fields.has('convertedAt')) out.comment(`Converted:   ${options.generatedAt}`);
+  if (fields.has('rosettaVersion'))
+    out.comment(`Generator:   RPA Rosetta ${options.rosettaVersion}`);
+  if (fields.has('inputs')) out.comment(`Inputs:      ${io('input')}`);
+  if (fields.has('outputs')) out.comment(`Outputs:     ${io('output')}`);
+  out.comment(
+    'Status:      DRAFT - syntax from the IBM RPA 30.0.x reference, being verified in Studio 30.0.2',
+  );
+  out.comment('='.repeat(70));
 
+  l.w = out;
   l.variables(bot.variables);
-  l.block(bot.body);
+  const system = [...systemNames(bot)].flatMap((n) => systemValues[n]?.init ?? []);
+  const helperDefs = [...l.helperVars, ...system.filter((x) => x.startsWith('defVar'))];
+  if (helperDefs.length) {
+    out.comment('---- Helper variables added by the conversion ----');
+    for (const d of helperDefs) out.line(d);
+  }
+  for (const cmd of system.filter((x) => !x.startsWith('defVar')))
+    out.line(cmd, docNote(cmd.split(' ')[0] ?? ''));
 
-  return { fileName: `${bot.name}.wal`, text: w.toString(), notes: w.notes };
+  out.append(body);
+  if (l.subs.length) {
+    out.comment('---- Subroutines added by the conversion (A360 Try/Catch) ----');
+    for (const s of l.subs) out.append(s);
+  }
+  return { fileName: `${bot.name}.wal`, text: out.toString(), notes: out.notes };
 }

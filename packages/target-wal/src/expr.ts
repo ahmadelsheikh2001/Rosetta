@@ -1,5 +1,5 @@
 import type { Expr } from '@rosetta/ir';
-import { LIST_INDEX_BASE, quote, ref, walBoolean } from './syntax.js';
+import { LIST_INDEX_BASE, quote, ref, systemValues, walBoolean } from './syntax.js';
 import type { NoteInput } from './writer.js';
 
 /** Collects notes raised while lowering one expression. */
@@ -60,8 +60,18 @@ export function textOf(expr: Expr, sink: NoteSink): string {
     case 'call':
       if (expr.fn === 'convert.toString' && expr.args[0]) return textOf(expr.args[0], sink);
       return placeholder(expr.fn, sink, `Function ${expr.fn} has no WAL form yet.`);
-    case 'system':
-      return placeholder(expr.name, sink, `System value ${expr.name} has no WAL form yet.`);
+    case 'system': {
+      const known = systemValues[expr.name];
+      if (known) {
+        sink({
+          kind: 'verify',
+          assumption: 'W-18',
+          text: `System value ${expr.name} written as ${known.ref} (documented).`,
+        });
+        return known.ref;
+      }
+      return placeholder(expr.name, sink, `System value ${expr.name} has no WAL equivalent.`);
+    }
     case 'raw':
       return placeholder(
         `unread expression`,

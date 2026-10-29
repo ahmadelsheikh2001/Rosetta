@@ -5,7 +5,7 @@
 // Generator:   RPA Rosetta 0.0.0
 // Inputs:      vTextIn (String), vNumIn (Numeric)
 // Outputs:     vResult (String)
-// Status:      DRAFT - WAL syntax not yet verified in IBM RPA Studio 30.0.2
+// Status:      DRAFT - syntax from the IBM RPA 30.0.x reference, being verified in Studio 30.0.2
 // ======================================================================
 defVar --name SampleNumber --type Numeric
 defVar --name SampleString --type String
@@ -16,15 +16,14 @@ defVar --name vKey --type String
 defVar --name vNumIn --type Numeric --value 7 --parameter
 defVar --name vCounter --type Numeric --value 0
 defVar --name vFlag --type Boolean --value True
-defVar --name vList --type List --innertype String
+defVar --name vList --type List --innertype String --value "[Alpha,Skip,Gamma]"
 defVar --name vDict --type StringDictionary --innertype String
 defVar --name vFileInfo --type StringDictionary --innertype String
-// ---- Initial values of collections ----
-add --collection "${vList}" --value "Alpha"
-add --collection "${vList}" --value "Skip"
-add --collection "${vList}" --value "Gamma"
-add --collection "${vDict}" --key "k1" --value "v1"
-add --collection "${vDict}" --key "k2" --value "v2"
+// ---- Initial values of dictionaries ----
+strDictAdd --key "k1" --value "v1" --dictionary ${vDict}
+strDictAdd --key "k2" --value "v2" --dictionary ${vDict}
+// ---- Helper variables added by the conversion ----
+defVar --name rosettaEntry1 --type StringKeyValuePair --innertype String
 // ---- Nested conditions ----
 // RR_02: nested If / Else If / Else on Number, String and Boolean
 if --left "${vNumIn}" --operator "Greater_Than" --right 5
@@ -46,7 +45,7 @@ break
 endIf
 next
 while --left "${vCounter}" --operator "Less_Than" --right 10
-evaluate --expression "${vCounter} + 1" vCounter=value
+incrementVar --number ${vCounter}
 endWhile
 foreach --collection "${vList}" --variable "${vItem}"
 if --left "${vItem}" --operator "Equal_To" --right "Skip"
@@ -54,7 +53,8 @@ continue
 endIf
 setVar --name "${vResult}" --value "Processed ${vItem}"
 endFor
-foreach --collection "${vDict}" --variable "${vKey}"
+foreach --collection "${vDict}" --variable "${rosettaEntry1}"
+setVar --name "${vKey}" --value "${rosettaEntry1.Key}"
 setVar --name "${vResult}" --value "Key ${vKey} has value ${vDict[${vKey}]}"
 endFor
 // TODO [ROSETTA] loop over file not converted yet; source kept below as comments.

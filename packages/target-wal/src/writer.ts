@@ -65,6 +65,13 @@ export class WalWriter {
     return this.commentDepth > 0;
   }
 
+  /** Appends another writer's lines; its note line numbers are shifted accordingly. */
+  append(other: WalWriter): void {
+    const offset = this.lines.length;
+    this.lines.push(...other.lines);
+    for (const n of other.notes) this.notes.push({ ...n, line: n.line + offset });
+  }
+
   toString(): string {
     return this.lines.join(EOL) + EOL;
   }

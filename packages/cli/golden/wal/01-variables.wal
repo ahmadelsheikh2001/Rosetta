@@ -5,7 +5,7 @@
 // Generator:   RPA Rosetta 0.0.0
 // Inputs:      vStr (String)
 // Outputs:     vNum (Numeric)
-// Status:      DRAFT - WAL syntax not yet verified in IBM RPA Studio 30.0.2
+// Status:      DRAFT - syntax from the IBM RPA 30.0.x reference, being verified in Studio 30.0.2
 // ======================================================================
 defVar --name SampleNumber --type Numeric
 defVar --name SampleString --type String
@@ -13,15 +13,13 @@ defVar --name vStr --type String --value "Test User" --parameter
 defVar --name vNum --type Numeric --value 12345 --output
 defVar --name vBool --type Boolean --value True
 defVar --name vDate --type DateTime
-defVar --name vList --type List --innertype String
+defVar --name vList --type List --innertype String --value "[Alpha,Beta]"
 defVar --name vDict --type StringDictionary --innertype String
 defVar --name vTable --type DataTable
 defVar --name vCred --type SecureString
-// ---- Initial values of collections ----
-add --collection "${vList}" --value "Alpha"
-add --collection "${vList}" --value "Beta"
-add --collection "${vDict}" --key "name" --value "Test User"
-add --collection "${vDict}" --key "city" --value "Test City"
+// ---- Initial values of dictionaries ----
+strDictAdd --key "name" --value "Test User" --dictionary ${vDict}
+strDictAdd --key "city" --value "Test City" --dictionary ${vDict}
 // ---- Assign new values ----
 // RR_01: assign a new value to each variable type
 setVar --name "${vStr}" --value "Updated Test User"
@@ -29,10 +27,10 @@ setVar --name "${vNum}" --value 100
 evaluate --expression "${vNum} + 5" vNum=value
 setVar --name "${vBool}" --value False
 add --collection "${vList}" --value "${vStr}"
-add --collection "${vDict}" --key "country" --value "Testland"
+strDictAdd --key "country" --value "Testland" --dictionary ${vDict}
 // ---- Show and log values ----
 // RR_01: display and log selected variables
 messageBox --title "RR_01 Variables" --text "vStr=${vStr} | vNum=${vNum} | vBool=${vBool} | first item=${vList[1]} | name=${vDict[name]}" --icon "Information" --buttons "OK" --defaultbutton "FirstButton"
-writeToFile --value "vStr=${vStr} | vNum=${vNum} | city=${vDict[city]} | item1=${vList[2]}" --file "C:\\RosettaTest\\log.txt"
-// TODO [ROSETTA] file.appendVariables: no WAL equivalent for "log variables to file"; write each variable with writeToFile
+writeToFile --value "vStr=${vStr} | vNum=${vNum} | city=${vDict[city]} | item1=${vList[2]}" --file "C:\\RosettaTest\\log.txt" --encoding "Default" --writeasnewline
+writeToFile --value "vBool=${vBool} | vDate=${vDate} | vNum=${vNum} | vStr=${vStr}" --file "C:\\RosettaTest\\log.txt" --encoding "Default" --writeasnewline
 // [DISABLED] messageBox --title "Automation Anywhere Enterprise Client" --text "This action is disabled on purpose" --icon "Information" --buttons "OK" --defaultbutton "FirstButton"

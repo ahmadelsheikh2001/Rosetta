@@ -69,6 +69,18 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: Se
   from the corpus and a fixture runner test.
 - Golden WAL tests over corpus 01–04.
 
+#### WAL from the IBM RPA 30.0.x reference
+
+- Studio round 1 applied: backslashes escaped, numbers unquoted, no `tryCatch`.
+- Generator rewritten against the IBM RPA 30.0.x command reference and the Studio toolbox: all 24
+  corpus commands now convert (`changeTextCase`, `parseText`, `addToDateTime`, `dateTimeToText`,
+  `convertStringToNumber`, `convertNumberToText`, `strDictAdd`, `incrementVar`, …).
+- A360 Try/Catch/Finally → `onError` handler subroutines with a failed flag (ADR-020).
+- Dictionary key loops, do-while, `$System:Machine$` (`getEnvVar`) and `$System:AATaskName$`
+  (`${rpa:scriptName}`); list defaults as `--value "[a,b]"`.
+- `docs/mappings/a360-to-ibm-rpa.md` (what converts, what has no equivalent),
+  `docs/formats/wal-30.0.2.md`, toolbox evidence in `corpus/ibm/toolbox-30.0.2`.
+
 ### Planned (deferred by ADR-016)
 
 - dependency-cruiser layer enforcement
