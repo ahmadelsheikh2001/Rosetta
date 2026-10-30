@@ -1,6 +1,6 @@
 # ADR-020: A360 Try/Catch/Finally as onError subroutines
 
-- **Status:** Accepted (pattern documented, to confirm by running RR_04 in Studio)
+- **Status:** Accepted, verified in Studio 30.0.2 (corpus/ibm/probe-30.0.2/round-6)
 - **Date:** 2026-10-29
 
 ## Context
@@ -28,3 +28,9 @@ exception type (WAL catches every error), Try/Finally without Catch, a Catch tha
 Behaviour matches A360 for the corpus cases, at the cost of extra lines (the flag checks) in the
 generated script. To confirm in Studio: nested Try (does the outer `onError` apply again after the
 inner subroutine returns?) and the run order of RR_04.
+
+## Verification
+
+Round 6 ran the converted RR_04 to completion: inner Catch, outer Catch (from the Throw), then
+Finally, as in A360. Round 5 showed that the outer handler must be set again after a nested Try
+returns, so the generator writes `onError --label <outer>` right after `goSub --label <inner>`.
