@@ -129,12 +129,12 @@ describe('lowerBot', () => {
       'setVar --name "${rosettaTry1Failed}" --value False',
       'goSub --label Try1',
       '// ---- Subroutines added by the conversion (A360 Try/Catch) ----',
-      '// A360 Try (source)',
       'beginSub --name Try1',
+      '// A360 Try (source)',
       'onError --label Catch1',
       'endSub',
-      '// A360 Catch (all errors)',
       'beginSub --name Catch1',
+      '// A360 Catch (all errors)',
       'setVar --name "${rosettaTry1Failed}" --value True',
       'setVar --name "${err}" --value "${rpa:errorMessage}"',
       'recover',
@@ -165,6 +165,7 @@ describe('lowerBot', () => {
     // a flag check follows every command of the protected block
     expect(sub).toEqual([
       'beginSub --name Try1',
+      '// A360 Try (source)',
       'onError --label Catch1',
       'changeTextCase --text "${a}" --type "Upper" a=value',
       'if --left "${rosettaTry1Failed}" --operator "Is_True"',

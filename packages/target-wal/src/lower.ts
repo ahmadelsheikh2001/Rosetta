@@ -291,8 +291,8 @@ class Lowerer {
     this.subs.push(tryW);
     this.w = tryW;
     tryW.source = main.source;
-    tryW.comment(`A360 Try (${main.source ?? 'source'})`);
     tryW.line(`beginSub --name ${trySub}`);
+    tryW.comment(`A360 Try (${main.source ?? 'source'})`);
     if (s.catches.length > 0) {
       tryW.line(`onError --label ${catchSub}`, docNote('onError --label (Handle Error)'));
       this.guards.push(flag);
@@ -308,8 +308,8 @@ class Lowerer {
     catchW.source = main.source;
     const [first, ...others] = s.catches;
     if (first) {
-      catchW.comment(`A360 Catch (${first.errorType ?? 'all errors'})`);
       catchW.line(`beginSub --name ${catchSub}`);
+      catchW.comment(`A360 Catch (${first.errorType ?? 'all errors'})`);
       catchW.line(`setVar --name "${ref(flag)}" --value True`);
       if (first.errorVar) {
         catchW.line(

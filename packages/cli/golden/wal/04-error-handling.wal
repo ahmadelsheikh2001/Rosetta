@@ -30,8 +30,8 @@ setVar --name "${vStatus}" --value "finished"
 // RR_04: wrap up after error handling
 // [DISABLED] messageBox --title "Automation Anywhere Enterprise Client" --text "Disabled on purpose: status=${vStatus} inner=${vErrMsg} outer=${vOuterErr}" --icon "Information" --buttons "OK" --defaultbutton "FirstButton"
 // ---- Subroutines added by the conversion (A360 Try/Catch) ----
-// A360 Try (ErrorHandler/try @ 1.2)
 beginSub --name Try1
+// A360 Try (ErrorHandler/try @ 1.2)
 onError --label Catch1
 setVar --name "${rosettaTry2Failed}" --value False
 goSub --label Try2
@@ -45,8 +45,8 @@ return
 endIf
 endIf
 endSub
-// A360 Try (ErrorHandler/try @ 1.2.1)
 beginSub --name Try2
+// A360 Try (ErrorHandler/try @ 1.2.1)
 onError --label Catch2
 // CSV session "Default" opened here; WAL reads the file in one step (readCSV) below.
 readCSV --filepath "${vFilePath}" --delimiter "," vFileTable=value
@@ -54,16 +54,16 @@ if --left "${rosettaTry2Failed}" --operator "Is_True"
 return
 endIf
 endSub
-// A360 Catch (BotException)
 beginSub --name Catch2
+// A360 Catch (BotException)
 setVar --name "${rosettaTry2Failed}" --value True
 setVar --name "${vErrMsg}" --value "${rpa:errorMessage}"
 setVar --name "${vErrLine}" --value ${rpa:errorLineNumber}
 writeToFile --value "Inner catch: ${vErrMsg} (line ${vErrLine})" --file "C:\\RosettaTest\\log.txt" --encoding "Default" --writeasnewline
 recover
 endSub
-// A360 Catch (BotException)
 beginSub --name Catch1
+// A360 Catch (BotException)
 setVar --name "${rosettaTry1Failed}" --value True
 setVar --name "${vOuterErr}" --value "${rpa:errorMessage}"
 setVar --name "${vErrLine}" --value ${rpa:errorLineNumber}

@@ -97,6 +97,20 @@ describe('conversion of the real corpus', () => {
     }
   });
 
+  it('writes nothing between or after subroutine blocks (round 3: blocks must be at the bottom)', () => {
+    for (const b of bots) {
+      const lines = b.script.text.split('\r\n').filter((l) => l !== '');
+      const first = lines.findIndex((l) => l.startsWith('beginSub '));
+      if (first === -1) continue;
+      let inside = false;
+      for (const line of lines.slice(first)) {
+        if (line.startsWith('beginSub ')) inside = true;
+        else if (!inside) expect.fail(`${b.name}: "${line}" is outside a subroutine block`);
+        if (line === 'endSub') inside = false;
+      }
+    }
+  });
+
   it('uses option values Studio accepts (round 2: conversiontype "Number" rejected)', () => {
     for (const b of bots) expect(b.script.text, b.name).not.toContain('--conversiontype "Number"');
   });
