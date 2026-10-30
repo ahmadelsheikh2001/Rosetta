@@ -91,6 +91,18 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: Se
 - Static WAL checker (`checkWal`): command catalog with required parameters and allowed values, plus the
   Studio structure rules; it finds all nine errors of round 1. `rosetta convert` reports its result per bot.
 
+#### Excel, sub-bots and vault credentials (corpus 05 and 08)
+
+- Corpus: RR_05_Excel, RR_08_Parent and RR_08_Child (byte-exact exports, hashes checked).
+- `@rosetta/source-a360`: SESSION, vault CREDENTIAL, TASKBOT and RECORD values; Excel row loop
+  (`loop.iterators.excel`); Run Task Bot lifted to `callBot` with its inputs and outputs.
+- Registry: Excel_MS OpenSpreadsheet, SetCell, SaveSpreadSheet, CloseSpreadsheet and
+  Credential assignToCV, each with a corpus fixture.
+- `@rosetta/target-wal` (from the IBM RPA 30.0.x reference, to verify in Studio): `excelOpen`,
+  `excelSet`, `excelClose --save`; the row loop as `excelGetTable` + `for` + `mapTableRow` with one
+  variable per column read; Run Task Bot as `executeScript` with JSON inputs/outputs; vault
+  credentials read with `getVaultItem`, never written as values.
+
 ### Planned (deferred by ADR-016)
 
 - dependency-cruiser layer enforcement

@@ -1,0 +1,23 @@
+// ======================================================================
+// Bot:         RR_08_Parent
+// Source:      08-subbot-credentials/RR_08_Parent.json (Automation Anywhere A360)
+// Converted:   2026-10-29T00:00:00.000Z
+// Generator:   RPA Rosetta 0.0.0
+// Inputs:      none
+// Outputs:     none
+// Status:      DRAFT - syntax from the IBM RPA 30.0.x reference, being verified in Studio 30.0.2
+// ======================================================================
+defVar --name SampleNumber --type Numeric
+defVar --name SampleString --type String
+defVar --name vResult --type String
+defVar --name vCopy --type String
+defVar --name vHardcoded --type String
+defVar --name vPassword --type SecureString
+defVar --name vCopyCred --type SecureString
+// ---- Initial values ----
+getVaultItem --name "DummyLogin" vPassword=password
+getVaultItem --name "DummyLogin" vCopyCred=password
+executeScript --name "RR_08_Child" --parameters "{\"inName\":\"Test User\"}" --output "{\"outGreeting\":\"${vResult}\"}"
+setVar --name "${vCopyCred}" --value "${vPassword}"
+setVar --name "${vHardcoded}" --value "NotARealPassword1"
+messageBox --title "Automation Anywhere Enterprise Client" --text "Result: ${vResult}" --icon "Information" --buttons "OK" --defaultbutton "FirstButton"

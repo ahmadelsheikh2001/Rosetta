@@ -1,0 +1,20 @@
+id: a360.excelms.savespreadsheet
+from: corpus/a360/05-excel/bot.json
+node:
+  uid: 71315d9b-ce7d-4d41-bb4c-990592d52747
+  commandName: SaveSpreadSheet
+  packageName: Excel_MS
+  disabled: false
+  attributes:
+    - name: session
+      value:
+        sessionName:
+          string: Default
+          type: STRING
+        type: SESSION
+    - name: isDisplayErrorEnabled
+      value:
+        boolean: false
+        type: BOOLEAN
+expect:
+  op: excel.save

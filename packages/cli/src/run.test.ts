@@ -79,7 +79,7 @@ describe('rosetta assess', () => {
   it('assesses the real corpus and writes a non-synthetic report', () => {
     const corpus = fileURLToPath(new URL('../../../corpus/a360', import.meta.url));
     expect(cli('assess', corpus, '--out', 'report')).toBe(ExitCode.Ok);
-    expect(out).toContain('Assessed 4 bot(s)');
+    expect(out).toContain('Assessed 7 bot(s)');
     const html = readFileSync(join(dir, 'report', 'report.html'), 'utf8');
     expect(html).not.toContain('class="banner"');
     expect(html).toContain('>04-error-handling</h2>');

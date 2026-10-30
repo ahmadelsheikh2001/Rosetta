@@ -1,0 +1,14 @@
+// ======================================================================
+// Bot:         RR_08_Child
+// Source:      08-subbot-credentials/RR_08_Child.json (Automation Anywhere A360)
+// Converted:   2026-10-29T00:00:00.000Z
+// Generator:   RPA Rosetta 0.0.0
+// Inputs:      inName (String)
+// Outputs:     outGreeting (String)
+// Status:      DRAFT - syntax from the IBM RPA 30.0.x reference, being verified in Studio 30.0.2
+// ======================================================================
+defVar --name SampleNumber --type Numeric
+defVar --name SampleString --type String
+defVar --name inName --type String --parameter
+defVar --name outGreeting --type String --output
+setVar --name "${outGreeting}" --value "Hello ${inName}"

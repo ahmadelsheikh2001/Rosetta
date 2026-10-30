@@ -101,6 +101,45 @@ describe('lowerBot', () => {
     expect(script.notes.some((n) => n.kind === 'manual' && n.text.includes('vault'))).toBe(true);
   });
 
+  it('reads a vault password with getVaultItem and leaves other attributes to the developer', () => {
+    const vault = (attribute: string): Expr => ({
+      kind: 'call',
+      fn: 'credential.vault',
+      args: [lit('Locker'), lit('Login'), lit(attribute)],
+    });
+    const b = bot('b', [], {
+      variables: [
+        variable(
+          'pwd',
+          { kind: 'credential' },
+          { sensitive: true, defaultValue: vault('password') },
+        ),
+        variable(
+          'usr',
+          { kind: 'credential' },
+          { sensitive: true, defaultValue: vault('username') },
+        ),
+      ],
+    });
+    const out = body(b);
+    expect(out).toContain('getVaultItem --name "Login" pwd=password');
+    expect(out.some((l) => l.startsWith('getVaultItem') && l.includes('usr'))).toBe(false);
+    expect(out.some((l) => l.startsWith('// TODO [ROSETTA] usr: vault attribute "username"'))).toBe(
+      true,
+    );
+  });
+
+  it('writes a TODO for an Excel command whose session was never opened', () => {
+    const b = bot('b', [
+      action('excel.setCell', {
+        args: { session: lit('Other'), cellOption: lit('SPECIFIC_CELL') },
+      }),
+    ]);
+    expect(body(b)).toContain(
+      '// TODO [ROSETTA] excel.setCell: Excel session "Other" was not opened in this bot',
+    );
+  });
+
   it('writes control flow blocks', () => {
     const b = bot('b', [
       group('Step', [

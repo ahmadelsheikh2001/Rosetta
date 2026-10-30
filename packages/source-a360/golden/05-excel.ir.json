@@ -1,0 +1,320 @@
+{
+  "id": "05-excel/bot.json",
+  "name": "05-excel",
+  "source": {
+    "platform": "a360",
+    "file": "05-excel/bot.json",
+    "nodePath": []
+  },
+  "variables": [
+    {
+      "name": "SampleNumber",
+      "type": {
+        "kind": "number"
+      },
+      "direction": "local",
+      "sensitive": false
+    },
+    {
+      "name": "SampleString",
+      "type": {
+        "kind": "string"
+      },
+      "direction": "local",
+      "sensitive": false
+    },
+    {
+      "name": "vRow",
+      "type": {
+        "kind": "record"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "defaultValue": {
+        "kind": "call",
+        "fn": "record.of",
+        "args": [
+          {
+            "kind": "literal",
+            "value": "{\"schema\":[],\"values\":[]}"
+          }
+        ]
+      }
+    }
+  ],
+  "packages": [
+    {
+      "name": "Excel_MS",
+      "version": "6.23.20"
+    },
+    {
+      "name": "LogToFile",
+      "version": "3.11.1"
+    },
+    {
+      "name": "Loop",
+      "version": "3.10.0-20251030-061555"
+    }
+  ],
+  "body": [
+    {
+      "id": "ca1a38ff-e0b6-47d8-8091-67ba1808163c",
+      "source": {
+        "platform": "a360",
+        "file": "05-excel/bot.json",
+        "nodePath": [
+          0
+        ],
+        "nodeId": "ca1a38ff-e0b6-47d8-8091-67ba1808163c",
+        "label": "Excel_MS/OpenSpreadsheet"
+      },
+      "kind": "action",
+      "op": "vendor:a360/Excel_MS/OpenSpreadsheet",
+      "args": {
+        "excelSourceOption": {
+          "kind": "literal",
+          "value": "desktopfilepath"
+        },
+        "filePath": {
+          "kind": "literal",
+          "value": "file:///C:/RosettaTest/input.xlsx"
+        },
+        "containsHeader": {
+          "kind": "literal",
+          "value": true
+        },
+        "isSpecificSheet": {
+          "kind": "literal",
+          "value": false
+        },
+        "fileAccessMode": {
+          "kind": "literal",
+          "value": "EDIT"
+        },
+        "isSecure": {
+          "kind": "literal",
+          "value": false
+        },
+        "loadAddIns": {
+          "kind": "literal",
+          "value": false
+        },
+        "excludeHiddenSheets": {
+          "kind": "literal",
+          "value": false
+        },
+        "containsChart": {
+          "kind": "literal",
+          "value": false
+        },
+        "setSensitivity": {
+          "kind": "literal",
+          "value": false
+        },
+        "disableUpdateLinks": {
+          "kind": "literal",
+          "value": false
+        },
+        "session": {
+          "kind": "literal",
+          "value": "Default"
+        }
+      },
+      "outputs": {}
+    },
+    {
+      "id": "fd939c37-06b8-4f13-850e-12e7283a941e",
+      "source": {
+        "platform": "a360",
+        "file": "05-excel/bot.json",
+        "nodePath": [
+          1
+        ],
+        "nodeId": "fd939c37-06b8-4f13-850e-12e7283a941e",
+        "label": "Loop/loop.commands.start"
+      },
+      "kind": "loop",
+      "loop": {
+        "kind": "forEach",
+        "collection": "tableRow",
+        "source": {
+          "kind": "call",
+          "fn": "excel.rows",
+          "args": [
+            {
+              "kind": "literal",
+              "value": "Default"
+            }
+          ]
+        },
+        "itemVar": {
+          "kind": "var",
+          "name": "vRow",
+          "path": []
+        }
+      },
+      "body": [
+        {
+          "id": "b4f546b2-96d3-42dc-8749-0d253cb2f4dc",
+          "source": {
+            "platform": "a360",
+            "file": "05-excel/bot.json",
+            "nodePath": [
+              1,
+              0
+            ],
+            "nodeId": "b4f546b2-96d3-42dc-8749-0d253cb2f4dc",
+            "label": "LogToFile/logToFile"
+          },
+          "kind": "action",
+          "op": "vendor:a360/LogToFile/logToFile",
+          "args": {
+            "filePath": {
+              "kind": "literal",
+              "value": "file:///C:/RosettaTest/log.txt"
+            },
+            "logContent": {
+              "kind": "template",
+              "parts": [
+                {
+                  "kind": "literal",
+                  "value": "Name="
+                },
+                {
+                  "kind": "var",
+                  "name": "vRow",
+                  "path": [
+                    {
+                      "kind": "key",
+                      "key": {
+                        "kind": "literal",
+                        "value": "Name"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "kind": "literal",
+                  "value": " Amount="
+                },
+                {
+                  "kind": "var",
+                  "name": "vRow",
+                  "path": [
+                    {
+                      "kind": "key",
+                      "key": {
+                        "kind": "literal",
+                        "value": "Amount"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "appendTimestamp": {
+              "kind": "literal",
+              "value": false
+            },
+            "logOption": {
+              "kind": "literal",
+              "value": "APPEND_FILE"
+            },
+            "encodingValue": {
+              "kind": "literal",
+              "value": "ANSI"
+            }
+          },
+          "outputs": {}
+        }
+      ]
+    },
+    {
+      "id": "db094de8-1da1-4005-9fef-c00fc626e293",
+      "source": {
+        "platform": "a360",
+        "file": "05-excel/bot.json",
+        "nodePath": [
+          2
+        ],
+        "nodeId": "db094de8-1da1-4005-9fef-c00fc626e293",
+        "label": "Excel_MS/SetCell"
+      },
+      "kind": "action",
+      "op": "vendor:a360/Excel_MS/SetCell",
+      "args": {
+        "cellOption": {
+          "kind": "literal",
+          "value": "SPECIFIC_CELL"
+        },
+        "cell": {
+          "kind": "literal",
+          "value": "C1"
+        },
+        "value": {
+          "kind": "literal",
+          "value": "Done"
+        },
+        "session": {
+          "kind": "literal",
+          "value": "Default"
+        }
+      },
+      "outputs": {}
+    },
+    {
+      "id": "71315d9b-ce7d-4d41-bb4c-990592d52747",
+      "source": {
+        "platform": "a360",
+        "file": "05-excel/bot.json",
+        "nodePath": [
+          3
+        ],
+        "nodeId": "71315d9b-ce7d-4d41-bb4c-990592d52747",
+        "label": "Excel_MS/SaveSpreadSheet"
+      },
+      "kind": "action",
+      "op": "vendor:a360/Excel_MS/SaveSpreadSheet",
+      "args": {
+        "session": {
+          "kind": "literal",
+          "value": "Default"
+        },
+        "isDisplayErrorEnabled": {
+          "kind": "literal",
+          "value": false
+        }
+      },
+      "outputs": {}
+    },
+    {
+      "id": "a46cccee-304d-48f9-ae92-44a98334b295",
+      "source": {
+        "platform": "a360",
+        "file": "05-excel/bot.json",
+        "nodePath": [
+          4
+        ],
+        "nodeId": "a46cccee-304d-48f9-ae92-44a98334b295",
+        "label": "Excel_MS/CloseSpreadsheet"
+      },
+      "kind": "action",
+      "op": "vendor:a360/Excel_MS/CloseSpreadsheet",
+      "args": {
+        "session": {
+          "kind": "literal",
+          "value": "Default"
+        },
+        "isSave": {
+          "kind": "literal",
+          "value": true
+        },
+        "isDisplayErrorEnabled": {
+          "kind": "literal",
+          "value": false
+        }
+      },
+      "outputs": {}
+    }
+  ]
+}

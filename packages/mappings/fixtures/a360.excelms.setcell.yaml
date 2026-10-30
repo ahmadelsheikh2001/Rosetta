@@ -1,0 +1,28 @@
+id: a360.excelms.setcell
+from: corpus/a360/05-excel/bot.json
+node:
+  uid: db094de8-1da1-4005-9fef-c00fc626e293
+  commandName: SetCell
+  packageName: Excel_MS
+  disabled: false
+  attributes:
+    - name: cellOption
+      value:
+        type: STRING
+        string: SPECIFIC_CELL
+    - name: cell
+      value:
+        type: STRING
+        string: C1
+    - name: value
+      value:
+        type: STRING
+        string: Done
+    - name: session
+      value:
+        type: SESSION
+        sessionName:
+          type: STRING
+          string: Default
+expect:
+  op: excel.setCell

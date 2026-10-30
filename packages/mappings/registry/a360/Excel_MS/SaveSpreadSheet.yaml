@@ -1,0 +1,11 @@
+id: a360.excelms.savespreadsheet
+source:
+  platform: a360
+  package: Excel_MS
+  command: SaveSpreadSheet
+status: partial
+irOp: excel.save
+evidence:
+  - corpus/a360/05-excel/bot.json
+notes: Lifted to a canonical op; the WAL form is a draft until verified in IBM
+  RPA Studio (ADR-017).

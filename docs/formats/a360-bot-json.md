@@ -52,8 +52,21 @@ A disabled node is a normal node with `disabled: true` (01, 02, 03, 04: one each
 | Throw            | `ErrorHandler/throw`, attributes `message`, `exceptionType` (04)                                                               |
 
 Iterators seen: `loop.iterators.times` (Loop), `list.iterators.list` (List),
-`dictionary.iterators.keys` (Dictionary), `loop.iterators.files` (File). Note the iterator's
-package can differ from `Loop`.
+`dictionary.iterators.keys` (Dictionary), `loop.iterators.files` (File), `loop.iterators.excel`
+(Excel_MS, "For each row in worksheet", 05: attributes `loopSelection` `ALL_ROWS`, `readOption`
+`READ_CELL_TEXT`, `session`; `returnTo` a RECORD variable). Note the iterator's package can differ
+from `Loop`.
+
+Run Task Bot (08): `TaskBot/runTask`, attribute `taskbot` =
+`{ type: TASKBOT, taskbotFile: { type: FILE, string: "repository:///Automation%20Anywhere/Bots/<folder>/<bot>" }, taskbotInput: { type: DICTIONARY, dictionary: [{ key: <child input variable>, value }] } }`;
+`returnTo` = `{ type: DICTIONARY, dictionary: [{ key: <child output variable>, value: { type: VARIABLE, variableName } }] }`.
+The child is referenced by URL-encoded repository path, not by id (A-13). Other attributes:
+`repeatOption` (`DO_NOT_REPEAT`), `delayNextRepetition`, `continueOnError`.
+
+Sessions (05): Excel_MS commands name their session. The opening command declares it in
+`returnTo: { type: SESSION, sessionName: { type: STRING, string: "Default" }, sessionTarget: LOCAL }`;
+the others carry an attribute `session` = `{ type: SESSION, sessionName: … }`. CsvTxt (04) stores
+the session name as a plain `STRING` attribute instead.
 
 Exception type seen: `BotException` (shown as "AllErrors" in the UI).
 
@@ -87,6 +100,10 @@ Operators are codes: `EQ`, `GT`, `LT` (02, 04).
 | `CONDITIONAL` | `conditionalName`, `packageName`                                                                  | 02, 04                             |
 | `ITERATOR`    | `iteratorName`, `packageName`                                                                     | 02                                 |
 | `EXCEPTION`   | `exceptionName`, `packageName`                                                                    | 04                                 |
+| `SESSION`     | `sessionName` (a `STRING` value)                                                                  | 05                                 |
+| `CREDENTIAL`  | `credential: { lockerName, name, attributeName }` (vault) or `expression` (`$vPassword$`)         | 08                                 |
+| `TASKBOT`     | `taskbotFile` (FILE value), `taskbotInput` (DICTIONARY value)                                     | 08                                 |
+| `RECORD`      | `record: { schema: [], values: [] }`                                                              | 05 (empty default only)            |
 
 Watch out:
 
@@ -99,12 +116,15 @@ Watch out:
 `{ name, type, subtype?, description?, readOnly, input, output, defaultValue? }`.
 
 - Types seen: `STRING`, `NUMBER`, `BOOLEAN`, `DATETIME`, `LIST` / `DICTIONARY` (with `subtype`,
-  e.g. `STRING`), `TABLE`, `CREDENTIAL`. Template variables `SampleNumber` / `SampleString` carry
-  `subtype: UNDEFINED` and no `defaultValue`.
+  e.g. `STRING`), `TABLE`, `CREDENTIAL`, `RECORD` (05, no `subtype`). Template variables
+  `SampleNumber` / `SampleString` carry `subtype: UNDEFINED` and no `defaultValue`.
 - Direction: `input` / `output` booleans (no `inout` seen).
 - `CREDENTIAL` with an insecure literal default: `defaultValue: { type: STRING, string: "…" }` (01).
-  This is the shape the hardcoded-credential rule looks for. **A vault reference has not been seen
-  yet** (A-10).
+  This is the shape the hardcoded-credential rule looks for.
+- `CREDENTIAL` from the vault (08): `defaultValue: { type: CREDENTIAL, credential: { lockerName, name, attributeName } }`.
+  No value is stored. The editor requires a default for every Credential variable (A-10).
+- A Credential cannot be copied into a `STRING` variable in the editor: String: Assign rejects
+  `$vPassword$`. `Credential/assignToCV` copies it into another Credential variable (08).
 - `VARIABLEMAP` stores names lower-cased (`vbool` for `vBool`), which suggests names are
   case-insensitive. Not confirmed.
 

@@ -12,21 +12,21 @@
     "hardcoded-email"
   ],
   "portfolio": {
-    "bots": 4,
-    "statements": 58,
+    "bots": 7,
+    "statements": 69,
     "coverage": {
       "mapped": 0,
-      "partial": 43,
+      "partial": 52,
       "manual": 0,
-      "total": 43,
+      "total": 52,
       "percent": 100
     },
     "qualityScore": 92,
     "effort": {
       "bySize": {
         "S": {
-          "bots": 2,
-          "hours": 8
+          "bots": 5,
+          "hours": 20
         },
         "M": {
           "bots": 2,
@@ -41,25 +41,25 @@
           "hours": 0
         }
       },
-      "totalHours": 32,
+      "totalHours": 44,
       "calibrated": false
     },
     "topManual": [],
     "topQuality": [
       {
         "key": "QUAL-UNUSED-VARIABLE",
-        "occurrences": 10,
-        "bots": 4
+        "occurrences": 17,
+        "bots": 7
+      },
+      {
+        "key": "QUAL-MISSING-ERROR-HANDLING",
+        "occurrences": 6,
+        "bots": 6
       },
       {
         "key": "QUAL-DISABLED-CODE",
         "occurrences": 4,
         "bots": 4
-      },
-      {
-        "key": "QUAL-MISSING-ERROR-HANDLING",
-        "occurrences": 3,
-        "bots": 3
       },
       {
         "key": "QUAL-HARDCODED-CREDENTIAL",
@@ -69,13 +69,18 @@
     ],
     "packages": [
       {
-        "name": "Comment",
-        "version": "2.17.0",
-        "bots": 4
+        "name": "String",
+        "version": "5.12.6",
+        "bots": 6
       },
       {
         "name": "MessageBox",
         "version": "3.8.1",
+        "bots": 5
+      },
+      {
+        "name": "Comment",
+        "version": "2.17.0",
         "bots": 4
       },
       {
@@ -89,13 +94,13 @@
         "bots": 4
       },
       {
-        "name": "String",
-        "version": "5.12.6",
-        "bots": 4
-      },
-      {
         "name": "Boolean",
         "version": "2.13.3",
+        "bots": 3
+      },
+      {
+        "name": "LogToFile",
+        "version": "3.11.1",
         "bots": 3
       },
       {
@@ -114,9 +119,14 @@
         "bots": 2
       },
       {
-        "name": "LogToFile",
-        "version": "3.11.1",
+        "name": "Loop",
+        "version": "3.10.0-20251030-061555",
         "bots": 2
+      },
+      {
+        "name": "Credential",
+        "version": "1.8.0",
+        "bots": 1
       },
       {
         "name": "CsvTxt",
@@ -134,18 +144,23 @@
         "bots": 1
       },
       {
+        "name": "Excel_MS",
+        "version": "6.23.20",
+        "bots": 1
+      },
+      {
         "name": "File",
         "version": "6.16.2",
         "bots": 1
       },
       {
-        "name": "Loop",
-        "version": "3.10.0-20251030-061555",
+        "name": "System",
+        "version": "3.18.2",
         "bots": 1
       },
       {
-        "name": "System",
-        "version": "3.18.2",
+        "name": "TaskBot",
+        "version": "2.10.0-20241119-100739",
         "bots": 1
       }
     ]
@@ -1487,6 +1502,438 @@
         {
           "name": "String",
           "version": "5.12.6"
+        }
+      ]
+    },
+    {
+      "id": "05-excel/bot.json",
+      "name": "05-excel",
+      "file": "05-excel/bot.json",
+      "metrics": {
+        "nodes": 6,
+        "maxDepth": 1,
+        "packages": 3,
+        "uiActions": 0,
+        "subBotCalls": 0,
+        "unmapped": 0,
+        "errorHandlers": 0
+      },
+      "complexity": {
+        "score": 20,
+        "size": "S",
+        "hours": 4
+      },
+      "coverage": {
+        "mapped": 0,
+        "partial": 5,
+        "manual": 0,
+        "total": 5,
+        "percent": 100
+      },
+      "conversionItems": [
+        {
+          "nodeId": "ca1a38ff-e0b6-47d8-8091-67ba1808163c",
+          "source": {
+            "platform": "a360",
+            "file": "05-excel/bot.json",
+            "nodePath": [
+              0
+            ],
+            "nodeId": "ca1a38ff-e0b6-47d8-8091-67ba1808163c",
+            "label": "Excel_MS/OpenSpreadsheet"
+          },
+          "op": "excel.open",
+          "bucket": "partial",
+          "reason": "partial",
+          "mappingId": "a360.excelms.openspreadsheet"
+        },
+        {
+          "nodeId": "b4f546b2-96d3-42dc-8749-0d253cb2f4dc",
+          "source": {
+            "platform": "a360",
+            "file": "05-excel/bot.json",
+            "nodePath": [
+              1,
+              0
+            ],
+            "nodeId": "b4f546b2-96d3-42dc-8749-0d253cb2f4dc",
+            "label": "LogToFile/logToFile"
+          },
+          "op": "file.appendText",
+          "bucket": "partial",
+          "reason": "partial",
+          "mappingId": "a360.logtofile.logtofile"
+        },
+        {
+          "nodeId": "db094de8-1da1-4005-9fef-c00fc626e293",
+          "source": {
+            "platform": "a360",
+            "file": "05-excel/bot.json",
+            "nodePath": [
+              2
+            ],
+            "nodeId": "db094de8-1da1-4005-9fef-c00fc626e293",
+            "label": "Excel_MS/SetCell"
+          },
+          "op": "excel.setCell",
+          "bucket": "partial",
+          "reason": "partial",
+          "mappingId": "a360.excelms.setcell"
+        },
+        {
+          "nodeId": "71315d9b-ce7d-4d41-bb4c-990592d52747",
+          "source": {
+            "platform": "a360",
+            "file": "05-excel/bot.json",
+            "nodePath": [
+              3
+            ],
+            "nodeId": "71315d9b-ce7d-4d41-bb4c-990592d52747",
+            "label": "Excel_MS/SaveSpreadSheet"
+          },
+          "op": "excel.save",
+          "bucket": "partial",
+          "reason": "partial",
+          "mappingId": "a360.excelms.savespreadsheet"
+        },
+        {
+          "nodeId": "a46cccee-304d-48f9-ae92-44a98334b295",
+          "source": {
+            "platform": "a360",
+            "file": "05-excel/bot.json",
+            "nodePath": [
+              4
+            ],
+            "nodeId": "a46cccee-304d-48f9-ae92-44a98334b295",
+            "label": "Excel_MS/CloseSpreadsheet"
+          },
+          "op": "excel.close",
+          "bucket": "partial",
+          "reason": "partial",
+          "mappingId": "a360.excelms.closespreadsheet"
+        }
+      ],
+      "quality": {
+        "score": 94,
+        "findings": [
+          {
+            "code": "QUAL-MISSING-ERROR-HANDLING",
+            "severity": "warning",
+            "category": "quality",
+            "messageId": "quality.missing-error-handling",
+            "params": {
+              "bot": "05-excel",
+              "actions": 5
+            },
+            "source": {
+              "platform": "a360",
+              "file": "05-excel/bot.json",
+              "nodePath": []
+            }
+          },
+          {
+            "code": "QUAL-UNUSED-VARIABLE",
+            "severity": "info",
+            "category": "quality",
+            "messageId": "quality.unused-variable",
+            "params": {
+              "bot": "05-excel",
+              "variable": "SampleNumber"
+            },
+            "source": {
+              "platform": "a360",
+              "file": "05-excel/bot.json",
+              "nodePath": []
+            }
+          },
+          {
+            "code": "QUAL-UNUSED-VARIABLE",
+            "severity": "info",
+            "category": "quality",
+            "messageId": "quality.unused-variable",
+            "params": {
+              "bot": "05-excel",
+              "variable": "SampleString"
+            },
+            "source": {
+              "platform": "a360",
+              "file": "05-excel/bot.json",
+              "nodePath": []
+            }
+          }
+        ]
+      },
+      "packages": [
+        {
+          "name": "Excel_MS",
+          "version": "6.23.20"
+        },
+        {
+          "name": "LogToFile",
+          "version": "3.11.1"
+        },
+        {
+          "name": "Loop",
+          "version": "3.10.0-20251030-061555"
+        }
+      ]
+    },
+    {
+      "id": "08-subbot-credentials/RR_08_Child.json",
+      "name": "RR_08_Child",
+      "file": "08-subbot-credentials/RR_08_Child.json",
+      "metrics": {
+        "nodes": 1,
+        "maxDepth": 0,
+        "packages": 1,
+        "uiActions": 0,
+        "subBotCalls": 0,
+        "unmapped": 0,
+        "errorHandlers": 0
+      },
+      "complexity": {
+        "score": 4,
+        "size": "S",
+        "hours": 4
+      },
+      "coverage": {
+        "mapped": 0,
+        "partial": 1,
+        "manual": 0,
+        "total": 1,
+        "percent": 100
+      },
+      "conversionItems": [
+        {
+          "nodeId": "df0fe6a7-0d64-4066-a220-927ec68d9ba9",
+          "source": {
+            "platform": "a360",
+            "file": "08-subbot-credentials/RR_08_Child.json",
+            "nodePath": [
+              0
+            ],
+            "nodeId": "df0fe6a7-0d64-4066-a220-927ec68d9ba9",
+            "label": "String/assign"
+          },
+          "op": "variable.assign",
+          "bucket": "partial",
+          "reason": "partial",
+          "mappingId": "a360.string.assign"
+        }
+      ],
+      "quality": {
+        "score": 94,
+        "findings": [
+          {
+            "code": "QUAL-MISSING-ERROR-HANDLING",
+            "severity": "warning",
+            "category": "quality",
+            "messageId": "quality.missing-error-handling",
+            "params": {
+              "bot": "RR_08_Child",
+              "actions": 1
+            },
+            "source": {
+              "platform": "a360",
+              "file": "08-subbot-credentials/RR_08_Child.json",
+              "nodePath": []
+            }
+          },
+          {
+            "code": "QUAL-UNUSED-VARIABLE",
+            "severity": "info",
+            "category": "quality",
+            "messageId": "quality.unused-variable",
+            "params": {
+              "bot": "RR_08_Child",
+              "variable": "SampleNumber"
+            },
+            "source": {
+              "platform": "a360",
+              "file": "08-subbot-credentials/RR_08_Child.json",
+              "nodePath": []
+            }
+          },
+          {
+            "code": "QUAL-UNUSED-VARIABLE",
+            "severity": "info",
+            "category": "quality",
+            "messageId": "quality.unused-variable",
+            "params": {
+              "bot": "RR_08_Child",
+              "variable": "SampleString"
+            },
+            "source": {
+              "platform": "a360",
+              "file": "08-subbot-credentials/RR_08_Child.json",
+              "nodePath": []
+            }
+          }
+        ]
+      },
+      "packages": [
+        {
+          "name": "String",
+          "version": "5.12.6"
+        }
+      ]
+    },
+    {
+      "id": "08-subbot-credentials/RR_08_Parent.json",
+      "name": "RR_08_Parent",
+      "file": "08-subbot-credentials/RR_08_Parent.json",
+      "metrics": {
+        "nodes": 4,
+        "maxDepth": 0,
+        "packages": 4,
+        "uiActions": 0,
+        "subBotCalls": 1,
+        "unmapped": 0,
+        "errorHandlers": 0
+      },
+      "complexity": {
+        "score": 19,
+        "size": "S",
+        "hours": 4
+      },
+      "coverage": {
+        "mapped": 0,
+        "partial": 3,
+        "manual": 0,
+        "total": 3,
+        "percent": 100
+      },
+      "conversionItems": [
+        {
+          "nodeId": "5b4e8931-01b3-49ac-95c9-8e145a224621",
+          "source": {
+            "platform": "a360",
+            "file": "08-subbot-credentials/RR_08_Parent.json",
+            "nodePath": [
+              1
+            ],
+            "nodeId": "5b4e8931-01b3-49ac-95c9-8e145a224621",
+            "label": "Credential/assignToCV"
+          },
+          "op": "credential.assign",
+          "bucket": "partial",
+          "reason": "partial",
+          "mappingId": "a360.credential.assigntocv"
+        },
+        {
+          "nodeId": "1f7aac37-01d4-4875-a6f1-13e4e0c33e97",
+          "source": {
+            "platform": "a360",
+            "file": "08-subbot-credentials/RR_08_Parent.json",
+            "nodePath": [
+              2
+            ],
+            "nodeId": "1f7aac37-01d4-4875-a6f1-13e4e0c33e97",
+            "label": "String/assign"
+          },
+          "op": "variable.assign",
+          "bucket": "partial",
+          "reason": "partial",
+          "mappingId": "a360.string.assign"
+        },
+        {
+          "nodeId": "20d72b69-9d47-4aa7-980a-c30000e8eabb",
+          "source": {
+            "platform": "a360",
+            "file": "08-subbot-credentials/RR_08_Parent.json",
+            "nodePath": [
+              3
+            ],
+            "nodeId": "20d72b69-9d47-4aa7-980a-c30000e8eabb",
+            "label": "MessageBox/messageBox"
+          },
+          "op": "dialog.message",
+          "bucket": "partial",
+          "reason": "partial",
+          "mappingId": "a360.messagebox.messagebox"
+        }
+      ],
+      "quality": {
+        "score": 93,
+        "findings": [
+          {
+            "code": "QUAL-MISSING-ERROR-HANDLING",
+            "severity": "warning",
+            "category": "quality",
+            "messageId": "quality.missing-error-handling",
+            "params": {
+              "bot": "RR_08_Parent",
+              "actions": 4
+            },
+            "source": {
+              "platform": "a360",
+              "file": "08-subbot-credentials/RR_08_Parent.json",
+              "nodePath": []
+            }
+          },
+          {
+            "code": "QUAL-UNUSED-VARIABLE",
+            "severity": "info",
+            "category": "quality",
+            "messageId": "quality.unused-variable",
+            "params": {
+              "bot": "RR_08_Parent",
+              "variable": "SampleNumber"
+            },
+            "source": {
+              "platform": "a360",
+              "file": "08-subbot-credentials/RR_08_Parent.json",
+              "nodePath": []
+            }
+          },
+          {
+            "code": "QUAL-UNUSED-VARIABLE",
+            "severity": "info",
+            "category": "quality",
+            "messageId": "quality.unused-variable",
+            "params": {
+              "bot": "RR_08_Parent",
+              "variable": "SampleString"
+            },
+            "source": {
+              "platform": "a360",
+              "file": "08-subbot-credentials/RR_08_Parent.json",
+              "nodePath": []
+            }
+          },
+          {
+            "code": "QUAL-UNUSED-VARIABLE",
+            "severity": "info",
+            "category": "quality",
+            "messageId": "quality.unused-variable",
+            "params": {
+              "bot": "RR_08_Parent",
+              "variable": "vCopy"
+            },
+            "source": {
+              "platform": "a360",
+              "file": "08-subbot-credentials/RR_08_Parent.json",
+              "nodePath": []
+            }
+          }
+        ]
+      },
+      "packages": [
+        {
+          "name": "Credential",
+          "version": "1.8.0"
+        },
+        {
+          "name": "MessageBox",
+          "version": "3.8.1"
+        },
+        {
+          "name": "String",
+          "version": "5.12.6"
+        },
+        {
+          "name": "TaskBot",
+          "version": "2.10.0-20241119-100739"
         }
       ]
     }

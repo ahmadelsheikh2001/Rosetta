@@ -1,0 +1,28 @@
+// ======================================================================
+// Bot:         05-excel
+// Source:      05-excel/bot.json (Automation Anywhere A360)
+// Converted:   2026-10-29T00:00:00.000Z
+// Generator:   RPA Rosetta 0.0.0
+// Inputs:      none
+// Outputs:     none
+// Status:      DRAFT - syntax from the IBM RPA 30.0.x reference, being verified in Studio 30.0.2
+// ======================================================================
+defVar --name SampleNumber --type Numeric
+defVar --name SampleString --type String
+// vRow (A360 Record): one String variable per column the bot reads
+defVar --name vRow_Name --type String
+defVar --name vRow_Amount --type String
+// ---- Helper variables added by the conversion ----
+defVar --name rosettaExcelDefault --type Excel
+defVar --name rosettaTable1 --type DataTable
+defVar --name rosettaRows2 --type Numeric
+defVar --name rosettaIndex3 --type Numeric
+excelOpen --file "C:\\RosettaTest\\input.xlsx" rosettaExcelDefault=value
+excelGetTable --file ${rosettaExcelDefault} --getfirstsheet --entiretable --hasheaders rosettaTable1=value rosettaRows2=rows
+for --variable ${rosettaIndex3} --from 1 --to ${rosettaRows2} --step 1
+mapTableRow --dataTable ${rosettaTable1} --row ${rosettaIndex3} --mappings "name=Name=${vRow_Name},name=Amount=${vRow_Amount}"
+writeToFile --value "Name=${vRow_Name} Amount=${vRow_Amount}" --file "C:\\RosettaTest\\log.txt" --encoding "Default" --writeasnewline
+next
+excelSet --value "Done" --file ${rosettaExcelDefault} --getfirstsheet --usingcell --cell "C1"
+// A360 Save workbook: WAL saves the workbook when it is closed (excelClose --save)
+excelClose --file ${rosettaExcelDefault} --save

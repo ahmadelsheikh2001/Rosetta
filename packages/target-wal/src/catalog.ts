@@ -226,4 +226,71 @@ export const walCommands: Readonly<Record<string, CommandSpec>> = {
     params: ['message', 'type'],
     required: ['message', 'type'],
   },
+  // Windows / Office (corpus 05)
+  excelOpen: {
+    evidence: 'documented',
+    params: [
+      'file',
+      'passwordtopen',
+      'passwordtomodify',
+      'usetemplate',
+      'template',
+      'savechanges',
+      'notcalculate',
+    ],
+    required: ['file'],
+  },
+  excelSet: {
+    evidence: 'documented',
+    params: [
+      'value',
+      'isformula',
+      'file',
+      'getfirstsheet',
+      'sheet',
+      'usingcell',
+      'cell',
+      'row',
+      'column',
+    ],
+    required: ['file', 'getfirstsheet|sheet', 'cell|row'],
+  },
+  excelGetTable: {
+    evidence: 'documented',
+    params: [
+      'file',
+      'getfirstsheet',
+      'sheet',
+      'entiretable',
+      'userange',
+      'range',
+      'fromrow',
+      'fromcolumn',
+      'torow',
+      'tocolumn',
+      'hasheaders',
+    ],
+    required: ['file', 'getfirstsheet|sheet'],
+  },
+  excelClose: {
+    evidence: 'documented',
+    params: ['file', 'save', 'notcalculate'],
+    required: ['file'],
+  },
+  mapTableRow: {
+    evidence: 'documented',
+    params: ['dataTable', 'row', 'mappings'],
+    required: ['dataTable', 'row', 'mappings'],
+  },
+  // Base / General (corpus 08)
+  getVaultItem: {
+    evidence: 'documented',
+    params: ['name', 'system'],
+    required: ['name'],
+  },
+  executeScript: {
+    evidence: 'documented',
+    params: ['handleError', 'isfromfile', 'filename', 'name', 'parameters', 'output', 'version'],
+    required: ['name'],
+  },
 };

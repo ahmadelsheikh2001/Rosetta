@@ -31,6 +31,22 @@ export const sourceValue = z.looseObject({
       .optional();
   },
   table: z.unknown().optional(),
+  record: z.unknown().optional(),
+  /** SESSION values (corpus 05): `{ type: SESSION, sessionName: { type: STRING, string } }`. */
+  get sessionName() {
+    return sourceValue.optional();
+  },
+  /** Vault reference of a CREDENTIAL value (corpus 08). */
+  credential: z
+    .looseObject({ lockerName: z.string(), name: z.string(), attributeName: z.string() })
+    .optional(),
+  /** TASKBOT values (corpus 08): the called bot and its input dictionary. */
+  get taskbotFile() {
+    return sourceValue.optional();
+  },
+  get taskbotInput() {
+    return sourceValue.optional();
+  },
 });
 export type SourceValue = z.infer<typeof sourceValue>;
 

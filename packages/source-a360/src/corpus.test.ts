@@ -20,12 +20,15 @@ const ofKind = <K extends Statement['kind']>(bot: Bot, kind: K) =>
   all(bot).filter((s): s is Extract<Statement, { kind: K }> => s.kind === kind);
 
 describe('corpus', () => {
-  it('reads all four sample bots', () => {
+  it('reads every sample bot', () => {
     expect(bots.map((b) => b.name)).toEqual([
       '01-variables',
       '02-control-flow',
       '03-strings-expressions',
       '04-error-handling',
+      '05-excel',
+      'RR_08_Child',
+      'RR_08_Parent',
     ]);
   });
 

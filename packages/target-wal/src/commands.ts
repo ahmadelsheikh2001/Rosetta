@@ -7,13 +7,34 @@ import type { NoteInput, WalWriter } from './writer.js';
 export interface LowerState {
   /** CSV session name → file path expression, from `csv.open`. */
   readonly csvSessions: Map<string, Expr>;
+  /** Excel session name → Excel instance variable, from `excel.open`. */
+  readonly excelSessions: Map<string, ExcelSession>;
   /** Source variable types, by name. */
   readonly varTypes: ReadonlyMap<string, IRType>;
   /** Declares a helper variable once per key and returns its name. */
   readonly helper: (key: string, defVar: (name: string) => string) => string;
 }
 
+export interface ExcelSession {
+  /** `Excel` variable holding the instance. */
+  readonly handle: string;
+  /** A360 "Contains header": the first row holds the column names. */
+  readonly header: boolean;
+  /** A360 "Save workbook" ran: WAL saves on close. */
+  saved: boolean;
+}
+
 type Lowerer = (a: ActionStmt, w: WalWriter, s: LowerState) => void;
+
+const sessionName = (a: ActionStmt): string =>
+  a.args.session?.kind === 'literal' ? String(a.args.session.value) : 'Default';
+
+/** The Excel session an action works on; writes a TODO when it was not opened in this bot. */
+function excelSession(a: ActionStmt, w: WalWriter, s: LowerState): ExcelSession | undefined {
+  const found = s.excelSessions.get(sessionName(a));
+  if (!found) manual(a, w, `Excel session "${sessionName(a)}" was not opened in this bot`);
+  return found;
+}
 
 /** Command taken from the IBM RPA 30.0.x reference, not yet seen in Studio (W-18). */
 const doc = (command: string): NoteInput => ({
@@ -369,5 +390,90 @@ export const lowerers: Readonly<Record<string, Lowerer>> = {
       `readCSV --filepath ${pathOf(path, h.sink)} --delimiter "," ${h.out()}=value`,
       doc('readCSV'),
     );
+  },
+  // Excel advanced (Excel_MS), corpus 05. A360 names a session; WAL keeps an Excel variable.
+  'excel.open': (a, w, s) => {
+    const h = helpers(a, w);
+    const session = sessionName(a);
+    if (h.str('excelSourceOption') !== 'desktopfilepath') {
+      manual(a, w, `workbook source "${h.str('excelSourceOption') ?? '?'}" not supported`);
+      return;
+    }
+    if (h.flag('isSecure')) {
+      manual(a, w, 'password-protected workbook: read the password from the vault');
+      return;
+    }
+    const handle = s.helper(
+      `excel${session.replace(/\W/g, '')}`,
+      (n) => `defVar --name ${n} --type Excel`,
+    );
+    s.excelSessions.set(session, { handle, header: h.flag('containsHeader'), saved: false });
+    const notes: NoteInput[] = [doc('excelOpen')];
+    if (h.str('fileAccessMode') === 'READONLY')
+      notes.push(
+        semantic('A360 opens the workbook read-only; WAL excelOpen opens it for editing.'),
+      );
+    if (h.flag('isSpecificSheet'))
+      notes.push({
+        kind: 'manual',
+        text: 'A360 activates a specific sheet; WAL commands below use the first sheet.',
+      });
+    h.emit(
+      `excelOpen --file ${pathOf(a.args.filePath ?? { kind: 'literal', value: '' }, h.sink)} ${handle}=value`,
+      ...notes,
+    );
+  },
+  'excel.setCell': (a, w, s) => {
+    const h = helpers(a, w);
+    const session = excelSession(a, w, s);
+    if (!session) return;
+    if (h.str('cellOption') !== 'SPECIFIC_CELL') {
+      manual(
+        a,
+        w,
+        `cell option ${h.str('cellOption') ?? '?'} not supported (only a specific cell)`,
+      );
+      return;
+    }
+    h.emit(
+      `excelSet --value ${h.text('value')} --file ${ref(session.handle)} --getfirstsheet --usingcell --cell ${h.text('cell')}`,
+      doc('excelSet (Set Value in Excel)'),
+      semantic('A360 writes to the active sheet; WAL writes to the first sheet.'),
+    );
+  },
+  'excel.save': (a, w, s) => {
+    const session = excelSession(a, w, s);
+    if (!session) return;
+    session.saved = true;
+    // No documented save for an Excel instance: officeSave works on Office applications.
+    w.comment('A360 Save workbook: WAL saves the workbook when it is closed (excelClose --save)', {
+      kind: 'semantic',
+      text: 'A360 saves here; WAL saves when the workbook is closed. Changes are lost if the bot fails before the close.',
+    });
+  },
+  'excel.close': (a, w, s) => {
+    const h = helpers(a, w);
+    const session = excelSession(a, w, s);
+    if (!session) return;
+    const save = h.flag('isSave') || session.saved;
+    h.emit(
+      `excelClose --file ${ref(session.handle)}${save ? ' --save' : ''}`,
+      doc('excelClose'),
+      ...(session.saved && !h.flag('isSave')
+        ? [
+            semantic(
+              'A360 closes without saving changes made after "Save workbook"; WAL saves them too.',
+            ),
+          ]
+        : []),
+    );
+  },
+  'credential.assign': (a, w) => {
+    const h = helpers(a, w);
+    h.emit(assignment(h.out(), h.val('stringVar')), {
+      kind: 'verify',
+      assumption: 'W-18',
+      text: 'Copies one SecureString to another with setVar; confirm Studio accepts it.',
+    });
   },
 };

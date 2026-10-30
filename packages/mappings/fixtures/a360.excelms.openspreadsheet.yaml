@@ -1,0 +1,60 @@
+id: a360.excelms.openspreadsheet
+from: corpus/a360/05-excel/bot.json
+node:
+  uid: ca1a38ff-e0b6-47d8-8091-67ba1808163c
+  commandName: OpenSpreadsheet
+  packageName: Excel_MS
+  disabled: false
+  attributes:
+    - name: excelSourceOption
+      value:
+        type: STRING
+        string: desktopfilepath
+    - name: filePath
+      value:
+        type: FILE
+        string: file:///C:/RosettaTest/input.xlsx
+    - name: containsHeader
+      value:
+        type: BOOLEAN
+        boolean: true
+    - name: isSpecificSheet
+      value:
+        type: BOOLEAN
+        boolean: false
+    - name: fileAccessMode
+      value:
+        type: STRING
+        string: EDIT
+    - name: isSecure
+      value:
+        type: BOOLEAN
+        boolean: false
+    - name: loadAddIns
+      value:
+        type: BOOLEAN
+        boolean: false
+    - name: excludeHiddenSheets
+      value:
+        type: BOOLEAN
+        boolean: false
+    - name: containsChart
+      value:
+        type: BOOLEAN
+        boolean: false
+    - name: setSensitivity
+      value:
+        type: BOOLEAN
+        boolean: false
+    - name: disableUpdateLinks
+      value:
+        type: BOOLEAN
+        boolean: false
+  returnTo:
+    type: SESSION
+    sessionName:
+      type: STRING
+      string: Default
+    sessionTarget: LOCAL
+expect:
+  op: excel.open

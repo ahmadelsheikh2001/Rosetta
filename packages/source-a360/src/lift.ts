@@ -26,6 +26,8 @@ const stringAttr = (node: { attributes?: SourceAttribute[] | undefined }, name: 
 
 const raw = (node: unknown): JsonValue => JSON.parse(JSON.stringify(node)) as JsonValue;
 
+const literal = (value: string): Expr => ({ kind: 'literal', value });
+
 /** Lifts one A360 bot (Source Model) to IR. Problems are collected on `ctx`. */
 export function liftBot(source: SourceBot, name: string, ctx: LiftContext): Bot {
   for (const v of source.variables) ctx.variablesByLowerName.set(v.name.toLowerCase(), v.name);
@@ -96,6 +98,8 @@ function liftNode(node: SourceNode, path: readonly number[], ctx: LiftContext): 
     }
     case 'ErrorHandler/try':
       return liftTry(node, path, base, ctx);
+    case 'TaskBot/runTask':
+      return liftRunTask(node, base, ctx);
     case 'ErrorHandler/throw': {
       const message = attr(node, 'message')?.value;
       return {
@@ -237,6 +241,22 @@ function liftLoop(
       spec = { kind: 'forEach', collection: 'dictKeys', source: map, itemVar: item };
     } else if (kind === 'loop.iterators.files' && folder && item) {
       spec = { kind: 'forEach', collection: 'file', source: folder, itemVar: item };
+    } else if (kind === 'loop.iterators.excel' && item) {
+      // Excel advanced (Excel_MS) "For each row in worksheet" (corpus 05): rows of the session.
+      for (const [option, usual] of [
+        ['loopSelection', 'ALL_ROWS'],
+        ['readOption', 'READ_CELL_TEXT'],
+      ] as const) {
+        const value = stringAttr(iterator ?? {}, option);
+        if (value !== undefined && value !== usual)
+          ctx.report(LiftCode.Semantic, 'info', { option: `${option}=${value}` }, base.source);
+      }
+      spec = {
+        kind: 'forEach',
+        collection: 'tableRow',
+        source: { kind: 'call', fn: 'excel.rows', args: [arg('session') ?? literal('Default')] },
+        itemVar: item,
+      };
     } else {
       ctx.report(LiftCode.Iterator, 'warning', { iterator: kind ?? 'none' }, base.source);
     }
@@ -305,6 +325,40 @@ function liftTry(
   };
 }
 
+/**
+ * Run Task Bot (corpus 08): the called bot is a repository path
+ * (`repository:///Automation%20Anywhere/Bots/...`), inputs a DICTIONARY keyed by the child's
+ * input variables, outputs a DICTIONARY in `returnTo` from the child's outputs to our variables.
+ */
+function liftRunTask(node: SourceNode, base: Base, ctx: LiftContext): Statement {
+  const taskbot = attr(node, 'taskbot')?.value;
+  const file = taskbot?.taskbotFile?.string;
+  if (!file) {
+    ctx.report(LiftCode.UnknownValue, 'warning', { type: 'TASKBOT' }, base.source);
+    return { ...base, kind: 'unknown', raw: raw(node), reason: 'called bot not found' };
+  }
+  let path = file.replace(/^repository:\/\/\//, '');
+  try {
+    path = decodeURIComponent(path);
+  } catch {
+    // keep the path as written
+  }
+  const inputs: Record<string, Expr> = {};
+  for (const e of taskbot.taskbotInput?.dictionary ?? [])
+    inputs[e.key] = valueToExpr(e.value, ctx, base.source);
+  const outputs: Record<string, Extract<Expr, { kind: 'var' }>> = {};
+  for (const e of node.returnTo?.dictionary ?? []) {
+    const ref = varRefOf(e.value);
+    if (ref) outputs[e.key] = ref;
+  }
+  const repeat = stringAttr(node, 'repeatOption');
+  if (repeat !== undefined && repeat !== 'DO_NOT_REPEAT')
+    ctx.report(LiftCode.Semantic, 'info', { option: `repeatOption=${repeat}` }, base.source);
+  if (attr(node, 'continueOnError')?.value?.boolean === true)
+    ctx.report(LiftCode.Semantic, 'info', { option: 'continueOnError=true' }, base.source);
+  return { ...base, kind: 'callBot', target: { path }, inputs, outputs };
+}
+
 function liftAction(
   node: SourceNode,
   path: readonly number[],
@@ -340,6 +394,9 @@ function liftAction(
   const outputs: Record<string, Extract<Expr, { kind: 'var' }>> = {};
   const result = varRefOf(node.returnTo);
   if (result) outputs.result = result;
+  // A session the action opens is declared in `returnTo` (corpus 05, Excel_MS OpenSpreadsheet).
+  if (node.returnTo?.type === 'SESSION' && !args.session)
+    args.session = valueToExpr(node.returnTo, ctx, base.source);
   for (const [key, value] of Object.entries(node.returns ?? {})) {
     const ref = varRefOf(value);
     if (ref) outputs[key] = ref;

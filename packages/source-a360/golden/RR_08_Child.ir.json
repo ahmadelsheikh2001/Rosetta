@@ -1,0 +1,96 @@
+{
+  "id": "08-subbot-credentials/RR_08_Child.json",
+  "name": "RR_08_Child",
+  "source": {
+    "platform": "a360",
+    "file": "08-subbot-credentials/RR_08_Child.json",
+    "nodePath": []
+  },
+  "variables": [
+    {
+      "name": "SampleNumber",
+      "type": {
+        "kind": "number"
+      },
+      "direction": "local",
+      "sensitive": false
+    },
+    {
+      "name": "SampleString",
+      "type": {
+        "kind": "string"
+      },
+      "direction": "local",
+      "sensitive": false
+    },
+    {
+      "name": "inName",
+      "type": {
+        "kind": "string"
+      },
+      "direction": "input",
+      "sensitive": false,
+      "defaultValue": {
+        "kind": "literal",
+        "value": ""
+      }
+    },
+    {
+      "name": "outGreeting",
+      "type": {
+        "kind": "string"
+      },
+      "direction": "output",
+      "sensitive": false,
+      "defaultValue": {
+        "kind": "literal",
+        "value": ""
+      }
+    }
+  ],
+  "packages": [
+    {
+      "name": "String",
+      "version": "5.12.6"
+    }
+  ],
+  "body": [
+    {
+      "id": "df0fe6a7-0d64-4066-a220-927ec68d9ba9",
+      "source": {
+        "platform": "a360",
+        "file": "08-subbot-credentials/RR_08_Child.json",
+        "nodePath": [
+          0
+        ],
+        "nodeId": "df0fe6a7-0d64-4066-a220-927ec68d9ba9",
+        "label": "String/assign"
+      },
+      "kind": "action",
+      "op": "vendor:a360/String/assign",
+      "args": {
+        "sourceString": {
+          "kind": "template",
+          "parts": [
+            {
+              "kind": "literal",
+              "value": "Hello "
+            },
+            {
+              "kind": "var",
+              "name": "inName",
+              "path": []
+            }
+          ]
+        }
+      },
+      "outputs": {
+        "result": {
+          "kind": "var",
+          "name": "outGreeting",
+          "path": []
+        }
+      }
+    }
+  ]
+}

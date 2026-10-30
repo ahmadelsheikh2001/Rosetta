@@ -72,6 +72,13 @@ describe('conversion of the real corpus', () => {
       'return',
       'onError',
       'recover',
+      'excelOpen',
+      'excelSet',
+      'excelGetTable',
+      'excelClose',
+      'mapTableRow',
+      'getVaultItem',
+      'executeScript',
     ]);
     for (const b of bots) {
       for (const line of b.script.text.split('\r\n')) {
@@ -186,6 +193,39 @@ describe('conversion of the real corpus', () => {
     );
   });
 
+  it('converts the Excel row loop of sample 05: one variable per column read', () => {
+    const lines = (bots.find((b) => b.name === '05-excel')?.script.text ?? '').split('\r\n');
+    expect(lines).toContain('defVar --name vRow_Name --type String');
+    expect(lines.some((l) => l.startsWith('defVar --name vRow '))).toBe(false);
+    const get = lines.findIndex((l) => l.startsWith('excelGetTable '));
+    const map = lines.findIndex((l) => l.startsWith('mapTableRow '));
+    const log = lines.findIndex((l) => l.startsWith('writeToFile '));
+    expect(get).toBeGreaterThan(lines.findIndex((l) => l.startsWith('excelOpen ')));
+    expect(lines[get]).toContain('--hasheaders');
+    expect(map).toBeGreaterThan(get);
+    expect(lines[log]).toContain('"Name=${vRow_Name} Amount=${vRow_Amount}"');
+    // A360 saves, then saves again on close: WAL saves once, on close
+    expect(lines.filter((l) => l.startsWith('excelClose ')).at(-1)).toMatch(/--save$/);
+  });
+
+  it('calls the converted child bot of sample 08 by its script name', () => {
+    const parent = bots.find((b) => b.name === 'RR_08_Parent')?.script.text ?? '';
+    const child = bots.find((b) => b.name === 'RR_08_Child');
+    expect(child?.script.fileName).toBe('RR_08_Child.wal');
+    expect(parent).toContain(
+      'executeScript --name "RR_08_Child" --parameters "{\\"inName\\":\\"Test User\\"}" --output "{\\"outGreeting\\":\\"${vResult}\\"}"',
+    );
+    expect(child?.script.text).toContain('defVar --name inName --type String --parameter');
+    expect(child?.script.text).toContain('defVar --name outGreeting --type String --output');
+  });
+
+  it('reads vault credentials with getVaultItem and never writes a credential value', () => {
+    const parent = bots.find((b) => b.name === 'RR_08_Parent')?.script.text ?? '';
+    expect(parent).toContain('getVaultItem --name "DummyLogin" vPassword=password');
+    expect(parent).toMatch(/defVar --name vPassword --type SecureString\r\n/);
+    expect(parent).not.toContain('NotReal123');
+  });
+
   it('balances every block', () => {
     const pairs: Record<string, string> = {
       if: 'endIf',
@@ -220,7 +260,7 @@ describe('rosetta convert', () => {
       cwd: dir,
     });
     expect(code).toBe(ExitCode.Ok);
-    expect(out).toContain('Converted 4 bot(s)');
+    expect(out).toContain('Converted 7 bot(s)');
     const files = readdirSync(join(dir, 'wal')).sort();
     expect(files).toContain('CONVERSION.md');
     expect(files).toContain('04-error-handling.wal');

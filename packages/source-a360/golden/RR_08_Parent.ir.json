@@ -1,0 +1,262 @@
+{
+  "id": "08-subbot-credentials/RR_08_Parent.json",
+  "name": "RR_08_Parent",
+  "source": {
+    "platform": "a360",
+    "file": "08-subbot-credentials/RR_08_Parent.json",
+    "nodePath": []
+  },
+  "variables": [
+    {
+      "name": "SampleNumber",
+      "type": {
+        "kind": "number"
+      },
+      "direction": "local",
+      "sensitive": false
+    },
+    {
+      "name": "SampleString",
+      "type": {
+        "kind": "string"
+      },
+      "direction": "local",
+      "sensitive": false
+    },
+    {
+      "name": "vResult",
+      "type": {
+        "kind": "string"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "defaultValue": {
+        "kind": "literal",
+        "value": ""
+      }
+    },
+    {
+      "name": "vCopy",
+      "type": {
+        "kind": "string"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "defaultValue": {
+        "kind": "literal",
+        "value": ""
+      }
+    },
+    {
+      "name": "vHardcoded",
+      "type": {
+        "kind": "string"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "defaultValue": {
+        "kind": "literal",
+        "value": ""
+      }
+    },
+    {
+      "name": "vPassword",
+      "type": {
+        "kind": "credential"
+      },
+      "direction": "local",
+      "sensitive": true,
+      "defaultValue": {
+        "kind": "call",
+        "fn": "credential.vault",
+        "args": [
+          {
+            "kind": "literal",
+            "value": "RosettaTest"
+          },
+          {
+            "kind": "literal",
+            "value": "DummyLogin"
+          },
+          {
+            "kind": "literal",
+            "value": "password"
+          }
+        ]
+      }
+    },
+    {
+      "name": "vCopyCred",
+      "type": {
+        "kind": "credential"
+      },
+      "direction": "local",
+      "sensitive": true,
+      "defaultValue": {
+        "kind": "call",
+        "fn": "credential.vault",
+        "args": [
+          {
+            "kind": "literal",
+            "value": "RosettaTest"
+          },
+          {
+            "kind": "literal",
+            "value": "DummyLogin"
+          },
+          {
+            "kind": "literal",
+            "value": "password"
+          }
+        ]
+      }
+    }
+  ],
+  "packages": [
+    {
+      "name": "Credential",
+      "version": "1.8.0"
+    },
+    {
+      "name": "MessageBox",
+      "version": "3.8.1"
+    },
+    {
+      "name": "String",
+      "version": "5.12.6"
+    },
+    {
+      "name": "TaskBot",
+      "version": "2.10.0-20241119-100739"
+    }
+  ],
+  "body": [
+    {
+      "id": "d96080b6-5ae3-42b2-9e0d-b303d35ef116",
+      "source": {
+        "platform": "a360",
+        "file": "08-subbot-credentials/RR_08_Parent.json",
+        "nodePath": [
+          0
+        ],
+        "nodeId": "d96080b6-5ae3-42b2-9e0d-b303d35ef116",
+        "label": "TaskBot/runTask"
+      },
+      "kind": "callBot",
+      "target": {
+        "path": "Automation Anywhere/Bots/RPA_Rosetta_Samples/RR_08_Child"
+      },
+      "inputs": {
+        "inName": {
+          "kind": "literal",
+          "value": "Test User"
+        }
+      },
+      "outputs": {
+        "outGreeting": {
+          "kind": "var",
+          "name": "vResult",
+          "path": []
+        }
+      }
+    },
+    {
+      "id": "5b4e8931-01b3-49ac-95c9-8e145a224621",
+      "source": {
+        "platform": "a360",
+        "file": "08-subbot-credentials/RR_08_Parent.json",
+        "nodePath": [
+          1
+        ],
+        "nodeId": "5b4e8931-01b3-49ac-95c9-8e145a224621",
+        "label": "Credential/assignToCV"
+      },
+      "kind": "action",
+      "op": "vendor:a360/Credential/assignToCV",
+      "args": {
+        "stringVar": {
+          "kind": "var",
+          "name": "vPassword",
+          "path": []
+        }
+      },
+      "outputs": {
+        "result": {
+          "kind": "var",
+          "name": "vCopyCred",
+          "path": []
+        }
+      }
+    },
+    {
+      "id": "1f7aac37-01d4-4875-a6f1-13e4e0c33e97",
+      "source": {
+        "platform": "a360",
+        "file": "08-subbot-credentials/RR_08_Parent.json",
+        "nodePath": [
+          2
+        ],
+        "nodeId": "1f7aac37-01d4-4875-a6f1-13e4e0c33e97",
+        "label": "String/assign"
+      },
+      "kind": "action",
+      "op": "vendor:a360/String/assign",
+      "args": {
+        "sourceString": {
+          "kind": "literal",
+          "value": "NotARealPassword1"
+        }
+      },
+      "outputs": {
+        "result": {
+          "kind": "var",
+          "name": "vHardcoded",
+          "path": []
+        }
+      }
+    },
+    {
+      "id": "20d72b69-9d47-4aa7-980a-c30000e8eabb",
+      "source": {
+        "platform": "a360",
+        "file": "08-subbot-credentials/RR_08_Parent.json",
+        "nodePath": [
+          3
+        ],
+        "nodeId": "20d72b69-9d47-4aa7-980a-c30000e8eabb",
+        "label": "MessageBox/messageBox"
+      },
+      "kind": "action",
+      "op": "vendor:a360/MessageBox/messageBox",
+      "args": {
+        "title": {
+          "kind": "literal",
+          "value": "Automation Anywhere Enterprise Client"
+        },
+        "content": {
+          "kind": "template",
+          "parts": [
+            {
+              "kind": "literal",
+              "value": "Result: "
+            },
+            {
+              "kind": "var",
+              "name": "vResult",
+              "path": []
+            }
+          ]
+        },
+        "scrollLines": {
+          "kind": "literal",
+          "value": 30
+        },
+        "closeMsgBox": {
+          "kind": "literal",
+          "value": false
+        }
+      },
+      "outputs": {}
+    }
+  ]
+}

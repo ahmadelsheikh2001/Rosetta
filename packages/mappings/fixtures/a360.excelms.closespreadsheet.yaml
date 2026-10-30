@@ -1,0 +1,24 @@
+id: a360.excelms.closespreadsheet
+from: corpus/a360/05-excel/bot.json
+node:
+  uid: a46cccee-304d-48f9-ae92-44a98334b295
+  commandName: CloseSpreadsheet
+  packageName: Excel_MS
+  disabled: false
+  attributes:
+    - name: session
+      value:
+        sessionName:
+          string: Default
+          type: STRING
+        type: SESSION
+    - name: isSave
+      value:
+        boolean: true
+        type: BOOLEAN
+    - name: isDisplayErrorEnabled
+      value:
+        boolean: false
+        type: BOOLEAN
+expect:
+  op: excel.close

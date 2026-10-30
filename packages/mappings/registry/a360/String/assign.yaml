@@ -10,4 +10,7 @@ evidence:
   - corpus/a360/02-control-flow/bot.json
   - corpus/a360/03-strings-expressions/bot.json
   - corpus/a360/04-error-handling/bot.json
-notes: Lifted to a canonical op; the WAL form is a draft until verified in IBM RPA Studio (ADR-017).
+  - corpus/a360/08-subbot-credentials/RR_08_Parent.json
+  - corpus/a360/08-subbot-credentials/RR_08_Child.json
+notes: Lifted to a canonical op; the WAL form is a draft until verified in IBM
+  RPA Studio (ADR-017).

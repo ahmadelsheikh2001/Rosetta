@@ -2,10 +2,10 @@ import type { QualityRule } from './types.js';
 
 /**
  * Flags credential variables that carry a literal value instead of a vault
- * reference. Shape verified on corpus 01 (A-10, partly): a `credential`
- * variable whose default is a non-empty literal. Literal passwords passed
- * directly to commands are not detected yet: that needs the vault reference
- * shape from sample 08.
+ * reference. Shapes verified (A-10): corpus 01, a `credential` variable whose
+ * default is a non-empty literal; corpus 08, a vault reference, lifted to a
+ * `credential.vault` call and therefore not flagged. A literal in a plain
+ * String variable (08 `vHardcoded`) carries no secret marker and is not detected.
  */
 export const hardcodedCredential: QualityRule = {
   id: 'hardcoded-credential',

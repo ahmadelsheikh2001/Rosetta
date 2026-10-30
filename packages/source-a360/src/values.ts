@@ -69,6 +69,26 @@ export function valueToExpr(value: SourceValue, ctx: LiftContext, at?: SourceRef
       };
     case 'TABLE':
       return { kind: 'call', fn: 'table.of', args: [literal(JSON.stringify(value.table ?? null))] };
+    case 'RECORD':
+      return {
+        kind: 'call',
+        fn: 'record.of',
+        args: [literal(JSON.stringify(value.record ?? null))],
+      };
+    case 'SESSION':
+      // Sessions are named; actions refer to them by name (corpus 04 stores the name as STRING).
+      return value.sessionName ? valueToExpr(value.sessionName, ctx, at) : unknown(value, ctx, at);
+    case 'CREDENTIAL':
+      // Vault reference (corpus 08): never a value, only where to find it.
+      if (value.credential) {
+        const c = value.credential;
+        return {
+          kind: 'call',
+          fn: 'credential.vault',
+          args: [literal(c.lockerName), literal(c.name), literal(c.attributeName)],
+        };
+      }
+      return value.string !== undefined ? literal(value.string) : unknown(value, ctx, at);
     default:
       return unknown(value, ctx, at);
   }
@@ -96,6 +116,7 @@ const scalarTypes: Readonly<Record<string, IRType>> = {
   BOOLEAN: { kind: 'boolean' },
   DATETIME: { kind: 'datetime' },
   TABLE: { kind: 'table' },
+  RECORD: { kind: 'record' },
   CREDENTIAL: { kind: 'credential' },
 };
 

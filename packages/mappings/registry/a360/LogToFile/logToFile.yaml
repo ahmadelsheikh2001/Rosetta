@@ -8,4 +8,6 @@ irOp: file.appendText
 evidence:
   - corpus/a360/01-variables/bot.json
   - corpus/a360/04-error-handling/bot.json
-notes: Lifted to a canonical op; the WAL form is a draft until verified in IBM RPA Studio (ADR-017).
+  - corpus/a360/05-excel/bot.json
+notes: Lifted to a canonical op; the WAL form is a draft until verified in IBM
+  RPA Studio (ADR-017).

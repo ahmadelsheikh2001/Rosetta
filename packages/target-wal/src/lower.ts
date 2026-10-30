@@ -80,6 +80,7 @@ class Lowerer {
   private readonly sharedHelpers = new Map<string, string>();
   readonly state: LowerState = {
     csvSessions: new Map(),
+    excelSessions: new Map(),
     varTypes: new Map(),
     helper: (key, defVar) => {
       const known = this.sharedHelpers.get(key);
@@ -99,6 +100,11 @@ class Lowerer {
   private helpers = 0;
   /** Source variable types, to choose get vs strDictGet. */
   varTypes = new Map<string, IRType>();
+  /**
+   * Record variables → column name → WAL variable. WAL has no record type, so each column the
+   * bot reads (`$vRow{Name}$`) becomes its own String variable, filled by mapTableRow.
+   */
+  recordFields = new Map<string, Map<string, string>>();
 
   /** Writes a line with notes collected from expression lowering. */
   private emit(build: (sink: NoteSink) => string, ...notes: NoteInput[]): void {
@@ -185,6 +191,8 @@ class Lowerer {
   private fetchElement(x: Extract<Expr, { kind: 'var' }>): string | undefined {
     const type = this.varTypes.get(x.name);
     const step = x.path[0];
+    if (type?.kind === 'record' && step?.kind === 'key' && step.key.kind === 'literal')
+      return this.recordFields.get(x.name)?.get(String(step.key.value));
     if (!step || (type?.kind !== 'list' && type?.kind !== 'dict')) return undefined;
     const itemType = walTypes[type.of.kind] ?? 'String';
     const helper = this.helperVar('Item', (n) => `defVar --name ${n} --type ${itemType}`);
@@ -283,6 +291,8 @@ class Lowerer {
         this.emit((sink) => `failTest --message ${valueOf(s.message, sink)}`);
         return;
       case 'callBot':
+        this.callBot(s);
+        return;
       case 'stop':
       case 'unknown':
         w.comment(`TODO [ROSETTA] ${s.kind} not converted yet`, {
@@ -332,6 +342,12 @@ class Lowerer {
         );
         this.block(s.body);
         w.line('endFor');
+      } else if (
+        spec.collection === 'tableRow' &&
+        spec.source.kind === 'call' &&
+        spec.source.fn === 'excel.rows'
+      ) {
+        this.excelRows(s, spec.source.args[0], spec.itemVar.name);
       } else if (spec.collection === 'dictKeys') {
         // foreach over a StringDictionary yields key-value pairs; A360 yields the keys.
         const pair = this.helperVar(
@@ -364,6 +380,96 @@ class Lowerer {
     } finally {
       this.loops.pop();
     }
+  }
+
+  /**
+   * A360 "For each row in worksheet" (corpus 05) → read the sheet into a DataTable
+   * (excelGetTable), then `for` over its rows with mapTableRow filling one variable per column
+   * the body reads (documented pattern of Map Table Row).
+   */
+  private excelRows(
+    s: Extract<Statement, { kind: 'loop' }>,
+    sessionExpr: Expr | undefined,
+    record: string,
+  ): void {
+    const w = this.w;
+    const name =
+      sessionExpr?.kind === 'literal' && sessionExpr.value !== null
+        ? String(sessionExpr.value)
+        : 'Default';
+    const session = this.state.excelSessions.get(name);
+    const fields = this.recordFields.get(record) ?? new Map<string, string>();
+    if (!session || fields.size === 0) {
+      w.comment(`TODO [ROSETTA] loop over the rows of Excel session "${name}" not converted`, {
+        kind: 'manual',
+        text: session
+          ? `The loop body reads no column of ${record}; nothing to map.`
+          : `Excel session "${name}" was not opened in this bot.`,
+      });
+      w.commented('', () => {
+        this.block(s.body);
+      });
+      return;
+    }
+    const table = this.helperVar('Table', (n) => `defVar --name ${n} --type DataTable`);
+    const rows = this.helperVar('Rows', (n) => `defVar --name ${n} --type Numeric`);
+    const index = this.helperVar('Index', (n) => `defVar --name ${n} --type Numeric`);
+    w.line(
+      `excelGetTable --file ${ref(session.handle)} --getfirstsheet --entiretable${session.header ? ' --hasheaders' : ''} ${table}=value ${rows}=rows`,
+      docNote('excelGetTable (Get Excel Table)'),
+      {
+        kind: 'semantic',
+        text: 'A360 reads the rows one by one from the workbook; WAL reads the first sheet once, before the loop. Cells are read as text in both.',
+      },
+    );
+    w.line(
+      `for --variable ${ref(index)} --from 1 --to ${ref(rows)} --step 1`,
+      docNote('for / next'),
+    );
+    const mappings = [...fields].map(([column, v]) => `name=${column}=${ref(v)}`).join(',');
+    w.line(
+      `mapTableRow --dataTable ${ref(table)} --row ${ref(index)} --mappings ${quote(mappings)}`,
+      {
+        kind: 'verify',
+        assumption: 'W-18',
+        text: 'mapTableRow by column name ("name=<column>=${var}"); the reference shows only "number=<n>=${var}". Confirm in Studio.',
+      },
+    );
+    this.block(s.body);
+    w.line('next');
+  }
+
+  /**
+   * A360 Run Task Bot (corpus 08) → executeScript (documented). The child is called by its bot
+   * name, the last part of the A360 repository path; inputs and outputs keep the child's
+   * variable names, which the conversion of the child keeps too.
+   */
+  private callBot(s: Extract<Statement, { kind: 'callBot' }>): void {
+    const name = s.target.path.split('/').at(-1) ?? s.target.path;
+    this.emit(
+      (sink) => {
+        const json = (entries: [string, string][]) =>
+          quote(JSON.stringify(Object.fromEntries(entries)));
+        const inputs = Object.entries(s.inputs).map(([k, e]): [string, string] => [
+          k,
+          textOf(e, sink),
+        ]);
+        const outputs = Object.entries(s.outputs).map(([k, v]): [string, string] => [
+          k,
+          ref(v.name),
+        ]);
+        return (
+          `executeScript --name ${quote(name)}` +
+          (inputs.length ? ` --parameters ${json(inputs)}` : '') +
+          (outputs.length ? ` --output ${json(outputs)}` : '')
+        );
+      },
+      docNote('executeScript --parameters / --output as JSON (Execute Script)'),
+      {
+        kind: 'manual',
+        text: `Calls script "${name}" (A360: ${s.target.path}). Publish the converted ${name}.wal to the tenant under that name, or replace it with the full path of the .wal file.`,
+      },
+    );
   }
 
   /**
@@ -487,6 +593,14 @@ class Lowerer {
     const init: (() => void)[] = [];
     for (const v of vars) {
       const notes: NoteInput[] = [];
+      if (v.type.kind === 'record') {
+        const fields = this.recordFields.get(v.name);
+        if (fields?.size) {
+          w.comment(`${v.name} (A360 Record): one String variable per column the bot reads`);
+          for (const f of fields.values()) w.line(`defVar --name ${f} --type String`);
+          continue;
+        }
+      }
       let type = walTypes[v.type.kind];
       if (!type) {
         type = 'String';
@@ -503,11 +617,21 @@ class Lowerer {
 
       const d = v.defaultValue;
       if (v.type.kind === 'credential') {
-        if (d)
+        const vault =
+          d?.kind === 'call' && d.fn === 'credential.vault'
+            ? d.args.map((x) => (x.kind === 'literal' ? String(x.value) : ''))
+            : undefined;
+        if (vault) {
+          const [locker = '', credential = '', attribute = ''] = vault;
+          init.push(() => {
+            this.vaultItem(v.name, locker, credential, attribute);
+          });
+        } else if (d) {
           notes.push({
             kind: 'manual',
             text: `Credential ${v.name} had a hardcoded value in the source; not carried over. Read it from the vault (getVaultItem).`,
           });
+        }
       } else if (d?.kind === 'literal' && d.value !== null && d.value !== '') {
         if (v.type.kind === 'datetime') {
           notes.push({
@@ -566,6 +690,33 @@ class Lowerer {
     // fill initial values are returned and written after all declarations.
     return init;
   }
+
+  /**
+   * A360 vault reference (locker / credential / attribute, corpus 08) → getVaultItem. The IBM
+   * vault has no lockers: a credential has a name, a user name and a password.
+   */
+  private vaultItem(variable: string, locker: string, credential: string, attribute: string): void {
+    const setup: NoteInput = {
+      kind: 'manual',
+      text: `Create credential "${credential}" in the IBM RPA vault (A360: locker "${locker}", attribute "${attribute}"); the value is never written in the script.`,
+    };
+    if (attribute.toLowerCase() !== 'password') {
+      this.w.comment(
+        `TODO [ROSETTA] ${variable}: vault attribute "${attribute}" (locker "${locker}", credential "${credential}")`,
+        {
+          kind: 'manual',
+          text: `${variable} reads vault attribute "${attribute}": getVaultItem returns only userName (Text) and password (SecureString). Map it by hand.`,
+        },
+        setup,
+      );
+      return;
+    }
+    this.w.line(
+      `getVaultItem --name ${quote(credential)} ${variable}=password`,
+      docNote('getVaultItem (Get Vault Item)'),
+      setup,
+    );
+  }
 }
 
 /** Collects the A360 system variables a bot uses. */
@@ -576,10 +727,30 @@ function systemNames(bot: Bot): Set<string> {
   return names;
 }
 
+/** Columns read from each record variable (`$vRow{Name}$`), in order of first use. */
+function recordFields(bot: Bot): Map<string, Map<string, string>> {
+  const records = new Set(bot.variables.filter((v) => v.type.kind === 'record').map((v) => v.name));
+  const out = new Map<string, Map<string, string>>();
+  walk(bot.body, (s) => {
+    for (const e of statementExprs(s)) {
+      walkExpr(e, (x) => {
+        const step = x.kind === 'var' && records.has(x.name) ? x.path[0] : undefined;
+        if (x.kind !== 'var' || step?.kind !== 'key' || step.key.kind !== 'literal') return;
+        const column = String(step.key.value);
+        const fields = out.get(x.name) ?? new Map<string, string>();
+        if (!fields.has(column)) fields.set(column, `${x.name}_${column.replace(/\W/g, '_')}`);
+        out.set(x.name, fields);
+      });
+    }
+  });
+  return out;
+}
+
 /** Generates a WAL script for one bot, with notes for every line to check. */
 export function lowerBot(bot: Bot, options: LowerOptions): WalScript {
   const l = new Lowerer();
   l.varTypes = new Map(bot.variables.map((v) => [v.name, v.type]));
+  l.recordFields = recordFields(bot);
   (l.state.varTypes as Map<string, IRType>).clear();
   for (const [k, v] of l.varTypes) (l.state.varTypes as Map<string, IRType>).set(k, v);
 
