@@ -21,6 +21,10 @@ defVar --name vParts --type List --innertype String
 defVar --name vList --type List --innertype String --value "[Alpha,Beta]"
 defVar --name vDict --type StringDictionary --innertype String
 // ---- Helper variables added by the conversion ----
+defVar --name rosettaItem1 --type String
+defVar --name rosettaItem2 --type String
+defVar --name rosettaItem3 --type String
+defVar --name rosettaItem4 --type String
 defVar --name rosettaMachineName --type String
 // ---- Initial values ----
 strDictAdd --key "name" --value "Test User" --dictionary ${vDict}
@@ -45,5 +49,9 @@ dateTimeToText --date "${vDate}" --usecustomformat --customformat "dd/MM/yyyy" v
 // ---- System variables and expressions ----
 // RR_03: system variables plus list index and dictionary key expressions
 setVar --name "${vOut}" --value "Machine=${rosettaMachineName} | Bot=${rpa:scriptName} | CR={{ROSETTA: a360:AAControlRoom}}"
-messageBox --title "RR_03 Expressions" --text "part0=${vParts[1]} | list1=${vList[2]} | name=${vDict[name]} | date=${vDateStr} | len=${vLen} | idx=${vIndex} | out=${vOut}" --icon "Information" --buttons "OK" --defaultbutton "FirstButton"
-// [DISABLED] messageBox --title "Automation Anywhere Enterprise Client" --text "Disabled on purpose: ${vList[1]}" --icon "Information" --buttons "OK" --defaultbutton "FirstButton"
+get --collection "${vParts}" --index 1 rosettaItem1=value
+get --collection "${vList}" --index 2 rosettaItem2=value
+strDictGet --key "name" --dictionary ${vDict} rosettaItem3=value
+messageBox --title "RR_03 Expressions" --text "part0=${rosettaItem1} | list1=${rosettaItem2} | name=${rosettaItem3} | date=${vDateStr} | len=${vLen} | idx=${vIndex} | out=${vOut}" --icon "Information" --buttons "OK" --defaultbutton "FirstButton"
+// [DISABLED] get --collection "${vList}" --index 1 rosettaItem4=value
+// [DISABLED] messageBox --title "Automation Anywhere Enterprise Client" --text "Disabled on purpose: ${rosettaItem4}" --icon "Information" --buttons "OK" --defaultbutton "FirstButton"

@@ -47,6 +47,8 @@ describe('conversion of the real corpus', () => {
       'addToDateTime',
       'dateTimeToText',
       'getEnvVar',
+      'get',
+      'strDictGet',
       'readCSV',
       'if',
       'elseIf',
@@ -107,6 +109,15 @@ describe('conversion of the real corpus', () => {
         if (line.startsWith('beginSub ')) inside = true;
         else if (!inside) expect.fail(`${b.name}: "${line}" is outside a subroutine block`);
         if (line === 'endSub') inside = false;
+      }
+    }
+  });
+
+  it('never reads list items or dictionary values with brackets (round 4: not interpolated)', () => {
+    for (const b of bots) {
+      for (const line of b.script.text.split('\r\n')) {
+        if (line.startsWith('//')) continue;
+        expect(line, b.name).not.toMatch(/\$\{[A-Za-z_]\w*\[/);
       }
     }
   });

@@ -17,6 +17,11 @@ defVar --name vList --type List --innertype String --value "[Alpha,Beta]"
 defVar --name vDict --type StringDictionary --innertype String
 defVar --name vTable --type DataTable
 defVar --name vCred --type SecureString
+// ---- Helper variables added by the conversion ----
+defVar --name rosettaItem1 --type String
+defVar --name rosettaItem2 --type String
+defVar --name rosettaItem3 --type String
+defVar --name rosettaItem4 --type String
 // ---- Initial values ----
 strDictAdd --key "name" --value "Test User" --dictionary ${vDict}
 strDictAdd --key "city" --value "Test City" --dictionary ${vDict}
@@ -30,7 +35,11 @@ add --collection "${vList}" --value "${vStr}"
 strDictAdd --key "country" --value "Testland" --dictionary ${vDict}
 // ---- Show and log values ----
 // RR_01: display and log selected variables
-messageBox --title "RR_01 Variables" --text "vStr=${vStr} | vNum=${vNum} | vBool=${vBool} | first item=${vList[1]} | name=${vDict[name]}" --icon "Information" --buttons "OK" --defaultbutton "FirstButton"
-writeToFile --value "vStr=${vStr} | vNum=${vNum} | city=${vDict[city]} | item1=${vList[2]}" --file "C:\\RosettaTest\\log.txt" --encoding "Default" --writeasnewline
+get --collection "${vList}" --index 1 rosettaItem1=value
+strDictGet --key "name" --dictionary ${vDict} rosettaItem2=value
+messageBox --title "RR_01 Variables" --text "vStr=${vStr} | vNum=${vNum} | vBool=${vBool} | first item=${rosettaItem1} | name=${rosettaItem2}" --icon "Information" --buttons "OK" --defaultbutton "FirstButton"
+strDictGet --key "city" --dictionary ${vDict} rosettaItem3=value
+get --collection "${vList}" --index 2 rosettaItem4=value
+writeToFile --value "vStr=${vStr} | vNum=${vNum} | city=${rosettaItem3} | item1=${rosettaItem4}" --file "C:\\RosettaTest\\log.txt" --encoding "Default" --writeasnewline
 writeToFile --value "vBool=${vBool} | vDate=${vDate} | vNum=${vNum} | vStr=${vStr}" --file "C:\\RosettaTest\\log.txt" --encoding "Default" --writeasnewline
 // [DISABLED] messageBox --title "Automation Anywhere Enterprise Client" --text "This action is disabled on purpose" --icon "Information" --buttons "OK" --defaultbutton "FirstButton"

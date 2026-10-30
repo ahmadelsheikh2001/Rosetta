@@ -1,7 +1,17 @@
-import { walk, type Block, type Bot, type Expr, type Statement, type Variable } from '@rosetta/ir';
+import {
+  statementExprs,
+  walk,
+  walkExpr,
+  type Block,
+  type Bot,
+  type Expr,
+  type IRType,
+  type Statement,
+  type Variable,
+} from '@rosetta/ir';
 import type { StandardsProfile } from '@rosetta/standards';
 import { lowerers, manual, type LowerState } from './commands.js';
-import { textOf, valueOf, type NoteSink } from './expr.js';
+import { accessKey, textOf, valueOf, withAccesses, type NoteSink } from './expr.js';
 import {
   errorLineRef,
   errorMessageRef,
@@ -72,6 +82,8 @@ class Lowerer {
   private readonly guards: string[] = [];
   private tries = 0;
   private helpers = 0;
+  /** Source variable types, to choose get vs strDictGet. */
+  varTypes = new Map<string, IRType>();
 
   /** Writes a line with notes collected from expression lowering. */
   private emit(build: (sink: NoteSink) => string, ...notes: NoteInput[]): void {
@@ -106,7 +118,9 @@ class Lowerer {
     try {
       if (s.disabled && !this.w.inComment) {
         this.w.commented('[DISABLED] ', () => {
-          this.statementBody(s);
+          this.withElementAccesses(s, () => {
+            this.statementBody(s);
+          });
         });
         this.w.note({
           kind: 'manual',
@@ -114,10 +128,83 @@ class Lowerer {
         });
         return;
       }
-      this.statementBody(s);
+      this.withElementAccesses(s, () => {
+        this.statementBody(s);
+      });
     } finally {
       this.w.source = saved;
     }
+  }
+
+  /**
+   * WAL does not interpolate `${list[1]}` or `${dict[key]}` (Studio round 4). Each list item or
+   * dictionary value the statement reads is fetched first into a helper variable with
+   * `get` (Get List Item, 1-based) or `strDictGet` (Get Dictionary Value).
+   */
+  private withElementAccesses(s: Statement, body: () => void): void {
+    const hoistable =
+      s.kind === 'action' ||
+      s.kind === 'throw' ||
+      s.kind === 'callBot' ||
+      s.kind === 'if' ||
+      (s.kind === 'loop' && s.loop.kind !== 'while');
+    const accesses = new Map<string, string>();
+    if (hoistable) {
+      for (const e of statementExprs(s)) {
+        walkExpr(e, (x) => {
+          if (x.kind !== 'var' || x.path.length !== 1 || accesses.has(accessKey(x))) return;
+          const helper = this.fetchElement(x);
+          if (helper) accesses.set(accessKey(x), helper);
+        });
+      }
+    } else if (s.kind === 'loop' && JSON.stringify(s.loop).includes('"path":[{')) {
+      this.w.note({
+        kind: 'manual',
+        text: 'The loop condition reads a list item or dictionary value; WAL needs it fetched with get / strDictGet inside the loop.',
+      });
+    }
+    withAccesses((x) => accesses.get(accessKey(x)), body);
+  }
+
+  /** Writes the command that reads one list item / dictionary value; returns the helper variable. */
+  private fetchElement(x: Extract<Expr, { kind: 'var' }>): string | undefined {
+    const type = this.varTypes.get(x.name);
+    const step = x.path[0];
+    if (!step || (type?.kind !== 'list' && type?.kind !== 'dict')) return undefined;
+    const itemType = walTypes[type.of.kind] ?? 'String';
+    const helper = this.helperVar('Item', (n) => `defVar --name ${n} --type ${itemType}`);
+    const pending: NoteInput[] = [];
+    const sink: NoteSink = (n) => pending.push(n);
+    if (type.kind === 'list' && step.kind === 'index') {
+      const i = step.index;
+      let index: string;
+      if (i.kind === 'literal' && typeof i.value === 'number') {
+        index = String(i.value + 1);
+      } else {
+        // A360 indexes are 0-based, WAL Get List Item is 1-based.
+        const shifted = this.helperVar('Index', (n) => `defVar --name ${n} --type Numeric`);
+        this.w.line(
+          `evaluate --expression ${quote(`${textOf(i, sink)} + 1`)} ${shifted}=value`,
+          ...pending.splice(0),
+        );
+        index = ref(shifted);
+      }
+      this.w.line(
+        `get --collection "${ref(x.name)}" --index ${index} ${helper}=value`,
+        ...pending.splice(0),
+        docNote('get (Get List Item; index starts at 1, A360 at 0)'),
+      );
+      return helper;
+    }
+    if (type.kind === 'dict' && step.kind === 'key') {
+      this.w.line(
+        `strDictGet --key ${valueOf(step.key, sink)} --dictionary ${ref(x.name)} ${helper}=value`,
+        ...pending.splice(0),
+        docNote('strDictGet (Get Dictionary Value)'),
+      );
+      return helper;
+    }
+    return undefined;
   }
 
   private statementBody(s: Statement): void {
@@ -467,6 +554,7 @@ function systemNames(bot: Bot): Set<string> {
 /** Generates a WAL script for one bot, with notes for every line to check. */
 export function lowerBot(bot: Bot, options: LowerOptions): WalScript {
   const l = new Lowerer();
+  l.varTypes = new Map(bot.variables.map((v) => [v.name, v.type]));
 
   // Body first: it decides which helper variables and subroutines are needed.
   l.w = new WalWriter();

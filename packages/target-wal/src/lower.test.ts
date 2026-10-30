@@ -205,6 +205,45 @@ describe('lowerBot', () => {
     }
   });
 
+  it('reads list items and dictionary values into helper variables before the statement', () => {
+    const access = (
+      name: string,
+      step: { kind: 'index'; index: Expr } | { kind: 'key'; key: Expr },
+    ) => ({ kind: 'var', name, path: [step] }) as const;
+    const b = bot(
+      'b',
+      [
+        action('variable.assign', {
+          args: {
+            sourceString: {
+              kind: 'template',
+              parts: [
+                access('items', { kind: 'index', index: lit(0) }),
+                access('items', { kind: 'index', index: ref('i') }),
+                access('map', { kind: 'key', key: lit('name') }),
+              ],
+            },
+          },
+          outputs: { result: ref('out') },
+        }),
+      ],
+      {
+        variables: [
+          variable('items', { kind: 'list', of: { kind: 'string' } }),
+          variable('map', { kind: 'dict', of: { kind: 'string' } }),
+        ],
+      },
+    );
+    const lines = body(b).filter((l) => !l.startsWith('defVar') && !l.startsWith('//'));
+    expect(lines).toEqual([
+      'get --collection "${items}" --index 1 rosettaItem1=value',
+      'evaluate --expression "${i} + 1" rosettaIndex3=value',
+      'get --collection "${items}" --index ${rosettaIndex3} rosettaItem2=value',
+      'strDictGet --key "name" --dictionary ${map} rosettaItem4=value',
+      'setVar --name "${out}" --value "${rosettaItem1}${rosettaItem2}${rosettaItem4}"',
+    ]);
+  });
+
   it('fills the machine name once when the bot uses it', () => {
     const b = bot('b', [
       action('variable.assign', {

@@ -1,9 +1,28 @@
-import type { Expr } from '@rosetta/ir';
+import type { Expr, VarRefExpr } from '@rosetta/ir';
 import { LIST_INDEX_BASE, quote, ref, systemValues, walBoolean } from './syntax.js';
 import type { NoteInput } from './writer.js';
 
 /** Collects notes raised while lowering one expression. */
 export type NoteSink = (note: NoteInput) => void;
+
+/** Helper variable holding a list item / dictionary value, by access expression. */
+export type AccessResolver = (access: VarRefExpr) => string | undefined;
+
+let accessResolver: AccessResolver | undefined;
+
+/** Stable key of an access expression such as `vList[0]` or `vDict{$vKey$}`. */
+export const accessKey = (e: VarRefExpr): string => JSON.stringify(e);
+
+/** Runs `fn` with element accesses resolved to helper variables (set per statement). */
+export function withAccesses<T>(resolve: AccessResolver, fn: () => T): T {
+  const saved = accessResolver;
+  accessResolver = resolve;
+  try {
+    return fn();
+  } finally {
+    accessResolver = saved;
+  }
+}
 
 /** Placeholder for content we cannot express; visible in Studio and listed in notes. */
 const placeholder = (what: string, sink: NoteSink, text: string): string => {
@@ -21,6 +40,12 @@ export function textOf(expr: Expr, sink: NoteSink): string {
       if (typeof expr.value === 'boolean') return walBoolean(expr.value);
       return expr.value === null ? '' : String(expr.value);
     case 'var': {
+      if (expr.path.length > 0) {
+        // `${list[1]}` is not interpolated by WAL (Studio round 4): the element was read
+        // into a helper variable by a get / strDictGet command written before the statement.
+        const helper = accessResolver?.(expr);
+        if (helper) return ref(helper);
+      }
       let out = expr.name;
       for (const step of expr.path) {
         const inner = step.kind === 'index' ? step.index : step.key;
