@@ -37,4 +37,4 @@ Same lines as one A360 run. Verified:
   data row), `for` over the `rows` output, and `mapTableRow` **by column name**
   (`"name=Name=${vRow_Name},name=Amount=${vRow_Amount}"`), which the reference does not show.
 - Numbers read as text give `100`, like A360 READ_CELL_TEXT.
-- `excelSet` and `excelClose --save` ran without error. `Done` in C1 not reported separately.
+- `excelSet` and `excelClose --save` ran without error. The owner confirmed `Done` in C1 (2026-10-31).

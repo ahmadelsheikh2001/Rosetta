@@ -64,4 +64,4 @@ Findings:
 - Numbers come back as their visible text (`100`, not `100.0`): READ_CELL_TEXT.
 - The three rows appear twice. The log appends (`APPEND_FILE`), so this is most likely two runs;
   to confirm with an empty `log.txt`. If one run wrote six lines, the loop ran twice.
-- `Done` in C1 of `input.xlsx`: not reported yet.
+- `Done` in C1 of `input.xlsx`: confirmed by the owner (2026-10-31).

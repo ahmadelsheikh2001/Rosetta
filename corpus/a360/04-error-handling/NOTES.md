@@ -75,3 +75,8 @@ Findings:
   numbers will differ after conversion.
 
 To repeat with `missing.txt` absent.
+
+### Run 2 (2026-10-31): `missing.txt` absent
+
+Reported by the owner: ran as intended. The log lines were not sent, so the A360 order and line numbers
+are not recorded yet (A-20, A-22).
