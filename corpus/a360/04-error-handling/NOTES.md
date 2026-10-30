@@ -55,3 +55,23 @@ then the outer Catch logs it, then Finally runs.
 - There's no single "read file" action; CSV/TXT Open + Read on the missing file was used, so the error comes from Open.
 - Catch/Finally are stored in the Try node's `branches`. The error message and line number outputs are under
   `returns.errorMessage` / `returns.errorLineNumber`, not as attributes.
+
+### Run 1 (2026-10-30): NOT the intended scenario
+
+`missing.txt` existed (empty file), so CSV Open did not fail and the inner Catch did not run.
+Log (`corpus/a360/runs/2026-10-30/log.txt`, lines 10–11, CRLF):
+
+```
+Outer catch: Custom RR_04 error thrown on purpose (line 10)
+cleanup done
+```
+
+Findings:
+
+- The outer Catch runs before Finally (A-20, partly).
+- The Throw is reported at line 10: nodes are counted in order including the inner Catch branch
+  (Step 1, Comment 2, Try 3, Try 4, Open 5, Read 6, Catch 7, Log 8, If 9, Throw 10) (A-22).
+- `vErrLine` holds the line of the failing node; WAL `${rpa:errorLineNumber}` counts WAL lines, so the
+  numbers will differ after conversion.
+
+To repeat with `missing.txt` absent.

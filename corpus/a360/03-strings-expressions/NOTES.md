@@ -66,3 +66,22 @@ Needed to close A-07 (escaping) and A-17 (non-ASCII encoding).
 - Step 1 has no Comment. The bot has 2 Comments in total, in Steps 2 and 3.
 - Message box text is stored as `expression`; plain literals as `string`.
 - Index base: Substring and Find start counting at 1 by default, list indexes like `$vList[0]$` start at 0.
+
+## Run result
+
+### Run 1 (2026-10-30)
+
+Message box "RR_03 Expressions" (machine name and Control Room URL redacted):
+
+```
+part0=Hello | list1=Beta | name=Test User | date=06/11/2026 | len=18 | idx=7 |
+out=Machine=<machine> | Bot=\Bots\RPA_Rosetta_Samples\RR_03_StringsExpressions | CR=<control-room-url>
+```
+
+Findings:
+
+- Trim worked (`len=18` for "Hello Rosetta Test"); split by space, `$vParts[0]$` = `Hello`.
+- `$System:Date$` + 7 days formatted `dd/MM/yyyy` = `06/11/2026` (run on 2026-10-30).
+- **String/find is 1-based**: `idx=7` for "Rosetta" in "Hello Rosetta Test" (A-19).
+- **`$System:AATaskName$` is the repository path** `\Bots\<folder>\<bot>`, not just the bot name (A-23).
+- `$System:AAControlRoom$` is the Control Room URL with a trailing slash.

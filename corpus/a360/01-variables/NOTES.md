@@ -146,3 +146,26 @@ Boolean 2.13.3; Comment 2.17.0; Dictionary 3.16.2; List 2.16.2; LogToFile 3.11.1
 - The Message box won't accept `$vNum$` or `$vBool$` directly (type mismatch), so the inline conversions `.Number:toString` and `.Boolean:toString` were used. `$vDate.Datetime:toString$` was rejected as an invalid expression, so vDate is only logged through "Log variables to file".
 - List: Add item only takes a variable as the item, not a literal, so the item added is the value of vStr.
 - No assign actions for DateTime, Table or Credential, since the spec didn't ask for them. DateTime operations are in RR_03.
+
+### Run 2 (2026-10-30, log path changed to `D:\Rosetta\out\wal\log.txt`)
+
+Completed. Log written (`corpus/a360/runs/2026-10-30/log.txt`, lines 1–9):
+
+```
+(10/30/2026 2:06:26 PM) vStr=Updated Test User | vNum=105 | city=Test City | item1=Beta
+Task bot name : \Bots\RPA_Rosetta_Samples\RR_01_Variables
+
+vBool (Boolean) = false
+vDate (Datetime) = 2026-01-01T09:00:00+02:00[Africa/Cairo]
+vNum (Number) = 105
+vStr (String) = Updated Test User
+----------------------------------------------------------------------------------------------------
+
+```
+
+Findings:
+
+- Log text to file with timestamp prefixes `(M/d/yyyy h:mm:ss AM/PM) ` to the line.
+- Log variables to file writes `Task bot name : <repository path>`, an empty line, one
+  `name (Type) = value` line per variable in alphabetical order, a line of 100 dashes and an empty line.
+- `item1=Beta`: `$vList[1]$` is the second item (0-based, confirmed again).

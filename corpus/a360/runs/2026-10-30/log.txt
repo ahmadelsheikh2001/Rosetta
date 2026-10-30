@@ -1,0 +1,11 @@
+(10/30/2026 2:06:26 PM) vStr=Updated Test User | vNum=105 | city=Test City | item1=Beta
+Task bot name : \Bots\RPA_Rosetta_Samples\RR_01_Variables
+
+vBool (Boolean) = false
+vDate (Datetime) = 2026-01-01T09:00:00+02:00[Africa/Cairo]
+vNum (Number) = 105
+vStr (String) = Updated Test User
+----------------------------------------------------------------------------------------------------
+
+Outer catch: Custom RR_04 error thrown on purpose (line 10)
+cleanup done
