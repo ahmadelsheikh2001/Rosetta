@@ -29,7 +29,88 @@ Boolean 2.13.3; Comment 2.17.0; Dictionary 3.16.2; List 2.16.2; LogToFile 3.11.1
 
 ## Run result
 
-Not run. The bots run on the owner's own device, and this agent can't observe a desktop run. Pending.
+### Run 1 (2026-10-30, Community Edition, owner's device)
+
+Message box (`run-1/message-box.png`), title "RR_01 Variables":
+
+```
+vStr=Updated Test User | vNum=105 | vBool=false | first item=Alpha | name=Test User
+```
+
+Then the bot stopped with:
+
+```
+There was a problem at line 12
+Unable to log the text to the file because the file path is not found. Verify the file path 'C:\RosettaTest\log.txt' and try again.
+Location: RR_01_Variables (line 12)
+Code: ba.bot.execution.error
+```
+
+Findings:
+
+- `vNum=105`: assign 100 then increment by 5, as expected.
+- `first item=Alpha`: `$vList[0]# RR_01_Variables
+
+## Provenance
+
+- Source: Automation Anywhere A360 **Community Edition** Control Room, private folder `Bots\RPA_Rosetta_Samples`
+- Retrieved: 2026-10-29, via `GET /v2/repository/files/{id}/content` (same call the editor makes), saved byte-for-byte with no reformatting
+- Content-Type returned: `application/vnd.aa.taskbot`
+- File: `bot.json`, 7508 bytes, SHA-256 `964420eb53bba473c5a9f3727119c474ac96f9c42c90f1a16586c3d7b3b10874`
+  (re-checked in the repo on 2026-10-29: identical)
+- Encoding: ASCII-only (UTF-8 compatible), no BOM, single line (no line breaks, so no CRLF question)
+- Repository version at retrieval: 26, status NEW (never run)
+
+## Sensitive-data check (done by hand before adding to corpus)
+
+- No username, email, Control Room URL, user ID or tenant ID found in `bot.json`.
+- The only long numbers are inside node `uid` values (random per-node IDs).
+- Not included anywhere in corpus: the dependencies API response, which does contain the Control Room URL and a repository ID.
+
+## Packages and versions (from `packages` in bot.json)
+
+Boolean 2.13.3; Comment 2.17.0; Dictionary 3.16.2; List 2.16.2; LogToFile 3.11.1; MessageBox 3.8.1; Number 3.11.5; Step 2.7.0; String 5.12.6
+
+`properties`: botCodeVersion "7", improvedNumberSupport true, timeout "0s", automationPriority PRIORITY_MEDIUM, runInChildWindow false, runInChildWindowMode DESKTOP. `triggers`: empty.
+
+## View dependencies and references (Control Room UI)
+
+- Dependencies (0), References (0). The dialog only lists other files (bots, forms and so on). It doesn't show package versions, which are in `packages` above.
+- API summary: 1 entry (the bot itself), dependencyType NONE, tags INTENDED_TARGET:WINDOWS, COMPATIBLE_TARGET:WINDOWS, COMPATIBLE_TARGET:MAC_OS.
+
+ is the first item; list indexes are 0-based at runtime (A-19, A360 side).
+- `vBool=false`: `$vBool.Boolean:toString# RR_01_Variables
+
+## Provenance
+
+- Source: Automation Anywhere A360 **Community Edition** Control Room, private folder `Bots\RPA_Rosetta_Samples`
+- Retrieved: 2026-10-29, via `GET /v2/repository/files/{id}/content` (same call the editor makes), saved byte-for-byte with no reformatting
+- Content-Type returned: `application/vnd.aa.taskbot`
+- File: `bot.json`, 7508 bytes, SHA-256 `964420eb53bba473c5a9f3727119c474ac96f9c42c90f1a16586c3d7b3b10874`
+  (re-checked in the repo on 2026-10-29: identical)
+- Encoding: ASCII-only (UTF-8 compatible), no BOM, single line (no line breaks, so no CRLF question)
+- Repository version at retrieval: 26, status NEW (never run)
+
+## Sensitive-data check (done by hand before adding to corpus)
+
+- No username, email, Control Room URL, user ID or tenant ID found in `bot.json`.
+- The only long numbers are inside node `uid` values (random per-node IDs).
+- Not included anywhere in corpus: the dependencies API response, which does contain the Control Room URL and a repository ID.
+
+## Packages and versions (from `packages` in bot.json)
+
+Boolean 2.13.3; Comment 2.17.0; Dictionary 3.16.2; List 2.16.2; LogToFile 3.11.1; MessageBox 3.8.1; Number 3.11.5; Step 2.7.0; String 5.12.6
+
+`properties`: botCodeVersion "7", improvedNumberSupport true, timeout "0s", automationPriority PRIORITY_MEDIUM, runInChildWindow false, runInChildWindowMode DESKTOP. `triggers`: empty.
+
+## View dependencies and references (Control Room UI)
+
+- Dependencies (0), References (0). The dialog only lists other files (bots, forms and so on). It doesn't show package versions, which are in `packages` above.
+- API summary: 1 entry (the bot itself), dependencyType NONE, tags INTENDED_TARGET:WINDOWS, COMPATIBLE_TARGET:WINDOWS, COMPATIBLE_TARGET:MAC_OS.
+
+ renders **lower-case** `false` (A-21).
+- "line 12" is the Log text to file command when every node is counted in order, Steps and Comments included (A-22).
+- Log text to file does not create a missing folder. The error was environmental (`C:\RosettaTest` did not exist). Rerun pending.
 
 ## Build log (as delivered during the build)
 
