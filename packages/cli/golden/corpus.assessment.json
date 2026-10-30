@@ -12,13 +12,13 @@
     "hardcoded-email"
   ],
   "portfolio": {
-    "bots": 7,
-    "statements": 69,
+    "bots": 8,
+    "statements": 88,
     "coverage": {
       "mapped": 0,
-      "partial": 52,
+      "partial": 68,
       "manual": 0,
-      "total": 52,
+      "total": 68,
       "percent": 100
     },
     "qualityScore": 92,
@@ -29,8 +29,8 @@
           "hours": 20
         },
         "M": {
-          "bots": 2,
-          "hours": 24
+          "bots": 3,
+          "hours": 36
         },
         "L": {
           "bots": 0,
@@ -41,25 +41,25 @@
           "hours": 0
         }
       },
-      "totalHours": 44,
+      "totalHours": 56,
       "calibrated": false
     },
     "topManual": [],
     "topQuality": [
       {
         "key": "QUAL-UNUSED-VARIABLE",
-        "occurrences": 17,
-        "bots": 7
+        "occurrences": 20,
+        "bots": 8
       },
       {
         "key": "QUAL-MISSING-ERROR-HANDLING",
-        "occurrences": 6,
-        "bots": 6
+        "occurrences": 7,
+        "bots": 7
       },
       {
         "key": "QUAL-DISABLED-CODE",
-        "occurrences": 4,
-        "bots": 4
+        "occurrences": 5,
+        "bots": 5
       },
       {
         "key": "QUAL-HARDCODED-CREDENTIAL",
@@ -71,11 +71,16 @@
       {
         "name": "String",
         "version": "5.12.6",
-        "bots": 6
+        "bots": 7
       },
       {
         "name": "MessageBox",
         "version": "3.8.1",
+        "bots": 5
+      },
+      {
+        "name": "Step",
+        "version": "2.7.0",
         "bots": 5
       },
       {
@@ -89,13 +94,13 @@
         "bots": 4
       },
       {
-        "name": "Step",
-        "version": "2.7.0",
-        "bots": 4
-      },
-      {
         "name": "Boolean",
         "version": "2.13.3",
+        "bots": 3
+      },
+      {
+        "name": "If",
+        "version": "3.8.0-20241115-115929",
         "bots": 3
       },
       {
@@ -104,13 +109,18 @@
         "bots": 3
       },
       {
-        "name": "Dictionary",
-        "version": "3.16.2",
+        "name": "Loop",
+        "version": "3.10.0-20251030-061555",
+        "bots": 3
+      },
+      {
+        "name": "CsvTxt",
+        "version": "2.15.1",
         "bots": 2
       },
       {
-        "name": "If",
-        "version": "3.8.0-20241115-115929",
+        "name": "Dictionary",
+        "version": "3.16.2",
         "bots": 2
       },
       {
@@ -119,18 +129,13 @@
         "bots": 2
       },
       {
-        "name": "Loop",
-        "version": "3.10.0-20251030-061555",
-        "bots": 2
+        "name": "Browser",
+        "version": "4.4.4",
+        "bots": 1
       },
       {
         "name": "Credential",
         "version": "1.8.0",
-        "bots": 1
-      },
-      {
-        "name": "CsvTxt",
-        "version": "2.15.1",
         "bots": 1
       },
       {
@@ -151,6 +156,11 @@
       {
         "name": "File",
         "version": "6.16.2",
+        "bots": 1
+      },
+      {
+        "name": "Recorder",
+        "version": "5.11.0-20260916-081602",
         "bots": 1
       },
       {
@@ -1934,6 +1944,444 @@
         {
           "name": "TaskBot",
           "version": "2.10.0-20241119-100739"
+        }
+      ]
+    },
+    {
+      "id": "09-web-form/bot.json",
+      "name": "09-web-form",
+      "file": "09-web-form/bot.json",
+      "metrics": {
+        "nodes": 19,
+        "maxDepth": 2,
+        "packages": 7,
+        "uiActions": 13,
+        "subBotCalls": 0,
+        "unmapped": 0,
+        "errorHandlers": 0
+      },
+      "complexity": {
+        "score": 76,
+        "size": "M",
+        "hours": 12
+      },
+      "coverage": {
+        "mapped": 0,
+        "partial": 16,
+        "manual": 0,
+        "total": 16,
+        "percent": 100
+      },
+      "conversionItems": [
+        {
+          "nodeId": "f52e7ae4-457c-4b55-a86c-b9d6b549c110",
+          "source": {
+            "platform": "a360",
+            "file": "09-web-form/bot.json",
+            "nodePath": [
+              0,
+              0
+            ],
+            "nodeId": "f52e7ae4-457c-4b55-a86c-b9d6b549c110",
+            "label": "CsvTxt/OpenCSVTXT"
+          },
+          "op": "csv.open",
+          "bucket": "partial",
+          "reason": "partial",
+          "mappingId": "a360.csvtxt.opencsvtxt"
+        },
+        {
+          "nodeId": "5d580bbe-c127-4b92-946d-a69641fdf294",
+          "source": {
+            "platform": "a360",
+            "file": "09-web-form/bot.json",
+            "nodePath": [
+              0,
+              1
+            ],
+            "nodeId": "5d580bbe-c127-4b92-946d-a69641fdf294",
+            "label": "Browser/openbrowser"
+          },
+          "op": "browser.open",
+          "bucket": "partial",
+          "reason": "partial",
+          "mappingId": "a360.browser.openbrowser"
+        },
+        {
+          "nodeId": "72fd71c7-91bf-456a-a8dc-6f6ec73744d7",
+          "source": {
+            "platform": "a360",
+            "file": "09-web-form/bot.json",
+            "nodePath": [
+              1,
+              0,
+              0
+            ],
+            "nodeId": "72fd71c7-91bf-456a-a8dc-6f6ec73744d7",
+            "label": "Recorder/capture"
+          },
+          "op": "ui.capture",
+          "bucket": "partial",
+          "reason": "partial",
+          "mappingId": "a360.recorder.capture"
+        },
+        {
+          "nodeId": "2a75f411-1c02-4e70-aacd-722a37c83159",
+          "source": {
+            "platform": "a360",
+            "file": "09-web-form/bot.json",
+            "nodePath": [
+              1,
+              0,
+              1
+            ],
+            "nodeId": "2a75f411-1c02-4e70-aacd-722a37c83159",
+            "label": "Recorder/capture"
+          },
+          "op": "ui.capture",
+          "bucket": "partial",
+          "reason": "partial",
+          "mappingId": "a360.recorder.capture"
+        },
+        {
+          "nodeId": "db0ca3a3-381a-4ce3-a1ba-2b3b38a94901",
+          "source": {
+            "platform": "a360",
+            "file": "09-web-form/bot.json",
+            "nodePath": [
+              1,
+              0,
+              2
+            ],
+            "nodeId": "db0ca3a3-381a-4ce3-a1ba-2b3b38a94901",
+            "label": "Recorder/capture"
+          },
+          "op": "ui.capture",
+          "bucket": "partial",
+          "reason": "partial",
+          "mappingId": "a360.recorder.capture"
+        },
+        {
+          "nodeId": "2a3f0192-7d07-4648-83d9-2351010bda6c",
+          "source": {
+            "platform": "a360",
+            "file": "09-web-form/bot.json",
+            "nodePath": [
+              1,
+              0,
+              3
+            ],
+            "nodeId": "2a3f0192-7d07-4648-83d9-2351010bda6c",
+            "label": "Recorder/capture"
+          },
+          "op": "ui.capture",
+          "bucket": "partial",
+          "reason": "partial",
+          "mappingId": "a360.recorder.capture"
+        },
+        {
+          "nodeId": "a1e11186-9ae7-4c34-9c7f-c1dd9b939909",
+          "source": {
+            "platform": "a360",
+            "file": "09-web-form/bot.json",
+            "nodePath": [
+              1,
+              0,
+              4
+            ],
+            "nodeId": "a1e11186-9ae7-4c34-9c7f-c1dd9b939909",
+            "label": "Recorder/capture"
+          },
+          "op": "ui.capture",
+          "bucket": "partial",
+          "reason": "partial",
+          "mappingId": "a360.recorder.capture"
+        },
+        {
+          "nodeId": "51edf4f7-e12d-4cee-86e0-a9d03f91f2e2",
+          "source": {
+            "platform": "a360",
+            "file": "09-web-form/bot.json",
+            "nodePath": [
+              1,
+              0,
+              5
+            ],
+            "nodeId": "51edf4f7-e12d-4cee-86e0-a9d03f91f2e2",
+            "label": "Recorder/capture"
+          },
+          "op": "ui.capture",
+          "bucket": "partial",
+          "reason": "partial",
+          "mappingId": "a360.recorder.capture"
+        },
+        {
+          "nodeId": "6e171f31-a0de-4242-a7d0-128a402c9ffe",
+          "source": {
+            "platform": "a360",
+            "file": "09-web-form/bot.json",
+            "nodePath": [
+              1,
+              0,
+              6
+            ],
+            "nodeId": "6e171f31-a0de-4242-a7d0-128a402c9ffe",
+            "label": "Recorder/capture"
+          },
+          "op": "ui.capture",
+          "bucket": "partial",
+          "reason": "partial",
+          "mappingId": "a360.recorder.capture"
+        },
+        {
+          "nodeId": "aa5a004b-af64-48d7-b5cb-b99ad4e1bdff",
+          "source": {
+            "platform": "a360",
+            "file": "09-web-form/bot.json",
+            "nodePath": [
+              1,
+              0,
+              7
+            ],
+            "nodeId": "aa5a004b-af64-48d7-b5cb-b99ad4e1bdff",
+            "label": "Recorder/capture"
+          },
+          "op": "ui.capture",
+          "bucket": "partial",
+          "reason": "partial",
+          "mappingId": "a360.recorder.capture"
+        },
+        {
+          "nodeId": "570c33b1-bd87-4f9e-ac3c-7c560051ecc8",
+          "source": {
+            "platform": "a360",
+            "file": "09-web-form/bot.json",
+            "nodePath": [
+              1,
+              0,
+              8,
+              0
+            ],
+            "nodeId": "570c33b1-bd87-4f9e-ac3c-7c560051ecc8",
+            "label": "Recorder/capture"
+          },
+          "op": "ui.capture",
+          "bucket": "partial",
+          "reason": "partial",
+          "mappingId": "a360.recorder.capture"
+        },
+        {
+          "nodeId": "d8b7faf9-4b70-439d-baf4-2c7f9a00d40c",
+          "source": {
+            "platform": "a360",
+            "file": "09-web-form/bot.json",
+            "nodePath": [
+              1,
+              0,
+              8,
+              1,
+              0
+            ],
+            "nodeId": "d8b7faf9-4b70-439d-baf4-2c7f9a00d40c",
+            "label": "Recorder/capture"
+          },
+          "op": "ui.capture",
+          "bucket": "partial",
+          "reason": "partial",
+          "mappingId": "a360.recorder.capture"
+        },
+        {
+          "nodeId": "facc2fc8-1107-4d09-b574-460a496da4ba",
+          "source": {
+            "platform": "a360",
+            "file": "09-web-form/bot.json",
+            "nodePath": [
+              1,
+              0,
+              9,
+              0
+            ],
+            "nodeId": "facc2fc8-1107-4d09-b574-460a496da4ba",
+            "label": "Recorder/capture"
+          },
+          "op": "ui.capture",
+          "bucket": "partial",
+          "reason": "partial",
+          "mappingId": "a360.recorder.capture"
+        },
+        {
+          "nodeId": "08164027-11f3-4e96-ae54-0d3a995cf4b2",
+          "source": {
+            "platform": "a360",
+            "file": "09-web-form/bot.json",
+            "nodePath": [
+              1,
+              0,
+              9,
+              1,
+              0
+            ],
+            "nodeId": "08164027-11f3-4e96-ae54-0d3a995cf4b2",
+            "label": "Recorder/capture"
+          },
+          "op": "ui.capture",
+          "bucket": "partial",
+          "reason": "partial",
+          "mappingId": "a360.recorder.capture"
+        },
+        {
+          "nodeId": "c86eb77a-7d85-4575-bad9-ee2345ac2a6f",
+          "source": {
+            "platform": "a360",
+            "file": "09-web-form/bot.json",
+            "nodePath": [
+              1,
+              0,
+              10
+            ],
+            "nodeId": "c86eb77a-7d85-4575-bad9-ee2345ac2a6f",
+            "label": "Recorder/capture"
+          },
+          "op": "ui.capture",
+          "bucket": "partial",
+          "reason": "partial",
+          "mappingId": "a360.recorder.capture"
+        },
+        {
+          "nodeId": "85952c78-e43e-4d7d-bfb9-69e56efe5d05",
+          "source": {
+            "platform": "a360",
+            "file": "09-web-form/bot.json",
+            "nodePath": [
+              2,
+              0
+            ],
+            "nodeId": "85952c78-e43e-4d7d-bfb9-69e56efe5d05",
+            "label": "CsvTxt/CloseCsvTxt"
+          },
+          "op": "csv.close",
+          "bucket": "partial",
+          "reason": "partial",
+          "mappingId": "a360.csvtxt.closecsvtxt"
+        }
+      ],
+      "quality": {
+        "score": 92,
+        "findings": [
+          {
+            "code": "QUAL-MISSING-ERROR-HANDLING",
+            "severity": "warning",
+            "category": "quality",
+            "messageId": "quality.missing-error-handling",
+            "params": {
+              "bot": "09-web-form",
+              "actions": 16
+            },
+            "source": {
+              "platform": "a360",
+              "file": "09-web-form/bot.json",
+              "nodePath": []
+            }
+          },
+          {
+            "code": "QUAL-DISABLED-CODE",
+            "severity": "info",
+            "category": "quality",
+            "messageId": "quality.disabled-code",
+            "params": {
+              "bot": "09-web-form",
+              "kind": "action"
+            },
+            "source": {
+              "platform": "a360",
+              "file": "09-web-form/bot.json",
+              "nodePath": [
+                1,
+                0,
+                9,
+                1,
+                0
+              ],
+              "nodeId": "08164027-11f3-4e96-ae54-0d3a995cf4b2",
+              "label": "Recorder/capture"
+            },
+            "nodeId": "08164027-11f3-4e96-ae54-0d3a995cf4b2"
+          },
+          {
+            "code": "QUAL-UNUSED-VARIABLE",
+            "severity": "info",
+            "category": "quality",
+            "messageId": "quality.unused-variable",
+            "params": {
+              "bot": "09-web-form",
+              "variable": "SampleNumber"
+            },
+            "source": {
+              "platform": "a360",
+              "file": "09-web-form/bot.json",
+              "nodePath": []
+            }
+          },
+          {
+            "code": "QUAL-UNUSED-VARIABLE",
+            "severity": "info",
+            "category": "quality",
+            "messageId": "quality.unused-variable",
+            "params": {
+              "bot": "09-web-form",
+              "variable": "SampleString"
+            },
+            "source": {
+              "platform": "a360",
+              "file": "09-web-form/bot.json",
+              "nodePath": []
+            }
+          },
+          {
+            "code": "QUAL-UNUSED-VARIABLE",
+            "severity": "info",
+            "category": "quality",
+            "messageId": "quality.unused-variable",
+            "params": {
+              "bot": "09-web-form",
+              "variable": "Browser1"
+            },
+            "source": {
+              "platform": "a360",
+              "file": "09-web-form/bot.json",
+              "nodePath": []
+            }
+          }
+        ]
+      },
+      "packages": [
+        {
+          "name": "Browser",
+          "version": "4.4.4"
+        },
+        {
+          "name": "CsvTxt",
+          "version": "2.15.1"
+        },
+        {
+          "name": "If",
+          "version": "3.8.0-20241115-115929"
+        },
+        {
+          "name": "Loop",
+          "version": "3.10.0-20251030-061555"
+        },
+        {
+          "name": "Recorder",
+          "version": "5.11.0-20260916-081602"
+        },
+        {
+          "name": "Step",
+          "version": "2.7.0"
+        },
+        {
+          "name": "String",
+          "version": "5.12.6"
         }
       ]
     }

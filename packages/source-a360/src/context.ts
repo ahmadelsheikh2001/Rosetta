@@ -68,13 +68,16 @@ export class LiftContext {
         : code === LiftCode.Json || code === LiftCode.Schema || code === LiftCode.Zip
           ? 'parse'
           : 'unmapped';
+    // Findings without a node (e.g. a variable) still name the file.
+    const at = source ?? this.ref([]);
     this.diagnostics.push({
       code,
       severity,
       category,
       messageId: liftMessageIds[code],
       params,
-      ...(source ? { source, ...(source.nodeId ? { nodeId: source.nodeId } : {}) } : {}),
+      source: at,
+      ...(at.nodeId ? { nodeId: at.nodeId } : {}),
     });
   }
 }

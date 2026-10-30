@@ -115,6 +115,17 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: Se
   scripts, notes, a ZIP of everything, or open the assessment report. Files never leave the
   computer: local-only binding, Host check, JSON-only API, strict Content-Security-Policy.
 
+#### Browser and Recorder (corpus 09)
+
+- Corpus 09-web-form: the owner's A360 web-form bot, sanitized (page address, user path and
+  capture blobs removed; see its NOTES).
+- Lifter: Recorder captures as UI targets (selector criteria), WINDOW variables, the CSV row
+  iterator, disabled Else branches; record columns written with quotes (`{"Company Name"}`).
+- WAL: `webStart`/`webNavigate`, `webSet`, `webSetComboBox`, `webClick` with the element id (else
+  XPath, else CSS) and the A360 wait as `--timeout`; CSV rows via `readCSV` + `for` + `mapTableRow`;
+  percent-encoded file paths decoded.
+- Reading messages without a node now name their file.
+
 ### Planned (deferred by ADR-016)
 
 - dependency-cruiser layer enforcement

@@ -1,0 +1,297 @@
+id: a360.recorder.capture
+from: corpus/a360/09-web-form/bot.json
+node:
+  uid: 72fd71c7-91bf-456a-a8dc-6f6ec73744d7
+  commandName: capture
+  packageName: Recorder
+  disabled: false
+  attributes:
+    - name: uiObject
+      value:
+        type: UIOBJECT
+        uiObject:
+          controlType: TEXTBOX
+          technologyType: HTML
+          browserType: CHROME
+          criteria:
+            HTML Tag:
+              enabled: true
+              value:
+                type: STRING
+                string: INPUT
+            UniqueID:
+              enabled: false
+              value:
+                type: STRING
+                string: 6bba7d55-d6c5-415a-bafc-1fb8c27940b2
+            WindowTitle:
+              enabled: false
+              value:
+                type: STRING
+                string: ''
+            innerHTML:
+              enabled: false
+              value:
+                type: STRING
+                string: ''
+            Left:
+              enabled: false
+              value:
+                type: STRING
+                string: '556'
+            Description:
+              enabled: false
+              value:
+                type: STRING
+                string: ''
+            DOMXPath:
+              enabled: true
+              value:
+                type: STRING
+                string: //input[@id='customerName']
+            HTML Top:
+              enabled: false
+              value:
+                type: STRING
+                string: '668'
+            HTML Left:
+              enabled: false
+              value:
+                type: STRING
+                string: '730'
+            Parent:
+              enabled: false
+              value:
+                type: STRING
+                string: ''
+            ClickY:
+              enabled: false
+              value:
+                type: STRING
+                string: '17'
+            HTML ID:
+              enabled: true
+              value:
+                type: STRING
+                string: customerName
+            ClickX:
+              enabled: false
+              value:
+                type: STRING
+                string: '210'
+            Index:
+              enabled: false
+              value:
+                type: STRING
+                string: '0'
+            outerHTML:
+              enabled: false
+              value:
+                type: STRING
+                string: <input type="text" id="customerName" class="form-control"
+                  name="customerName" placeholder="Customer Name"
+                  required="required">
+            HTML Class:
+              enabled: false
+              value:
+                type: STRING
+                string: form-control
+            HTML FrameName:
+              enabled: false
+              value:
+                type: STRING
+                string: ''
+            HTML HasFrame:
+              enabled: true
+              value:
+                type: STRING
+                string: 'false'
+            Name:
+              enabled: false
+              value:
+                type: STRING
+                string: customerName
+            States:
+              enabled: false
+              value:
+                type: STRING
+                string: ''
+            HTML Type:
+              enabled: true
+              value:
+                type: STRING
+                string: text
+            HTML FramePath:
+              enabled: false
+              value:
+                type: STRING
+                string: ''
+            HTML InnerText:
+              enabled: false
+              value:
+                type: STRING
+                string: ''
+            HTML Alt:
+              enabled: false
+              value:
+                type: STRING
+                string: ''
+            HTML Href:
+              enabled: false
+              value:
+                type: STRING
+                string: ''
+            HTML SourceIndex:
+              enabled: false
+              value:
+                type: STRING
+                string: '0'
+            ItemName:
+              enabled: false
+              value:
+                type: STRING
+                string: ''
+            Height:
+              enabled: false
+              value:
+                type: STRING
+                string: '29'
+            ID:
+              enabled: false
+              value:
+                type: STRING
+                string: ''
+            Width:
+              enabled: false
+              value:
+                type: STRING
+                string: '810'
+            HTML Title:
+              enabled: false
+              value:
+                type: STRING
+                string: ''
+            Path:
+              enabled: true
+              value:
+                type: STRING
+                string: 4|1|1|4|1
+            HTML Height:
+              enabled: false
+              value:
+                type: STRING
+                string: '29'
+            HTML Value:
+              enabled: false
+              value:
+                type: STRING
+                string: ''
+            HTML TagIndex:
+              enabled: false
+              value:
+                type: STRING
+                string: '1'
+            Role:
+              enabled: false
+              value:
+                type: STRING
+                string: TextBox
+            Top:
+              enabled: false
+              value:
+                type: STRING
+                string: '596'
+            DefaultAction:
+              enabled: false
+              value:
+                type: STRING
+                string: ''
+            ItemValue:
+              enabled: false
+              value:
+                type: STRING
+                string: ''
+            HTML ClassId:
+              enabled: false
+              value:
+                type: STRING
+                string: ''
+            HTML Width:
+              enabled: false
+              value:
+                type: STRING
+                string: '810'
+            Value:
+              enabled: false
+              value:
+                type: STRING
+                string: ''
+            HTML Name:
+              enabled: true
+              value:
+                type: STRING
+                string: customerName
+            Class:
+              enabled: false
+              value:
+                type: STRING
+                string: ''
+            HTML FrameSrc:
+              enabled: true
+              value:
+                type: STRING
+                string: https://example.com/customer-onboarding.html
+            IsVisible:
+              enabled: false
+              value:
+                type: STRING
+                string: 'true'
+            CSS Selector:
+              enabled: true
+              value:
+                type: STRING
+                string: input#customerName
+          isElevated: false
+          capture:
+            thumbnailMetadataPath: aefc9453-95e5-47df-845c-fb88323b29e3.png
+            screenshotMetadataPath: d6f8d826-9583-48b8-8138-75c4afc0c704.png
+            screenshotRectangle:
+              x: 556
+              y: 596
+              width: 810
+              height: 29
+            thumbnailRectangle:
+              x: 0
+              y: 0
+              width: 676
+              height: 24
+            securelyRecorded: false
+        uiObjectWindow:
+          type: WINDOW
+          expression: $Browser1$
+    - name: textboxAction
+      value:
+        type: STRING
+        string: SETTEXT
+    - name: runInBackground
+      value:
+        type: BOOLEAN
+        boolean: false
+    - name: typeOfInput
+      value:
+        type: STRING
+        string: VALUE
+    - name: value
+      value:
+        type: STRING
+        expression: $CsvTxtRow{"Company Name"}$
+    - name: advancedWait
+      value:
+        type: STRING
+        string: BASIC
+    - name: wait
+      value:
+        type: NUMBER
+        number: '15'
+expect:
+  op: ui.capture

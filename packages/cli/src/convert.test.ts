@@ -79,6 +79,11 @@ describe('conversion of the real corpus', () => {
       'mapTableRow',
       'getVaultItem',
       'executeScript',
+      'webStart',
+      'webNavigate',
+      'webSet',
+      'webSetComboBox',
+      'webClick',
     ]);
     for (const b of bots) {
       for (const line of b.script.text.split('\r\n')) {
@@ -226,6 +231,26 @@ describe('conversion of the real corpus', () => {
     expect(parent).not.toContain('NotReal123');
   });
 
+  it('converts the browser form of sample 09: CSV rows into web fields by id', () => {
+    const lines = (bots.find((b) => b.name === '09-web-form')?.script.text ?? '').split('\r\n');
+    expect(lines).toContain('webStart --name browser --type "Chrome"');
+    const read = lines.findIndex((l) => l.startsWith('readCSV '));
+    expect(lines[read]).toContain('"C:\\\\RosettaTest\\\\customer-onboarding-challenge.csv"');
+    expect(lines[read]).toContain('--hasheaders');
+    expect(lines[read + 1]).toMatch(/^for --variable .* --to \$\{rosettaTable\d+\.Rows\}/);
+    expect(lines).toContain(
+      'webSet --value "${CsvTxtRow_Company_Name}" --selector "Id" --id "customerName" --timeout "00:00:15"',
+    );
+    expect(lines.some((l) => l.startsWith('webSetComboBox --selectoptionby "MatchByText"'))).toBe(
+      true,
+    );
+    // the only TODO is inside the Else that is disabled in the source
+    const todos = lines.filter((l) => l.includes('TODO [ROSETTA]'));
+    expect(todos).toHaveLength(1);
+    expect(todos[0]).toMatch(/^\/\/ \[DISABLED\]/);
+    expect(lines.join('\n')).not.toContain('Browser1 --type');
+  });
+
   it('balances every block', () => {
     const pairs: Record<string, string> = {
       if: 'endIf',
@@ -260,7 +285,7 @@ describe('rosetta convert', () => {
       cwd: dir,
     });
     expect(code).toBe(ExitCode.Ok);
-    expect(out).toContain('Converted 7 bot(s)');
+    expect(out).toContain('Converted 8 bot(s)');
     const files = readdirSync(join(dir, 'wal')).sort();
     expect(files).toContain('CONVERSION.md');
     expect(files).toContain('04-error-handling.wal');

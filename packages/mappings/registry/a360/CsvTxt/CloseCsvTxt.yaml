@@ -1,0 +1,11 @@
+id: a360.csvtxt.closecsvtxt
+source:
+  platform: a360
+  package: CsvTxt
+  command: CloseCsvTxt
+status: partial
+irOp: csv.close
+evidence:
+  - corpus/a360/09-web-form/bot.json
+notes: Lifted to a canonical op; the WAL form is a draft until verified in IBM
+  RPA Studio (ADR-017).

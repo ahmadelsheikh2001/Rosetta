@@ -93,8 +93,8 @@ describe('readBotJson', () => {
   it('reports unknown variable and value types', () => {
     const r = readBotJson(
       bot(
-        [node('X', 'y', { attributes: [{ name: 'w', value: { type: 'WINDOW' } }] })],
-        [{ name: 'win', type: 'WINDOW' }],
+        [node('X', 'y', { attributes: [{ name: 'w', value: { type: 'HOLOGRAM' } }] })],
+        [{ name: 'win', type: 'HOLOGRAM' }],
       ),
       opts,
     );
@@ -102,6 +102,6 @@ describe('readBotJson', () => {
       'A360-UNKNOWN-VALUE',
       'A360-VARIABLE-TYPE',
     ]);
-    expect(r.bot?.variables[0]?.type).toEqual({ kind: 'unknown', sourceType: 'WINDOW' });
+    expect(r.bot?.variables[0]?.type).toEqual({ kind: 'unknown', sourceType: 'HOLOGRAM' });
   });
 });

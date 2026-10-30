@@ -135,7 +135,16 @@ export function valueOf(expr: Expr, sink: NoteSink): string {
  * Windows paths.
  */
 export function pathOf(expr: Expr, sink: NoteSink): string {
-  const strip = (s: string) => s.replace(/^file:\/\/\/?/, '');
+  // URIs are percent-encoded: `file:///C:/My%20Files/x.csv` (corpus 09).
+  const strip = (s: string) => {
+    if (!s.startsWith('file://')) return s;
+    const rest = s.replace(/^file:\/\/\/?/, '');
+    try {
+      return decodeURIComponent(rest);
+    } catch {
+      return rest;
+    }
+  };
   if (expr.kind === 'literal' && typeof expr.value === 'string') {
     return quote(strip(expr.value).replace(/\//g, '\\'));
   }

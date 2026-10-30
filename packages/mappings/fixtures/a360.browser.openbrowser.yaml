@@ -1,0 +1,30 @@
+id: a360.browser.openbrowser
+from: corpus/a360/09-web-form/bot.json
+node:
+  uid: 5d580bbe-c127-4b92-946d-a69641fdf294
+  commandName: openbrowser
+  packageName: Browser
+  disabled: false
+  attributes:
+    - name: openOption
+      value:
+        type: STRING
+        string: NEW_WIN
+    - name: browser
+      value:
+        type: STRING
+        string: CHROME
+    - name: url
+      value:
+        type: STRING
+        string: https://example.com/customer-onboarding.html
+    - name: timeoutValue
+      value:
+        type: NUMBER
+        number: '240'
+    - name: version
+      value:
+        type: NUMBER
+        number: '3810'
+expect:
+  op: browser.open

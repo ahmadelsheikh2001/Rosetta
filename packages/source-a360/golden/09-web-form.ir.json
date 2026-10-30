@@ -1,0 +1,2953 @@
+{
+  "id": "09-web-form/bot.json",
+  "name": "09-web-form",
+  "source": {
+    "platform": "a360",
+    "file": "09-web-form/bot.json",
+    "nodePath": []
+  },
+  "variables": [
+    {
+      "name": "SampleNumber",
+      "type": {
+        "kind": "number"
+      },
+      "direction": "local",
+      "sensitive": false
+    },
+    {
+      "name": "SampleString",
+      "type": {
+        "kind": "string"
+      },
+      "direction": "local",
+      "sensitive": false
+    },
+    {
+      "name": "CsvTxtRow",
+      "type": {
+        "kind": "record"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "defaultValue": {
+        "kind": "call",
+        "fn": "record.of",
+        "args": [
+          {
+            "kind": "literal",
+            "value": "{\"schema\":[],\"values\":[]}"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Browser1",
+      "type": {
+        "kind": "handle",
+        "resource": "browser"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "defaultValue": {
+        "kind": "call",
+        "fn": "window.of",
+        "args": [
+          {
+            "kind": "literal",
+            "value": "Customer Onboarding"
+          },
+          {
+            "kind": "literal",
+            "value": "BROWSER_CHROME"
+          }
+        ]
+      }
+    }
+  ],
+  "packages": [
+    {
+      "name": "Browser",
+      "version": "4.4.4"
+    },
+    {
+      "name": "CsvTxt",
+      "version": "2.15.1"
+    },
+    {
+      "name": "If",
+      "version": "3.8.0-20241115-115929"
+    },
+    {
+      "name": "Loop",
+      "version": "3.10.0-20251030-061555"
+    },
+    {
+      "name": "Recorder",
+      "version": "5.11.0-20260916-081602"
+    },
+    {
+      "name": "Step",
+      "version": "2.7.0"
+    },
+    {
+      "name": "String",
+      "version": "5.12.6"
+    }
+  ],
+  "body": [
+    {
+      "id": "2455ca01-ac7c-47bf-9262-ebd34d3e62d3",
+      "source": {
+        "platform": "a360",
+        "file": "09-web-form/bot.json",
+        "nodePath": [
+          0
+        ],
+        "nodeId": "2455ca01-ac7c-47bf-9262-ebd34d3e62d3",
+        "label": "open Exel and  red data "
+      },
+      "kind": "group",
+      "label": "open Exel and  red data ",
+      "body": [
+        {
+          "id": "f52e7ae4-457c-4b55-a86c-b9d6b549c110",
+          "source": {
+            "platform": "a360",
+            "file": "09-web-form/bot.json",
+            "nodePath": [
+              0,
+              0
+            ],
+            "nodeId": "f52e7ae4-457c-4b55-a86c-b9d6b549c110",
+            "label": "CsvTxt/OpenCSVTXT"
+          },
+          "kind": "action",
+          "op": "vendor:a360/CsvTxt/OpenCSVTXT",
+          "args": {
+            "session": {
+              "kind": "literal",
+              "value": "Default"
+            },
+            "filePath": {
+              "kind": "literal",
+              "value": "file:///C:/RosettaTest/customer-onboarding-challenge.csv"
+            },
+            "containsHeader": {
+              "kind": "literal",
+              "value": true
+            },
+            "delimeter": {
+              "kind": "literal",
+              "value": "comma"
+            },
+            "trimLeadingSpace": {
+              "kind": "literal",
+              "value": true
+            },
+            "trimTrailingSpace": {
+              "kind": "literal",
+              "value": true
+            },
+            "encoding": {
+              "kind": "literal",
+              "value": "UTF-8"
+            }
+          },
+          "outputs": {}
+        },
+        {
+          "id": "5d580bbe-c127-4b92-946d-a69641fdf294",
+          "source": {
+            "platform": "a360",
+            "file": "09-web-form/bot.json",
+            "nodePath": [
+              0,
+              1
+            ],
+            "nodeId": "5d580bbe-c127-4b92-946d-a69641fdf294",
+            "label": "Browser/openbrowser"
+          },
+          "kind": "action",
+          "op": "vendor:a360/Browser/openbrowser",
+          "args": {
+            "openOption": {
+              "kind": "literal",
+              "value": "NEW_WIN"
+            },
+            "browser": {
+              "kind": "literal",
+              "value": "CHROME"
+            },
+            "url": {
+              "kind": "literal",
+              "value": "https://example.com/customer-onboarding.html"
+            },
+            "timeoutValue": {
+              "kind": "literal",
+              "value": 240
+            },
+            "version": {
+              "kind": "literal",
+              "value": 3810
+            }
+          },
+          "outputs": {}
+        }
+      ]
+    },
+    {
+      "id": "74c9001d-388d-4d52-abdf-febba459428a",
+      "source": {
+        "platform": "a360",
+        "file": "09-web-form/bot.json",
+        "nodePath": [
+          1
+        ],
+        "nodeId": "74c9001d-388d-4d52-abdf-febba459428a",
+        "label": "loop and insert data"
+      },
+      "kind": "group",
+      "label": "loop and insert data",
+      "body": [
+        {
+          "id": "bbb55908-5ac2-4054-a120-be6a3878e228",
+          "source": {
+            "platform": "a360",
+            "file": "09-web-form/bot.json",
+            "nodePath": [
+              1,
+              0
+            ],
+            "nodeId": "bbb55908-5ac2-4054-a120-be6a3878e228",
+            "label": "Loop/loop.commands.start"
+          },
+          "kind": "loop",
+          "loop": {
+            "kind": "forEach",
+            "collection": "tableRow",
+            "source": {
+              "kind": "call",
+              "fn": "csv.rows",
+              "args": [
+                {
+                  "kind": "literal",
+                  "value": "Default"
+                }
+              ]
+            },
+            "itemVar": {
+              "kind": "var",
+              "name": "CsvTxtRow",
+              "path": []
+            }
+          },
+          "body": [
+            {
+              "id": "72fd71c7-91bf-456a-a8dc-6f6ec73744d7",
+              "source": {
+                "platform": "a360",
+                "file": "09-web-form/bot.json",
+                "nodePath": [
+                  1,
+                  0,
+                  0
+                ],
+                "nodeId": "72fd71c7-91bf-456a-a8dc-6f6ec73744d7",
+                "label": "Recorder/capture"
+              },
+              "kind": "action",
+              "op": "vendor:a360/Recorder/capture",
+              "args": {
+                "textboxAction": {
+                  "kind": "literal",
+                  "value": "SETTEXT"
+                },
+                "runInBackground": {
+                  "kind": "literal",
+                  "value": false
+                },
+                "typeOfInput": {
+                  "kind": "literal",
+                  "value": "VALUE"
+                },
+                "value": {
+                  "kind": "var",
+                  "name": "CsvTxtRow",
+                  "path": [
+                    {
+                      "kind": "key",
+                      "key": {
+                        "kind": "literal",
+                        "value": "Company Name"
+                      }
+                    }
+                  ]
+                },
+                "advancedWait": {
+                  "kind": "literal",
+                  "value": "BASIC"
+                },
+                "wait": {
+                  "kind": "literal",
+                  "value": 15
+                }
+              },
+              "outputs": {},
+              "target": {
+                "technology": "web",
+                "strategies": [
+                  {
+                    "kind": "HTML Tag",
+                    "value": "INPUT",
+                    "enabled": true
+                  },
+                  {
+                    "kind": "UniqueID",
+                    "value": "6bba7d55-d6c5-415a-bafc-1fb8c27940b2",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "Left",
+                    "value": "556",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "xpath",
+                    "value": "//input[@id='customerName']",
+                    "enabled": true
+                  },
+                  {
+                    "kind": "HTML Top",
+                    "value": "668",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "HTML Left",
+                    "value": "730",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "ClickY",
+                    "value": "17",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "id",
+                    "value": "customerName",
+                    "enabled": true
+                  },
+                  {
+                    "kind": "ClickX",
+                    "value": "210",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "Index",
+                    "value": "0",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "outerHTML",
+                    "value": "<input type=\"text\" id=\"customerName\" class=\"form-control\" name=\"customerName\" placeholder=\"Customer Name\" required=\"required\">",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "HTML Class",
+                    "value": "form-control",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "HTML HasFrame",
+                    "value": "false",
+                    "enabled": true
+                  },
+                  {
+                    "kind": "Name",
+                    "value": "customerName",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "HTML Type",
+                    "value": "text",
+                    "enabled": true
+                  },
+                  {
+                    "kind": "HTML SourceIndex",
+                    "value": "0",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "Height",
+                    "value": "29",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "Width",
+                    "value": "810",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "path",
+                    "value": "4|1|1|4|1",
+                    "enabled": true
+                  },
+                  {
+                    "kind": "HTML Height",
+                    "value": "29",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "HTML TagIndex",
+                    "value": "1",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "Role",
+                    "value": "TextBox",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "Top",
+                    "value": "596",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "HTML Width",
+                    "value": "810",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "name",
+                    "value": "customerName",
+                    "enabled": true
+                  },
+                  {
+                    "kind": "HTML FrameSrc",
+                    "value": "https://example.com/customer-onboarding.html",
+                    "enabled": true
+                  },
+                  {
+                    "kind": "IsVisible",
+                    "value": "true",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "css",
+                    "value": "input#customerName",
+                    "enabled": true
+                  }
+                ],
+                "raw": {
+                  "controlType": "TEXTBOX",
+                  "technologyType": "HTML",
+                  "browserType": "CHROME"
+                }
+              }
+            },
+            {
+              "id": "2a75f411-1c02-4e70-aacd-722a37c83159",
+              "source": {
+                "platform": "a360",
+                "file": "09-web-form/bot.json",
+                "nodePath": [
+                  1,
+                  0,
+                  1
+                ],
+                "nodeId": "2a75f411-1c02-4e70-aacd-722a37c83159",
+                "label": "Recorder/capture"
+              },
+              "kind": "action",
+              "op": "vendor:a360/Recorder/capture",
+              "args": {
+                "textboxAction": {
+                  "kind": "literal",
+                  "value": "SETTEXT"
+                },
+                "runInBackground": {
+                  "kind": "literal",
+                  "value": false
+                },
+                "typeOfInput": {
+                  "kind": "literal",
+                  "value": "VALUE"
+                },
+                "value": {
+                  "kind": "var",
+                  "name": "CsvTxtRow",
+                  "path": [
+                    {
+                      "kind": "key",
+                      "key": {
+                        "kind": "literal",
+                        "value": "Customer ID"
+                      }
+                    }
+                  ]
+                },
+                "advancedWait": {
+                  "kind": "literal",
+                  "value": "BASIC"
+                },
+                "wait": {
+                  "kind": "literal",
+                  "value": 15
+                }
+              },
+              "outputs": {},
+              "target": {
+                "technology": "web",
+                "strategies": [
+                  {
+                    "kind": "HTML Tag",
+                    "value": "INPUT",
+                    "enabled": true
+                  },
+                  {
+                    "kind": "UniqueID",
+                    "value": "1ea69b81-7dc1-40cd-94f8-c30190a6bd9e",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "Left",
+                    "value": "556",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "xpath",
+                    "value": "//input[@id='customerID']",
+                    "enabled": true
+                  },
+                  {
+                    "kind": "HTML Top",
+                    "value": "726",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "HTML Left",
+                    "value": "730",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "ClickY",
+                    "value": "16",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "id",
+                    "value": "customerID",
+                    "enabled": true
+                  },
+                  {
+                    "kind": "ClickX",
+                    "value": "162",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "Index",
+                    "value": "0",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "outerHTML",
+                    "value": "<input type=\"text\" id=\"customerID\" class=\"form-control\" name=\"customerID \" placeholder=\"Customer ID\" required=\"required\">",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "HTML Class",
+                    "value": "form-control",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "HTML HasFrame",
+                    "value": "false",
+                    "enabled": true
+                  },
+                  {
+                    "kind": "Name",
+                    "value": "customerID ",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "HTML Type",
+                    "value": "text",
+                    "enabled": true
+                  },
+                  {
+                    "kind": "HTML SourceIndex",
+                    "value": "0",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "Height",
+                    "value": "29",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "Width",
+                    "value": "810",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "path",
+                    "value": "4|1|1|5|1",
+                    "enabled": true
+                  },
+                  {
+                    "kind": "HTML Height",
+                    "value": "29",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "HTML TagIndex",
+                    "value": "2",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "Role",
+                    "value": "TextBox",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "Top",
+                    "value": "640",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "HTML Width",
+                    "value": "810",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "name",
+                    "value": "customerID",
+                    "enabled": true
+                  },
+                  {
+                    "kind": "HTML FrameSrc",
+                    "value": "https://example.com/customer-onboarding.html",
+                    "enabled": true
+                  },
+                  {
+                    "kind": "IsVisible",
+                    "value": "true",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "css",
+                    "value": "input#customerID",
+                    "enabled": true
+                  }
+                ],
+                "raw": {
+                  "controlType": "TEXTBOX",
+                  "technologyType": "HTML",
+                  "browserType": "CHROME"
+                }
+              }
+            },
+            {
+              "id": "db0ca3a3-381a-4ce3-a1ba-2b3b38a94901",
+              "source": {
+                "platform": "a360",
+                "file": "09-web-form/bot.json",
+                "nodePath": [
+                  1,
+                  0,
+                  2
+                ],
+                "nodeId": "db0ca3a3-381a-4ce3-a1ba-2b3b38a94901",
+                "label": "Recorder/capture"
+              },
+              "kind": "action",
+              "op": "vendor:a360/Recorder/capture",
+              "args": {
+                "textboxAction": {
+                  "kind": "literal",
+                  "value": "SETTEXT"
+                },
+                "runInBackground": {
+                  "kind": "literal",
+                  "value": false
+                },
+                "typeOfInput": {
+                  "kind": "literal",
+                  "value": "VALUE"
+                },
+                "value": {
+                  "kind": "var",
+                  "name": "CsvTxtRow",
+                  "path": [
+                    {
+                      "kind": "key",
+                      "key": {
+                        "kind": "literal",
+                        "value": "Primary Contact"
+                      }
+                    }
+                  ]
+                },
+                "advancedWait": {
+                  "kind": "literal",
+                  "value": "BASIC"
+                },
+                "wait": {
+                  "kind": "literal",
+                  "value": 15
+                }
+              },
+              "outputs": {},
+              "target": {
+                "technology": "web",
+                "strategies": [
+                  {
+                    "kind": "HTML Tag",
+                    "value": "INPUT",
+                    "enabled": true
+                  },
+                  {
+                    "kind": "UniqueID",
+                    "value": "9c7173ca-232b-46f1-bdd9-2db731cc145a",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "Left",
+                    "value": "556",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "xpath",
+                    "value": "//input[@id='primaryContact']",
+                    "enabled": true
+                  },
+                  {
+                    "kind": "HTML Top",
+                    "value": "784",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "HTML Left",
+                    "value": "730",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "ClickY",
+                    "value": "16",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "id",
+                    "value": "primaryContact",
+                    "enabled": true
+                  },
+                  {
+                    "kind": "ClickX",
+                    "value": "87",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "Index",
+                    "value": "0",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "outerHTML",
+                    "value": "<input type=\"text\" id=\"primaryContact\" class=\"form-control\" name=\"contact \" placeholder=\"Primary Contact\" required=\"required\">",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "HTML Class",
+                    "value": "form-control",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "HTML HasFrame",
+                    "value": "false",
+                    "enabled": true
+                  },
+                  {
+                    "kind": "Name",
+                    "value": "contact ",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "HTML Type",
+                    "value": "text",
+                    "enabled": true
+                  },
+                  {
+                    "kind": "HTML SourceIndex",
+                    "value": "0",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "Height",
+                    "value": "29",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "Width",
+                    "value": "810",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "path",
+                    "value": "4|1|1|6|1",
+                    "enabled": true
+                  },
+                  {
+                    "kind": "HTML Height",
+                    "value": "29",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "HTML TagIndex",
+                    "value": "3",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "Role",
+                    "value": "TextBox",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "Top",
+                    "value": "683",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "HTML Width",
+                    "value": "810",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "name",
+                    "value": "contact",
+                    "enabled": true
+                  },
+                  {
+                    "kind": "HTML FrameSrc",
+                    "value": "https://example.com/customer-onboarding.html",
+                    "enabled": true
+                  },
+                  {
+                    "kind": "IsVisible",
+                    "value": "true",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "css",
+                    "value": "input#primaryContact",
+                    "enabled": true
+                  }
+                ],
+                "raw": {
+                  "controlType": "TEXTBOX",
+                  "technologyType": "HTML",
+                  "browserType": "CHROME"
+                }
+              }
+            },
+            {
+              "id": "2a3f0192-7d07-4648-83d9-2351010bda6c",
+              "source": {
+                "platform": "a360",
+                "file": "09-web-form/bot.json",
+                "nodePath": [
+                  1,
+                  0,
+                  3
+                ],
+                "nodeId": "2a3f0192-7d07-4648-83d9-2351010bda6c",
+                "label": "Recorder/capture"
+              },
+              "kind": "action",
+              "op": "vendor:a360/Recorder/capture",
+              "args": {
+                "textboxAction": {
+                  "kind": "literal",
+                  "value": "SETTEXT"
+                },
+                "runInBackground": {
+                  "kind": "literal",
+                  "value": false
+                },
+                "typeOfInput": {
+                  "kind": "literal",
+                  "value": "VALUE"
+                },
+                "value": {
+                  "kind": "var",
+                  "name": "CsvTxtRow",
+                  "path": [
+                    {
+                      "kind": "key",
+                      "key": {
+                        "kind": "literal",
+                        "value": "Street Address"
+                      }
+                    }
+                  ]
+                },
+                "advancedWait": {
+                  "kind": "literal",
+                  "value": "BASIC"
+                },
+                "wait": {
+                  "kind": "literal",
+                  "value": 15
+                }
+              },
+              "outputs": {},
+              "target": {
+                "technology": "web",
+                "strategies": [
+                  {
+                    "kind": "HTML Tag",
+                    "value": "INPUT",
+                    "enabled": true
+                  },
+                  {
+                    "kind": "UniqueID",
+                    "value": "bff85d61-2ff8-457b-b520-f770a247e89a",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "Left",
+                    "value": "556",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "xpath",
+                    "value": "//input[@id='street']",
+                    "enabled": true
+                  },
+                  {
+                    "kind": "HTML Top",
+                    "value": "842",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "HTML Left",
+                    "value": "730",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "ClickY",
+                    "value": "5",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "id",
+                    "value": "street",
+                    "enabled": true
+                  },
+                  {
+                    "kind": "ClickX",
+                    "value": "137",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "Index",
+                    "value": "0",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "outerHTML",
+                    "value": "<input type=\"text\" id=\"street\" class=\"form-control\" name=\"street \" placeholder=\"Street Address\" required=\"required\">",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "HTML Class",
+                    "value": "form-control",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "HTML HasFrame",
+                    "value": "false",
+                    "enabled": true
+                  },
+                  {
+                    "kind": "Name",
+                    "value": "street ",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "HTML Type",
+                    "value": "text",
+                    "enabled": true
+                  },
+                  {
+                    "kind": "HTML SourceIndex",
+                    "value": "0",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "Height",
+                    "value": "29",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "Width",
+                    "value": "810",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "path",
+                    "value": "4|1|1|7|1",
+                    "enabled": true
+                  },
+                  {
+                    "kind": "HTML Height",
+                    "value": "29",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "HTML TagIndex",
+                    "value": "4",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "Role",
+                    "value": "TextBox",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "Top",
+                    "value": "727",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "HTML Width",
+                    "value": "810",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "name",
+                    "value": "street",
+                    "enabled": true
+                  },
+                  {
+                    "kind": "HTML FrameSrc",
+                    "value": "https://example.com/customer-onboarding.html",
+                    "enabled": true
+                  },
+                  {
+                    "kind": "IsVisible",
+                    "value": "true",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "css",
+                    "value": "input#street",
+                    "enabled": true
+                  }
+                ],
+                "raw": {
+                  "controlType": "TEXTBOX",
+                  "technologyType": "HTML",
+                  "browserType": "CHROME"
+                }
+              }
+            },
+            {
+              "id": "a1e11186-9ae7-4c34-9c7f-c1dd9b939909",
+              "source": {
+                "platform": "a360",
+                "file": "09-web-form/bot.json",
+                "nodePath": [
+                  1,
+                  0,
+                  4
+                ],
+                "nodeId": "a1e11186-9ae7-4c34-9c7f-c1dd9b939909",
+                "label": "Recorder/capture"
+              },
+              "kind": "action",
+              "op": "vendor:a360/Recorder/capture",
+              "args": {
+                "textboxAction": {
+                  "kind": "literal",
+                  "value": "SETTEXT"
+                },
+                "runInBackground": {
+                  "kind": "literal",
+                  "value": false
+                },
+                "typeOfInput": {
+                  "kind": "literal",
+                  "value": "VALUE"
+                },
+                "value": {
+                  "kind": "var",
+                  "name": "CsvTxtRow",
+                  "path": [
+                    {
+                      "kind": "key",
+                      "key": {
+                        "kind": "literal",
+                        "value": "City"
+                      }
+                    }
+                  ]
+                },
+                "advancedWait": {
+                  "kind": "literal",
+                  "value": "BASIC"
+                },
+                "wait": {
+                  "kind": "literal",
+                  "value": 15
+                }
+              },
+              "outputs": {},
+              "target": {
+                "technology": "web",
+                "strategies": [
+                  {
+                    "kind": "HTML Tag",
+                    "value": "INPUT",
+                    "enabled": true
+                  },
+                  {
+                    "kind": "UniqueID",
+                    "value": "5599f7b1-ebd5-40fb-9852-f0b00d977244",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "Left",
+                    "value": "556",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "xpath",
+                    "value": "//input[@id='city']",
+                    "enabled": true
+                  },
+                  {
+                    "kind": "HTML Top",
+                    "value": "900",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "HTML Left",
+                    "value": "730",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "ClickY",
+                    "value": "11",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "id",
+                    "value": "city",
+                    "enabled": true
+                  },
+                  {
+                    "kind": "ClickX",
+                    "value": "114",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "Index",
+                    "value": "0",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "outerHTML",
+                    "value": "<input type=\"text\" id=\"city\" class=\"form-control\" name=\"city \" placeholder=\"City\" required=\"required\">",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "HTML Class",
+                    "value": "form-control",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "HTML HasFrame",
+                    "value": "false",
+                    "enabled": true
+                  },
+                  {
+                    "kind": "Name",
+                    "value": "city ",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "HTML Type",
+                    "value": "text",
+                    "enabled": true
+                  },
+                  {
+                    "kind": "HTML SourceIndex",
+                    "value": "0",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "Height",
+                    "value": "29",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "Width",
+                    "value": "265",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "path",
+                    "value": "4|1|1|-6|1|1",
+                    "enabled": true
+                  },
+                  {
+                    "kind": "HTML Height",
+                    "value": "29",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "HTML TagIndex",
+                    "value": "5",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "Role",
+                    "value": "TextBox",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "Top",
+                    "value": "770",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "HTML Width",
+                    "value": "265",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "name",
+                    "value": "city",
+                    "enabled": true
+                  },
+                  {
+                    "kind": "HTML FrameSrc",
+                    "value": "https://example.com/customer-onboarding.html",
+                    "enabled": true
+                  },
+                  {
+                    "kind": "IsVisible",
+                    "value": "true",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "css",
+                    "value": "input#city",
+                    "enabled": true
+                  }
+                ],
+                "raw": {
+                  "controlType": "TEXTBOX",
+                  "technologyType": "HTML",
+                  "browserType": "CHROME"
+                }
+              }
+            },
+            {
+              "id": "51edf4f7-e12d-4cee-86e0-a9d03f91f2e2",
+              "source": {
+                "platform": "a360",
+                "file": "09-web-form/bot.json",
+                "nodePath": [
+                  1,
+                  0,
+                  5
+                ],
+                "nodeId": "51edf4f7-e12d-4cee-86e0-a9d03f91f2e2",
+                "label": "Recorder/capture"
+              },
+              "kind": "action",
+              "op": "vendor:a360/Recorder/capture",
+              "args": {
+                "comboboxAction": {
+                  "kind": "literal",
+                  "value": "SELECTITEMBYTEXT"
+                },
+                "runInBackground": {
+                  "kind": "literal",
+                  "value": false
+                },
+                "value": {
+                  "kind": "var",
+                  "name": "CsvTxtRow",
+                  "path": [
+                    {
+                      "kind": "key",
+                      "key": {
+                        "kind": "literal",
+                        "value": "State"
+                      }
+                    }
+                  ]
+                },
+                "advancedWait": {
+                  "kind": "literal",
+                  "value": "BASIC"
+                },
+                "wait": {
+                  "kind": "literal",
+                  "value": 15
+                }
+              },
+              "outputs": {},
+              "target": {
+                "technology": "web",
+                "strategies": [
+                  {
+                    "kind": "HTML Tag",
+                    "value": "SELECT",
+                    "enabled": true
+                  },
+                  {
+                    "kind": "UniqueID",
+                    "value": "b6fd9627-d0fd-46f6-8873-65236a695993",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "innerHTML",
+                    "value": "\n                <option value=\"State\">State</option>\n                <option value=\"AL\">AL</option>\n                <option value=\"AK\">AK</option>\n                <option value=\"AR\">AR</option>\n                <option value=\"AZ\">AZ</option>\n                <option value=\"CA\">CA</option>\n                <option value=\"CO\">CO</option>\n                <option value=\"CT\">CT</option>\n                <option value=\"DC\">DC</option>\n                <option value=\"DE\">DE</option>\n                <option value=\"FL\">FL</option>\n                <option value=\"GA\">GA</option>\n                <option value=\"HI\">HI</option>\n                <option value=\"IA\">IA</option>\n                <option value=\"ID\">ID</option>\n                <option value=\"IL\">IL</option>\n                <option value=\"IN\">IN</option>\n                <option value=\"KS\">KS</option>\n                <option value=\"KY\">KY</option>\n                <option value=\"LA\">LA</option>\n                <option value=\"MA\">MA</option>\n      ",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "Left",
+                    "value": "828",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "xpath",
+                    "value": "//select[@id='state']",
+                    "enabled": true
+                  },
+                  {
+                    "kind": "HTML Top",
+                    "value": "900",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "HTML Left",
+                    "value": "1093",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "ClickY",
+                    "value": "9",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "id",
+                    "value": "state",
+                    "enabled": true
+                  },
+                  {
+                    "kind": "ClickX",
+                    "value": "97",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "Index",
+                    "value": "0",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "outerHTML",
+                    "value": "<select class=\"form-control\" id=\"state\" name=\"state\">\n                <option value=\"State\">State</option>\n                <option value=\"AL\">AL</option>\n                <option value=\"AK\">AK</option>\n                <option value=\"AR\">AR</option>\n                <option value=\"AZ\">AZ</option>\n                <option value=\"CA\">CA</option>\n                <option value=\"CO\">CO</option>\n                <option value=\"CT\">CT</option>\n                <option value=\"DC\">DC</option>\n                <option value=\"DE\">DE</option>\n                <option value=\"FL\">FL</option>\n                <option value=\"GA\">GA</option>\n                <option value=\"HI\">HI</option>\n                <option value=\"IA\">IA</option>\n                <option value=\"ID\">ID</option>\n                <option value=\"IL\">IL</option>\n                <option value=\"IN\">IN</option>\n                <option value=\"KS\">KS</option>\n                <option value=\"KY\">KY</option>\n                <option value=\"LA\">LA</option>\n                <option value=\"MA\">MA</option>\n                <option value=\"MD\">MD</option>\n                <option value=\"ME\">ME</option>\n                <option value=\"MI\">MI</option>\n                <option value=\"MN\">MN</option>\n                <option value=\"MO\">MO</option>\n                <option value=\"MS\">MS</option>\n                <option value=\"MT\">MT</option>\n                <option value=\"NC\">NC</option>\n                <option value=\"NE\">NE</option>\n                <option value=\"NH\">NH</option>\n                <option value=\"NJ\">NJ</option>\n                <option value=\"NM\">NM</option>\n                <option value=\"NV\">NV</option>\n                <option value=\"NY\">NY</option>\n                <option value=\"ND\">ND</option>\n                <option value=\"OH\">OH</option>\n                <option value=\"OK\">OK</option>\n                <option value=\"OR\">OR</option>\n                <option value=\"PA\">PA</option>\n                <option value=\"RI\">RI</option>\n                <option value=\"SC\">SC</option>\n                <option value=\"SD\">SD</option>\n                <option value=\"TN\">TN</option>\n                <option value=\"TX\">TX</option>\n                <option value=\"UT\">UT</option>\n                <option value=\"VT\">VT</option>\n                <option value=\"VA\">VA</option>\n                <option value=\"WA\">WA</option>\n                <option value=\"WI\">WI</option>\n                <option value=\"WV\">WV</option>\n                <option value=\"WY\">WY</opti",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "HTML Class",
+                    "value": "form-control",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "HTML HasFrame",
+                    "value": "false",
+                    "enabled": true
+                  },
+                  {
+                    "kind": "Name",
+                    "value": "state",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "HTML Type",
+                    "value": "select-one",
+                    "enabled": true
+                  },
+                  {
+                    "kind": "HTML InnerText",
+                    "value": "State\nAL\nAK\nAR\nAZ\nCA\nCO\nCT\nDC\nDE\nFL\nGA\nHI\nIA\nID\nIL\nIN\nKS\nKY\nLA\nMA\nMD\nME\nMI\nMN\nMO\nMS\nMT\nNC\nNE\nNH\nNJ\nNM\nNV\nNY\nND\nOH\nOK\nOR\nPA\nRI\nSC\nSD\nTN\nTX\nUT\nVT\nVA\nWA\nWI\nWV\nWY",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "HTML SourceIndex",
+                    "value": "0",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "Height",
+                    "value": "29",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "Width",
+                    "value": "265",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "path",
+                    "value": "4|1|1|-6|2|1",
+                    "enabled": true
+                  },
+                  {
+                    "kind": "HTML Height",
+                    "value": "29",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "HTML Value",
+                    "value": "State",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "HTML TagIndex",
+                    "value": "1",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "Role",
+                    "value": "ComboBox",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "Top",
+                    "value": "770",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "HTML Width",
+                    "value": "265",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "name",
+                    "value": "state",
+                    "enabled": true
+                  },
+                  {
+                    "kind": "HTML FrameSrc",
+                    "value": "https://example.com/customer-onboarding.html",
+                    "enabled": true
+                  },
+                  {
+                    "kind": "IsVisible",
+                    "value": "true",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "css",
+                    "value": "select#state",
+                    "enabled": true
+                  }
+                ],
+                "raw": {
+                  "controlType": "COMBOBOX",
+                  "technologyType": "HTML",
+                  "browserType": "CHROME"
+                }
+              }
+            },
+            {
+              "id": "6e171f31-a0de-4242-a7d0-128a402c9ffe",
+              "source": {
+                "platform": "a360",
+                "file": "09-web-form/bot.json",
+                "nodePath": [
+                  1,
+                  0,
+                  6
+                ],
+                "nodeId": "6e171f31-a0de-4242-a7d0-128a402c9ffe",
+                "label": "Recorder/capture"
+              },
+              "kind": "action",
+              "op": "vendor:a360/Recorder/capture",
+              "args": {
+                "textboxAction": {
+                  "kind": "literal",
+                  "value": "SETTEXT"
+                },
+                "runInBackground": {
+                  "kind": "literal",
+                  "value": false
+                },
+                "typeOfInput": {
+                  "kind": "literal",
+                  "value": "VALUE"
+                },
+                "value": {
+                  "kind": "var",
+                  "name": "CsvTxtRow",
+                  "path": [
+                    {
+                      "kind": "key",
+                      "key": {
+                        "kind": "literal",
+                        "value": "Zip"
+                      }
+                    }
+                  ]
+                },
+                "advancedWait": {
+                  "kind": "literal",
+                  "value": "BASIC"
+                },
+                "wait": {
+                  "kind": "literal",
+                  "value": 15
+                }
+              },
+              "outputs": {},
+              "target": {
+                "technology": "web",
+                "strategies": [
+                  {
+                    "kind": "HTML Tag",
+                    "value": "INPUT",
+                    "enabled": true
+                  },
+                  {
+                    "kind": "UniqueID",
+                    "value": "1b175e78-eb2b-4836-ba84-b782180ae54b",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "Left",
+                    "value": "1100",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "xpath",
+                    "value": "//input[@id='zip']",
+                    "enabled": true
+                  },
+                  {
+                    "kind": "HTML Top",
+                    "value": "900",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "HTML Left",
+                    "value": "1457",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "ClickY",
+                    "value": "8",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "id",
+                    "value": "zip",
+                    "enabled": true
+                  },
+                  {
+                    "kind": "ClickX",
+                    "value": "159",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "Index",
+                    "value": "0",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "outerHTML",
+                    "value": "<input type=\"text\" id=\"zip\" class=\"form-control\" name=\"zip \" placeholder=\"Zip\" required=\"required\">",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "HTML Class",
+                    "value": "form-control",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "HTML HasFrame",
+                    "value": "false",
+                    "enabled": true
+                  },
+                  {
+                    "kind": "Name",
+                    "value": "zip ",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "HTML Type",
+                    "value": "text",
+                    "enabled": true
+                  },
+                  {
+                    "kind": "HTML SourceIndex",
+                    "value": "0",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "Height",
+                    "value": "29",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "Width",
+                    "value": "265",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "path",
+                    "value": "4|1|1|-6|-1|1",
+                    "enabled": true
+                  },
+                  {
+                    "kind": "HTML Height",
+                    "value": "29",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "HTML TagIndex",
+                    "value": "6",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "Role",
+                    "value": "TextBox",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "Top",
+                    "value": "770",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "HTML Width",
+                    "value": "265",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "name",
+                    "value": "zip",
+                    "enabled": true
+                  },
+                  {
+                    "kind": "HTML FrameSrc",
+                    "value": "https://example.com/customer-onboarding.html",
+                    "enabled": true
+                  },
+                  {
+                    "kind": "IsVisible",
+                    "value": "true",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "css",
+                    "value": "input#zip",
+                    "enabled": true
+                  }
+                ],
+                "raw": {
+                  "controlType": "TEXTBOX",
+                  "technologyType": "HTML",
+                  "browserType": "CHROME"
+                }
+              }
+            },
+            {
+              "id": "aa5a004b-af64-48d7-b5cb-b99ad4e1bdff",
+              "source": {
+                "platform": "a360",
+                "file": "09-web-form/bot.json",
+                "nodePath": [
+                  1,
+                  0,
+                  7
+                ],
+                "nodeId": "aa5a004b-af64-48d7-b5cb-b99ad4e1bdff",
+                "label": "Recorder/capture"
+              },
+              "kind": "action",
+              "op": "vendor:a360/Recorder/capture",
+              "args": {
+                "textboxAction": {
+                  "kind": "literal",
+                  "value": "SETTEXT"
+                },
+                "runInBackground": {
+                  "kind": "literal",
+                  "value": false
+                },
+                "typeOfInput": {
+                  "kind": "literal",
+                  "value": "VALUE"
+                },
+                "value": {
+                  "kind": "var",
+                  "name": "CsvTxtRow",
+                  "path": [
+                    {
+                      "kind": "key",
+                      "key": {
+                        "kind": "literal",
+                        "value": "Email Address"
+                      }
+                    }
+                  ]
+                },
+                "advancedWait": {
+                  "kind": "literal",
+                  "value": "BASIC"
+                },
+                "wait": {
+                  "kind": "literal",
+                  "value": 15
+                }
+              },
+              "outputs": {},
+              "target": {
+                "technology": "web",
+                "strategies": [
+                  {
+                    "kind": "HTML Tag",
+                    "value": "INPUT",
+                    "enabled": true
+                  },
+                  {
+                    "kind": "UniqueID",
+                    "value": "6a9cd96b-1fb8-406d-92b2-d252f9037f2c",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "Left",
+                    "value": "556",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "xpath",
+                    "value": "//input[@id='email']",
+                    "enabled": true
+                  },
+                  {
+                    "kind": "HTML Top",
+                    "value": "958",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "HTML Left",
+                    "value": "730",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "ClickY",
+                    "value": "15",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "id",
+                    "value": "email",
+                    "enabled": true
+                  },
+                  {
+                    "kind": "ClickX",
+                    "value": "140",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "Index",
+                    "value": "0",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "outerHTML",
+                    "value": "<input type=\"email\" id=\"email\" class=\"form-control\" name=\"email\" placeholder=\"Email\" required=\"required\">",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "HTML Class",
+                    "value": "form-control",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "HTML HasFrame",
+                    "value": "false",
+                    "enabled": true
+                  },
+                  {
+                    "kind": "Name",
+                    "value": "email",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "HTML Type",
+                    "value": "email",
+                    "enabled": true
+                  },
+                  {
+                    "kind": "HTML SourceIndex",
+                    "value": "0",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "Height",
+                    "value": "29",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "Width",
+                    "value": "810",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "path",
+                    "value": "4|1|1|-5|1",
+                    "enabled": true
+                  },
+                  {
+                    "kind": "HTML Height",
+                    "value": "29",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "HTML TagIndex",
+                    "value": "7",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "Role",
+                    "value": "TextBox",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "Top",
+                    "value": "814",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "HTML Width",
+                    "value": "810",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "name",
+                    "value": "email",
+                    "enabled": true
+                  },
+                  {
+                    "kind": "HTML FrameSrc",
+                    "value": "https://example.com/customer-onboarding.html",
+                    "enabled": true
+                  },
+                  {
+                    "kind": "IsVisible",
+                    "value": "true",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "css",
+                    "value": "input#email",
+                    "enabled": true
+                  }
+                ],
+                "raw": {
+                  "controlType": "TEXTBOX",
+                  "technologyType": "HTML",
+                  "browserType": "CHROME"
+                }
+              }
+            },
+            {
+              "id": "947c0a81-244b-4dfc-9c37-4dea7b7455a7",
+              "source": {
+                "platform": "a360",
+                "file": "09-web-form/bot.json",
+                "nodePath": [
+                  1,
+                  0,
+                  8
+                ],
+                "nodeId": "947c0a81-244b-4dfc-9c37-4dea7b7455a7",
+                "label": "If/if"
+              },
+              "kind": "if",
+              "branches": [
+                {
+                  "condition": {
+                    "kind": "binary",
+                    "op": "eq",
+                    "left": {
+                      "kind": "var",
+                      "name": "CsvTxtRow",
+                      "path": [
+                        {
+                          "kind": "key",
+                          "key": {
+                            "kind": "literal",
+                            "value": "Offers Discounts"
+                          }
+                        }
+                      ]
+                    },
+                    "right": {
+                      "kind": "literal",
+                      "value": "YES"
+                    }
+                  },
+                  "body": [
+                    {
+                      "id": "570c33b1-bd87-4f9e-ac3c-7c560051ecc8",
+                      "source": {
+                        "platform": "a360",
+                        "file": "09-web-form/bot.json",
+                        "nodePath": [
+                          1,
+                          0,
+                          8,
+                          0
+                        ],
+                        "nodeId": "570c33b1-bd87-4f9e-ac3c-7c560051ecc8",
+                        "label": "Recorder/capture"
+                      },
+                      "kind": "action",
+                      "op": "vendor:a360/Recorder/capture",
+                      "args": {
+                        "radioAction": {
+                          "kind": "literal",
+                          "value": "CLICK"
+                        },
+                        "runInBackground": {
+                          "kind": "literal",
+                          "value": false
+                        },
+                        "advancedWait": {
+                          "kind": "literal",
+                          "value": "BASIC"
+                        },
+                        "wait": {
+                          "kind": "literal",
+                          "value": 15
+                        }
+                      },
+                      "outputs": {},
+                      "target": {
+                        "technology": "web",
+                        "strategies": [
+                          {
+                            "kind": "HTML Tag",
+                            "value": "INPUT",
+                            "enabled": true
+                          },
+                          {
+                            "kind": "UniqueID",
+                            "value": "ba29af32-c14e-4f23-838b-55c60b12b1a4",
+                            "enabled": false
+                          },
+                          {
+                            "kind": "Left",
+                            "value": "556",
+                            "enabled": false
+                          },
+                          {
+                            "kind": "xpath",
+                            "value": "//input[@id='activeDiscountYes']",
+                            "enabled": true
+                          },
+                          {
+                            "kind": "HTML Top",
+                            "value": "1080",
+                            "enabled": false
+                          },
+                          {
+                            "kind": "HTML Left",
+                            "value": "730",
+                            "enabled": false
+                          },
+                          {
+                            "kind": "ClickY",
+                            "value": "5",
+                            "enabled": false
+                          },
+                          {
+                            "kind": "id",
+                            "value": "activeDiscountYes",
+                            "enabled": true
+                          },
+                          {
+                            "kind": "ClickX",
+                            "value": "1",
+                            "enabled": false
+                          },
+                          {
+                            "kind": "Index",
+                            "value": "0",
+                            "enabled": false
+                          },
+                          {
+                            "kind": "outerHTML",
+                            "value": "<input class=\"form-check-input\" type=\"radio\" name=\"activeDiscount\" id=\"activeDiscountYes\" value=\"option1\">",
+                            "enabled": false
+                          },
+                          {
+                            "kind": "HTML Class",
+                            "value": "form-check-input",
+                            "enabled": false
+                          },
+                          {
+                            "kind": "HTML HasFrame",
+                            "value": "false",
+                            "enabled": true
+                          },
+                          {
+                            "kind": "Name",
+                            "value": "activeDiscount",
+                            "enabled": false
+                          },
+                          {
+                            "kind": "States",
+                            "value": "Deselected",
+                            "enabled": false
+                          },
+                          {
+                            "kind": "HTML Type",
+                            "value": "radio",
+                            "enabled": true
+                          },
+                          {
+                            "kind": "HTML SourceIndex",
+                            "value": "0",
+                            "enabled": false
+                          },
+                          {
+                            "kind": "Height",
+                            "value": "10",
+                            "enabled": false
+                          },
+                          {
+                            "kind": "Width",
+                            "value": "10",
+                            "enabled": false
+                          },
+                          {
+                            "kind": "path",
+                            "value": "4|1|1|-3|1|2|1",
+                            "enabled": true
+                          },
+                          {
+                            "kind": "HTML Height",
+                            "value": "10",
+                            "enabled": false
+                          },
+                          {
+                            "kind": "HTML Value",
+                            "value": "option1",
+                            "enabled": false
+                          },
+                          {
+                            "kind": "HTML TagIndex",
+                            "value": "8",
+                            "enabled": false
+                          },
+                          {
+                            "kind": "Role",
+                            "value": "RadioButton",
+                            "enabled": false
+                          },
+                          {
+                            "kind": "Top",
+                            "value": "804",
+                            "enabled": false
+                          },
+                          {
+                            "kind": "HTML Width",
+                            "value": "10",
+                            "enabled": false
+                          },
+                          {
+                            "kind": "name",
+                            "value": "activeDiscount",
+                            "enabled": true
+                          },
+                          {
+                            "kind": "HTML FrameSrc",
+                            "value": "https://example.com/customer-onboarding.html",
+                            "enabled": true
+                          },
+                          {
+                            "kind": "IsVisible",
+                            "value": "true",
+                            "enabled": false
+                          },
+                          {
+                            "kind": "css",
+                            "value": "input#activeDiscountYes",
+                            "enabled": true
+                          }
+                        ],
+                        "raw": {
+                          "controlType": "RADIO",
+                          "technologyType": "HTML",
+                          "browserType": "CHROME"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ],
+              "else": [
+                {
+                  "id": "d8b7faf9-4b70-439d-baf4-2c7f9a00d40c",
+                  "source": {
+                    "platform": "a360",
+                    "file": "09-web-form/bot.json",
+                    "nodePath": [
+                      1,
+                      0,
+                      8,
+                      1,
+                      0
+                    ],
+                    "nodeId": "d8b7faf9-4b70-439d-baf4-2c7f9a00d40c",
+                    "label": "Recorder/capture"
+                  },
+                  "kind": "action",
+                  "op": "vendor:a360/Recorder/capture",
+                  "args": {
+                    "radioAction": {
+                      "kind": "literal",
+                      "value": "SELECT"
+                    },
+                    "runInBackground": {
+                      "kind": "literal",
+                      "value": false
+                    },
+                    "advancedWait": {
+                      "kind": "literal",
+                      "value": "BASIC"
+                    },
+                    "wait": {
+                      "kind": "literal",
+                      "value": 15
+                    }
+                  },
+                  "outputs": {},
+                  "target": {
+                    "technology": "web",
+                    "strategies": [
+                      {
+                        "kind": "HTML Tag",
+                        "value": "INPUT",
+                        "enabled": true
+                      },
+                      {
+                        "kind": "UniqueID",
+                        "value": "5a2a657e-662e-43cc-b90e-9542d664bf2a",
+                        "enabled": false
+                      },
+                      {
+                        "kind": "Left",
+                        "value": "599",
+                        "enabled": false
+                      },
+                      {
+                        "kind": "xpath",
+                        "value": "//input[@id='activeDiscountNo']",
+                        "enabled": true
+                      },
+                      {
+                        "kind": "HTML Top",
+                        "value": "1080",
+                        "enabled": false
+                      },
+                      {
+                        "kind": "HTML Left",
+                        "value": "789",
+                        "enabled": false
+                      },
+                      {
+                        "kind": "ClickY",
+                        "value": "5",
+                        "enabled": false
+                      },
+                      {
+                        "kind": "id",
+                        "value": "activeDiscountNo",
+                        "enabled": true
+                      },
+                      {
+                        "kind": "ClickX",
+                        "value": "7",
+                        "enabled": false
+                      },
+                      {
+                        "kind": "Index",
+                        "value": "0",
+                        "enabled": false
+                      },
+                      {
+                        "kind": "outerHTML",
+                        "value": "<input class=\"form-check-input\" type=\"radio\" name=\"activeDiscount\" id=\"activeDiscountNo\" value=\"option2\">",
+                        "enabled": false
+                      },
+                      {
+                        "kind": "HTML Class",
+                        "value": "form-check-input",
+                        "enabled": false
+                      },
+                      {
+                        "kind": "HTML HasFrame",
+                        "value": "false",
+                        "enabled": true
+                      },
+                      {
+                        "kind": "Name",
+                        "value": "activeDiscount",
+                        "enabled": false
+                      },
+                      {
+                        "kind": "States",
+                        "value": "Deselected",
+                        "enabled": false
+                      },
+                      {
+                        "kind": "HTML Type",
+                        "value": "radio",
+                        "enabled": true
+                      },
+                      {
+                        "kind": "HTML SourceIndex",
+                        "value": "0",
+                        "enabled": false
+                      },
+                      {
+                        "kind": "Height",
+                        "value": "10",
+                        "enabled": false
+                      },
+                      {
+                        "kind": "Width",
+                        "value": "10",
+                        "enabled": false
+                      },
+                      {
+                        "kind": "path",
+                        "value": "4|1|1|-3|1|-1|1",
+                        "enabled": true
+                      },
+                      {
+                        "kind": "HTML Height",
+                        "value": "10",
+                        "enabled": false
+                      },
+                      {
+                        "kind": "HTML Value",
+                        "value": "option2",
+                        "enabled": false
+                      },
+                      {
+                        "kind": "HTML TagIndex",
+                        "value": "9",
+                        "enabled": false
+                      },
+                      {
+                        "kind": "Role",
+                        "value": "RadioButton",
+                        "enabled": false
+                      },
+                      {
+                        "kind": "Top",
+                        "value": "804",
+                        "enabled": false
+                      },
+                      {
+                        "kind": "HTML Width",
+                        "value": "10",
+                        "enabled": false
+                      },
+                      {
+                        "kind": "name",
+                        "value": "activeDiscount",
+                        "enabled": true
+                      },
+                      {
+                        "kind": "HTML FrameSrc",
+                        "value": "https://example.com/customer-onboarding.html",
+                        "enabled": true
+                      },
+                      {
+                        "kind": "IsVisible",
+                        "value": "true",
+                        "enabled": false
+                      },
+                      {
+                        "kind": "css",
+                        "value": "input#activeDiscountNo",
+                        "enabled": true
+                      }
+                    ],
+                    "raw": {
+                      "controlType": "RADIO",
+                      "technologyType": "HTML",
+                      "browserType": "CHROME"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "id": "58e10c2b-db2c-4302-9cec-294d661b6bc4",
+              "source": {
+                "platform": "a360",
+                "file": "09-web-form/bot.json",
+                "nodePath": [
+                  1,
+                  0,
+                  9
+                ],
+                "nodeId": "58e10c2b-db2c-4302-9cec-294d661b6bc4",
+                "label": "If/if"
+              },
+              "kind": "if",
+              "branches": [
+                {
+                  "condition": {
+                    "kind": "binary",
+                    "op": "eq",
+                    "left": {
+                      "kind": "var",
+                      "name": "CsvTxtRow",
+                      "path": [
+                        {
+                          "kind": "key",
+                          "key": {
+                            "kind": "literal",
+                            "value": "Non-Disclosure On File"
+                          }
+                        }
+                      ]
+                    },
+                    "right": {
+                      "kind": "literal",
+                      "value": "YES"
+                    }
+                  },
+                  "body": [
+                    {
+                      "id": "facc2fc8-1107-4d09-b574-460a496da4ba",
+                      "source": {
+                        "platform": "a360",
+                        "file": "09-web-form/bot.json",
+                        "nodePath": [
+                          1,
+                          0,
+                          9,
+                          0
+                        ],
+                        "nodeId": "facc2fc8-1107-4d09-b574-460a496da4ba",
+                        "label": "Recorder/capture"
+                      },
+                      "kind": "action",
+                      "op": "vendor:a360/Recorder/capture",
+                      "args": {
+                        "checkboxAction": {
+                          "kind": "literal",
+                          "value": "CHECK"
+                        },
+                        "runInBackground": {
+                          "kind": "literal",
+                          "value": false
+                        },
+                        "advancedWait": {
+                          "kind": "literal",
+                          "value": "BASIC"
+                        },
+                        "wait": {
+                          "kind": "literal",
+                          "value": 15
+                        }
+                      },
+                      "outputs": {},
+                      "target": {
+                        "technology": "web",
+                        "strategies": [
+                          {
+                            "kind": "HTML Tag",
+                            "value": "INPUT",
+                            "enabled": true
+                          },
+                          {
+                            "kind": "UniqueID",
+                            "value": "ba3cded0-498a-4c37-8b2d-927a2851eafa",
+                            "enabled": false
+                          },
+                          {
+                            "kind": "Left",
+                            "value": "964",
+                            "enabled": false
+                          },
+                          {
+                            "kind": "xpath",
+                            "value": "//input[@id='NDA']",
+                            "enabled": true
+                          },
+                          {
+                            "kind": "HTML Top",
+                            "value": "1078",
+                            "enabled": false
+                          },
+                          {
+                            "kind": "HTML Left",
+                            "value": "1275",
+                            "enabled": false
+                          },
+                          {
+                            "kind": "ClickY",
+                            "value": "4",
+                            "enabled": false
+                          },
+                          {
+                            "kind": "id",
+                            "value": "NDA",
+                            "enabled": true
+                          },
+                          {
+                            "kind": "ClickX",
+                            "value": "3",
+                            "enabled": false
+                          },
+                          {
+                            "kind": "Index",
+                            "value": "0",
+                            "enabled": false
+                          },
+                          {
+                            "kind": "outerHTML",
+                            "value": "<input type=\"checkbox\" id=\"NDA\" required=\"required\">",
+                            "enabled": false
+                          },
+                          {
+                            "kind": "HTML HasFrame",
+                            "value": "false",
+                            "enabled": true
+                          },
+                          {
+                            "kind": "States",
+                            "value": "Unchecked",
+                            "enabled": false
+                          },
+                          {
+                            "kind": "HTML Type",
+                            "value": "checkbox",
+                            "enabled": true
+                          },
+                          {
+                            "kind": "HTML SourceIndex",
+                            "value": "0",
+                            "enabled": false
+                          },
+                          {
+                            "kind": "Height",
+                            "value": "10",
+                            "enabled": false
+                          },
+                          {
+                            "kind": "Width",
+                            "value": "10",
+                            "enabled": false
+                          },
+                          {
+                            "kind": "path",
+                            "value": "4|1|1|-3|-1|-1|1",
+                            "enabled": true
+                          },
+                          {
+                            "kind": "HTML Height",
+                            "value": "10",
+                            "enabled": false
+                          },
+                          {
+                            "kind": "HTML Value",
+                            "value": "on",
+                            "enabled": false
+                          },
+                          {
+                            "kind": "HTML TagIndex",
+                            "value": "10",
+                            "enabled": false
+                          },
+                          {
+                            "kind": "Role",
+                            "value": "CheckBox",
+                            "enabled": false
+                          },
+                          {
+                            "kind": "Top",
+                            "value": "803",
+                            "enabled": false
+                          },
+                          {
+                            "kind": "HTML Width",
+                            "value": "10",
+                            "enabled": false
+                          },
+                          {
+                            "kind": "HTML FrameSrc",
+                            "value": "https://example.com/customer-onboarding.html",
+                            "enabled": true
+                          },
+                          {
+                            "kind": "IsVisible",
+                            "value": "true",
+                            "enabled": false
+                          },
+                          {
+                            "kind": "css",
+                            "value": "input#NDA",
+                            "enabled": true
+                          }
+                        ],
+                        "raw": {
+                          "controlType": "CHECKBOX",
+                          "technologyType": "HTML",
+                          "browserType": "CHROME"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ],
+              "else": [
+                {
+                  "id": "08164027-11f3-4e96-ae54-0d3a995cf4b2",
+                  "source": {
+                    "platform": "a360",
+                    "file": "09-web-form/bot.json",
+                    "nodePath": [
+                      1,
+                      0,
+                      9,
+                      1,
+                      0
+                    ],
+                    "nodeId": "08164027-11f3-4e96-ae54-0d3a995cf4b2",
+                    "label": "Recorder/capture"
+                  },
+                  "kind": "action",
+                  "op": "vendor:a360/Recorder/capture",
+                  "args": {
+                    "advancedWait": {
+                      "kind": "literal",
+                      "value": "BASIC"
+                    },
+                    "wait": {
+                      "kind": "literal",
+                      "value": 15
+                    }
+                  },
+                  "outputs": {},
+                  "target": {
+                    "technology": "web",
+                    "strategies": [
+                      {
+                        "kind": "HTML Tag",
+                        "value": "INPUT",
+                        "enabled": true
+                      },
+                      {
+                        "kind": "UniqueID",
+                        "value": "5a2a657e-662e-43cc-b90e-9542d664bf2a",
+                        "enabled": false
+                      },
+                      {
+                        "kind": "Left",
+                        "value": "599",
+                        "enabled": false
+                      },
+                      {
+                        "kind": "xpath",
+                        "value": "//input[@id='activeDiscountNo']",
+                        "enabled": true
+                      },
+                      {
+                        "kind": "HTML Top",
+                        "value": "1080",
+                        "enabled": false
+                      },
+                      {
+                        "kind": "HTML Left",
+                        "value": "789",
+                        "enabled": false
+                      },
+                      {
+                        "kind": "ClickY",
+                        "value": "5",
+                        "enabled": false
+                      },
+                      {
+                        "kind": "id",
+                        "value": "activeDiscountNo",
+                        "enabled": true
+                      },
+                      {
+                        "kind": "ClickX",
+                        "value": "7",
+                        "enabled": false
+                      },
+                      {
+                        "kind": "Index",
+                        "value": "0",
+                        "enabled": false
+                      },
+                      {
+                        "kind": "outerHTML",
+                        "value": "<input class=\"form-check-input\" type=\"radio\" name=\"activeDiscount\" id=\"activeDiscountNo\" value=\"option2\">",
+                        "enabled": false
+                      },
+                      {
+                        "kind": "HTML Class",
+                        "value": "form-check-input",
+                        "enabled": false
+                      },
+                      {
+                        "kind": "HTML HasFrame",
+                        "value": "false",
+                        "enabled": true
+                      },
+                      {
+                        "kind": "Name",
+                        "value": "activeDiscount",
+                        "enabled": false
+                      },
+                      {
+                        "kind": "States",
+                        "value": "Deselected",
+                        "enabled": false
+                      },
+                      {
+                        "kind": "HTML Type",
+                        "value": "radio",
+                        "enabled": true
+                      },
+                      {
+                        "kind": "HTML SourceIndex",
+                        "value": "0",
+                        "enabled": false
+                      },
+                      {
+                        "kind": "Height",
+                        "value": "10",
+                        "enabled": false
+                      },
+                      {
+                        "kind": "Width",
+                        "value": "10",
+                        "enabled": false
+                      },
+                      {
+                        "kind": "path",
+                        "value": "4|1|1|-3|1|-1|1",
+                        "enabled": true
+                      },
+                      {
+                        "kind": "HTML Height",
+                        "value": "10",
+                        "enabled": false
+                      },
+                      {
+                        "kind": "HTML Value",
+                        "value": "option2",
+                        "enabled": false
+                      },
+                      {
+                        "kind": "HTML TagIndex",
+                        "value": "9",
+                        "enabled": false
+                      },
+                      {
+                        "kind": "Role",
+                        "value": "RadioButton",
+                        "enabled": false
+                      },
+                      {
+                        "kind": "Top",
+                        "value": "804",
+                        "enabled": false
+                      },
+                      {
+                        "kind": "HTML Width",
+                        "value": "10",
+                        "enabled": false
+                      },
+                      {
+                        "kind": "name",
+                        "value": "activeDiscount",
+                        "enabled": true
+                      },
+                      {
+                        "kind": "HTML FrameSrc",
+                        "value": "https://example.com/customer-onboarding.html",
+                        "enabled": true
+                      },
+                      {
+                        "kind": "IsVisible",
+                        "value": "true",
+                        "enabled": false
+                      },
+                      {
+                        "kind": "css",
+                        "value": "input#activeDiscountNo",
+                        "enabled": true
+                      }
+                    ],
+                    "raw": {
+                      "controlType": "RADIO",
+                      "technologyType": "HTML",
+                      "browserType": "CHROME"
+                    }
+                  },
+                  "disabled": true
+                }
+              ]
+            },
+            {
+              "id": "c86eb77a-7d85-4575-bad9-ee2345ac2a6f",
+              "source": {
+                "platform": "a360",
+                "file": "09-web-form/bot.json",
+                "nodePath": [
+                  1,
+                  0,
+                  10
+                ],
+                "nodeId": "c86eb77a-7d85-4575-bad9-ee2345ac2a6f",
+                "label": "Recorder/capture"
+              },
+              "kind": "action",
+              "op": "vendor:a360/Recorder/capture",
+              "args": {
+                "buttonAction": {
+                  "kind": "literal",
+                  "value": "CLICK"
+                },
+                "runInBackground": {
+                  "kind": "literal",
+                  "value": false
+                },
+                "advancedWait": {
+                  "kind": "literal",
+                  "value": "BASIC"
+                },
+                "wait": {
+                  "kind": "literal",
+                  "value": 15
+                }
+              },
+              "outputs": {},
+              "target": {
+                "technology": "web",
+                "strategies": [
+                  {
+                    "kind": "HTML Tag",
+                    "value": "BUTTON",
+                    "enabled": true
+                  },
+                  {
+                    "kind": "UniqueID",
+                    "value": "326ac123-1f7e-4ab6-a708-312822bdcde5",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "innerHTML",
+                    "value": "Register",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "Left",
+                    "value": "556",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "xpath",
+                    "value": "//button[@id='submit_button']",
+                    "enabled": true
+                  },
+                  {
+                    "kind": "HTML Top",
+                    "value": "1138",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "HTML Left",
+                    "value": "730",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "ClickY",
+                    "value": "16",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "id",
+                    "value": "submit_button",
+                    "enabled": true
+                  },
+                  {
+                    "kind": "ClickX",
+                    "value": "66",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "Index",
+                    "value": "0",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "outerHTML",
+                    "value": "<button type=\"button\" id=\"submit_button\" class=\"btn customer-onboarding__btn-orange\">Register</button>",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "HTML Class",
+                    "value": "btn customer-onboarding__btn-orange",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "HTML HasFrame",
+                    "value": "false",
+                    "enabled": true
+                  },
+                  {
+                    "kind": "HTML Type",
+                    "value": "button",
+                    "enabled": true
+                  },
+                  {
+                    "kind": "HTML InnerText",
+                    "value": "Register",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "HTML SourceIndex",
+                    "value": "0",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "Height",
+                    "value": "30",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "Width",
+                    "value": "105",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "path",
+                    "value": "4|1|1|-2|1",
+                    "enabled": true
+                  },
+                  {
+                    "kind": "HTML Height",
+                    "value": "30",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "HTML TagIndex",
+                    "value": "1",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "Role",
+                    "value": "PushButton",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "Top",
+                    "value": "848",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "HTML Width",
+                    "value": "105",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "HTML FrameSrc",
+                    "value": "https://example.com/customer-onboarding.html",
+                    "enabled": true
+                  },
+                  {
+                    "kind": "IsVisible",
+                    "value": "true",
+                    "enabled": false
+                  },
+                  {
+                    "kind": "css",
+                    "value": "button#submit_button",
+                    "enabled": true
+                  }
+                ],
+                "raw": {
+                  "controlType": "BUTTON",
+                  "technologyType": "HTML",
+                  "browserType": "CHROME"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "3846cdaf-a88b-4566-b76a-07d0a02c9573",
+      "source": {
+        "platform": "a360",
+        "file": "09-web-form/bot.json",
+        "nodePath": [
+          2
+        ],
+        "nodeId": "3846cdaf-a88b-4566-b76a-07d0a02c9573",
+        "label": "close csv file "
+      },
+      "kind": "group",
+      "label": "close csv file ",
+      "body": [
+        {
+          "id": "85952c78-e43e-4d7d-bfb9-69e56efe5d05",
+          "source": {
+            "platform": "a360",
+            "file": "09-web-form/bot.json",
+            "nodePath": [
+              2,
+              0
+            ],
+            "nodeId": "85952c78-e43e-4d7d-bfb9-69e56efe5d05",
+            "label": "CsvTxt/CloseCsvTxt"
+          },
+          "kind": "action",
+          "op": "vendor:a360/CsvTxt/CloseCsvTxt",
+          "args": {
+            "session": {
+              "kind": "literal",
+              "value": "Default"
+            }
+          },
+          "outputs": {}
+        }
+      ]
+    }
+  ]
+}

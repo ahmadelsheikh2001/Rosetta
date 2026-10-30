@@ -11,7 +11,7 @@ import {
 } from '@rosetta/ir';
 import type { StandardsProfile } from '@rosetta/standards';
 import { lowerers, manual, type LowerState } from './commands.js';
-import { accessKey, textOf, valueOf, withAccesses, type NoteSink } from './expr.js';
+import { accessKey, pathOf, textOf, valueOf, withAccesses, type NoteSink } from './expr.js';
 import {
   errorLineRef,
   errorMessageRef,
@@ -346,9 +346,14 @@ class Lowerer {
       } else if (
         spec.collection === 'tableRow' &&
         spec.source.kind === 'call' &&
-        spec.source.fn === 'excel.rows'
+        (spec.source.fn === 'excel.rows' || spec.source.fn === 'csv.rows')
       ) {
-        this.excelRows(s, spec.source.args[0], spec.itemVar.name);
+        this.tableRows(
+          s,
+          spec.source.fn === 'excel.rows' ? 'Excel' : 'CSV',
+          spec.source.args[0],
+          spec.itemVar.name,
+        );
       } else if (spec.collection === 'dictKeys') {
         // foreach over a StringDictionary yields key-value pairs; A360 yields the keys.
         const pair = this.helperVar(
@@ -384,12 +389,13 @@ class Lowerer {
   }
 
   /**
-   * A360 "For each row in worksheet" (corpus 05) → read the sheet into a DataTable
-   * (excelGetTable), then `for` over its rows with mapTableRow filling one variable per column
-   * the body reads (documented pattern of Map Table Row).
+   * A360 "For each row" of an Excel worksheet (corpus 05) or a CSV file (corpus 09) → read it
+   * into a DataTable (excelGetTable / readCSV), then `for` over its rows with mapTableRow
+   * filling one variable per column the body reads (documented pattern of Map Table Row).
    */
-  private excelRows(
+  private tableRows(
     s: Extract<Statement, { kind: 'loop' }>,
+    kind: 'Excel' | 'CSV',
     sessionExpr: Expr | undefined,
     record: string,
   ): void {
@@ -398,14 +404,16 @@ class Lowerer {
       sessionExpr?.kind === 'literal' && sessionExpr.value !== null
         ? String(sessionExpr.value)
         : 'Default';
-    const session = this.state.excelSessions.get(name);
+    const excel = kind === 'Excel' ? this.state.excelSessions.get(name) : undefined;
+    const csv = kind === 'CSV' ? this.state.csvSessions.get(name) : undefined;
     const fields = this.recordFields.get(record) ?? new Map<string, string>();
-    if (!session || fields.size === 0) {
-      w.comment(`TODO [ROSETTA] loop over the rows of Excel session "${name}" not converted`, {
+    if ((!excel && !csv) || fields.size === 0) {
+      w.comment(`TODO [ROSETTA] loop over the rows of ${kind} session "${name}" not converted`, {
         kind: 'manual',
-        text: session
-          ? `The loop body reads no column of ${record}; nothing to map.`
-          : `Excel session "${name}" was not opened in this bot.`,
+        text:
+          excel || csv
+            ? `The loop body reads no column of ${record}; nothing to map.`
+            : `${kind} session "${name}" was not opened in this bot.`,
       });
       w.commented('', () => {
         this.block(s.body);
@@ -413,24 +421,46 @@ class Lowerer {
       return;
     }
     const table = this.helperVar('Table', (n) => `defVar --name ${n} --type DataTable`);
-    const rows = this.helperVar('Rows', (n) => `defVar --name ${n} --type Numeric`);
+    let count: string;
+    if (excel) {
+      const rows = this.helperVar('Rows', (n) => `defVar --name ${n} --type Numeric`);
+      w.line(
+        `excelGetTable --file ${ref(excel.handle)} --getfirstsheet --entiretable${excel.header ? ' --hasheaders' : ''} ${table}=value ${rows}=rows`,
+        docNote('excelGetTable (Get Excel Table)'),
+        {
+          kind: 'semantic',
+          text: 'A360 reads the rows one by one from the workbook; WAL reads the first sheet once, before the loop. Cells are read as text in both.',
+        },
+      );
+      count = ref(rows);
+    } else {
+      const path = csv?.path ?? { kind: 'literal' as const, value: '' };
+      this.emit(
+        (sink) =>
+          `readCSV --filepath ${pathOf(path, sink)} --delimiter ","${csv?.header ? ' --hasheaders' : ''} ${table}=value`,
+        docNote('readCSV'),
+        {
+          kind: 'semantic',
+          text: 'A360 reads the file row by row; WAL reads it whole, before the loop.',
+        },
+      );
+      count = ref(`${table}.Rows`);
+    }
     const index = this.helperVar('Index', (n) => `defVar --name ${n} --type Numeric`);
     w.line(
-      `excelGetTable --file ${ref(session.handle)} --getfirstsheet --entiretable${session.header ? ' --hasheaders' : ''} ${table}=value ${rows}=rows`,
-      docNote('excelGetTable (Get Excel Table)'),
-      {
-        kind: 'semantic',
-        text: 'A360 reads the rows one by one from the workbook; WAL reads the first sheet once, before the loop. Cells are read as text in both.',
-      },
-    );
-    w.line(
-      `for --variable ${ref(index)} --from 1 --to ${ref(rows)} --step 1`,
+      `for --variable ${ref(index)} --from 1 --to ${count} --step 1`,
       docNote('for / next'),
+      ...(excel
+        ? []
+        : [docNote('row count ${table.Rows} (documented in the Map Table Row examples)')]),
     );
     // Columns mapped by name ("name=<column>=${var}"): verified in Studio round 9.
     const mappings = [...fields].map(([column, v]) => `name=${column}=${ref(v)}`).join(',');
     w.line(
       `mapTableRow --dataTable ${ref(table)} --row ${ref(index)} --mappings ${quote(mappings)}`,
+      ...([...fields.keys()].some((c) => /[s,=]/.test(c))
+        ? [docNote('mapTableRow with a column name containing a space, comma or "="')]
+        : []),
     );
     this.block(s.body);
     w.line('next');
@@ -590,6 +620,10 @@ class Lowerer {
     const init: (() => void)[] = [];
     for (const v of vars) {
       const notes: NoteInput[] = [];
+      if (v.type.kind === 'handle' && v.type.resource === 'browser') {
+        w.comment(`${v.name} (A360 browser window): WAL works in the browser started by webStart`);
+        continue;
+      }
       if (v.type.kind === 'record') {
         const fields = this.recordFields.get(v.name);
         if (fields?.size) {

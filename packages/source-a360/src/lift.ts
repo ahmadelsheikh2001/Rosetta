@@ -9,6 +9,7 @@ import type {
   OpName,
   SourceRef,
   Statement,
+  UITarget,
   Variable,
 } from '@rosetta/ir';
 import { LiftCode, type LiftContext } from './context.js';
@@ -182,7 +183,9 @@ function liftIf(
   let elseBody: Block | undefined;
   (node.branches ?? []).forEach((b, i) => {
     const bPath = branchPath(node, path, i);
-    const body = liftBlock(b.children ?? [], bPath, ctx);
+    // A disabled Else / Else If (corpus 09) disables everything in it.
+    const lifted = liftBlock(b.children ?? [], bPath, ctx);
+    const body = b.disabled ? lifted.map((s) => ({ ...s, disabled: true })) : lifted;
     if (b.commandName === 'elseIf') {
       branches.push({ condition: liftCondition(b, ctx.ref(bPath, b.uid, 'If/elseIf'), ctx), body });
     } else if (b.commandName === 'else') {
@@ -241,6 +244,14 @@ function liftLoop(
       spec = { kind: 'forEach', collection: 'dictKeys', source: map, itemVar: item };
     } else if (kind === 'loop.iterators.files' && folder && item) {
       spec = { kind: 'forEach', collection: 'file', source: folder, itemVar: item };
+    } else if (kind === 'iterators.csvtxt' && item) {
+      // CSV/TXT "For each row" (corpus 09): rows of the session opened by OpenCSVTXT.
+      spec = {
+        kind: 'forEach',
+        collection: 'tableRow',
+        source: { kind: 'call', fn: 'csv.rows', args: [arg('session') ?? literal('Default')] },
+        itemVar: item,
+      };
     } else if (kind === 'loop.iterators.excel' && item) {
       // Excel advanced (Excel_MS) "For each row in worksheet" (corpus 05): rows of the session.
       for (const [option, usual] of [
@@ -382,9 +393,14 @@ function liftAction(
   }
 
   const args: Record<string, Expr> = {};
+  let target: UITarget | undefined;
   const addArgs = (attrs: readonly SourceAttribute[], prefix: string) => {
     for (const a of attrs) {
       const key = prefix + a.name;
+      if (a.value?.type === 'UIOBJECT') {
+        target = uiTarget(a.value.uiObject);
+        continue;
+      }
       if (a.value) args[key] = valueToExpr(a.value, ctx, base.source);
       if (a.attributes) addArgs(a.attributes, `${key}.`);
     }
@@ -410,6 +426,46 @@ function liftAction(
     op,
     args,
     outputs,
+    ...(target ? { target } : {}),
     ...(mapping ? { mappingId: mapping.id } : {}),
+  };
+}
+
+/** Recorder criteria names → selector kinds (corpus 09). Other criteria keep their own name. */
+const selectorKinds: Readonly<Record<string, string>> = {
+  'HTML ID': 'id',
+  'HTML Name': 'name',
+  DOMXPath: 'xpath',
+  'CSS Selector': 'css',
+  Path: 'path',
+};
+
+/**
+ * Recorder capture (corpus 09): `{ blob, controlType, technologyType, browserType, criteria }`.
+ * `criteria` maps each property to `{ enabled, value }`; A360 matches all enabled ones.
+ * The blob (a base64 copy of the captured page context) is not kept.
+ */
+function uiTarget(uiObject: unknown): UITarget {
+  const o = (uiObject ?? {}) as {
+    controlType?: unknown;
+    technologyType?: unknown;
+    browserType?: unknown;
+    criteria?: Record<string, { enabled?: unknown; value?: { string?: unknown } }>;
+  };
+  const strategies = Object.entries(o.criteria ?? {})
+    .filter(([, c]) => typeof c.value?.string === 'string' && c.value.string !== '')
+    .map(([name, c]) => ({
+      kind: selectorKinds[name] ?? name,
+      value: String(c.value?.string),
+      enabled: c.enabled === true,
+    }));
+  return {
+    technology: o.technologyType === 'HTML' ? 'web' : 'other',
+    strategies,
+    raw: raw({
+      controlType: o.controlType ?? null,
+      technologyType: o.technologyType ?? null,
+      browserType: o.browserType ?? null,
+    }),
   };
 }

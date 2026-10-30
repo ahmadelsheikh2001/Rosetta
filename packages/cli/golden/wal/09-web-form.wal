@@ -1,0 +1,56 @@
+// ======================================================================
+// Bot:         09-web-form
+// Source:      09-web-form/bot.json (Automation Anywhere A360)
+// Converted:   2026-10-29T00:00:00.000Z
+// Generator:   RPA Rosetta 0.0.0
+// Inputs:      none
+// Outputs:     none
+// Status:      DRAFT - syntax from the IBM RPA 30.0.x reference, being verified in Studio 30.0.2
+// ======================================================================
+defVar --name SampleNumber --type Numeric
+defVar --name SampleString --type String
+// CsvTxtRow (A360 Record): one String variable per column the bot reads
+defVar --name CsvTxtRow_Company_Name --type String
+defVar --name CsvTxtRow_Customer_ID --type String
+defVar --name CsvTxtRow_Primary_Contact --type String
+defVar --name CsvTxtRow_Street_Address --type String
+defVar --name CsvTxtRow_City --type String
+defVar --name CsvTxtRow_State --type String
+defVar --name CsvTxtRow_Zip --type String
+defVar --name CsvTxtRow_Email_Address --type String
+defVar --name CsvTxtRow_Offers_Discounts --type String
+defVar --name CsvTxtRow_Non_Disclosure_On_File --type String
+// Browser1 (A360 browser window): WAL works in the browser started by webStart
+// ---- Helper variables added by the conversion ----
+defVar --name rosettaTable1 --type DataTable
+defVar --name rosettaIndex2 --type Numeric
+// ---- open Exel and  red data  ----
+// CSV session "Default" opened here; WAL reads the file in one step (readCSV) below.
+webStart --name browser --type "Chrome"
+webNavigate --url "https://example.com/customer-onboarding.html"
+// ---- loop and insert data ----
+readCSV --filepath "C:\\RosettaTest\\customer-onboarding-challenge.csv" --delimiter "," --hasheaders rosettaTable1=value
+for --variable ${rosettaIndex2} --from 1 --to ${rosettaTable1.Rows} --step 1
+mapTableRow --dataTable ${rosettaTable1} --row ${rosettaIndex2} --mappings "name=Company Name=${CsvTxtRow_Company_Name},name=Customer ID=${CsvTxtRow_Customer_ID},name=Primary Contact=${CsvTxtRow_Primary_Contact},name=Street Address=${CsvTxtRow_Street_Address},name=City=${CsvTxtRow_City},name=State=${CsvTxtRow_State},name=Zip=${CsvTxtRow_Zip},name=Email Address=${CsvTxtRow_Email_Address},name=Offers Discounts=${CsvTxtRow_Offers_Discounts},name=Non-Disclosure On File=${CsvTxtRow_Non_Disclosure_On_File}"
+webSet --value "${CsvTxtRow_Company_Name}" --selector "Id" --id "customerName" --timeout "00:00:15"
+webSet --value "${CsvTxtRow_Customer_ID}" --selector "Id" --id "customerID" --timeout "00:00:15"
+webSet --value "${CsvTxtRow_Primary_Contact}" --selector "Id" --id "primaryContact" --timeout "00:00:15"
+webSet --value "${CsvTxtRow_Street_Address}" --selector "Id" --id "street" --timeout "00:00:15"
+webSet --value "${CsvTxtRow_City}" --selector "Id" --id "city" --timeout "00:00:15"
+webSetComboBox --selectoptionby "MatchByText" --matchbytext "${CsvTxtRow_State}" --selector "Id" --id "state" --timeout "00:00:15"
+webSet --value "${CsvTxtRow_Zip}" --selector "Id" --id "zip" --timeout "00:00:15"
+webSet --value "${CsvTxtRow_Email_Address}" --selector "Id" --id "email" --timeout "00:00:15"
+if --left "${CsvTxtRow_Offers_Discounts}" --operator "Equal_To" --right "YES"
+webClick --selector "Id" --id "activeDiscountYes" --timeout "00:00:15"
+else
+webClick --selector "Id" --id "activeDiscountNo" --timeout "00:00:15"
+endIf
+if --left "${CsvTxtRow_Non_Disclosure_On_File}" --operator "Equal_To" --right "YES"
+webClick --selector "Id" --id "NDA" --timeout "00:00:15"
+else
+// [DISABLED] // TODO [ROSETTA] ui.capture: Recorder action (none) not supported yet
+endIf
+webClick --selector "Id" --id "submit_button" --timeout "00:00:15"
+next
+// ---- close csv file  ----
+// CSV session "Default" closed here; WAL keeps no file open (readCSV).

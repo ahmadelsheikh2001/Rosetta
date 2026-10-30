@@ -51,7 +51,8 @@ A disabled node is a normal node with `disabled: true` (01, 02, 03, 04: one each
 | Catch            | attributes `exceptionType` (`EXCEPTION`), `continueOnError`; `returns.errorMessage`, `returns.errorLineNumber` (04)            |
 | Throw            | `ErrorHandler/throw`, attributes `message`, `exceptionType` (04)                                                               |
 
-Iterators seen: `loop.iterators.times` (Loop), `list.iterators.list` (List),
+Iterators seen: `loop.iterators.times` (Loop), `list.iterators.list` (List), `iterators.csvtxt`
+(CsvTxt, "For each row in CSV/TXT", 09: attribute `session`; `returnTo` a RECORD variable),
 `dictionary.iterators.keys` (Dictionary), `loop.iterators.files` (File), `loop.iterators.excel`
 (Excel_MS, "For each row in worksheet", 05: attributes `loopSelection` `ALL_ROWS`, `readOption`
 `READ_CELL_TEXT`, `session`; `returnTo` a RECORD variable). Note the iterator's package can differ
@@ -85,25 +86,27 @@ Operators are codes: `EQ`, `GT`, `LT` (02, 04).
 
 `{ type, <payload> }`. Shapes found:
 
-| `type`        | Payload key(s)                                                                                    | Notes                              |
-| ------------- | ------------------------------------------------------------------------------------------------- | ---------------------------------- |
-| `STRING`      | `string` (literal) **or** `expression` (contains `$…$`)                                           | 01–04                              |
-| `NUMBER`      | `number` **as a string** (`"5"`, `"-1"`) or `expression`                                          | 01–04                              |
-| `BOOLEAN`     | `boolean` or `expression`                                                                         | 01–04                              |
-| `DATETIME`    | `string` (ISO with zone, e.g. `2026-01-01T09:00:00+02:00[Africa/Cairo]`, or `""`) or `expression` | 01, 03                             |
-| `FILE`        | `string` (`file:///C:/…`) or `expression` (`file://$vFilePath$`)                                  | 01, 04: URI form, not a plain path |
-| `VARIABLE`    | `variableName`                                                                                    | 01–04                              |
-| `VARIABLEMAP` | `variableMapNames` (lower-cased names)                                                            | 01                                 |
-| `LIST`        | `list`: values                                                                                    | 01–03                              |
-| `DICTIONARY`  | `dictionary`: `[{ key, value, entryType }]`                                                       | 01–03                              |
-| `TABLE`       | `table`: `{ schema: [{ name?, type }], rows: [{ values }] }`                                      | 01, 04                             |
-| `CONDITIONAL` | `conditionalName`, `packageName`                                                                  | 02, 04                             |
-| `ITERATOR`    | `iteratorName`, `packageName`                                                                     | 02                                 |
-| `EXCEPTION`   | `exceptionName`, `packageName`                                                                    | 04                                 |
-| `SESSION`     | `sessionName` (a `STRING` value)                                                                  | 05                                 |
-| `CREDENTIAL`  | `credential: { lockerName, name, attributeName }` (vault) or `expression` (`$vPassword$`)         | 08                                 |
-| `TASKBOT`     | `taskbotFile` (FILE value), `taskbotInput` (DICTIONARY value)                                     | 08                                 |
-| `RECORD`      | `record: { schema: [], values: [] }`                                                              | 05 (empty default only)            |
+| `type`        | Payload key(s)                                                                                      | Notes                              |
+| ------------- | --------------------------------------------------------------------------------------------------- | ---------------------------------- |
+| `STRING`      | `string` (literal) **or** `expression` (contains `$…$`)                                             | 01–04                              |
+| `NUMBER`      | `number` **as a string** (`"5"`, `"-1"`) or `expression`                                            | 01–04                              |
+| `BOOLEAN`     | `boolean` or `expression`                                                                           | 01–04                              |
+| `DATETIME`    | `string` (ISO with zone, e.g. `2026-01-01T09:00:00+02:00[Africa/Cairo]`, or `""`) or `expression`   | 01, 03                             |
+| `FILE`        | `string` (`file:///C:/…`) or `expression` (`file://$vFilePath$`)                                    | 01, 04: URI form, not a plain path |
+| `VARIABLE`    | `variableName`                                                                                      | 01–04                              |
+| `VARIABLEMAP` | `variableMapNames` (lower-cased names)                                                              | 01                                 |
+| `LIST`        | `list`: values                                                                                      | 01–03                              |
+| `DICTIONARY`  | `dictionary`: `[{ key, value, entryType }]`                                                         | 01–03                              |
+| `TABLE`       | `table`: `{ schema: [{ name?, type }], rows: [{ values }] }`                                        | 01, 04                             |
+| `CONDITIONAL` | `conditionalName`, `packageName`                                                                    | 02, 04                             |
+| `ITERATOR`    | `iteratorName`, `packageName`                                                                       | 02                                 |
+| `EXCEPTION`   | `exceptionName`, `packageName`                                                                      | 04                                 |
+| `SESSION`     | `sessionName` (a `STRING` value)                                                                    | 05                                 |
+| `CREDENTIAL`  | `credential: { lockerName, name, attributeName }` (vault) or `expression` (`$vPassword$`)           | 08                                 |
+| `TASKBOT`     | `taskbotFile` (FILE value), `taskbotInput` (DICTIONARY value)                                       | 08                                 |
+| `UIOBJECT`    | `uiObject`: `{ blob, controlType, technologyType, browserType, criteria }` (Recorder, see 09 NOTES) | 09                                 |
+| `WINDOW`      | `window`: `{ name, windowType, browserTabUrl, … }`                                                  | 09                                 |
+| `RECORD`      | `record: { schema: [], values: [] }`                                                                | 05 (empty default only)            |
 
 Watch out:
 

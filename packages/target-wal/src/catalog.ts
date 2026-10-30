@@ -36,6 +36,8 @@ const condition: CommandSpec = {
   enums: { operator: operators },
 };
 const bare: CommandSpec = { evidence: 'verified', params: [] };
+/** Selector types the generator writes for web elements (documented `selector` options). */
+const webSelectors = ['Id', 'Name', 'IdAndName', 'CssSelector', 'XPath'];
 
 export const walCommands: Readonly<Record<string, CommandSpec>> = {
   // variables
@@ -282,6 +284,75 @@ export const walCommands: Readonly<Record<string, CommandSpec>> = {
     params: ['dataTable', 'row', 'mappings'],
     required: ['dataTable', 'row', 'mappings'],
   },
+  // Browser (corpus 09): classic web commands, documented for 30.0.x
+  webStart: {
+    evidence: 'documented',
+    params: [
+      'name',
+      'type',
+      'userprofilepreferences',
+      'enableextensions',
+      'extensionsFolder',
+      'disablegpu',
+      'bypassExternalProtocols',
+      'useproxy',
+      'isautodetect',
+      'username',
+      'password',
+    ],
+    required: ['name', 'type'],
+    enums: { type: ['Chrome', 'Edge', 'Firefox', 'InternetExplorer'] },
+  },
+  webNavigate: { evidence: 'documented', params: ['url'], required: ['url'] },
+  webSet: {
+    evidence: 'documented',
+    params: ['value', 'selector', 'id', 'name', 'css', 'xpath', 'simulatehuman', 'timeout'],
+    required: ['value', 'selector'],
+    enums: { selector: webSelectors },
+  },
+  webSetComboBox: {
+    evidence: 'documented',
+    params: [
+      'selectoptionby',
+      'value',
+      'matchbytext',
+      'index',
+      'nowait',
+      'selector',
+      'id',
+      'name',
+      'css',
+      'innertext',
+      'tagname',
+      'xpath',
+      'simulatehuman',
+      'timeout',
+    ],
+    required: ['selectoptionby', 'selector'],
+    enums: { selector: webSelectors },
+  },
+  webClick: {
+    evidence: 'documented',
+    params: [
+      'isdoubleclick',
+      'nowait',
+      'selector',
+      'id',
+      'name',
+      'css',
+      'linktext',
+      'innertext',
+      'tagname',
+      'xpath',
+      'class',
+      'elementvalue',
+      'simulatehuman',
+      'timeout',
+    ],
+    required: ['selector'],
+    enums: { selector: webSelectors },
+  },
+  webClose: { evidence: 'documented', params: ['name', 'leavebrowseropen'], required: ['name'] },
   // Base / General (corpus 08; verified in Studio rounds 8-9)
   getVaultItem: {
     evidence: 'verified',

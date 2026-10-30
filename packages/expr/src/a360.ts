@@ -50,7 +50,9 @@ function parseInner(inner: string): Expr {
   }
   if (/^\d+$/.test(inner)) return { kind: 'literal', value: Number(inner) };
   if (inner.includes('$')) throw new ExprError(`unsupported key "${inner}"`);
-  return { kind: 'literal', value: inner };
+  // Record columns with spaces are quoted: `$CsvTxtRow{"Company Name"}$`, `$CsvTxtRow{State}$`.
+  const quoted = /^"(.*)"$/.exec(inner);
+  return { kind: 'literal', value: quoted ? (quoted[1] ?? '') : inner };
 }
 
 /** Parses the content between the `$` delimiters of one reference. */

@@ -1,0 +1,14 @@
+id: a360.csvtxt.closecsvtxt
+from: corpus/a360/09-web-form/bot.json
+node:
+  uid: 85952c78-e43e-4d7d-bfb9-69e56efe5d05
+  commandName: CloseCsvTxt
+  packageName: CsvTxt
+  disabled: false
+  attributes:
+    - name: session
+      value:
+        string: Default
+        type: STRING
+expect:
+  op: csv.close

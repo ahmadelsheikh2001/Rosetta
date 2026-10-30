@@ -8,3 +8,5 @@
 # A360 timestamp keys: add them from the first real export (ADR-017, no guessing), e.g.
 #   timestamp-field:<key seen in export>
 # Paths are repo-relative with forward slashes, e.g. corpus/a360/01-variables/export.zip
+# 09-web-form NOTES: digits inside the SHA-256 of the original file (checked by hand)
+corpus/a360/09-web-form/NOTES.md::5873848297

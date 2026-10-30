@@ -1,12 +1,12 @@
-import type { ActionStmt, Expr, IRType } from '@rosetta/ir';
+import type { ActionStmt, Expr, IRType, UITarget } from '@rosetta/ir';
 import { pathOf, textOf, valueOf, type NoteSink } from './expr.js';
 import { quote, ref, regexLiteral } from './syntax.js';
 import type { NoteInput, WalWriter } from './writer.js';
 
 /** Lowering state shared across one bot. */
 export interface LowerState {
-  /** CSV session name → file path expression, from `csv.open`. */
-  readonly csvSessions: Map<string, Expr>;
+  /** CSV session name → file and header flag, from `csv.open`. */
+  readonly csvSessions: Map<string, { readonly path: Expr; readonly header: boolean }>;
   /** Excel session name → Excel instance variable, from `excel.open`. */
   readonly excelSessions: Map<string, ExcelSession>;
   /** Source variable types, by name. */
@@ -134,6 +134,34 @@ const dateUnits: Readonly<Record<string, string>> = {
   SECONDS: 'Seconds',
   YEARS: 'Years',
 };
+
+const browserTypes: Readonly<Record<string, string>> = {
+  CHROME: 'Chrome',
+  EDGE: 'Edge',
+  FIREFOX: 'Firefox',
+};
+
+/** Seconds → TimeSpan text `hh:mm:ss` (documented `--timeout "00:00:05"`). */
+const timeSpan = (seconds: number): string =>
+  [Math.floor(seconds / 3600), Math.floor((seconds % 3600) / 60), Math.floor(seconds % 60)]
+    .map((n) => String(n).padStart(2, '0'))
+    .join(':');
+
+/**
+ * The WAL selector for a captured web element: the HTML id when A360 used it, else the XPath,
+ * else the CSS selector (documented selector types Id, XPath, CssSelector).
+ */
+function webSelector(t: UITarget): { args: string; label: string } | undefined {
+  const pick = (kind: string) => t.strategies.find((x) => x.kind === kind && x.enabled)?.value;
+  const id = pick('id');
+  if (id) return { args: `--selector "Id" --id ${quote(id)}`, label: `the id "${id}"` };
+  const xpath = pick('xpath');
+  if (xpath) return { args: `--selector "XPath" --xpath ${quote(xpath)}`, label: 'the XPath' };
+  const css = pick('css');
+  if (css)
+    return { args: `--selector "CssSelector" --css ${quote(css)}`, label: 'the CSS selector' };
+  return undefined;
+}
 
 /** Canonical op → WAL (docs/formats/wal-30.0.2.md, docs/mappings/a360-to-ibm-rpa.md). */
 export const lowerers: Readonly<Record<string, Lowerer>> = {
@@ -374,24 +402,91 @@ export const lowerers: Readonly<Record<string, Lowerer>> = {
     );
   },
   'csv.open': (a, w, s) => {
-    const session = a.args.session?.kind === 'literal' ? String(a.args.session.value) : 'Default';
-    if (a.args.filePath) s.csvSessions.set(session, a.args.filePath);
+    const h = helpers(a, w);
+    const session = sessionName(a);
+    if (a.args.filePath)
+      s.csvSessions.set(session, { path: a.args.filePath, header: h.flag('containsHeader') });
     w.comment(
       `CSV session "${session}" opened here; WAL reads the file in one step (readCSV) below.`,
     );
   },
   'csv.read': (a, w, s) => {
     const h = helpers(a, w);
-    const session = a.args.session?.kind === 'literal' ? String(a.args.session.value) : 'Default';
-    const path = s.csvSessions.get(session);
-    if (!path) {
+    const session = sessionName(a);
+    const csv = s.csvSessions.get(session);
+    if (!csv) {
       manual(a, w, `CSV session "${session}" was not opened in this bot`);
       return;
     }
     h.emit(
-      `readCSV --filepath ${pathOf(path, h.sink)} --delimiter "," ${h.out()}=value`,
+      `readCSV --filepath ${pathOf(csv.path, h.sink)} --delimiter ","${csv.header ? ' --hasheaders' : ''} ${h.out()}=value`,
       doc('readCSV'),
     );
+  },
+  'csv.close': (a, w) => {
+    w.comment(`CSV session "${sessionName(a)}" closed here; WAL keeps no file open (readCSV).`);
+  },
+  // Browser and Recorder (corpus 09). Classic web commands: the Smart Web commands need 30.0.3.
+  'browser.open': (a, w) => {
+    const h = helpers(a, w);
+    const type = browserTypes[h.str('browser') ?? ''];
+    if (!type) {
+      manual(a, w, `browser ${h.str('browser') ?? '?'} not supported`);
+      return;
+    }
+    h.emit(`webStart --name browser --type "${type}"`, doc('webStart (Start Browser)'));
+    h.emit(`webNavigate --url ${h.text('url')}`, doc('webNavigate'));
+  },
+  'ui.capture': (a, w) => {
+    const h = helpers(a, w);
+    const selector = a.target ? webSelector(a.target) : undefined;
+    if (a.target?.technology !== 'web' || !selector) {
+      manual(a, w, 'only web page elements with an id, XPath or CSS selector are converted');
+      return;
+    }
+    const wait = a.args.wait?.kind === 'literal' ? Number(a.args.wait.value) : NaN;
+    const timeout = Number.isFinite(wait) && wait > 0 ? ` --timeout "${timeSpan(wait)}"` : '';
+    const notes: NoteInput[] = [];
+    if (a.target.strategies.filter((x) => x.enabled).length > 1)
+      notes.push(
+        semantic(
+          `A360 matches all enabled properties of the captured element; WAL uses ${selector.label} only.`,
+        ),
+      );
+    const action =
+      h.str('textboxAction') ??
+      h.str('comboboxAction') ??
+      h.str('radioAction') ??
+      h.str('checkboxAction') ??
+      h.str('buttonAction');
+    if (h.str('textboxAction') === 'SETTEXT') {
+      h.emit(
+        `webSet --value ${h.text('value')} ${selector.args}${timeout}`,
+        doc('webSet (Set Value to Field)'),
+        ...notes,
+      );
+    } else if (h.str('comboboxAction') === 'SELECTITEMBYTEXT') {
+      h.emit(
+        `webSetComboBox --selectoptionby "MatchByText" --matchbytext ${h.text('value')} ${selector.args}${timeout}`,
+        doc('webSetComboBox (Select Item in Combo Box)'),
+        ...notes,
+      );
+    } else if (
+      h.str('buttonAction') === 'CLICK' ||
+      h.str('radioAction') === 'CLICK' ||
+      h.str('radioAction') === 'SELECT' ||
+      h.str('checkboxAction') === 'CHECK'
+    ) {
+      if (h.str('checkboxAction') === 'CHECK')
+        notes.push(
+          semantic(
+            'A360 checks the box; WAL clicks it, which unchecks a box that is already checked.',
+          ),
+        );
+      h.emit(`webClick ${selector.args}${timeout}`, doc('webClick (Click on Web Page)'), ...notes);
+    } else {
+      manual(a, w, `Recorder action ${action ?? '(none)'} not supported yet`);
+    }
   },
   // Excel advanced (Excel_MS), corpus 05. A360 names a session; WAL keeps an Excel variable.
   'excel.open': (a, w, s) => {

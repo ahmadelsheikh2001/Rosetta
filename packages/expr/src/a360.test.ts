@@ -26,6 +26,19 @@ describe('parseA360', () => {
     });
   });
 
+  it('drops the quotes around record columns that contain spaces (corpus 09)', () => {
+    expect(parseA360('$CsvTxtRow{"Company Name"}$')).toEqual({
+      kind: 'var',
+      name: 'CsvTxtRow',
+      path: [{ kind: 'key', key: lit('Company Name') }],
+    });
+    expect(parseA360('$CsvTxtRow{State}$')).toEqual({
+      kind: 'var',
+      name: 'CsvTxtRow',
+      path: [{ kind: 'key', key: lit('State') }],
+    });
+  });
+
   it('parses dictionary keys', () => {
     expect(parseA360('$vDict{name}$')).toEqual({
       kind: 'var',

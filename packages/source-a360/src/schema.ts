@@ -32,6 +32,10 @@ export const sourceValue = z.looseObject({
   },
   table: z.unknown().optional(),
   record: z.unknown().optional(),
+  /** Recorder capture (corpus 09): technology, control type and selector criteria. */
+  uiObject: z.unknown().optional(),
+  /** WINDOW value (corpus 09): the application or browser window a capture works in. */
+  window: z.unknown().optional(),
   /** SESSION values (corpus 05): `{ type: SESSION, sessionName: { type: STRING, string } }`. */
   get sessionName() {
     return sourceValue.optional();

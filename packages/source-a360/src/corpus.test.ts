@@ -29,6 +29,7 @@ describe('corpus', () => {
       '05-excel',
       'RR_08_Child',
       'RR_08_Parent',
+      '09-web-form',
     ]);
   });
 

@@ -5,6 +5,9 @@ import type { SourceValue, SourceVariable } from './schema.js';
 
 const literal = (value: string | number | boolean): Expr => ({ kind: 'literal', value });
 
+/** A string field of a loosely typed payload, or "". */
+const text = (x: unknown): string => (typeof x === 'string' ? x : '');
+
 /** Parses an `expression` payload; unreadable text is reported and kept as `raw`. */
 function expression(text: string, ctx: LiftContext, at?: SourceRef): Expr {
   const expr = parseA360(text);
@@ -75,6 +78,16 @@ export function valueToExpr(value: SourceValue, ctx: LiftContext, at?: SourceRef
         fn: 'record.of',
         args: [literal(JSON.stringify(value.record ?? null))],
       };
+    case 'WINDOW': {
+      // corpus 09: { name, windowType: BROWSER_CHROME, browserTabUrl, … }; the window is reached
+      // through the browser the bot opens, so only its title and type are kept.
+      const w = (value.window ?? {}) as { name?: unknown; windowType?: unknown };
+      return {
+        kind: 'call',
+        fn: 'window.of',
+        args: [literal(text(w.name)), literal(text(w.windowType))],
+      };
+    }
     case 'SESSION':
       // Sessions are named; actions refer to them by name (corpus 04 stores the name as STRING).
       return value.sessionName ? valueToExpr(value.sessionName, ctx, at) : unknown(value, ctx, at);
@@ -124,6 +137,11 @@ const scalarTypes: Readonly<Record<string, IRType>> = {
 export function variableType(variable: SourceVariable, ctx: LiftContext): IRType {
   const scalar = scalarTypes[variable.type];
   if (scalar) return scalar;
+  if (variable.type === 'WINDOW') {
+    const w = variable.defaultValue?.window as { windowType?: unknown } | undefined;
+    const browser = text(w?.windowType).startsWith('BROWSER_');
+    return { kind: 'handle', resource: browser ? 'browser' : 'window' };
+  }
   if (variable.type === 'LIST' || variable.type === 'DICTIONARY') {
     const of = variable.subtype ? scalarTypes[variable.subtype] : undefined;
     return { kind: variable.type === 'LIST' ? 'list' : 'dict', of: of ?? { kind: 'any' } };
