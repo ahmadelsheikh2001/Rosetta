@@ -427,14 +427,10 @@ class Lowerer {
       `for --variable ${ref(index)} --from 1 --to ${ref(rows)} --step 1`,
       docNote('for / next'),
     );
+    // Columns mapped by name ("name=<column>=${var}"): verified in Studio round 9.
     const mappings = [...fields].map(([column, v]) => `name=${column}=${ref(v)}`).join(',');
     w.line(
       `mapTableRow --dataTable ${ref(table)} --row ${ref(index)} --mappings ${quote(mappings)}`,
-      {
-        kind: 'verify',
-        assumption: 'W-18',
-        text: 'mapTableRow by column name ("name=<column>=${var}"); the reference shows only "number=<n>=${var}". Confirm in Studio.',
-      },
     );
     this.block(s.body);
     w.line('next');

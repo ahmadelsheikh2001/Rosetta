@@ -226,9 +226,9 @@ export const walCommands: Readonly<Record<string, CommandSpec>> = {
     params: ['message', 'type'],
     required: ['message', 'type'],
   },
-  // Windows / Office (corpus 05)
+  // Windows / Office (corpus 05; verified in Studio round 9)
   excelOpen: {
-    evidence: 'documented',
+    evidence: 'verified',
     params: [
       'file',
       'passwordtopen',
@@ -241,7 +241,7 @@ export const walCommands: Readonly<Record<string, CommandSpec>> = {
     required: ['file'],
   },
   excelSet: {
-    evidence: 'documented',
+    evidence: 'verified',
     params: [
       'value',
       'isformula',
@@ -256,7 +256,7 @@ export const walCommands: Readonly<Record<string, CommandSpec>> = {
     required: ['file', 'getfirstsheet|sheet', 'cell|row'],
   },
   excelGetTable: {
-    evidence: 'documented',
+    evidence: 'verified',
     params: [
       'file',
       'getfirstsheet',
@@ -273,23 +273,23 @@ export const walCommands: Readonly<Record<string, CommandSpec>> = {
     required: ['file', 'getfirstsheet|sheet'],
   },
   excelClose: {
-    evidence: 'documented',
+    evidence: 'verified',
     params: ['file', 'save', 'notcalculate'],
     required: ['file'],
   },
   mapTableRow: {
-    evidence: 'documented',
+    evidence: 'verified',
     params: ['dataTable', 'row', 'mappings'],
     required: ['dataTable', 'row', 'mappings'],
   },
-  // Base / General (corpus 08)
+  // Base / General (corpus 08; verified in Studio rounds 8-9)
   getVaultItem: {
-    evidence: 'documented',
+    evidence: 'verified',
     params: ['name', 'system'],
     required: ['name'],
   },
   executeScript: {
-    evidence: 'documented',
+    evidence: 'verified',
     params: ['handleError', 'isfromfile', 'filename', 'name', 'parameters', 'output', 'version'],
     required: ['name'],
   },
