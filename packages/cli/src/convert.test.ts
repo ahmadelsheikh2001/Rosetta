@@ -4,6 +4,7 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { defaultProfile } from '@rosetta/standards';
 import { afterAll, describe, expect, it } from 'vitest';
+import { checkWal } from '@rosetta/target-wal';
 import { convertFolder } from './convert.js';
 import { ExitCode } from './exit-codes.js';
 import { run } from './run.js';
@@ -113,6 +114,23 @@ describe('conversion of the real corpus', () => {
     }
   });
 
+  it('passes the static check: no problems in any converted bot', () => {
+    for (const b of bots) expect(b.problems, b.name).toEqual([]);
+  });
+
+  it('static check finds every error Studio reported in round 1', () => {
+    const tested = fileURLToPath(
+      new URL(
+        '../../../corpus/ibm/probe-30.0.2/round-1/04-error-handling.tested.wal',
+        import.meta.url,
+      ),
+    );
+    const lines = new Set(checkWal(readFileSync(tested, 'utf8')).map((p) => p.line));
+    // Studio Error List, round 1 (corpus/ibm/probe-30.0.2/round-1/RESULTS.md)
+    for (const line of [21, 22, 24, 25, 27, 29, 33, 35, 37])
+      expect(lines, `line ${line}`).toContain(line);
+  });
+
   it('never reads list items or dictionary values with brackets (round 4: not interpolated)', () => {
     for (const b of bots) {
       for (const line of b.script.text.split('\r\n')) {
@@ -131,7 +149,8 @@ describe('conversion of the real corpus', () => {
       for (const line of b.script.text.split('\r\n')) {
         if (line.startsWith('//')) continue;
         for (const [, value = ''] of line.matchAll(/"((?:[^"\\]|\\.)*)"/g)) {
-          expect(value.replace(/\\\\|\\"/g, ''), `${b.name}: ${line}`).not.toContain('\\');
+          // allowed escapes: \\ (backslash), \" (quote), \r and \n (documented line breaks)
+          expect(value.replace(/\\[\\"rn]/g, ''), `${b.name}: ${line}`).not.toContain('\\');
         }
       }
     }

@@ -76,7 +76,20 @@ class Lowerer {
   readonly subs: WalWriter[] = [];
   /** Helper variables (defVar lines) the conversion needs, declared after the bot's own. */
   readonly helperVars: string[] = [];
-  readonly state: LowerState = { csvSessions: new Map() };
+  /** Helper variables declared once per key (e.g. the log timestamp). */
+  private readonly sharedHelpers = new Map<string, string>();
+  readonly state: LowerState = {
+    csvSessions: new Map(),
+    varTypes: new Map(),
+    helper: (key, defVar) => {
+      const known = this.sharedHelpers.get(key);
+      if (known) return known;
+      const name = `rosetta${key.charAt(0).toUpperCase()}${key.slice(1)}`;
+      this.helperVars.push(defVar(name));
+      this.sharedHelpers.set(key, name);
+      return name;
+    },
+  };
   private readonly loops: (string | undefined)[] = [];
   /** "failed" flags of the protected blocks being written, innermost last. */
   private readonly guards: string[] = [];
@@ -567,6 +580,8 @@ function systemNames(bot: Bot): Set<string> {
 export function lowerBot(bot: Bot, options: LowerOptions): WalScript {
   const l = new Lowerer();
   l.varTypes = new Map(bot.variables.map((v) => [v.name, v.type]));
+  (l.state.varTypes as Map<string, IRType>).clear();
+  for (const [k, v] of l.varTypes) (l.state.varTypes as Map<string, IRType>).set(k, v);
 
   // Body first: it decides which helper variables and subroutines are needed.
   l.w = new WalWriter();

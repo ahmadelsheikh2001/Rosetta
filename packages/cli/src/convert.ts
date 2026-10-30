@@ -3,7 +3,13 @@ import { join, resolve } from 'node:path';
 import { loadRegistry, registryDir } from '@rosetta/mappings';
 import { readFolder } from '@rosetta/source-a360';
 import type { StandardsProfile } from '@rosetta/standards';
-import { lowerBot, renderNotes, type WalScript } from '@rosetta/target-wal';
+import {
+  checkWal,
+  lowerBot,
+  renderNotes,
+  type WalProblem,
+  type WalScript,
+} from '@rosetta/target-wal';
 import { lookupFrom } from './assess-folder.js';
 import { ExitCode } from './exit-codes.js';
 import { convertHelp } from './help.js';
@@ -13,6 +19,8 @@ import { parse, resolveProfileFrom, UsageError, version } from './options.js';
 export interface ConvertedBot {
   readonly name: string;
   readonly script: WalScript;
+  /** Static check of the script (catalog + Studio structure rules). */
+  readonly problems: readonly WalProblem[];
 }
 
 /** Reads every bot under `input` and generates its WAL script. */
@@ -24,10 +32,10 @@ export function convertFolder(
   const registry = loadRegistry(registryDir).entries.map((e) => e.entry);
   const { bots, diagnostics } = readFolder(input, lookupFrom(registry));
   return {
-    bots: bots.map((bot) => ({
-      name: bot.name,
-      script: lowerBot(bot, { profile, generatedAt, rosettaVersion: version }),
-    })),
+    bots: bots.map((bot) => {
+      const script = lowerBot(bot, { profile, generatedAt, rosettaVersion: version });
+      return { name: bot.name, script, problems: checkWal(script.text) };
+    }),
     unreadable: diagnostics.filter((d) => d.severity === 'error').length,
   };
 }
@@ -44,11 +52,11 @@ export function renderSummary(bots: readonly ConvertedBot[], generatedAt: string
     'How to test: open each `.wal` in Studio. If it is rejected, send the line number and the exact error text.',
     'If it opens, run it and compare the result with the A360 bot. Details per bot are in `<bot>.notes.md`.',
     '',
-    '| Bot | Script | Lines | Manual | Behaviour | Syntax checks |',
-    '| --- | --- | --- | --- | --- | --- |',
+    '| Bot | Script | Lines | Static check | Manual | Behaviour | Syntax checks |',
+    '| --- | --- | --- | --- | --- | --- | --- |',
     ...bots.map(
       (b) =>
-        `| ${b.name} | [${b.script.fileName}](${b.script.fileName}) | ${b.script.text.split('\r\n').length - 1} | ${count(b, 'manual')} | ${count(b, 'semantic')} | ${count(b, 'verify')} |`,
+        `| ${b.name} | [${b.script.fileName}](${b.script.fileName}) | ${b.script.text.split('\r\n').length - 1} | ${b.problems.length === 0 ? 'OK' : `${b.problems.filter((p) => p.severity === 'error').length} errors, ${b.problems.filter((p) => p.severity === 'warning').length} warnings`} | ${count(b, 'manual')} | ${count(b, 'semantic')} | ${count(b, 'verify')} |`,
     ),
     '',
   ].join('\n');
@@ -79,11 +87,22 @@ export function convertCommand(args: readonly string[], io: Io): number {
   mkdirSync(out, { recursive: true });
   for (const b of bots) {
     writeFileSync(join(out, b.script.fileName), b.script.text);
-    writeFileSync(join(out, `${b.name}.notes.md`), renderNotes(b.script.fileName, b.script.notes));
+    writeFileSync(
+      join(out, `${b.name}.notes.md`),
+      renderNotes(b.script.fileName, b.script.notes, b.problems),
+    );
   }
   writeFileSync(join(out, 'CONVERSION.md'), renderSummary(bots, generatedAt));
   io.out(
     `Converted ${bots.length} bot(s) to ${out}${unreadable ? `; ${unreadable} file(s) could not be read` : ''}.\n` +
+      `Static check: ${
+        bots.every((b) => b.problems.length === 0)
+          ? 'no problems'
+          : bots
+              .filter((b) => b.problems.length > 0)
+              .map((b) => `${b.name} ${b.problems.length}`)
+              .join(', ')
+      }.\n` +
       'The WAL is a DRAFT: open each script in IBM RPA Studio and report any error with its line number.\n',
   );
   return ExitCode.Ok;

@@ -1,4 +1,4 @@
-import type { ActionStmt, Expr } from '@rosetta/ir';
+import type { ActionStmt, Expr, IRType } from '@rosetta/ir';
 import { pathOf, textOf, valueOf, type NoteSink } from './expr.js';
 import { quote, ref, regexLiteral } from './syntax.js';
 import type { NoteInput, WalWriter } from './writer.js';
@@ -7,6 +7,10 @@ import type { NoteInput, WalWriter } from './writer.js';
 export interface LowerState {
   /** CSV session name → file path expression, from `csv.open`. */
   readonly csvSessions: Map<string, Expr>;
+  /** Source variable types, by name. */
+  readonly varTypes: ReadonlyMap<string, IRType>;
+  /** Declares a helper variable once per key and returns its name. */
+  readonly helper: (key: string, defVar: (name: string) => string) => string;
 }
 
 type Lowerer = (a: ActionStmt, w: WalWriter, s: LowerState) => void;
@@ -50,6 +54,33 @@ function helpers(a: ActionStmt, w: WalWriter) {
 /** Writes a TODO for an action with no WAL form yet. */
 export function manual(a: ActionStmt, w: WalWriter, why: string): void {
   w.comment(`TODO [ROSETTA] ${a.op}: ${why}`, { kind: 'manual', text: `${a.op}: ${why}` });
+}
+
+/** A360 type names as written by "Log variables to file" (corpus 01, run 2). */
+const a360TypeNames: Readonly<Record<string, string>> = {
+  string: 'String',
+  number: 'Number',
+  boolean: 'Boolean',
+  datetime: 'Datetime',
+  list: 'List',
+  dict: 'Dictionary',
+  table: 'Table',
+  credential: 'Credential',
+};
+
+/**
+ * A360 log timestamp prefix, e.g. `(10/30/2026 2:06:26 PM) ` (corpus 01, run 2): the current time
+ * formatted M/d/yyyy h:mm:ss tt with en-US. Helper lines are written before the log line.
+ */
+function timestamp(w: WalWriter, s: LowerState): string {
+  const now = s.helper('logNow', (n) => `defVar --name ${n} --type DateTime`);
+  const text = s.helper('logStamp', (n) => `defVar --name ${n} --type String`);
+  w.line(`getCurrentDateAndTime --localorutc "LocalTime" ${now}=value`);
+  w.line(
+    `dateTimeToText --date "${ref(now)}" --usecustomformat --customformat "M/d/yyyy h:mm:ss tt" --culture en-US ${text}=value`,
+    doc('dateTimeToText with --culture en-US'),
+  );
+  return `(${ref(text)}) `;
 }
 
 /** `setVar` is verified in Studio (round 1). */
@@ -197,21 +228,20 @@ export const lowerers: Readonly<Record<string, Lowerer>> = {
         : []),
     );
   },
-  'file.appendText': (a, w) => {
+  'file.appendText': (a, w, s) => {
     const h = helpers(a, w);
     const notes: NoteInput[] = [
       doc('writeToFile --encoding --writeasnewline (appends unless --overwrite)'),
     ];
-    if (h.flag('appendTimestamp'))
-      notes.push(semantic('A360 prefixes the line with a timestamp; not reproduced.'));
+    const prefix = h.flag('appendTimestamp') ? timestamp(w, s) : '';
     if (h.str('logOption') !== 'APPEND_FILE')
       notes.push(semantic('A360 overwrites the file here; add --overwrite if intended.'));
     h.emit(
-      `writeToFile --value ${h.text('logContent')} --file ${pathOf(a.args.filePath ?? { kind: 'literal', value: '' }, h.sink)} --encoding "Default" --writeasnewline`,
+      `writeToFile --value ${quote(prefix + textOf(a.args.logContent ?? { kind: 'literal', value: '' }, h.sink))} --file ${pathOf(a.args.filePath ?? { kind: 'literal', value: '' }, h.sink)} --encoding "Default" --writeasnewline`,
       ...notes,
     );
   },
-  'file.appendVariables': (a, w) => {
+  'file.appendVariables': (a, w, s) => {
     const h = helpers(a, w);
     const vars = a.args.variables;
     const names =
@@ -220,12 +250,23 @@ export const lowerers: Readonly<Record<string, Lowerer>> = {
       manual(a, w, 'variable list not recognised');
       return;
     }
-    const content = names.map((n) => `${n}=${ref(n)}`).join(' | ');
+    // A360 format (corpus 01, run 2): header, empty line, one "name (Type) = value" line per
+    // variable in alphabetical order, 100 dashes.
+    const sorted = [...names].sort((x, y) => x.toLowerCase().localeCompare(y.toLowerCase()));
+    const content = [
+      'Task bot name : ${rpa:scriptName}',
+      '',
+      ...sorted.map(
+        (n) => `${n} (${a360TypeNames[s.varTypes.get(n)?.kind ?? ''] ?? 'Any'}) = ${ref(n)}`,
+      ),
+      '-'.repeat(100),
+      '',
+    ].join('\n');
     h.emit(
       `writeToFile --value ${quote(content)} --file ${pathOf(a.args.filePath ?? { kind: 'literal', value: '' }, h.sink)} --encoding "Default" --writeasnewline`,
       doc('writeToFile'),
       semantic(
-        'A360 "Log variables to file" has its own line format; written here as name=value pairs.',
+        'Same layout as A360. Differences: the bot name is the script name, not the repository path (A-23); Boolean and Datetime values are written in WAL format (A-21).',
       ),
     );
   },

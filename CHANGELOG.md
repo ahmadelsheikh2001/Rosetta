@@ -81,6 +81,16 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: Se
 - `docs/mappings/a360-to-ibm-rpa.md` (what converts, what has no equivalent),
   `docs/formats/wal-30.0.2.md`, toolbox evidence in `corpus/ibm/toolbox-30.0.2`.
 
+#### Verified in IBM RPA Studio and static check
+
+- Studio rounds 1–7: all four corpus bots convert, open and run; RR_03 matches the A360 run value for value,
+  RR_04 error handling runs in the A360 order (ADR-020 verified).
+- List items / dictionary values read with `get` (1-based) and `strDictGet`; defVars before commands;
+  subroutines at the bottom; outer `onError` restored after a nested Try.
+- A360 log formats reproduced: timestamp prefix `(M/d/yyyy h:mm:ss tt)` and the Log variables layout.
+- Static WAL checker (`checkWal`): command catalog with required parameters and allowed values, plus the
+  Studio structure rules; it finds all nine errors of round 1. `rosetta convert` reports its result per bot.
+
 ### Planned (deferred by ADR-016)
 
 - dependency-cruiser layer enforcement

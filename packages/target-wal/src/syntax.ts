@@ -70,7 +70,11 @@ export const walBoolean = (b: boolean): string => (b ? 'True' : 'False');
  * Escaping a double quote with a backslash is documented (IBM examples use `\"`).
  */
 export const quote = (text: string): string =>
-  `"${text.replaceAll(BACKSLASH, BACKSLASH + BACKSLASH).replaceAll('"', BACKSLASH + '"')}"`;
+  `"${text
+    .replaceAll(BACKSLASH, BACKSLASH + BACKSLASH)
+    .replaceAll('"', BACKSLASH + '"')
+    .replaceAll('\r', BACKSLASH + 'r')
+    .replaceAll('\n', BACKSLASH + 'n')}"`;
 
 /** Escapes text so it matches literally inside a .NET regular expression. */
 export const regexLiteral = (text: string): string =>

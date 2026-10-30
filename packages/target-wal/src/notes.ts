@@ -1,3 +1,4 @@
+import type { WalProblem } from './check.js';
 import type { WalNote } from './writer.js';
 
 const sections: readonly { kind: WalNote['kind']; title: string; intro: string }[] = [
@@ -20,8 +21,25 @@ const sections: readonly { kind: WalNote['kind']; title: string; intro: string }
 ];
 
 /** Renders the notes of one script as a Markdown checklist for the reviewer. */
-export function renderNotes(scriptName: string, notes: readonly WalNote[]): string {
+export function renderNotes(
+  scriptName: string,
+  notes: readonly WalNote[],
+  problems: readonly WalProblem[] = [],
+): string {
   const out = [`# ${scriptName}: conversion notes`, ''];
+  if (problems.length > 0) {
+    out.push(
+      '## Static check problems',
+      '',
+      'Found before Studio: fix these first.',
+      '',
+      '| Line | Severity | Problem |',
+      '| --- | --- | --- |',
+    );
+    for (const p of problems)
+      out.push(`| ${p.line} | ${p.severity} | ${p.message.replace(/\|/g, '\\|')} |`);
+    out.push('');
+  }
   out.push(
     `${notes.filter((n) => n.kind === 'manual').length} manual, ${notes.filter((n) => n.kind === 'semantic').length} behaviour, ${notes.filter((n) => n.kind === 'verify').length} syntax checks.`,
     '',
