@@ -284,9 +284,9 @@ export const walCommands: Readonly<Record<string, CommandSpec>> = {
     params: ['dataTable', 'row', 'mappings'],
     required: ['dataTable', 'row', 'mappings'],
   },
-  // Browser (corpus 09): classic web commands, documented for 30.0.x
+  // Browser (corpus 09): classic web commands; accepted by Studio 30.0.2 in round 10
   webStart: {
-    evidence: 'documented',
+    evidence: 'verified',
     params: [
       'name',
       'type',
@@ -300,18 +300,22 @@ export const walCommands: Readonly<Record<string, CommandSpec>> = {
       'username',
       'password',
     ],
-    required: ['name', 'type'],
-    enums: { type: ['Chrome', 'Edge', 'Firefox', 'InternetExplorer'] },
+    // userprofilepreferences: optional in the reference, required by Studio 30.0.2 (round 10)
+    required: ['name', 'type', 'userprofilepreferences'],
+    enums: {
+      type: ['Chrome', 'Edge', 'Firefox', 'InternetExplorer'],
+      userprofilepreferences: ['AutomationOptimized', 'UserProfileOptmized', 'StrictUserProfile'],
+    },
   },
-  webNavigate: { evidence: 'documented', params: ['url'], required: ['url'] },
+  webNavigate: { evidence: 'verified', params: ['url'], required: ['url'] },
   webSet: {
-    evidence: 'documented',
+    evidence: 'verified',
     params: ['value', 'selector', 'id', 'name', 'css', 'xpath', 'simulatehuman', 'timeout'],
     required: ['value', 'selector'],
     enums: { selector: webSelectors },
   },
   webSetComboBox: {
-    evidence: 'documented',
+    evidence: 'verified',
     params: [
       'selectoptionby',
       'value',
@@ -332,7 +336,7 @@ export const walCommands: Readonly<Record<string, CommandSpec>> = {
     enums: { selector: webSelectors },
   },
   webClick: {
-    evidence: 'documented',
+    evidence: 'verified',
     params: [
       'isdoubleclick',
       'nowait',
@@ -352,7 +356,7 @@ export const walCommands: Readonly<Record<string, CommandSpec>> = {
     required: ['selector'],
     enums: { selector: webSelectors },
   },
-  webClose: { evidence: 'documented', params: ['name', 'leavebrowseropen'], required: ['name'] },
+  webClose: { evidence: 'verified', params: ['name', 'leavebrowseropen'], required: ['name'] },
   // Base / General (corpus 08; verified in Studio rounds 8-9)
   getVaultItem: {
     evidence: 'verified',

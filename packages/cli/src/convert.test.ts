@@ -84,6 +84,7 @@ describe('conversion of the real corpus', () => {
       'webSet',
       'webSetComboBox',
       'webClick',
+      'webClose',
     ]);
     for (const b of bots) {
       for (const line of b.script.text.split('\r\n')) {
@@ -233,7 +234,13 @@ describe('conversion of the real corpus', () => {
 
   it('converts the browser form of sample 09: CSV rows into web fields by id', () => {
     const lines = (bots.find((b) => b.name === '09-web-form')?.script.text ?? '').split('\r\n');
-    expect(lines).toContain('webStart --name browser --type "Chrome"');
+    expect(lines).toContain(
+      'webStart --name browser --type "Chrome" --userprofilepreferences "AutomationOptimized"',
+    );
+    // Studio round 10: every webStart is closed; A360 leaves the browser open
+    expect(lines.filter((l) => l.startsWith('webClose '))).toEqual([
+      'webClose --name browser --leavebrowseropen',
+    ]);
     const read = lines.findIndex((l) => l.startsWith('readCSV '));
     expect(lines[read]).toContain('"C:\\\\RosettaTest\\\\customer-onboarding-challenge.csv"');
     expect(lines[read]).toContain('--hasheaders');

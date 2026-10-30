@@ -26,7 +26,7 @@ defVar --name rosettaTable1 --type DataTable
 defVar --name rosettaIndex2 --type Numeric
 // ---- open Exel and  red data  ----
 // CSV session "Default" opened here; WAL reads the file in one step (readCSV) below.
-webStart --name browser --type "Chrome"
+webStart --name browser --type "Chrome" --userprofilepreferences "AutomationOptimized"
 webNavigate --url "https://example.com/customer-onboarding.html"
 // ---- loop and insert data ----
 readCSV --filepath "C:\\RosettaTest\\customer-onboarding-challenge.csv" --delimiter "," --hasheaders rosettaTable1=value
@@ -54,3 +54,4 @@ webClick --selector "Id" --id "submit_button" --timeout "00:00:15"
 next
 // ---- close csv file  ----
 // CSV session "Default" closed here; WAL keeps no file open (readCSV).
+webClose --name browser --leavebrowseropen

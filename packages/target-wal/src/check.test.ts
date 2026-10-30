@@ -74,6 +74,18 @@ describe('checkWal', () => {
     ]);
   });
 
+  it('reports what Studio reported for webStart in round 10', () => {
+    expect(messages('webStart --name browser --type "Chrome"')).toEqual([
+      '1: webStart requires --userprofilepreferences.',
+      "1: Command 'webStart' must be closed with 'webClose' (round 10).",
+    ]);
+    const ok = [
+      'webStart --name browser --type "Chrome" --userprofilepreferences "AutomationOptimized"',
+      'webClose --name browser --leavebrowseropen',
+    ].join('\r\n');
+    expect(messages(ok)).toEqual([]);
+  });
+
   it('reports anything between subroutine blocks (round 3)', () => {
     expect(
       messages(

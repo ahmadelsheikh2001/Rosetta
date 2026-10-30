@@ -83,6 +83,7 @@ class Lowerer {
     excelSessions: new Map(),
     varTypes: new Map(),
     vaultCredentials: new Map(),
+    browsers: new Set(),
     helper: (key, defVar) => {
       const known = this.sharedHelpers.get(key);
       if (known) return known;
@@ -794,6 +795,13 @@ export function lowerBot(bot: Bot, options: LowerOptions): WalScript {
   // Body first: it decides which helper variables and subroutines are needed.
   l.w = new WalWriter();
   l.block(bot.body);
+  // Studio wants every webStart closed (round 10); A360 leaves the browser open, so does this.
+  for (const name of l.state.browsers)
+    l.w.line(`webClose --name ${name} --leavebrowseropen`, {
+      kind: 'verify',
+      assumption: 'W-18',
+      text: 'webClose --leavebrowseropen (Close Browser)',
+    });
   const body = l.w;
 
   const out = new WalWriter();

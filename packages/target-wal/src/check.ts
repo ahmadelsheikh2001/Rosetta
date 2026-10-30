@@ -94,6 +94,10 @@ export function checkWal(text: string): WalProblem[] {
   let seenCommand = false;
   let seenSub = false;
   let insideSub = false;
+  /** Line of the first webStart, and whether any webClose follows. */
+  let startedBrowser: number | undefined;
+  // widened: it is set inside the line callback, which narrowing does not follow
+  let closedBrowser = false as boolean;
   /** Declared variable types, from defVar. */
   const types = new Map<string, string>();
 
@@ -108,6 +112,8 @@ export function checkWal(text: string): WalProblem[] {
       return;
     }
     const { verb, params } = parsed;
+    if (verb === 'webStart') startedBrowser ??= n;
+    if (verb === 'webClose') closedBrowser = true;
 
     // structure (rounds 2 and 3)
     if (verb === 'defVar') {
@@ -214,6 +220,9 @@ export function checkWal(text: string): WalProblem[] {
     }
   });
 
+  // Studio 30.0.2 warns when a webStart is never closed with webClose (round 10).
+  if (startedBrowser !== undefined && !closedBrowser)
+    add(startedBrowser, 'warning', "Command 'webStart' must be closed with 'webClose' (round 10).");
   for (const open of stack)
     add(open.line, 'error', `${open.opener} is never closed (${blocks[open.opener] ?? ''}).`);
   for (const c of calls) {

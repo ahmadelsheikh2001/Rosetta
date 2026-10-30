@@ -13,6 +13,8 @@ export interface LowerState {
   readonly varTypes: ReadonlyMap<string, IRType>;
   /** Credential variables backed by the A360 vault → credential name. */
   readonly vaultCredentials: ReadonlyMap<string, string>;
+  /** Browser instances started with webStart; each needs a webClose (Studio round 10). */
+  readonly browsers: Set<string>;
   /** Declares a helper variable once per key and returns its name. */
   readonly helper: (key: string, defVar: (name: string) => string) => string;
 }
@@ -427,14 +429,19 @@ export const lowerers: Readonly<Record<string, Lowerer>> = {
     w.comment(`CSV session "${sessionName(a)}" closed here; WAL keeps no file open (readCSV).`);
   },
   // Browser and Recorder (corpus 09). Classic web commands: the Smart Web commands need 30.0.3.
-  'browser.open': (a, w) => {
+  'browser.open': (a, w, s) => {
     const h = helpers(a, w);
     const type = browserTypes[h.str('browser') ?? ''];
     if (!type) {
       manual(a, w, `browser ${h.str('browser') ?? '?'} not supported`);
       return;
     }
-    h.emit(`webStart --name browser --type "${type}"`, doc('webStart (Start Browser)'));
+    s.browsers.add('browser');
+    // --userprofilepreferences is required by Studio although documented as optional (round 10).
+    h.emit(
+      `webStart --name browser --type "${type}" --userprofilepreferences "AutomationOptimized"`,
+      doc('webStart (Start Browser)'),
+    );
     h.emit(`webNavigate --url ${h.text('url')}`, doc('webNavigate'));
   },
   'ui.capture': (a, w) => {
