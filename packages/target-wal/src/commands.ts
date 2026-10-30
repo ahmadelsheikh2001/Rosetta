@@ -11,6 +11,8 @@ export interface LowerState {
   readonly excelSessions: Map<string, ExcelSession>;
   /** Source variable types, by name. */
   readonly varTypes: ReadonlyMap<string, IRType>;
+  /** Credential variables backed by the A360 vault → credential name. */
+  readonly vaultCredentials: ReadonlyMap<string, string>;
   /** Declares a helper variable once per key and returns its name. */
   readonly helper: (key: string, defVar: (name: string) => string) => string;
 }
@@ -468,12 +470,19 @@ export const lowerers: Readonly<Record<string, Lowerer>> = {
         : []),
     );
   },
-  'credential.assign': (a, w) => {
+  'credential.assign': (a, w, s) => {
+    // setVar does not accept SecureString variables (Studio round 8), and WAL has no other way
+    // to copy one. A copy of a vault credential is read from the vault again instead.
     const h = helpers(a, w);
-    h.emit(assignment(h.out(), h.val('stringVar')), {
-      kind: 'verify',
-      assumption: 'W-18',
-      text: 'Copies one SecureString to another with setVar; confirm Studio accepts it.',
+    const src = a.args.stringVar;
+    const credential = src?.kind === 'var' ? s.vaultCredentials.get(src.name) : undefined;
+    if (!credential) {
+      manual(a, w, 'WAL cannot copy a SecureString (setVar rejects it); read it from the vault');
+      return;
+    }
+    h.emit(`getVaultItem --name ${quote(credential)} ${h.out()}=password`, {
+      kind: 'semantic',
+      text: `A360 copies ${src?.kind === 'var' ? src.name : 'the credential'}; WAL reads the same vault credential again (setVar rejects SecureString, round 8).`,
     });
   },
 };

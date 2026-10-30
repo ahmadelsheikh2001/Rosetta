@@ -18,6 +18,6 @@ defVar --name vCopyCred --type SecureString
 getVaultItem --name "DummyLogin" vPassword=password
 getVaultItem --name "DummyLogin" vCopyCred=password
 executeScript --name "RR_08_Child" --parameters "{\"inName\":\"Test User\"}" --output "{\"outGreeting\":\"${vResult}\"}"
-setVar --name "${vCopyCred}" --value "${vPassword}"
+getVaultItem --name "DummyLogin" vCopyCred=password
 setVar --name "${vHardcoded}" --value "NotARealPassword1"
 messageBox --title "Automation Anywhere Enterprise Client" --text "Result: ${vResult}" --icon "Information" --buttons "OK" --defaultbutton "FirstButton"

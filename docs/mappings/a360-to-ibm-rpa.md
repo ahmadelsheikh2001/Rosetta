@@ -44,7 +44,7 @@ sources: [`docs/formats/wal-30.0.2.md`](../formats/wal-30.0.2.md).
 | Excel_MS / CloseSpreadsheet          | Close Excel                           | `excelClose`                          | Documented                                   | `--save` when A360 saves on close or saved earlier                                                                    |
 | Loop + `loop.iterators.excel`        | Get Excel Table + For + Map Table Row | `excelGetTable`, `for`, `mapTableRow` | Documented                                   | Sheet read once before the loop; one String variable per column read (`vRow_Name`); mapping by column name to confirm |
 | TaskBot / runTask                    | Execute Script                        | `executeScript`                       | Documented                                   | `--name "<child bot>"`, inputs/outputs as JSON; publish the child under that name (noted)                             |
-| Credential / assignToCV              | Assign Variable                       | `setVar`                              | Documented                                   | SecureString to SecureString, to confirm                                                                              |
+| Credential / assignToCV              | Get Vault Item                        | `getVaultItem`                        | Round 8                                      | `setVar` rejects SecureString (round 8): a copy of a vault credential is read from the vault again; otherwise manual  |
 
 ## Control flow
 

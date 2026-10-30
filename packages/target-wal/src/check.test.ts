@@ -62,6 +62,18 @@ describe('checkWal', () => {
     ]);
   });
 
+  it('reports setVar on SecureString variables, as Studio did in round 8', () => {
+    const text = [
+      'defVar --name a --type SecureString',
+      'defVar --name b --type SecureString',
+      'setVar --name "${b}" --value "${a}"',
+    ].join('\r\n');
+    expect(messages(text)).toEqual([
+      '3: setVar does not accept the SecureString variable b (round 8).',
+      '3: setVar does not accept the SecureString variable a (round 8).',
+    ]);
+  });
+
   it('reports anything between subroutine blocks (round 3)', () => {
     expect(
       messages(

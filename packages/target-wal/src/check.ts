@@ -159,6 +159,11 @@ export function checkWal(text: string): WalProblem[] {
       const target = /^\$\{(\w+)\}$/.exec(unquote(params.get('name') ?? ''))?.[1];
       const value = params.get('value');
       const type = target ? types.get(target) : undefined;
+      const source = /^"?\$\{(\w+)\}"?$/.exec(typeof value === 'string' ? value : '')?.[1];
+      for (const v of [target, source]) {
+        if (v && types.get(v) === 'SecureString')
+          add(n, 'error', `setVar does not accept the SecureString variable ${v} (round 8).`);
+      }
       if (
         (type === 'Numeric' || type === 'Boolean') &&
         typeof value === 'string' &&

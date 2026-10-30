@@ -82,6 +82,7 @@ class Lowerer {
     csvSessions: new Map(),
     excelSessions: new Map(),
     varTypes: new Map(),
+    vaultCredentials: new Map(),
     helper: (key, defVar) => {
       const known = this.sharedHelpers.get(key);
       if (known) return known;
@@ -753,6 +754,12 @@ export function lowerBot(bot: Bot, options: LowerOptions): WalScript {
   l.recordFields = recordFields(bot);
   (l.state.varTypes as Map<string, IRType>).clear();
   for (const [k, v] of l.varTypes) (l.state.varTypes as Map<string, IRType>).set(k, v);
+  for (const v of bot.variables) {
+    const d = v.defaultValue;
+    const name = d?.kind === 'call' && d.fn === 'credential.vault' ? d.args[1] : undefined;
+    if (name?.kind === 'literal' && name.value !== null)
+      (l.state.vaultCredentials as Map<string, string>).set(v.name, String(name.value));
+  }
 
   // Body first: it decides which helper variables and subroutines are needed.
   l.w = new WalWriter();
