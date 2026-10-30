@@ -10,8 +10,9 @@ import type { Diagnostic, Severity, SourceRef } from '@rosetta/ir';
 import { en, translate, type Catalog, type MessageId } from './catalog.js';
 import { anchor, esc } from './escape.js';
 import { fontFaceCss } from './fonts.js';
+import { logoDataUri, logoHeight } from './logo.js';
 import { icon } from './icons.js';
-import { reportCss } from './styles.js';
+import { LOGO_WIDTH, reportCss } from './styles.js';
 
 export interface RenderOptions {
   readonly catalog?: Catalog;
@@ -216,7 +217,7 @@ ${reportCss()}
 </head>
 <body>
 <header class="masthead"><div class="wrap">
-  <div class="logo-space"><div class="logo-placeholder" role="img" aria-label="${t('report.logoPlaceholder')}">${t('report.logoPlaceholder')}</div></div>
+  <div class="logo-space"><img class="logo" src="${logoDataUri('white')}" alt="${t('report.logoAlt')}" width="${LOGO_WIDTH}" height="${logoHeight(LOGO_WIDTH)}"></div>
   <div class="titles"><span class="product">${t('report.product')} · ${t('report.title')}</span><span class="subtitle">${t('report.subtitle')}</span></div>
 </div></header>
 ${banner}

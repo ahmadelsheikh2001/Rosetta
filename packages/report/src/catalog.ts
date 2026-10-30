@@ -8,7 +8,7 @@ export const en = {
   'report.product': 'RPA Rosetta',
   'report.subtitle': 'Automation Anywhere A360 → IBM RPA',
   'report.generated': 'Generated {date} · profile {profile} v{version}',
-  'report.logoPlaceholder': 'Valleysoft logo',
+  'report.logoAlt': 'Valleysoft',
   'report.synthetic.title': 'Synthetic data',
   'report.synthetic.body':
     'This report was rendered from hand-built sample data to review the design. None of the bots, numbers or findings are real.',

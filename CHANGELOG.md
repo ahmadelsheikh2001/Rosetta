@@ -103,6 +103,11 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: Se
   variable per column read; Run Task Bot as `executeScript` with JSON inputs/outputs; vault
   credentials read with `getVaultItem`, never written as values.
 
+#### Brand
+
+- Official Valleysoft logo files (transparent PNG, B-05) in `packages/report/assets/logo`; the report
+  masthead shows the white logo, embedded so the report stays offline.
+
 ### Planned (deferred by ADR-016)
 
 - dependency-cruiser layer enforcement

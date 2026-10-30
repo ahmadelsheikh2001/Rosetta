@@ -48,10 +48,7 @@ a { color: var(--color-accent); }
 .masthead { background: var(--vs-oxford-blue); color: var(--vs-white); }
 .masthead .wrap { display: flex; align-items: center; gap: 24px; padding-top: 8px; padding-bottom: 8px; flex-wrap: wrap; }
 .logo-space { padding: var(--logo-clear); }
-.logo-placeholder {
-  width: var(--logo-width); height: 40px; display: flex; align-items: center; justify-content: center;
-  border: 1px dashed var(--vs-white); color: var(--vs-white); font-size: var(--font-size-xs);
-}
+.logo { display: block; width: var(--logo-width); height: auto; }
 .masthead .titles { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 .masthead .product { font-family: var(--font-headline); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; font-size: var(--font-size-lg); overflow-wrap: anywhere; }
 .masthead .subtitle { font-size: var(--font-size-xs); opacity: 0.85; }
