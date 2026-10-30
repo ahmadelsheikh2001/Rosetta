@@ -20,10 +20,10 @@ defVar --name vDate --type DateTime
 defVar --name vParts --type List --innertype String
 defVar --name vList --type List --innertype String --value "[Alpha,Beta]"
 defVar --name vDict --type StringDictionary --innertype String
-// ---- Initial values of dictionaries ----
-strDictAdd --key "name" --value "Test User" --dictionary ${vDict}
 // ---- Helper variables added by the conversion ----
 defVar --name rosettaMachineName --type String
+// ---- Initial values ----
+strDictAdd --key "name" --value "Test User" --dictionary ${vDict}
 getEnvVar --name COMPUTERNAME --target "Process" rosettaMachineName=value
 // ---- String operations ----
 setVar --name "${vOut}" --value "Prefix-${vText}-${vNumStr}-Suffix"
@@ -38,7 +38,7 @@ getStringLength --text "${vText}" vLen=value
 // ---- Conversions and dates ----
 // RR_03: number/string conversions and datetime add + custom format
 convertStringToNumber --text "${vNumStr}" --allowleadingsign --allowdecimalpoint --culture en-US vNum=value
-convertNumberToText --number ${vNum} --conversiontype "Number" --decimals 0 vOut=value
+convertNumberToText --number ${vNum} --conversiontype "SimpleNumber" --decimals 0 vOut=value
 getCurrentDateAndTime --localorutc "LocalTime" vDate=value
 addToDateTime --date "${vDate}" --value 7 --type "Days" vDate=value
 dateTimeToText --date "${vDate}" --usecustomformat --customformat "dd/MM/yyyy" vDateStr=value

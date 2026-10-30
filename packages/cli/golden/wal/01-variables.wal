@@ -17,7 +17,7 @@ defVar --name vList --type List --innertype String --value "[Alpha,Beta]"
 defVar --name vDict --type StringDictionary --innertype String
 defVar --name vTable --type DataTable
 defVar --name vCred --type SecureString
-// ---- Initial values of dictionaries ----
+// ---- Initial values ----
 strDictAdd --key "name" --value "Test User" --dictionary ${vDict}
 strDictAdd --key "city" --value "Test City" --dictionary ${vDict}
 // ---- Assign new values ----

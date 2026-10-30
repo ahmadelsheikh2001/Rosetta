@@ -88,6 +88,19 @@ describe('conversion of the real corpus', () => {
     }
   });
 
+  it('declares every variable before the first command (round 2)', () => {
+    for (const b of bots) {
+      const commands = b.script.text.split('\r\n').filter((l) => l !== '' && !l.startsWith('//'));
+      const firstCommand = commands.findIndex((l) => !l.startsWith('defVar '));
+      const lastDefVar = commands.map((l) => l.startsWith('defVar ')).lastIndexOf(true);
+      expect(lastDefVar, b.name).toBeLessThan(firstCommand === -1 ? Infinity : firstCommand);
+    }
+  });
+
+  it('uses option values Studio accepts (round 2: conversiontype "Number" rejected)', () => {
+    for (const b of bots) expect(b.script.text, b.name).not.toContain('--conversiontype "Number"');
+  });
+
   it('writes no unescaped backslash in a quoted value (round 1: backslash escapes)', () => {
     for (const b of bots) {
       for (const line of b.script.text.split('\r\n')) {

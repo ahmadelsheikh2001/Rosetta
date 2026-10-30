@@ -370,7 +370,7 @@ class Lowerer {
     }
   }
 
-  variables(vars: readonly Variable[]): void {
+  variables(vars: readonly Variable[]): (() => void)[] {
     const w = this.w;
     const init: (() => void)[] = [];
     for (const v of vars) {
@@ -450,10 +450,9 @@ class Lowerer {
       if (v.direction === 'output' || v.direction === 'inout') line += ' --output';
       w.line(line, ...notes);
     }
-    if (init.length) {
-      w.comment('---- Initial values of dictionaries ----');
-      for (const f of init) f();
-    }
+    // Studio requires every defVar before the first command (round 2), so the commands that
+    // fill initial values are returned and written after all declarations.
+    return init;
   }
 }
 
@@ -497,15 +496,20 @@ export function lowerBot(bot: Bot, options: LowerOptions): WalScript {
   out.comment('='.repeat(70));
 
   l.w = out;
-  l.variables(bot.variables);
+  const init = l.variables(bot.variables);
   const system = [...systemNames(bot)].flatMap((n) => systemValues[n]?.init ?? []);
   const helperDefs = [...l.helperVars, ...system.filter((x) => x.startsWith('defVar'))];
   if (helperDefs.length) {
     out.comment('---- Helper variables added by the conversion ----');
     for (const d of helperDefs) out.line(d);
   }
-  for (const cmd of system.filter((x) => !x.startsWith('defVar')))
-    out.line(cmd, docNote(cmd.split(' ')[0] ?? ''));
+  // Every defVar is above this point: Studio rejects a defVar after a command (round 2).
+  const startup = system.filter((x) => !x.startsWith('defVar'));
+  if (init.length || startup.length) {
+    out.comment('---- Initial values ----');
+    for (const f of init) f();
+    for (const cmd of startup) out.line(cmd);
+  }
 
   out.append(body);
   if (l.subs.length) {

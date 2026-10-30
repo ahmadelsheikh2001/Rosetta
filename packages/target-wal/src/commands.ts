@@ -113,8 +113,8 @@ export const lowerers: Readonly<Record<string, Lowerer>> = {
   'number.toString': (a, w) => {
     const h = helpers(a, w);
     h.emit(
-      `convertNumberToText --number ${h.num('input')} --conversiontype "Number" --decimals ${h.val('numFormatDigits')} ${h.out()}=value`,
-      doc('convertNumberToText (conversion type "Number")'),
+      `convertNumberToText --number ${h.num('input')} --conversiontype "SimpleNumber" --decimals ${h.val('numFormatDigits')} ${h.out()}=value`,
+      doc('convertNumberToText (conversion type "SimpleNumber")'),
     );
   },
   'string.toNumber': (a, w) => {
