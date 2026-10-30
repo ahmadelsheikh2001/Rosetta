@@ -35,6 +35,7 @@ beginSub --name Try1
 onError --label Catch1
 setVar --name "${rosettaTry2Failed}" --value False
 goSub --label Try2
+onError --label Catch1
 if --left "${rosettaTry1Failed}" --operator "Is_True"
 return
 endIf

@@ -181,6 +181,13 @@ describe('lowerBot', () => {
     expect(lines.indexOf('// cleanup')).toBe(lines.indexOf('goSub --label Try1') + 2);
   });
 
+  it('restores the outer error handler after a nested Try returns (round 5)', () => {
+    const inner = tryCatch([action('vendor:a360/X/y')], [{ body: [] }]);
+    const lines = body(bot('b', [tryCatch([inner, action('vendor:a360/X/z')], [{ body: [] }])]));
+    const call = lines.indexOf('goSub --label Try2');
+    expect(lines[call + 1]).toBe('onError --label Catch1');
+  });
+
   it('ends every error handler with recover and never returns from it', () => {
     const inner = tryCatch(
       [action('vendor:a360/X/y')],

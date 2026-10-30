@@ -80,6 +80,8 @@ class Lowerer {
   private readonly loops: (string | undefined)[] = [];
   /** "failed" flags of the protected blocks being written, innermost last. */
   private readonly guards: string[] = [];
+  /** Error handlers (onError labels) of the protected blocks being written, innermost last. */
+  private readonly handlers: string[] = [];
   private tries = 0;
   private helpers = 0;
   /** Source variable types, to choose get vs strDictGet. */
@@ -372,6 +374,12 @@ class Lowerer {
 
     main.line(`setVar --name "${ref(flag)}" --value False`);
     main.line(`goSub --label ${trySub}`, docNote('goSub / beginSub / endSub'));
+    const outerHandler = this.handlers.at(-1);
+    if (outerHandler && !main.inComment) {
+      // The inner onError replaced the outer one (Studio round 5: the outer Catch did not run);
+      // restore it for the rest of the enclosing Try.
+      main.line(`onError --label ${outerHandler}`);
+    }
 
     // Try subroutine
     const tryW = new WalWriter();
@@ -383,9 +391,13 @@ class Lowerer {
     if (s.catches.length > 0) {
       tryW.line(`onError --label ${catchSub}`, docNote('onError --label (Handle Error)'));
       this.guards.push(flag);
+      this.handlers.push(catchSub);
     }
     this.block(s.body);
-    if (s.catches.length > 0) this.guards.pop();
+    if (s.catches.length > 0) {
+      this.guards.pop();
+      this.handlers.pop();
+    }
     tryW.line('endSub');
 
     // Catch subroutine
