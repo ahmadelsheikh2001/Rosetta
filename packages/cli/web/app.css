@@ -120,7 +120,14 @@ a {
 main .wrap {
   padding: 32px 24px 64px;
   display: grid;
+  /* minmax(0, 1fr): long script lines scroll inside their box, never the page */
+  grid-template-columns: minmax(0, 1fr);
   gap: 24px;
+}
+.card,
+.bot,
+.panel {
+  min-width: 0;
 }
 .intro h1 {
   font-size: 1.9rem;
