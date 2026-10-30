@@ -65,4 +65,15 @@ Variables:
 
 ## Run result
 
-Not run yet. **Expected**: a message box `Result: Hello Test User`.
+### Run 1 (2026-10-30, A360 Community Edition)
+
+RR_08_Parent ran to the end. Message box (title "Automation Anywhere Enterprise Client",
+heading "Message from bot"):
+
+```
+Result: Hello Test User
+```
+
+The child received `inName` and its `outGreeting` came back into `vResult`. Reading the vault
+credential did not fail (its value is never shown). The screenshot is not kept: the text above
+is all it shows.

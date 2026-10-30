@@ -45,5 +45,23 @@ Excel_MS 6.23.20 (shown as "Excel advanced"); LogToFile 3.11.1; Loop 3.10.0-2025
 
 ## Run result
 
-Not run yet. **Expected** `log.txt` lines: `Name=Alice Amount=100`, `Name=Bob Amount=200`,
-`Name=Carol Amount=300`, and `input.xlsx` with `Done` in C1.
+### Run 1 (2026-10-30, A360 Community Edition)
+
+`C:\RosettaTest\log.txt` as delivered:
+
+```
+Name=Alice Amount=100
+Name=Bob Amount=200
+Name=Carol Amount=300
+Name=Alice Amount=100
+Name=Bob Amount=200
+Name=Carol Amount=300
+```
+
+Findings:
+
+- The header row is skipped (`containsHeader` true) and columns are read by header name.
+- Numbers come back as their visible text (`100`, not `100.0`): READ_CELL_TEXT.
+- The three rows appear twice. The log appends (`APPEND_FILE`), so this is most likely two runs;
+  to confirm with an empty `log.txt`. If one run wrote six lines, the loop ran twice.
+- `Done` in C1 of `input.xlsx`: not reported yet.
