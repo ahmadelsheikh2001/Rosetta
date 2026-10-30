@@ -7,7 +7,8 @@ import { ProfileError } from '@rosetta/standards';
 import { assessFolder } from './assess-folder.js';
 import { ExitCode } from './exit-codes.js';
 import { convertCommand } from './convert.js';
-import { assessHelp, convertHelp, mainHelp, previewHelp } from './help.js';
+import { assessHelp, convertHelp, mainHelp, previewHelp, serveHelp } from './help.js';
+import { serveCommand } from './serve.js';
 import type { Io } from './io.js';
 import { parse, resolveProfileFrom, UsageError, version } from './options.js';
 
@@ -109,7 +110,9 @@ export function run(args: readonly string[], io: Io): number {
               ? previewHelp
               : topic === 'convert'
                 ? convertHelp
-                : mainHelp,
+                : topic === 'serve'
+                  ? serveHelp
+                  : mainHelp,
         );
         return ExitCode.Ok;
       }
@@ -123,6 +126,8 @@ export function run(args: readonly string[], io: Io): number {
         return previewReport(rest, io);
       case 'convert':
         return convertCommand(rest, io);
+      case 'serve':
+        return serveCommand(rest, io);
       default:
         throw new UsageError(`unknown command "${command}"`);
     }

@@ -65,6 +65,9 @@ importers:
       '@rosetta/assessment':
         specifier: workspace:*
         version: link:../assessment
+      '@rosetta/design-tokens':
+        specifier: workspace:*
+        version: link:../design-tokens
       '@rosetta/expr':
         specifier: workspace:*
         version: link:../expr

@@ -108,6 +108,13 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: Se
 - Official Valleysoft logo files (transparent PNG, B-05) in `packages/report/assets/logo`; the report
   masthead shows the white logo, embedded so the report stays offline.
 
+#### Web UI (ADR-021)
+
+- `rosetta serve` (`pnpm ui`): local web UI on 127.0.0.1. Choose the conversion, upload A360 bot
+  files, convert, then view each IBM RPA script with line numbers and its notes, download the
+  scripts, notes, a ZIP of everything, or open the assessment report. Files never leave the
+  computer: local-only binding, Host check, JSON-only API, strict Content-Security-Policy.
+
 ### Planned (deferred by ADR-016)
 
 - dependency-cruiser layer enforcement

@@ -29,5 +29,10 @@ export default defineConfig(
     files: ['**/*.js', '**/*.mjs'],
     extends: [tseslint.configs.disableTypeChecked],
   },
+  {
+    // Browser code of the web UI (rosetta serve)
+    files: ['packages/cli/web/**/*.js'],
+    languageOptions: { globals: globals.browser, sourceType: 'script' },
+  },
   prettier,
 );

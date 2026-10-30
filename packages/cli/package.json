@@ -12,10 +12,12 @@
     }
   },
   "files": [
-    "dist"
+    "dist",
+    "web"
   ],
   "dependencies": {
     "@rosetta/assessment": "workspace:*",
+    "@rosetta/design-tokens": "workspace:*",
     "@rosetta/expr": "workspace:*",
     "@rosetta/ir": "workspace:*",
     "@rosetta/mappings": "workspace:*",

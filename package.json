@@ -21,6 +21,7 @@
     "scan:corpus": "node scripts/scan-corpus.mjs --all",
     "prepare": "husky",
     "rosetta": "node packages/cli/dist/main.js",
+    "ui": "node packages/cli/dist/main.js serve",
     "preview:report": "tsc -b && node packages/cli/dist/main.js preview-report"
   },
   "devDependencies": {

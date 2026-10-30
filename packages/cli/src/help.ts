@@ -7,6 +7,7 @@ Commands:
   assess <input-dir>     Assess a folder of A360 exports and write the report
   convert <input-dir>    Convert A360 bots to DRAFT IBM RPA WAL scripts
   preview-report         Render the report from SYNTHETIC data, to review the design
+  serve                  Start the web UI on this computer (upload, convert, download)
   help [command]         Show help for a command
 
 Options:
@@ -58,6 +59,19 @@ The WAL syntax is a DRAFT until verified in IBM RPA Studio 30.0.2.
 
 Options:
   --out <dir>               Output folder (default: ./rosetta-wal)
+${profileOptions}
+  -h, --help                Show this help
+`;
+
+export const serveHelp = `rosetta serve [options]
+
+Starts the web UI on this computer: choose the source and target platform,
+upload bot files, convert them and download the IBM RPA scripts, their notes
+and the assessment report. It listens on 127.0.0.1 only, so the files never
+leave this computer.
+
+Options:
+  --port <n>                Port (default: 4173; 0 picks a free one)
 ${profileOptions}
   -h, --help                Show this help
 `;
