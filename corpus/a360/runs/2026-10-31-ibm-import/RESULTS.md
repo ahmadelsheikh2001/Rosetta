@@ -38,3 +38,29 @@ Findings and fixes (commit after this file):
 - RR_08_Child asked for `inName` without a default; the generator now writes `""` for STRING
   variables without a value, as the original does.
 - The message box of RR_IBM_01 was closed on the Bot Agent desktop; its text is not recorded.
+
+## Re-test with the regenerated files (commit ad1d324)
+
+All four uploads returned HTTP 200 and were stored byte for byte (01: 7,116 bytes, 02: 12,518,
+03: 10,217, RR_08_Child: 1,121).
+
+| Target bot                    | Editor                       | Run                                  |
+| ----------------------------- | ---------------------------- | ------------------------------------ |
+| RR_IBM_01-variables           | 14 lines, no markers         | success; message box text as below   |
+| RR_IBM_02-control-flow        | 29 lines, no markers         | success                              |
+| RR_IBM_03-strings-expressions | 22 lines, no markers         | success; message box text as below   |
+| RR_IBM_RR_08_Child            | 1 line, no markers           | success; input uses its default `""` |
+
+All four converted bots open without markers and run to completion. Round trip A360 → IBM RPA →
+A360 is confirmed in a real Control Room for 01, 02, 03 and RR_08_Child.
+
+- 01 message box, read on the Bot Agent desktop by the user, matches the original A360 bot:
+  `vStr=Updated Test User | vNum=105 | vBool=false | first item=Alpha | name=Test User`.
+- 02: the "For each key in the dictionary" loop is accepted; the errors on lines 23 and 24 are gone.
+- 03: no deploy error now that the `System` package is declared; `$System:Date$` (line 15) and
+  `$System:AAControlRoom$` (line 20) both resolve. Message box (machine name and Control Room URL
+  removed): `part0=Hello | list1=Beta | name=Test User | date=07/11/2026 | len=18 | idx=7 |
+out=Machine=<machine> | Bot=\Bots\RPA_Rosetta_Samples\RR_IBM_03-strings-expressions | CR=<url>`.
+  `$System:AATaskName$` gives the full repository path, as in the original A360 bot.
+- An earlier 01 run, left waiting at its message box, was aborted by the Control Room after about
+  30 minutes (RUN_ABORTED); the run that counts is the later one.
