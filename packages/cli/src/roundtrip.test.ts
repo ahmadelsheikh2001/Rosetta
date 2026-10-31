@@ -4,7 +4,7 @@ import { loadRegistry, registryDir } from '@rosetta/mappings';
 import { readFolder } from '@rosetta/source-a360';
 import { readWal } from '@rosetta/source-wal';
 import { defaultProfile } from '@rosetta/standards';
-import { generateA360 } from '@rosetta/target-a360';
+import { checkA360, generateA360 } from '@rosetta/target-a360';
 import { lowerBot } from '@rosetta/target-wal';
 import { describe, expect, it } from 'vitest';
 import { lookupFrom } from './assess-folder.js';
@@ -58,7 +58,7 @@ describe('round trip A360 → IBM RPA → A360', () => {
   // share of the original command tree found again; the rest is listed in the notes
   const expected: Record<string, number> = {
     '01-variables': 1,
-    '02-control-flow': 26 / 27, // the folder loop has no WAL form yet (ADR-019 notes)
+    '02-control-flow': 25 / 27, // the folder loop and its body have no WAL form yet
     '03-strings-expressions': 1,
     RR_08_Child: 1,
   };
@@ -81,6 +81,8 @@ describe('round trip A360 → IBM RPA → A360', () => {
       return true;
     }).length;
     expect(matched / original.length).toBeGreaterThanOrEqual(expected[name] ?? 1);
+    // what the A360 editor and compiler rejected in the import test must not come back
+    expect(checkA360(result.json)).toEqual([]);
     await expect(`${JSON.stringify(result.json, null, 2)}\n`).toMatchFileSnapshot(
       `../golden/a360/${name}.json`,
     );

@@ -6,3 +6,4 @@ export {
   type A360Note,
 } from './generate.js';
 export { exprText } from './values.js';
+export { checkA360, type A360Problem } from './check.js';

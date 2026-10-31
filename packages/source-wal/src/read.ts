@@ -98,6 +98,8 @@ interface Line {
 class Reader {
   readonly diagnostics: Diagnostic[] = [];
   readonly variables: Variable[] = [];
+  /** WAL type name of each declared variable (`StringKeyValuePair` has no IR type of its own). */
+  readonly walTypes = new Map<string, string>();
   private readonly subs = new Map<string, Line[]>();
   private readonly inlining: string[] = [];
 
@@ -202,6 +204,7 @@ class Reader {
             }
           : walValue(value);
     }
+    this.walTypes.set(name, typeName);
     this.variables.push({
       name,
       type,
@@ -385,13 +388,44 @@ class Parser {
             ...unknown(this.r, n, line.text, 'foreach without a variable'),
             body,
           } as Statement;
+        const source = walValue(cmd.params.get('collection') ?? '""');
+        if (this.r.walTypes.get(item.name) === 'StringKeyValuePair') {
+          // A foreach over a StringDictionary yields key-value entries. When the body starts by
+          // taking the entry's key (`setVar --name "${k}" --value "${entry.Key}"`, as RPA Rosetta
+          // writes an A360 dictionary-keys loop), it is a loop over the keys.
+          const [first, ...rest] = body;
+          const value = first?.kind === 'action' ? first.args.value : undefined;
+          const key =
+            first?.kind === 'action' && first.op === 'vendor:ibm-rpa/setVar'
+              ? first.args.name
+              : undefined;
+          const takesKey =
+            value?.kind === 'var' &&
+            value.name === item.name &&
+            value.path.length === 1 &&
+            value.path[0]?.kind === 'key' &&
+            JSON.stringify(value.path[0].key) === JSON.stringify({ kind: 'literal', value: 'Key' });
+          if (takesKey && key?.kind === 'var' && key.path.length === 0)
+            return {
+              ...base,
+              kind: 'loop',
+              loop: { kind: 'forEach', collection: 'dictKeys', source, itemVar: key },
+              body: rest,
+            };
+          return {
+            ...base,
+            kind: 'loop',
+            loop: { kind: 'forEach', collection: 'dict', source, itemVar: item },
+            body,
+          };
+        }
         return {
           ...base,
           kind: 'loop',
           loop: {
             kind: 'forEach',
             collection: 'list',
-            source: walValue(cmd.params.get('collection') ?? '""'),
+            source,
             itemVar: item,
           },
           body,

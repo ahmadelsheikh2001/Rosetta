@@ -36,7 +36,11 @@
       "type": "STRING",
       "readOnly": false,
       "input": false,
-      "output": false
+      "output": false,
+      "defaultValue": {
+        "type": "STRING",
+        "string": ""
+      }
     },
     {
       "name": "inName",
@@ -44,7 +48,11 @@
       "type": "STRING",
       "readOnly": false,
       "input": true,
-      "output": false
+      "output": false,
+      "defaultValue": {
+        "type": "STRING",
+        "string": ""
+      }
     },
     {
       "name": "outGreeting",
@@ -52,7 +60,11 @@
       "type": "STRING",
       "readOnly": false,
       "input": false,
-      "output": true
+      "output": true,
+      "defaultValue": {
+        "type": "STRING",
+        "string": ""
+      }
     }
   ],
   "packages": [

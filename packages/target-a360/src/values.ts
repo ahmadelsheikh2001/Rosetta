@@ -21,6 +21,13 @@ const systemValues: Readonly<Record<string, string>> = {
 export function exprText(e: Expr, types: ReadonlyMap<string, IRType>, sink: Sink): string {
   switch (e.kind) {
     case 'literal':
+      if (typeof e.value === 'string' && e.value.includes('{{ROSETTA: ')) {
+        // target-wal writes A360 system values WAL lacks as {{ROSETTA: a360:Name}} placeholders
+        const text = e.value.replace(/\{\{ROSETTA: a360:(\w+)\}\}/g, '$$System:$1$$');
+        if (text.includes('{{ROSETTA: '))
+          sink(`Placeholder left in "${e.value}"; replace it in the A360 editor.`);
+        return text;
+      }
       if (typeof e.value === 'string' && e.value.includes('$'))
         sink(`Text "${e.value}" contains "$", which A360 reads as a variable marker (A-07).`);
       return e.value === null ? '' : String(e.value);
@@ -66,7 +73,12 @@ const bareRef = (e: Expr): string | undefined =>
   e.kind === 'var' && e.path.length === 0 ? `$${e.name}$` : undefined;
 
 export function stringValue(e: Expr, types: ReadonlyMap<string, IRType>, sink: Sink): A360Value {
-  if (e.kind === 'literal' && typeof e.value === 'string' && !e.value.includes('$'))
+  if (
+    e.kind === 'literal' &&
+    typeof e.value === 'string' &&
+    !e.value.includes('$') &&
+    !e.value.includes('{{ROSETTA: ')
+  )
     return { type: 'STRING', string: e.value };
   if (e.kind === 'literal' && e.value !== null && typeof e.value !== 'string')
     return { type: 'STRING', string: String(e.value) };

@@ -624,25 +624,6 @@
                   "name": "sourceString",
                   "value": {
                     "type": "STRING",
-                    "expression": "$rosettaEntry1{Key}$"
-                  }
-                }
-              ],
-              "returnTo": {
-                "type": "VARIABLE",
-                "variableName": "vKey"
-              }
-            },
-            {
-              "uid": "9c4284c2-3449-46cf-a384-8614d26f735b",
-              "commandName": "assign",
-              "packageName": "String",
-              "disabled": false,
-              "attributes": [
-                {
-                  "name": "sourceString",
-                  "value": {
-                    "type": "STRING",
                     "expression": "Key $vKey$ has value $vDict{$vKey$}$"
                   }
                 }
@@ -669,28 +650,21 @@
               "name": "iterator",
               "returnTo": {
                 "type": "VARIABLE",
-                "variableName": "rosettaEntry1"
+                "variableName": "vKey"
               },
               "attributes": [
                 {
-                  "name": "list",
+                  "name": "sourceMap",
                   "value": {
                     "type": "VARIABLE",
                     "variableName": "vDict"
-                  }
-                },
-                {
-                  "name": "forOptions",
-                  "value": {
-                    "type": "STRING",
-                    "string": "all"
                   }
                 }
               ],
               "value": {
                 "type": "ITERATOR",
-                "iteratorName": "list.iterators.list",
-                "packageName": "List"
+                "iteratorName": "dictionary.iterators.keys",
+                "packageName": "Dictionary"
               }
             }
           ]
@@ -818,7 +792,11 @@
       "type": "STRING",
       "readOnly": false,
       "input": false,
-      "output": false
+      "output": false,
+      "defaultValue": {
+        "type": "STRING",
+        "string": ""
+      }
     },
     {
       "name": "vTextIn",
@@ -850,7 +828,11 @@
       "type": "STRING",
       "readOnly": false,
       "input": false,
-      "output": false
+      "output": false,
+      "defaultValue": {
+        "type": "STRING",
+        "string": ""
+      }
     },
     {
       "name": "vKey",
@@ -858,7 +840,11 @@
       "type": "STRING",
       "readOnly": false,
       "input": false,
-      "output": false
+      "output": false,
+      "defaultValue": {
+        "type": "STRING",
+        "string": ""
+      }
     },
     {
       "name": "vNumIn",
@@ -971,6 +957,11 @@
     {
       "name": "Comment",
       "version": "2.17.0",
+      "settingsAttributes": []
+    },
+    {
+      "name": "Dictionary",
+      "version": "3.16.2",
       "settingsAttributes": []
     },
     {

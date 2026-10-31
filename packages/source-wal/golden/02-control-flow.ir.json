@@ -880,7 +880,7 @@
           "kind": "loop",
           "loop": {
             "kind": "forEach",
-            "collection": "list",
+            "collection": "dictKeys",
             "source": {
               "kind": "var",
               "name": "vDict",
@@ -888,46 +888,11 @@
             },
             "itemVar": {
               "kind": "var",
-              "name": "rosettaEntry1",
+              "name": "vKey",
               "path": []
             }
           },
           "body": [
-            {
-              "id": "L60",
-              "source": {
-                "platform": "ibm-rpa",
-                "file": "02-control-flow.wal",
-                "nodePath": [
-                  59
-                ],
-                "nodeId": "L60",
-                "label": "setVar @ line 60"
-              },
-              "kind": "action",
-              "op": "vendor:ibm-rpa/setVar",
-              "args": {
-                "name": {
-                  "kind": "var",
-                  "name": "vKey",
-                  "path": []
-                },
-                "value": {
-                  "kind": "var",
-                  "name": "rosettaEntry1",
-                  "path": [
-                    {
-                      "kind": "key",
-                      "key": {
-                        "kind": "literal",
-                        "value": "Key"
-                      }
-                    }
-                  ]
-                }
-              },
-              "outputs": {}
-            },
             {
               "id": "L61",
               "source": {

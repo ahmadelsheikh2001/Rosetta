@@ -399,7 +399,11 @@
       "type": "STRING",
       "readOnly": false,
       "input": false,
-      "output": false
+      "output": false,
+      "defaultValue": {
+        "type": "STRING",
+        "string": ""
+      }
     },
     {
       "name": "vStr",

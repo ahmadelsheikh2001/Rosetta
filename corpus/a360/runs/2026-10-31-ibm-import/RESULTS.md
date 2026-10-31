@@ -1,0 +1,40 @@
+# IBM RPA → A360: import, editor and run check (ADR-022 step 3)
+
+- Date: 2026-10-31, A360 Community Edition, folder `Bots\RPA_Rosetta_Samples`, browser agent.
+- Input: `out/a360/*.json` from commit fd43ba1, made from the Studio-tested WAL scripts in
+  `packages/cli/golden/wal` (01, 02, 03, RR_08_Child).
+- Method: empty target bots made in the editor (Create > Task Bot; creating by API was not found,
+  A-24), content written with `PUT /v2/repository/files/{id}/content`, opened in the editor, run.
+  Every upload returned HTTP 200 and was stored byte for byte; the editor changed nothing.
+
+| Target bot                    | Editor                      | Run                                               |
+| ----------------------------- | --------------------------- | ------------------------------------------------- |
+| RR_IBM_01-variables           | no markers                  | success                                           |
+| RR_IBM_02-control-flow        | errors on lines 23 and 24   | blocked: "Automation with errors"                 |
+| RR_IBM_03-strings-expressions | no markers                  | deploy failed: line 15, `$System:Date$` not found |
+| RR_IBM_RR_08_Child            | no markers                  | success                                           |
+| RR_IBM_BadVersion (test)      | "Package not found", line 1 | blocked: "Automation with errors"                 |
+
+Findings and fixes (commit after this file):
+
+- **02, line 23–24:** the dictionary-keys loop came back as a List iterator over a Dictionary
+  ("Variable not allowed") with the undeclared WAL helper `rosettaEntry1` ("Variable not found").
+  Fixed: `source-wal` reads a foreach over `StringKeyValuePair` entries that starts by taking the
+  key as a dictionary-keys loop; `target-a360` writes `dictionary.iterators.keys`.
+- **03, line 15:** `deployment.compilation.failed`, "could not find the variable 'Date' in the
+  package 'System'". The original A360 bot lists the `System` package (3.18.2); the generator did
+  not. Fixed: `System` is added whenever a `$System:…$` value is used. The
+  `{{ROSETTA: a360:AAControlRoom}}` placeholder written by target-wal now comes back as
+  `$System:AAControlRoom$`.
+- **The upload API validates nothing** (`hasErrors` stays false). New `checkA360` reports what the
+  editor and compiler rejected: undeclared variables, iterator over the wrong variable type,
+  package versions this Control Room lacks, unknown or package-less `$System:…$` values. On the four
+  files as uploaded it reports exactly the errors above; on the regenerated files, none.
+- Editor-time errors block a run ("Automation with errors"); `$System:…$` problems appear only when
+  the bot is compiled for a run.
+- Worked as generated: nested If / Else If / Else, Break and Continue with loop labels, While,
+  list loop, `$vDict{$vKey$}$`, `.Number:toString` / `.Boolean:toString`, comments, disabled
+  actions, variables without defaults (CREDENTIAL, TABLE).
+- RR_08_Child asked for `inName` without a default; the generator now writes `""` for STRING
+  variables without a value, as the original does.
+- The message box of RR_IBM_01 was closed on the Bot Agent desktop; its text is not recorded.

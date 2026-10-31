@@ -515,7 +515,7 @@
               "name": "sourceString",
               "value": {
                 "type": "STRING",
-                "expression": "Machine=$System:Machine$ | Bot=$System:AATaskName$ | CR={{ROSETTA: a360:AAControlRoom}}"
+                "expression": "Machine=$System:Machine$ | Bot=$System:AATaskName$ | CR=$System:AAControlRoom$"
               }
             }
           ],
@@ -623,7 +623,11 @@
       "type": "STRING",
       "readOnly": false,
       "input": false,
-      "output": false
+      "output": false,
+      "defaultValue": {
+        "type": "STRING",
+        "string": ""
+      }
     },
     {
       "name": "vText",
@@ -667,7 +671,11 @@
       "type": "STRING",
       "readOnly": false,
       "input": false,
-      "output": false
+      "output": false,
+      "defaultValue": {
+        "type": "STRING",
+        "string": ""
+      }
     },
     {
       "name": "vNum",
@@ -796,6 +804,11 @@
     {
       "name": "String",
       "version": "5.12.6",
+      "settingsAttributes": []
+    },
+    {
+      "name": "System",
+      "version": "3.18.2",
       "settingsAttributes": []
     }
   ],

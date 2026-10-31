@@ -289,6 +289,22 @@ class Generator {
             value: { type: 'ITERATOR', iteratorName: 'list.iterators.list', packageName: 'List' },
           },
         ];
+      } else if (spec.collection === 'dictKeys' && spec.source.kind === 'var') {
+        // corpus 02: Dictionary "For each key in the dictionary"
+        this.packages.add('Dictionary');
+        attributes = [
+          attr('loopType', { type: 'STRING', string: 'ITERATOR' }),
+          {
+            name: 'iterator',
+            returnTo: variableRef(spec.itemVar.name),
+            attributes: [attr('sourceMap', variableRef(spec.source.name))],
+            value: {
+              type: 'ITERATOR',
+              iteratorName: 'dictionary.iterators.keys',
+              packageName: 'Dictionary',
+            },
+          },
+        ];
       } else {
         return this.todo(path, `loop over ${spec.collection} not converted to A360 yet`);
       }
@@ -347,6 +363,7 @@ class Generator {
         node.subtype = variableTypes[of.kind] ?? 'STRING';
       }
       const d = v.defaultValue;
+      if (type === 'STRING' && !d) node.defaultValue = { type, string: '' };
       if (type === 'CREDENTIAL') {
         this.note(
           'manual',
@@ -381,7 +398,8 @@ class Generator {
     });
   }
 
-  packageList(): Node[] {
+  packageList(nodes: readonly Node[]): Node[] {
+    if (JSON.stringify(nodes).includes('$System:')) this.packages.add('System');
     return [...this.packages].sort().map((name) => ({
       name,
       version: packageVersions[name] ?? '',
@@ -739,7 +757,7 @@ export function generateA360(source: Bot): A360Bot {
       triggers: [],
       nodes,
       variables,
-      packages: g.packageList(),
+      packages: g.packageList(nodes),
       properties: {
         botCodeVersion: '7',
         improvedNumberSupport: true,
