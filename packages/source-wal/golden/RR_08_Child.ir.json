@@ -1,0 +1,118 @@
+{
+  "id": "RR_08_Child.wal",
+  "name": "RR_08_Child",
+  "source": {
+    "platform": "ibm-rpa",
+    "file": "RR_08_Child.wal",
+    "nodePath": []
+  },
+  "variables": [
+    {
+      "name": "SampleNumber",
+      "type": {
+        "kind": "number"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "RR_08_Child.wal",
+        "nodePath": [
+          9
+        ],
+        "nodeId": "L10",
+        "label": "defVar"
+      }
+    },
+    {
+      "name": "SampleString",
+      "type": {
+        "kind": "string"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "RR_08_Child.wal",
+        "nodePath": [
+          10
+        ],
+        "nodeId": "L11",
+        "label": "defVar"
+      }
+    },
+    {
+      "name": "inName",
+      "type": {
+        "kind": "string"
+      },
+      "direction": "input",
+      "sensitive": false,
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "RR_08_Child.wal",
+        "nodePath": [
+          11
+        ],
+        "nodeId": "L12",
+        "label": "defVar"
+      }
+    },
+    {
+      "name": "outGreeting",
+      "type": {
+        "kind": "string"
+      },
+      "direction": "output",
+      "sensitive": false,
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "RR_08_Child.wal",
+        "nodePath": [
+          12
+        ],
+        "nodeId": "L13",
+        "label": "defVar"
+      }
+    }
+  ],
+  "packages": [],
+  "body": [
+    {
+      "id": "L14",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "RR_08_Child.wal",
+        "nodePath": [
+          13
+        ],
+        "nodeId": "L14",
+        "label": "setVar @ line 14"
+      },
+      "kind": "action",
+      "op": "vendor:ibm-rpa/setVar",
+      "args": {
+        "name": {
+          "kind": "var",
+          "name": "outGreeting",
+          "path": []
+        },
+        "value": {
+          "kind": "template",
+          "parts": [
+            {
+              "kind": "literal",
+              "value": "Hello "
+            },
+            {
+              "kind": "var",
+              "name": "inName",
+              "path": []
+            }
+          ]
+        }
+      },
+      "outputs": {}
+    }
+  ]
+}

@@ -1,0 +1,1272 @@
+{
+  "id": "03-strings-expressions.wal",
+  "name": "03-strings-expressions",
+  "source": {
+    "platform": "ibm-rpa",
+    "file": "03-strings-expressions.wal",
+    "nodePath": []
+  },
+  "variables": [
+    {
+      "name": "SampleNumber",
+      "type": {
+        "kind": "number"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "03-strings-expressions.wal",
+        "nodePath": [
+          9
+        ],
+        "nodeId": "L10",
+        "label": "defVar"
+      }
+    },
+    {
+      "name": "SampleString",
+      "type": {
+        "kind": "string"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "03-strings-expressions.wal",
+        "nodePath": [
+          10
+        ],
+        "nodeId": "L11",
+        "label": "defVar"
+      }
+    },
+    {
+      "name": "vText",
+      "type": {
+        "kind": "string"
+      },
+      "direction": "input",
+      "sensitive": false,
+      "defaultValue": {
+        "kind": "literal",
+        "value": "  Hello Rosetta Test  "
+      },
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "03-strings-expressions.wal",
+        "nodePath": [
+          11
+        ],
+        "nodeId": "L12",
+        "label": "defVar"
+      }
+    },
+    {
+      "name": "vOut",
+      "type": {
+        "kind": "string"
+      },
+      "direction": "output",
+      "sensitive": false,
+      "defaultValue": {
+        "kind": "literal",
+        "value": "none"
+      },
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "03-strings-expressions.wal",
+        "nodePath": [
+          12
+        ],
+        "nodeId": "L13",
+        "label": "defVar"
+      }
+    },
+    {
+      "name": "vNumStr",
+      "type": {
+        "kind": "string"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "defaultValue": {
+        "kind": "literal",
+        "value": "42"
+      },
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "03-strings-expressions.wal",
+        "nodePath": [
+          13
+        ],
+        "nodeId": "L14",
+        "label": "defVar"
+      }
+    },
+    {
+      "name": "vDateStr",
+      "type": {
+        "kind": "string"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "03-strings-expressions.wal",
+        "nodePath": [
+          14
+        ],
+        "nodeId": "L15",
+        "label": "defVar"
+      }
+    },
+    {
+      "name": "vNum",
+      "type": {
+        "kind": "number"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "defaultValue": {
+        "kind": "literal",
+        "value": 0
+      },
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "03-strings-expressions.wal",
+        "nodePath": [
+          15
+        ],
+        "nodeId": "L16",
+        "label": "defVar"
+      }
+    },
+    {
+      "name": "vIndex",
+      "type": {
+        "kind": "number"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "defaultValue": {
+        "kind": "literal",
+        "value": 0
+      },
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "03-strings-expressions.wal",
+        "nodePath": [
+          16
+        ],
+        "nodeId": "L17",
+        "label": "defVar"
+      }
+    },
+    {
+      "name": "vLen",
+      "type": {
+        "kind": "number"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "defaultValue": {
+        "kind": "literal",
+        "value": 0
+      },
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "03-strings-expressions.wal",
+        "nodePath": [
+          17
+        ],
+        "nodeId": "L18",
+        "label": "defVar"
+      }
+    },
+    {
+      "name": "vDate",
+      "type": {
+        "kind": "datetime"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "03-strings-expressions.wal",
+        "nodePath": [
+          18
+        ],
+        "nodeId": "L19",
+        "label": "defVar"
+      }
+    },
+    {
+      "name": "vParts",
+      "type": {
+        "kind": "list",
+        "of": {
+          "kind": "string"
+        }
+      },
+      "direction": "local",
+      "sensitive": false,
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "03-strings-expressions.wal",
+        "nodePath": [
+          19
+        ],
+        "nodeId": "L20",
+        "label": "defVar"
+      }
+    },
+    {
+      "name": "vList",
+      "type": {
+        "kind": "list",
+        "of": {
+          "kind": "string"
+        }
+      },
+      "direction": "local",
+      "sensitive": false,
+      "defaultValue": {
+        "kind": "call",
+        "fn": "list.of",
+        "args": [
+          {
+            "kind": "literal",
+            "value": "Alpha"
+          },
+          {
+            "kind": "literal",
+            "value": "Beta"
+          }
+        ]
+      },
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "03-strings-expressions.wal",
+        "nodePath": [
+          20
+        ],
+        "nodeId": "L21",
+        "label": "defVar"
+      }
+    },
+    {
+      "name": "vDict",
+      "type": {
+        "kind": "dict",
+        "of": {
+          "kind": "string"
+        }
+      },
+      "direction": "local",
+      "sensitive": false,
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "03-strings-expressions.wal",
+        "nodePath": [
+          21
+        ],
+        "nodeId": "L22",
+        "label": "defVar"
+      }
+    },
+    {
+      "name": "rosettaItem1",
+      "type": {
+        "kind": "string"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "03-strings-expressions.wal",
+        "nodePath": [
+          23
+        ],
+        "nodeId": "L24",
+        "label": "defVar"
+      }
+    },
+    {
+      "name": "rosettaItem2",
+      "type": {
+        "kind": "string"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "03-strings-expressions.wal",
+        "nodePath": [
+          24
+        ],
+        "nodeId": "L25",
+        "label": "defVar"
+      }
+    },
+    {
+      "name": "rosettaItem3",
+      "type": {
+        "kind": "string"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "03-strings-expressions.wal",
+        "nodePath": [
+          25
+        ],
+        "nodeId": "L26",
+        "label": "defVar"
+      }
+    },
+    {
+      "name": "rosettaItem4",
+      "type": {
+        "kind": "string"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "03-strings-expressions.wal",
+        "nodePath": [
+          26
+        ],
+        "nodeId": "L27",
+        "label": "defVar"
+      }
+    },
+    {
+      "name": "rosettaMachineName",
+      "type": {
+        "kind": "string"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "03-strings-expressions.wal",
+        "nodePath": [
+          27
+        ],
+        "nodeId": "L28",
+        "label": "defVar"
+      }
+    }
+  ],
+  "packages": [],
+  "body": [
+    {
+      "id": "L30",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "03-strings-expressions.wal",
+        "nodePath": [
+          29
+        ],
+        "nodeId": "L30",
+        "label": "strDictAdd @ line 30"
+      },
+      "kind": "action",
+      "op": "vendor:ibm-rpa/strDictAdd",
+      "args": {
+        "key": {
+          "kind": "literal",
+          "value": "name"
+        },
+        "value": {
+          "kind": "literal",
+          "value": "Test User"
+        },
+        "dictionary": {
+          "kind": "var",
+          "name": "vDict",
+          "path": []
+        }
+      },
+      "outputs": {}
+    },
+    {
+      "id": "L31",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "03-strings-expressions.wal",
+        "nodePath": [
+          30
+        ],
+        "nodeId": "L31",
+        "label": "getEnvVar @ line 31"
+      },
+      "kind": "action",
+      "op": "vendor:ibm-rpa/getEnvVar",
+      "args": {
+        "name": {
+          "kind": "literal",
+          "value": "COMPUTERNAME"
+        },
+        "target": {
+          "kind": "literal",
+          "value": "Process"
+        }
+      },
+      "outputs": {
+        "value": {
+          "kind": "var",
+          "name": "rosettaMachineName",
+          "path": []
+        }
+      }
+    },
+    {
+      "id": "L32",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "03-strings-expressions.wal",
+        "nodePath": [
+          31
+        ],
+        "nodeId": "L32"
+      },
+      "kind": "comment",
+      "text": "---- String operations ----"
+    },
+    {
+      "id": "L33",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "03-strings-expressions.wal",
+        "nodePath": [
+          32
+        ],
+        "nodeId": "L33",
+        "label": "setVar @ line 33"
+      },
+      "kind": "action",
+      "op": "vendor:ibm-rpa/setVar",
+      "args": {
+        "name": {
+          "kind": "var",
+          "name": "vOut",
+          "path": []
+        },
+        "value": {
+          "kind": "template",
+          "parts": [
+            {
+              "kind": "literal",
+              "value": "Prefix-"
+            },
+            {
+              "kind": "var",
+              "name": "vText",
+              "path": []
+            },
+            {
+              "kind": "literal",
+              "value": "-"
+            },
+            {
+              "kind": "var",
+              "name": "vNumStr",
+              "path": []
+            },
+            {
+              "kind": "literal",
+              "value": "-Suffix"
+            }
+          ]
+        }
+      },
+      "outputs": {}
+    },
+    {
+      "id": "L34",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "03-strings-expressions.wal",
+        "nodePath": [
+          33
+        ],
+        "nodeId": "L34",
+        "label": "trimString @ line 34"
+      },
+      "kind": "action",
+      "op": "vendor:ibm-rpa/trimString",
+      "args": {
+        "text": {
+          "kind": "var",
+          "name": "vText",
+          "path": []
+        },
+        "trimoption": {
+          "kind": "literal",
+          "value": "TrimStartAndEnd"
+        }
+      },
+      "outputs": {
+        "value": {
+          "kind": "var",
+          "name": "vText",
+          "path": []
+        }
+      }
+    },
+    {
+      "id": "L35",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "03-strings-expressions.wal",
+        "nodePath": [
+          34
+        ],
+        "nodeId": "L35",
+        "label": "getSubString @ line 35"
+      },
+      "kind": "action",
+      "op": "vendor:ibm-rpa/getSubString",
+      "args": {
+        "text": {
+          "kind": "var",
+          "name": "vText",
+          "path": []
+        },
+        "start": {
+          "kind": "literal",
+          "value": 1
+        },
+        "length": {
+          "kind": "literal",
+          "value": 5
+        }
+      },
+      "outputs": {
+        "value": {
+          "kind": "var",
+          "name": "vOut",
+          "path": []
+        }
+      }
+    },
+    {
+      "id": "L36",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "03-strings-expressions.wal",
+        "nodePath": [
+          35
+        ],
+        "nodeId": "L36",
+        "label": "replaceText @ line 36"
+      },
+      "kind": "action",
+      "op": "vendor:ibm-rpa/replaceText",
+      "args": {
+        "texttoparse": {
+          "kind": "var",
+          "name": "vText",
+          "path": []
+        },
+        "useregex": {
+          "kind": "literal",
+          "value": true
+        },
+        "pattern": {
+          "kind": "literal",
+          "value": "Rosetta"
+        },
+        "regexOptions": {
+          "kind": "literal",
+          "value": "IgnoreCase"
+        },
+        "replacement": {
+          "kind": "literal",
+          "value": "IBM"
+        }
+      },
+      "outputs": {
+        "value": {
+          "kind": "var",
+          "name": "vOut",
+          "path": []
+        }
+      }
+    },
+    {
+      "id": "L37",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "03-strings-expressions.wal",
+        "nodePath": [
+          36
+        ],
+        "nodeId": "L37",
+        "label": "splitString @ line 37"
+      },
+      "kind": "action",
+      "op": "vendor:ibm-rpa/splitString",
+      "args": {
+        "text": {
+          "kind": "var",
+          "name": "vText",
+          "path": []
+        },
+        "delimiteroption": {
+          "kind": "literal",
+          "value": "CustomDelimiter"
+        },
+        "customdelimiter": {
+          "kind": "literal",
+          "value": " "
+        }
+      },
+      "outputs": {
+        "value": {
+          "kind": "var",
+          "name": "vParts",
+          "path": []
+        }
+      }
+    },
+    {
+      "id": "L38",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "03-strings-expressions.wal",
+        "nodePath": [
+          37
+        ],
+        "nodeId": "L38",
+        "label": "changeTextCase @ line 38"
+      },
+      "kind": "action",
+      "op": "vendor:ibm-rpa/changeTextCase",
+      "args": {
+        "text": {
+          "kind": "var",
+          "name": "vText",
+          "path": []
+        },
+        "type": {
+          "kind": "literal",
+          "value": "Upper"
+        }
+      },
+      "outputs": {
+        "value": {
+          "kind": "var",
+          "name": "vOut",
+          "path": []
+        }
+      }
+    },
+    {
+      "id": "L39",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "03-strings-expressions.wal",
+        "nodePath": [
+          38
+        ],
+        "nodeId": "L39",
+        "label": "changeTextCase @ line 39"
+      },
+      "kind": "action",
+      "op": "vendor:ibm-rpa/changeTextCase",
+      "args": {
+        "text": {
+          "kind": "var",
+          "name": "vText",
+          "path": []
+        },
+        "type": {
+          "kind": "literal",
+          "value": "Lower"
+        }
+      },
+      "outputs": {
+        "value": {
+          "kind": "var",
+          "name": "vOut",
+          "path": []
+        }
+      }
+    },
+    {
+      "id": "L40",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "03-strings-expressions.wal",
+        "nodePath": [
+          39
+        ],
+        "nodeId": "L40",
+        "label": "parseText @ line 40"
+      },
+      "kind": "action",
+      "op": "vendor:ibm-rpa/parseText",
+      "args": {
+        "text": {
+          "kind": "var",
+          "name": "vText",
+          "path": []
+        },
+        "useRegex": {
+          "kind": "literal",
+          "value": true
+        },
+        "regexPattern": {
+          "kind": "literal",
+          "value": "Rosetta"
+        },
+        "regexOptions": {
+          "kind": "literal",
+          "value": "IgnoreCase"
+        },
+        "startindex": {
+          "kind": "literal",
+          "value": 1
+        }
+      },
+      "outputs": {
+        "value": {
+          "kind": "var",
+          "name": "vIndex",
+          "path": []
+        }
+      }
+    },
+    {
+      "id": "L41",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "03-strings-expressions.wal",
+        "nodePath": [
+          40
+        ],
+        "nodeId": "L41",
+        "label": "getStringLength @ line 41"
+      },
+      "kind": "action",
+      "op": "vendor:ibm-rpa/getStringLength",
+      "args": {
+        "text": {
+          "kind": "var",
+          "name": "vText",
+          "path": []
+        }
+      },
+      "outputs": {
+        "value": {
+          "kind": "var",
+          "name": "vLen",
+          "path": []
+        }
+      }
+    },
+    {
+      "id": "L42",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "03-strings-expressions.wal",
+        "nodePath": [
+          41
+        ],
+        "nodeId": "L42"
+      },
+      "kind": "comment",
+      "text": "---- Conversions and dates ----"
+    },
+    {
+      "id": "L43",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "03-strings-expressions.wal",
+        "nodePath": [
+          42
+        ],
+        "nodeId": "L43"
+      },
+      "kind": "comment",
+      "text": "RR_03: number/string conversions and datetime add + custom format"
+    },
+    {
+      "id": "L44",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "03-strings-expressions.wal",
+        "nodePath": [
+          43
+        ],
+        "nodeId": "L44",
+        "label": "convertStringToNumber @ line 44"
+      },
+      "kind": "action",
+      "op": "vendor:ibm-rpa/convertStringToNumber",
+      "args": {
+        "text": {
+          "kind": "var",
+          "name": "vNumStr",
+          "path": []
+        },
+        "allowleadingsign": {
+          "kind": "literal",
+          "value": true
+        },
+        "allowdecimalpoint": {
+          "kind": "literal",
+          "value": true
+        },
+        "culture": {
+          "kind": "literal",
+          "value": "en-US"
+        }
+      },
+      "outputs": {
+        "value": {
+          "kind": "var",
+          "name": "vNum",
+          "path": []
+        }
+      }
+    },
+    {
+      "id": "L45",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "03-strings-expressions.wal",
+        "nodePath": [
+          44
+        ],
+        "nodeId": "L45",
+        "label": "convertNumberToText @ line 45"
+      },
+      "kind": "action",
+      "op": "vendor:ibm-rpa/convertNumberToText",
+      "args": {
+        "number": {
+          "kind": "var",
+          "name": "vNum",
+          "path": []
+        },
+        "conversiontype": {
+          "kind": "literal",
+          "value": "SimpleNumber"
+        },
+        "decimals": {
+          "kind": "literal",
+          "value": 0
+        }
+      },
+      "outputs": {
+        "value": {
+          "kind": "var",
+          "name": "vOut",
+          "path": []
+        }
+      }
+    },
+    {
+      "id": "L46",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "03-strings-expressions.wal",
+        "nodePath": [
+          45
+        ],
+        "nodeId": "L46",
+        "label": "getCurrentDateAndTime @ line 46"
+      },
+      "kind": "action",
+      "op": "vendor:ibm-rpa/getCurrentDateAndTime",
+      "args": {
+        "localorutc": {
+          "kind": "literal",
+          "value": "LocalTime"
+        }
+      },
+      "outputs": {
+        "value": {
+          "kind": "var",
+          "name": "vDate",
+          "path": []
+        }
+      }
+    },
+    {
+      "id": "L47",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "03-strings-expressions.wal",
+        "nodePath": [
+          46
+        ],
+        "nodeId": "L47",
+        "label": "addToDateTime @ line 47"
+      },
+      "kind": "action",
+      "op": "vendor:ibm-rpa/addToDateTime",
+      "args": {
+        "date": {
+          "kind": "var",
+          "name": "vDate",
+          "path": []
+        },
+        "value": {
+          "kind": "literal",
+          "value": 7
+        },
+        "type": {
+          "kind": "literal",
+          "value": "Days"
+        }
+      },
+      "outputs": {
+        "value": {
+          "kind": "var",
+          "name": "vDate",
+          "path": []
+        }
+      }
+    },
+    {
+      "id": "L48",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "03-strings-expressions.wal",
+        "nodePath": [
+          47
+        ],
+        "nodeId": "L48",
+        "label": "dateTimeToText @ line 48"
+      },
+      "kind": "action",
+      "op": "vendor:ibm-rpa/dateTimeToText",
+      "args": {
+        "date": {
+          "kind": "var",
+          "name": "vDate",
+          "path": []
+        },
+        "usecustomformat": {
+          "kind": "literal",
+          "value": true
+        },
+        "customformat": {
+          "kind": "literal",
+          "value": "dd/MM/yyyy"
+        }
+      },
+      "outputs": {
+        "value": {
+          "kind": "var",
+          "name": "vDateStr",
+          "path": []
+        }
+      }
+    },
+    {
+      "id": "L49",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "03-strings-expressions.wal",
+        "nodePath": [
+          48
+        ],
+        "nodeId": "L49"
+      },
+      "kind": "comment",
+      "text": "---- System variables and expressions ----"
+    },
+    {
+      "id": "L50",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "03-strings-expressions.wal",
+        "nodePath": [
+          49
+        ],
+        "nodeId": "L50"
+      },
+      "kind": "comment",
+      "text": "RR_03: system variables plus list index and dictionary key expressions"
+    },
+    {
+      "id": "L51",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "03-strings-expressions.wal",
+        "nodePath": [
+          50
+        ],
+        "nodeId": "L51",
+        "label": "setVar @ line 51"
+      },
+      "kind": "action",
+      "op": "vendor:ibm-rpa/setVar",
+      "args": {
+        "name": {
+          "kind": "var",
+          "name": "vOut",
+          "path": []
+        },
+        "value": {
+          "kind": "template",
+          "parts": [
+            {
+              "kind": "literal",
+              "value": "Machine="
+            },
+            {
+              "kind": "var",
+              "name": "rosettaMachineName",
+              "path": []
+            },
+            {
+              "kind": "literal",
+              "value": " | Bot="
+            },
+            {
+              "kind": "system",
+              "name": "ibm-rpa:scriptName"
+            },
+            {
+              "kind": "literal",
+              "value": " | CR={{ROSETTA: a360:AAControlRoom}}"
+            }
+          ]
+        }
+      },
+      "outputs": {}
+    },
+    {
+      "id": "L52",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "03-strings-expressions.wal",
+        "nodePath": [
+          51
+        ],
+        "nodeId": "L52",
+        "label": "get @ line 52"
+      },
+      "kind": "action",
+      "op": "vendor:ibm-rpa/get",
+      "args": {
+        "collection": {
+          "kind": "var",
+          "name": "vParts",
+          "path": []
+        },
+        "index": {
+          "kind": "literal",
+          "value": 1
+        }
+      },
+      "outputs": {
+        "value": {
+          "kind": "var",
+          "name": "rosettaItem1",
+          "path": []
+        }
+      }
+    },
+    {
+      "id": "L53",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "03-strings-expressions.wal",
+        "nodePath": [
+          52
+        ],
+        "nodeId": "L53",
+        "label": "get @ line 53"
+      },
+      "kind": "action",
+      "op": "vendor:ibm-rpa/get",
+      "args": {
+        "collection": {
+          "kind": "var",
+          "name": "vList",
+          "path": []
+        },
+        "index": {
+          "kind": "literal",
+          "value": 2
+        }
+      },
+      "outputs": {
+        "value": {
+          "kind": "var",
+          "name": "rosettaItem2",
+          "path": []
+        }
+      }
+    },
+    {
+      "id": "L54",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "03-strings-expressions.wal",
+        "nodePath": [
+          53
+        ],
+        "nodeId": "L54",
+        "label": "strDictGet @ line 54"
+      },
+      "kind": "action",
+      "op": "vendor:ibm-rpa/strDictGet",
+      "args": {
+        "key": {
+          "kind": "literal",
+          "value": "name"
+        },
+        "dictionary": {
+          "kind": "var",
+          "name": "vDict",
+          "path": []
+        }
+      },
+      "outputs": {
+        "value": {
+          "kind": "var",
+          "name": "rosettaItem3",
+          "path": []
+        }
+      }
+    },
+    {
+      "id": "L55",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "03-strings-expressions.wal",
+        "nodePath": [
+          54
+        ],
+        "nodeId": "L55",
+        "label": "messageBox @ line 55"
+      },
+      "kind": "action",
+      "op": "vendor:ibm-rpa/messageBox",
+      "args": {
+        "title": {
+          "kind": "literal",
+          "value": "RR_03 Expressions"
+        },
+        "text": {
+          "kind": "template",
+          "parts": [
+            {
+              "kind": "literal",
+              "value": "part0="
+            },
+            {
+              "kind": "var",
+              "name": "rosettaItem1",
+              "path": []
+            },
+            {
+              "kind": "literal",
+              "value": " | list1="
+            },
+            {
+              "kind": "var",
+              "name": "rosettaItem2",
+              "path": []
+            },
+            {
+              "kind": "literal",
+              "value": " | name="
+            },
+            {
+              "kind": "var",
+              "name": "rosettaItem3",
+              "path": []
+            },
+            {
+              "kind": "literal",
+              "value": " | date="
+            },
+            {
+              "kind": "var",
+              "name": "vDateStr",
+              "path": []
+            },
+            {
+              "kind": "literal",
+              "value": " | len="
+            },
+            {
+              "kind": "var",
+              "name": "vLen",
+              "path": []
+            },
+            {
+              "kind": "literal",
+              "value": " | idx="
+            },
+            {
+              "kind": "var",
+              "name": "vIndex",
+              "path": []
+            },
+            {
+              "kind": "literal",
+              "value": " | out="
+            },
+            {
+              "kind": "var",
+              "name": "vOut",
+              "path": []
+            }
+          ]
+        },
+        "icon": {
+          "kind": "literal",
+          "value": "Information"
+        },
+        "buttons": {
+          "kind": "literal",
+          "value": "OK"
+        },
+        "defaultbutton": {
+          "kind": "literal",
+          "value": "FirstButton"
+        }
+      },
+      "outputs": {}
+    },
+    {
+      "id": "L56",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "03-strings-expressions.wal",
+        "nodePath": [
+          55
+        ],
+        "nodeId": "L56"
+      },
+      "kind": "comment",
+      "text": "[DISABLED] get --collection \"${vList}\" --index 1 rosettaItem4=value"
+    },
+    {
+      "id": "L57",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "03-strings-expressions.wal",
+        "nodePath": [
+          56
+        ],
+        "nodeId": "L57"
+      },
+      "kind": "comment",
+      "text": "[DISABLED] messageBox --title \"Automation Anywhere Enterprise Client\" --text \"Disabled on purpose: ${rosettaItem4}\" --icon \"Information\" --buttons \"OK\" --defaultbutton \"FirstButton\""
+    }
+  ]
+}

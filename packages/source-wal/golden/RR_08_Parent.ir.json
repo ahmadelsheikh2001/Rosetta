@@ -1,0 +1,330 @@
+{
+  "id": "RR_08_Parent.wal",
+  "name": "RR_08_Parent",
+  "source": {
+    "platform": "ibm-rpa",
+    "file": "RR_08_Parent.wal",
+    "nodePath": []
+  },
+  "variables": [
+    {
+      "name": "SampleNumber",
+      "type": {
+        "kind": "number"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "RR_08_Parent.wal",
+        "nodePath": [
+          9
+        ],
+        "nodeId": "L10",
+        "label": "defVar"
+      }
+    },
+    {
+      "name": "SampleString",
+      "type": {
+        "kind": "string"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "RR_08_Parent.wal",
+        "nodePath": [
+          10
+        ],
+        "nodeId": "L11",
+        "label": "defVar"
+      }
+    },
+    {
+      "name": "vResult",
+      "type": {
+        "kind": "string"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "RR_08_Parent.wal",
+        "nodePath": [
+          11
+        ],
+        "nodeId": "L12",
+        "label": "defVar"
+      }
+    },
+    {
+      "name": "vCopy",
+      "type": {
+        "kind": "string"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "RR_08_Parent.wal",
+        "nodePath": [
+          12
+        ],
+        "nodeId": "L13",
+        "label": "defVar"
+      }
+    },
+    {
+      "name": "vHardcoded",
+      "type": {
+        "kind": "string"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "RR_08_Parent.wal",
+        "nodePath": [
+          13
+        ],
+        "nodeId": "L14",
+        "label": "defVar"
+      }
+    },
+    {
+      "name": "vPassword",
+      "type": {
+        "kind": "credential"
+      },
+      "direction": "local",
+      "sensitive": true,
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "RR_08_Parent.wal",
+        "nodePath": [
+          14
+        ],
+        "nodeId": "L15",
+        "label": "defVar"
+      }
+    },
+    {
+      "name": "vCopyCred",
+      "type": {
+        "kind": "credential"
+      },
+      "direction": "local",
+      "sensitive": true,
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "RR_08_Parent.wal",
+        "nodePath": [
+          15
+        ],
+        "nodeId": "L16",
+        "label": "defVar"
+      }
+    }
+  ],
+  "packages": [],
+  "body": [
+    {
+      "id": "L18",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "RR_08_Parent.wal",
+        "nodePath": [
+          17
+        ],
+        "nodeId": "L18",
+        "label": "getVaultItem @ line 18"
+      },
+      "kind": "action",
+      "op": "vendor:ibm-rpa/getVaultItem",
+      "args": {
+        "name": {
+          "kind": "literal",
+          "value": "DummyLogin"
+        }
+      },
+      "outputs": {
+        "password": {
+          "kind": "var",
+          "name": "vPassword",
+          "path": []
+        }
+      }
+    },
+    {
+      "id": "L19",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "RR_08_Parent.wal",
+        "nodePath": [
+          18
+        ],
+        "nodeId": "L19",
+        "label": "getVaultItem @ line 19"
+      },
+      "kind": "action",
+      "op": "vendor:ibm-rpa/getVaultItem",
+      "args": {
+        "name": {
+          "kind": "literal",
+          "value": "DummyLogin"
+        }
+      },
+      "outputs": {
+        "password": {
+          "kind": "var",
+          "name": "vCopyCred",
+          "path": []
+        }
+      }
+    },
+    {
+      "id": "L20",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "RR_08_Parent.wal",
+        "nodePath": [
+          19
+        ],
+        "nodeId": "L20",
+        "label": "executeScript @ line 20"
+      },
+      "kind": "action",
+      "op": "vendor:ibm-rpa/executeScript",
+      "args": {
+        "name": {
+          "kind": "literal",
+          "value": "RR_08_Child"
+        },
+        "parameters": {
+          "kind": "literal",
+          "value": "{\"inName\":\"Test User\"}"
+        },
+        "output": {
+          "kind": "template",
+          "parts": [
+            {
+              "kind": "literal",
+              "value": "{\"outGreeting\":\""
+            },
+            {
+              "kind": "var",
+              "name": "vResult",
+              "path": []
+            },
+            {
+              "kind": "literal",
+              "value": "\"}"
+            }
+          ]
+        }
+      },
+      "outputs": {}
+    },
+    {
+      "id": "L21",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "RR_08_Parent.wal",
+        "nodePath": [
+          20
+        ],
+        "nodeId": "L21",
+        "label": "getVaultItem @ line 21"
+      },
+      "kind": "action",
+      "op": "vendor:ibm-rpa/getVaultItem",
+      "args": {
+        "name": {
+          "kind": "literal",
+          "value": "DummyLogin"
+        }
+      },
+      "outputs": {
+        "password": {
+          "kind": "var",
+          "name": "vCopyCred",
+          "path": []
+        }
+      }
+    },
+    {
+      "id": "L22",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "RR_08_Parent.wal",
+        "nodePath": [
+          21
+        ],
+        "nodeId": "L22",
+        "label": "setVar @ line 22"
+      },
+      "kind": "action",
+      "op": "vendor:ibm-rpa/setVar",
+      "args": {
+        "name": {
+          "kind": "var",
+          "name": "vHardcoded",
+          "path": []
+        },
+        "value": {
+          "kind": "literal",
+          "value": "NotARealPassword1"
+        }
+      },
+      "outputs": {}
+    },
+    {
+      "id": "L23",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "RR_08_Parent.wal",
+        "nodePath": [
+          22
+        ],
+        "nodeId": "L23",
+        "label": "messageBox @ line 23"
+      },
+      "kind": "action",
+      "op": "vendor:ibm-rpa/messageBox",
+      "args": {
+        "title": {
+          "kind": "literal",
+          "value": "Automation Anywhere Enterprise Client"
+        },
+        "text": {
+          "kind": "template",
+          "parts": [
+            {
+              "kind": "literal",
+              "value": "Result: "
+            },
+            {
+              "kind": "var",
+              "name": "vResult",
+              "path": []
+            }
+          ]
+        },
+        "icon": {
+          "kind": "literal",
+          "value": "Information"
+        },
+        "buttons": {
+          "kind": "literal",
+          "value": "OK"
+        },
+        "defaultbutton": {
+          "kind": "literal",
+          "value": "FirstButton"
+        }
+      },
+      "outputs": {}
+    }
+  ]
+}

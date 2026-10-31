@@ -20,6 +20,8 @@ export default {
         'cli',
         'design-tokens',
         'target-wal',
+        'source-wal',
+        'target-a360',
       ],
     ],
   },

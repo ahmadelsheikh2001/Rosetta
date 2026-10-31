@@ -25,3 +25,4 @@ New decision: copy [`000-template.md`](000-template.md), take the next number, a
 | [019](019-draft-and-verify-wal.md)             | Draft-and-verify for WAL syntax                           | Accepted                              |
 | [020](020-try-catch-as-onerror-subroutines.md) | A360 Try/Catch/Finally as onError subroutines             | Accepted                              |
 | [021](021-local-web-ui.md)                     | Local web UI (`rosetta serve`)                            | Accepted                              |
+| [022](022-bidirectional-ibm-to-a360.md)        | Both directions: IBM RPA → A360 as well                   | Accepted                              |

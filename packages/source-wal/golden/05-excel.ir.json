@@ -1,0 +1,443 @@
+{
+  "id": "05-excel.wal",
+  "name": "05-excel",
+  "source": {
+    "platform": "ibm-rpa",
+    "file": "05-excel.wal",
+    "nodePath": []
+  },
+  "variables": [
+    {
+      "name": "SampleNumber",
+      "type": {
+        "kind": "number"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "05-excel.wal",
+        "nodePath": [
+          9
+        ],
+        "nodeId": "L10",
+        "label": "defVar"
+      }
+    },
+    {
+      "name": "SampleString",
+      "type": {
+        "kind": "string"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "05-excel.wal",
+        "nodePath": [
+          10
+        ],
+        "nodeId": "L11",
+        "label": "defVar"
+      }
+    },
+    {
+      "name": "vRow_Name",
+      "type": {
+        "kind": "string"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "05-excel.wal",
+        "nodePath": [
+          12
+        ],
+        "nodeId": "L13",
+        "label": "defVar"
+      }
+    },
+    {
+      "name": "vRow_Amount",
+      "type": {
+        "kind": "string"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "05-excel.wal",
+        "nodePath": [
+          13
+        ],
+        "nodeId": "L14",
+        "label": "defVar"
+      }
+    },
+    {
+      "name": "rosettaExcelDefault",
+      "type": {
+        "kind": "handle",
+        "resource": "excel"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "05-excel.wal",
+        "nodePath": [
+          15
+        ],
+        "nodeId": "L16",
+        "label": "defVar"
+      }
+    },
+    {
+      "name": "rosettaTable1",
+      "type": {
+        "kind": "table"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "05-excel.wal",
+        "nodePath": [
+          16
+        ],
+        "nodeId": "L17",
+        "label": "defVar"
+      }
+    },
+    {
+      "name": "rosettaRows2",
+      "type": {
+        "kind": "number"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "05-excel.wal",
+        "nodePath": [
+          17
+        ],
+        "nodeId": "L18",
+        "label": "defVar"
+      }
+    },
+    {
+      "name": "rosettaIndex3",
+      "type": {
+        "kind": "number"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "05-excel.wal",
+        "nodePath": [
+          18
+        ],
+        "nodeId": "L19",
+        "label": "defVar"
+      }
+    }
+  ],
+  "packages": [],
+  "body": [
+    {
+      "id": "L12",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "05-excel.wal",
+        "nodePath": [
+          11
+        ],
+        "nodeId": "L12"
+      },
+      "kind": "comment",
+      "text": "vRow (A360 Record): one String variable per column the bot reads"
+    },
+    {
+      "id": "L20",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "05-excel.wal",
+        "nodePath": [
+          19
+        ],
+        "nodeId": "L20",
+        "label": "excelOpen @ line 20"
+      },
+      "kind": "action",
+      "op": "vendor:ibm-rpa/excelOpen",
+      "args": {
+        "file": {
+          "kind": "literal",
+          "value": "C:\\RosettaTest\\input.xlsx"
+        }
+      },
+      "outputs": {
+        "value": {
+          "kind": "var",
+          "name": "rosettaExcelDefault",
+          "path": []
+        }
+      }
+    },
+    {
+      "id": "L21",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "05-excel.wal",
+        "nodePath": [
+          20
+        ],
+        "nodeId": "L21",
+        "label": "excelGetTable @ line 21"
+      },
+      "kind": "action",
+      "op": "vendor:ibm-rpa/excelGetTable",
+      "args": {
+        "file": {
+          "kind": "var",
+          "name": "rosettaExcelDefault",
+          "path": []
+        },
+        "getfirstsheet": {
+          "kind": "literal",
+          "value": true
+        },
+        "entiretable": {
+          "kind": "literal",
+          "value": true
+        },
+        "hasheaders": {
+          "kind": "literal",
+          "value": true
+        }
+      },
+      "outputs": {
+        "value": {
+          "kind": "var",
+          "name": "rosettaTable1",
+          "path": []
+        },
+        "rows": {
+          "kind": "var",
+          "name": "rosettaRows2",
+          "path": []
+        }
+      }
+    },
+    {
+      "id": "L22",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "05-excel.wal",
+        "nodePath": [
+          21
+        ],
+        "nodeId": "L22",
+        "label": "for @ line 22"
+      },
+      "kind": "loop",
+      "loop": {
+        "kind": "times",
+        "count": {
+          "kind": "var",
+          "name": "rosettaRows2",
+          "path": []
+        },
+        "indexVar": {
+          "kind": "var",
+          "name": "rosettaIndex3",
+          "path": []
+        }
+      },
+      "body": [
+        {
+          "id": "L23",
+          "source": {
+            "platform": "ibm-rpa",
+            "file": "05-excel.wal",
+            "nodePath": [
+              22
+            ],
+            "nodeId": "L23",
+            "label": "mapTableRow @ line 23"
+          },
+          "kind": "action",
+          "op": "vendor:ibm-rpa/mapTableRow",
+          "args": {
+            "dataTable": {
+              "kind": "var",
+              "name": "rosettaTable1",
+              "path": []
+            },
+            "row": {
+              "kind": "var",
+              "name": "rosettaIndex3",
+              "path": []
+            },
+            "mappings": {
+              "kind": "template",
+              "parts": [
+                {
+                  "kind": "literal",
+                  "value": "name=Name="
+                },
+                {
+                  "kind": "var",
+                  "name": "vRow_Name",
+                  "path": []
+                },
+                {
+                  "kind": "literal",
+                  "value": ",name=Amount="
+                },
+                {
+                  "kind": "var",
+                  "name": "vRow_Amount",
+                  "path": []
+                }
+              ]
+            }
+          },
+          "outputs": {}
+        },
+        {
+          "id": "L24",
+          "source": {
+            "platform": "ibm-rpa",
+            "file": "05-excel.wal",
+            "nodePath": [
+              23
+            ],
+            "nodeId": "L24",
+            "label": "writeToFile @ line 24"
+          },
+          "kind": "action",
+          "op": "vendor:ibm-rpa/writeToFile",
+          "args": {
+            "value": {
+              "kind": "template",
+              "parts": [
+                {
+                  "kind": "literal",
+                  "value": "Name="
+                },
+                {
+                  "kind": "var",
+                  "name": "vRow_Name",
+                  "path": []
+                },
+                {
+                  "kind": "literal",
+                  "value": " Amount="
+                },
+                {
+                  "kind": "var",
+                  "name": "vRow_Amount",
+                  "path": []
+                }
+              ]
+            },
+            "file": {
+              "kind": "literal",
+              "value": "C:\\RosettaTest\\log.txt"
+            },
+            "encoding": {
+              "kind": "literal",
+              "value": "Default"
+            },
+            "writeasnewline": {
+              "kind": "literal",
+              "value": true
+            }
+          },
+          "outputs": {}
+        }
+      ]
+    },
+    {
+      "id": "L26",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "05-excel.wal",
+        "nodePath": [
+          25
+        ],
+        "nodeId": "L26",
+        "label": "excelSet @ line 26"
+      },
+      "kind": "action",
+      "op": "vendor:ibm-rpa/excelSet",
+      "args": {
+        "value": {
+          "kind": "literal",
+          "value": "Done"
+        },
+        "file": {
+          "kind": "var",
+          "name": "rosettaExcelDefault",
+          "path": []
+        },
+        "getfirstsheet": {
+          "kind": "literal",
+          "value": true
+        },
+        "usingcell": {
+          "kind": "literal",
+          "value": true
+        },
+        "cell": {
+          "kind": "literal",
+          "value": "C1"
+        }
+      },
+      "outputs": {}
+    },
+    {
+      "id": "L27",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "05-excel.wal",
+        "nodePath": [
+          26
+        ],
+        "nodeId": "L27"
+      },
+      "kind": "comment",
+      "text": "A360 Save workbook: WAL saves the workbook when it is closed (excelClose --save)"
+    },
+    {
+      "id": "L28",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "05-excel.wal",
+        "nodePath": [
+          27
+        ],
+        "nodeId": "L28",
+        "label": "excelClose @ line 28"
+      },
+      "kind": "action",
+      "op": "vendor:ibm-rpa/excelClose",
+      "args": {
+        "file": {
+          "kind": "var",
+          "name": "rosettaExcelDefault",
+          "path": []
+        },
+        "save": {
+          "kind": "literal",
+          "value": true
+        }
+      },
+      "outputs": {}
+    }
+  ]
+}

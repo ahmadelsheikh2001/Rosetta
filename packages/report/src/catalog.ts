@@ -136,6 +136,10 @@ export const en = {
   'lift.json': 'Not valid JSON: {detail}',
   'lift.schema': 'Not a recognised A360 bot file (at "{path}": {detail}).',
   'lift.zip': 'Export zips are not supported yet; provide the bot JSON files instead.',
+  'lift.wal.parse': 'Line {line}: a quoted value is not closed.',
+  'lift.wal.structure': 'A block is not closed or closed twice ({verb}).',
+  'lift.wal.unsupported': '{verb} is not converted yet: {detail}',
+  'lift.wal.variableType': 'Variable "{variable}" has type {type}, which is not understood yet.',
   'lift.unknownValue': 'A value of type {type} was not understood and is kept as is.',
   'lift.rawExpression': 'The expression "{text}" could not be read ({reason}) and is kept as is.',
   'lift.condition':

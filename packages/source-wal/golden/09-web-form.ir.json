@@ -1,0 +1,1084 @@
+{
+  "id": "09-web-form.wal",
+  "name": "09-web-form",
+  "source": {
+    "platform": "ibm-rpa",
+    "file": "09-web-form.wal",
+    "nodePath": []
+  },
+  "variables": [
+    {
+      "name": "SampleNumber",
+      "type": {
+        "kind": "number"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "09-web-form.wal",
+        "nodePath": [
+          9
+        ],
+        "nodeId": "L10",
+        "label": "defVar"
+      }
+    },
+    {
+      "name": "SampleString",
+      "type": {
+        "kind": "string"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "09-web-form.wal",
+        "nodePath": [
+          10
+        ],
+        "nodeId": "L11",
+        "label": "defVar"
+      }
+    },
+    {
+      "name": "CsvTxtRow_Company_Name",
+      "type": {
+        "kind": "string"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "09-web-form.wal",
+        "nodePath": [
+          12
+        ],
+        "nodeId": "L13",
+        "label": "defVar"
+      }
+    },
+    {
+      "name": "CsvTxtRow_Customer_ID",
+      "type": {
+        "kind": "string"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "09-web-form.wal",
+        "nodePath": [
+          13
+        ],
+        "nodeId": "L14",
+        "label": "defVar"
+      }
+    },
+    {
+      "name": "CsvTxtRow_Primary_Contact",
+      "type": {
+        "kind": "string"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "09-web-form.wal",
+        "nodePath": [
+          14
+        ],
+        "nodeId": "L15",
+        "label": "defVar"
+      }
+    },
+    {
+      "name": "CsvTxtRow_Street_Address",
+      "type": {
+        "kind": "string"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "09-web-form.wal",
+        "nodePath": [
+          15
+        ],
+        "nodeId": "L16",
+        "label": "defVar"
+      }
+    },
+    {
+      "name": "CsvTxtRow_City",
+      "type": {
+        "kind": "string"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "09-web-form.wal",
+        "nodePath": [
+          16
+        ],
+        "nodeId": "L17",
+        "label": "defVar"
+      }
+    },
+    {
+      "name": "CsvTxtRow_State",
+      "type": {
+        "kind": "string"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "09-web-form.wal",
+        "nodePath": [
+          17
+        ],
+        "nodeId": "L18",
+        "label": "defVar"
+      }
+    },
+    {
+      "name": "CsvTxtRow_Zip",
+      "type": {
+        "kind": "string"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "09-web-form.wal",
+        "nodePath": [
+          18
+        ],
+        "nodeId": "L19",
+        "label": "defVar"
+      }
+    },
+    {
+      "name": "CsvTxtRow_Email_Address",
+      "type": {
+        "kind": "string"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "09-web-form.wal",
+        "nodePath": [
+          19
+        ],
+        "nodeId": "L20",
+        "label": "defVar"
+      }
+    },
+    {
+      "name": "CsvTxtRow_Offers_Discounts",
+      "type": {
+        "kind": "string"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "09-web-form.wal",
+        "nodePath": [
+          20
+        ],
+        "nodeId": "L21",
+        "label": "defVar"
+      }
+    },
+    {
+      "name": "CsvTxtRow_Non_Disclosure_On_File",
+      "type": {
+        "kind": "string"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "09-web-form.wal",
+        "nodePath": [
+          21
+        ],
+        "nodeId": "L22",
+        "label": "defVar"
+      }
+    },
+    {
+      "name": "rosettaTable1",
+      "type": {
+        "kind": "table"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "09-web-form.wal",
+        "nodePath": [
+          24
+        ],
+        "nodeId": "L25",
+        "label": "defVar"
+      }
+    },
+    {
+      "name": "rosettaIndex2",
+      "type": {
+        "kind": "number"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "09-web-form.wal",
+        "nodePath": [
+          25
+        ],
+        "nodeId": "L26",
+        "label": "defVar"
+      }
+    }
+  ],
+  "packages": [],
+  "body": [
+    {
+      "id": "L12",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "09-web-form.wal",
+        "nodePath": [
+          11
+        ],
+        "nodeId": "L12"
+      },
+      "kind": "comment",
+      "text": "CsvTxtRow (A360 Record): one String variable per column the bot reads"
+    },
+    {
+      "id": "L23",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "09-web-form.wal",
+        "nodePath": [
+          22
+        ],
+        "nodeId": "L23"
+      },
+      "kind": "comment",
+      "text": "Browser1 (A360 browser window): WAL works in the browser started by webStart"
+    },
+    {
+      "id": "L27",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "09-web-form.wal",
+        "nodePath": [
+          26
+        ],
+        "nodeId": "L27"
+      },
+      "kind": "comment",
+      "text": "---- open Exel and  red data  ----"
+    },
+    {
+      "id": "L28",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "09-web-form.wal",
+        "nodePath": [
+          27
+        ],
+        "nodeId": "L28"
+      },
+      "kind": "comment",
+      "text": "CSV session \"Default\" opened here; WAL reads the file in one step (readCSV) below."
+    },
+    {
+      "id": "L29",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "09-web-form.wal",
+        "nodePath": [
+          28
+        ],
+        "nodeId": "L29",
+        "label": "webStart @ line 29"
+      },
+      "kind": "action",
+      "op": "vendor:ibm-rpa/webStart",
+      "args": {
+        "name": {
+          "kind": "literal",
+          "value": "browser"
+        },
+        "type": {
+          "kind": "literal",
+          "value": "Chrome"
+        },
+        "userprofilepreferences": {
+          "kind": "literal",
+          "value": "AutomationOptimized"
+        }
+      },
+      "outputs": {}
+    },
+    {
+      "id": "L30",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "09-web-form.wal",
+        "nodePath": [
+          29
+        ],
+        "nodeId": "L30",
+        "label": "webNavigate @ line 30"
+      },
+      "kind": "action",
+      "op": "vendor:ibm-rpa/webNavigate",
+      "args": {
+        "url": {
+          "kind": "literal",
+          "value": "https://example.com/customer-onboarding.html"
+        }
+      },
+      "outputs": {}
+    },
+    {
+      "id": "L31",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "09-web-form.wal",
+        "nodePath": [
+          30
+        ],
+        "nodeId": "L31"
+      },
+      "kind": "comment",
+      "text": "---- loop and insert data ----"
+    },
+    {
+      "id": "L32",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "09-web-form.wal",
+        "nodePath": [
+          31
+        ],
+        "nodeId": "L32",
+        "label": "readCSV @ line 32"
+      },
+      "kind": "action",
+      "op": "vendor:ibm-rpa/readCSV",
+      "args": {
+        "filepath": {
+          "kind": "literal",
+          "value": "C:\\RosettaTest\\customer-onboarding-challenge.csv"
+        },
+        "delimiter": {
+          "kind": "literal",
+          "value": ","
+        },
+        "hasheaders": {
+          "kind": "literal",
+          "value": true
+        }
+      },
+      "outputs": {
+        "value": {
+          "kind": "var",
+          "name": "rosettaTable1",
+          "path": []
+        }
+      }
+    },
+    {
+      "id": "L33",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "09-web-form.wal",
+        "nodePath": [
+          32
+        ],
+        "nodeId": "L33",
+        "label": "for @ line 33"
+      },
+      "kind": "loop",
+      "loop": {
+        "kind": "times",
+        "count": {
+          "kind": "var",
+          "name": "rosettaTable1",
+          "path": [
+            {
+              "kind": "key",
+              "key": {
+                "kind": "literal",
+                "value": "Rows"
+              }
+            }
+          ]
+        },
+        "indexVar": {
+          "kind": "var",
+          "name": "rosettaIndex2",
+          "path": []
+        }
+      },
+      "body": [
+        {
+          "id": "L34",
+          "source": {
+            "platform": "ibm-rpa",
+            "file": "09-web-form.wal",
+            "nodePath": [
+              33
+            ],
+            "nodeId": "L34",
+            "label": "mapTableRow @ line 34"
+          },
+          "kind": "action",
+          "op": "vendor:ibm-rpa/mapTableRow",
+          "args": {
+            "dataTable": {
+              "kind": "var",
+              "name": "rosettaTable1",
+              "path": []
+            },
+            "row": {
+              "kind": "var",
+              "name": "rosettaIndex2",
+              "path": []
+            },
+            "mappings": {
+              "kind": "template",
+              "parts": [
+                {
+                  "kind": "literal",
+                  "value": "name=Company Name="
+                },
+                {
+                  "kind": "var",
+                  "name": "CsvTxtRow_Company_Name",
+                  "path": []
+                },
+                {
+                  "kind": "literal",
+                  "value": ",name=Customer ID="
+                },
+                {
+                  "kind": "var",
+                  "name": "CsvTxtRow_Customer_ID",
+                  "path": []
+                },
+                {
+                  "kind": "literal",
+                  "value": ",name=Primary Contact="
+                },
+                {
+                  "kind": "var",
+                  "name": "CsvTxtRow_Primary_Contact",
+                  "path": []
+                },
+                {
+                  "kind": "literal",
+                  "value": ",name=Street Address="
+                },
+                {
+                  "kind": "var",
+                  "name": "CsvTxtRow_Street_Address",
+                  "path": []
+                },
+                {
+                  "kind": "literal",
+                  "value": ",name=City="
+                },
+                {
+                  "kind": "var",
+                  "name": "CsvTxtRow_City",
+                  "path": []
+                },
+                {
+                  "kind": "literal",
+                  "value": ",name=State="
+                },
+                {
+                  "kind": "var",
+                  "name": "CsvTxtRow_State",
+                  "path": []
+                },
+                {
+                  "kind": "literal",
+                  "value": ",name=Zip="
+                },
+                {
+                  "kind": "var",
+                  "name": "CsvTxtRow_Zip",
+                  "path": []
+                },
+                {
+                  "kind": "literal",
+                  "value": ",name=Email Address="
+                },
+                {
+                  "kind": "var",
+                  "name": "CsvTxtRow_Email_Address",
+                  "path": []
+                },
+                {
+                  "kind": "literal",
+                  "value": ",name=Offers Discounts="
+                },
+                {
+                  "kind": "var",
+                  "name": "CsvTxtRow_Offers_Discounts",
+                  "path": []
+                },
+                {
+                  "kind": "literal",
+                  "value": ",name=Non-Disclosure On File="
+                },
+                {
+                  "kind": "var",
+                  "name": "CsvTxtRow_Non_Disclosure_On_File",
+                  "path": []
+                }
+              ]
+            }
+          },
+          "outputs": {}
+        },
+        {
+          "id": "L35",
+          "source": {
+            "platform": "ibm-rpa",
+            "file": "09-web-form.wal",
+            "nodePath": [
+              34
+            ],
+            "nodeId": "L35",
+            "label": "webSet @ line 35"
+          },
+          "kind": "action",
+          "op": "vendor:ibm-rpa/webSet",
+          "args": {
+            "value": {
+              "kind": "var",
+              "name": "CsvTxtRow_Company_Name",
+              "path": []
+            },
+            "selector": {
+              "kind": "literal",
+              "value": "Id"
+            },
+            "id": {
+              "kind": "literal",
+              "value": "customerName"
+            },
+            "timeout": {
+              "kind": "literal",
+              "value": "00:00:15"
+            }
+          },
+          "outputs": {}
+        },
+        {
+          "id": "L36",
+          "source": {
+            "platform": "ibm-rpa",
+            "file": "09-web-form.wal",
+            "nodePath": [
+              35
+            ],
+            "nodeId": "L36",
+            "label": "webSet @ line 36"
+          },
+          "kind": "action",
+          "op": "vendor:ibm-rpa/webSet",
+          "args": {
+            "value": {
+              "kind": "var",
+              "name": "CsvTxtRow_Customer_ID",
+              "path": []
+            },
+            "selector": {
+              "kind": "literal",
+              "value": "Id"
+            },
+            "id": {
+              "kind": "literal",
+              "value": "customerID"
+            },
+            "timeout": {
+              "kind": "literal",
+              "value": "00:00:15"
+            }
+          },
+          "outputs": {}
+        },
+        {
+          "id": "L37",
+          "source": {
+            "platform": "ibm-rpa",
+            "file": "09-web-form.wal",
+            "nodePath": [
+              36
+            ],
+            "nodeId": "L37",
+            "label": "webSet @ line 37"
+          },
+          "kind": "action",
+          "op": "vendor:ibm-rpa/webSet",
+          "args": {
+            "value": {
+              "kind": "var",
+              "name": "CsvTxtRow_Primary_Contact",
+              "path": []
+            },
+            "selector": {
+              "kind": "literal",
+              "value": "Id"
+            },
+            "id": {
+              "kind": "literal",
+              "value": "primaryContact"
+            },
+            "timeout": {
+              "kind": "literal",
+              "value": "00:00:15"
+            }
+          },
+          "outputs": {}
+        },
+        {
+          "id": "L38",
+          "source": {
+            "platform": "ibm-rpa",
+            "file": "09-web-form.wal",
+            "nodePath": [
+              37
+            ],
+            "nodeId": "L38",
+            "label": "webSet @ line 38"
+          },
+          "kind": "action",
+          "op": "vendor:ibm-rpa/webSet",
+          "args": {
+            "value": {
+              "kind": "var",
+              "name": "CsvTxtRow_Street_Address",
+              "path": []
+            },
+            "selector": {
+              "kind": "literal",
+              "value": "Id"
+            },
+            "id": {
+              "kind": "literal",
+              "value": "street"
+            },
+            "timeout": {
+              "kind": "literal",
+              "value": "00:00:15"
+            }
+          },
+          "outputs": {}
+        },
+        {
+          "id": "L39",
+          "source": {
+            "platform": "ibm-rpa",
+            "file": "09-web-form.wal",
+            "nodePath": [
+              38
+            ],
+            "nodeId": "L39",
+            "label": "webSet @ line 39"
+          },
+          "kind": "action",
+          "op": "vendor:ibm-rpa/webSet",
+          "args": {
+            "value": {
+              "kind": "var",
+              "name": "CsvTxtRow_City",
+              "path": []
+            },
+            "selector": {
+              "kind": "literal",
+              "value": "Id"
+            },
+            "id": {
+              "kind": "literal",
+              "value": "city"
+            },
+            "timeout": {
+              "kind": "literal",
+              "value": "00:00:15"
+            }
+          },
+          "outputs": {}
+        },
+        {
+          "id": "L40",
+          "source": {
+            "platform": "ibm-rpa",
+            "file": "09-web-form.wal",
+            "nodePath": [
+              39
+            ],
+            "nodeId": "L40",
+            "label": "webSetComboBox @ line 40"
+          },
+          "kind": "action",
+          "op": "vendor:ibm-rpa/webSetComboBox",
+          "args": {
+            "selectoptionby": {
+              "kind": "literal",
+              "value": "MatchByText"
+            },
+            "matchbytext": {
+              "kind": "var",
+              "name": "CsvTxtRow_State",
+              "path": []
+            },
+            "selector": {
+              "kind": "literal",
+              "value": "Id"
+            },
+            "id": {
+              "kind": "literal",
+              "value": "state"
+            },
+            "timeout": {
+              "kind": "literal",
+              "value": "00:00:15"
+            }
+          },
+          "outputs": {}
+        },
+        {
+          "id": "L41",
+          "source": {
+            "platform": "ibm-rpa",
+            "file": "09-web-form.wal",
+            "nodePath": [
+              40
+            ],
+            "nodeId": "L41",
+            "label": "webSet @ line 41"
+          },
+          "kind": "action",
+          "op": "vendor:ibm-rpa/webSet",
+          "args": {
+            "value": {
+              "kind": "var",
+              "name": "CsvTxtRow_Zip",
+              "path": []
+            },
+            "selector": {
+              "kind": "literal",
+              "value": "Id"
+            },
+            "id": {
+              "kind": "literal",
+              "value": "zip"
+            },
+            "timeout": {
+              "kind": "literal",
+              "value": "00:00:15"
+            }
+          },
+          "outputs": {}
+        },
+        {
+          "id": "L42",
+          "source": {
+            "platform": "ibm-rpa",
+            "file": "09-web-form.wal",
+            "nodePath": [
+              41
+            ],
+            "nodeId": "L42",
+            "label": "webSet @ line 42"
+          },
+          "kind": "action",
+          "op": "vendor:ibm-rpa/webSet",
+          "args": {
+            "value": {
+              "kind": "var",
+              "name": "CsvTxtRow_Email_Address",
+              "path": []
+            },
+            "selector": {
+              "kind": "literal",
+              "value": "Id"
+            },
+            "id": {
+              "kind": "literal",
+              "value": "email"
+            },
+            "timeout": {
+              "kind": "literal",
+              "value": "00:00:15"
+            }
+          },
+          "outputs": {}
+        },
+        {
+          "id": "L43",
+          "source": {
+            "platform": "ibm-rpa",
+            "file": "09-web-form.wal",
+            "nodePath": [
+              42
+            ],
+            "nodeId": "L43",
+            "label": "if @ line 43"
+          },
+          "kind": "if",
+          "branches": [
+            {
+              "condition": {
+                "kind": "binary",
+                "op": "eq",
+                "left": {
+                  "kind": "var",
+                  "name": "CsvTxtRow_Offers_Discounts",
+                  "path": []
+                },
+                "right": {
+                  "kind": "literal",
+                  "value": "YES"
+                }
+              },
+              "body": [
+                {
+                  "id": "L44",
+                  "source": {
+                    "platform": "ibm-rpa",
+                    "file": "09-web-form.wal",
+                    "nodePath": [
+                      43
+                    ],
+                    "nodeId": "L44",
+                    "label": "webClick @ line 44"
+                  },
+                  "kind": "action",
+                  "op": "vendor:ibm-rpa/webClick",
+                  "args": {
+                    "selector": {
+                      "kind": "literal",
+                      "value": "Id"
+                    },
+                    "id": {
+                      "kind": "literal",
+                      "value": "activeDiscountYes"
+                    },
+                    "timeout": {
+                      "kind": "literal",
+                      "value": "00:00:15"
+                    }
+                  },
+                  "outputs": {}
+                }
+              ]
+            }
+          ],
+          "else": [
+            {
+              "id": "L46",
+              "source": {
+                "platform": "ibm-rpa",
+                "file": "09-web-form.wal",
+                "nodePath": [
+                  45
+                ],
+                "nodeId": "L46",
+                "label": "webClick @ line 46"
+              },
+              "kind": "action",
+              "op": "vendor:ibm-rpa/webClick",
+              "args": {
+                "selector": {
+                  "kind": "literal",
+                  "value": "Id"
+                },
+                "id": {
+                  "kind": "literal",
+                  "value": "activeDiscountNo"
+                },
+                "timeout": {
+                  "kind": "literal",
+                  "value": "00:00:15"
+                }
+              },
+              "outputs": {}
+            }
+          ]
+        },
+        {
+          "id": "L48",
+          "source": {
+            "platform": "ibm-rpa",
+            "file": "09-web-form.wal",
+            "nodePath": [
+              47
+            ],
+            "nodeId": "L48",
+            "label": "if @ line 48"
+          },
+          "kind": "if",
+          "branches": [
+            {
+              "condition": {
+                "kind": "binary",
+                "op": "eq",
+                "left": {
+                  "kind": "var",
+                  "name": "CsvTxtRow_Non_Disclosure_On_File",
+                  "path": []
+                },
+                "right": {
+                  "kind": "literal",
+                  "value": "YES"
+                }
+              },
+              "body": [
+                {
+                  "id": "L49",
+                  "source": {
+                    "platform": "ibm-rpa",
+                    "file": "09-web-form.wal",
+                    "nodePath": [
+                      48
+                    ],
+                    "nodeId": "L49",
+                    "label": "webClick @ line 49"
+                  },
+                  "kind": "action",
+                  "op": "vendor:ibm-rpa/webClick",
+                  "args": {
+                    "selector": {
+                      "kind": "literal",
+                      "value": "Id"
+                    },
+                    "id": {
+                      "kind": "literal",
+                      "value": "NDA"
+                    },
+                    "timeout": {
+                      "kind": "literal",
+                      "value": "00:00:15"
+                    }
+                  },
+                  "outputs": {}
+                }
+              ]
+            }
+          ],
+          "else": [
+            {
+              "id": "L51",
+              "source": {
+                "platform": "ibm-rpa",
+                "file": "09-web-form.wal",
+                "nodePath": [
+                  50
+                ],
+                "nodeId": "L51"
+              },
+              "kind": "comment",
+              "text": "[DISABLED] // TODO [ROSETTA] ui.capture: Recorder action (none) not supported yet"
+            }
+          ]
+        },
+        {
+          "id": "L53",
+          "source": {
+            "platform": "ibm-rpa",
+            "file": "09-web-form.wal",
+            "nodePath": [
+              52
+            ],
+            "nodeId": "L53",
+            "label": "webClick @ line 53"
+          },
+          "kind": "action",
+          "op": "vendor:ibm-rpa/webClick",
+          "args": {
+            "selector": {
+              "kind": "literal",
+              "value": "Id"
+            },
+            "id": {
+              "kind": "literal",
+              "value": "submit_button"
+            },
+            "timeout": {
+              "kind": "literal",
+              "value": "00:00:15"
+            }
+          },
+          "outputs": {}
+        }
+      ]
+    },
+    {
+      "id": "L55",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "09-web-form.wal",
+        "nodePath": [
+          54
+        ],
+        "nodeId": "L55"
+      },
+      "kind": "comment",
+      "text": "---- close csv file  ----"
+    },
+    {
+      "id": "L56",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "09-web-form.wal",
+        "nodePath": [
+          55
+        ],
+        "nodeId": "L56"
+      },
+      "kind": "comment",
+      "text": "CSV session \"Default\" closed here; WAL keeps no file open (readCSV)."
+    },
+    {
+      "id": "L57",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "09-web-form.wal",
+        "nodePath": [
+          56
+        ],
+        "nodeId": "L57",
+        "label": "webClose @ line 57"
+      },
+      "kind": "action",
+      "op": "vendor:ibm-rpa/webClose",
+      "args": {
+        "name": {
+          "kind": "literal",
+          "value": "browser"
+        },
+        "leavebrowseropen": {
+          "kind": "literal",
+          "value": true
+        }
+      },
+      "outputs": {}
+    }
+  ]
+}

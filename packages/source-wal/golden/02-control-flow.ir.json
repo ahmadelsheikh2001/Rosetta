@@ -1,0 +1,1076 @@
+{
+  "id": "02-control-flow.wal",
+  "name": "02-control-flow",
+  "source": {
+    "platform": "ibm-rpa",
+    "file": "02-control-flow.wal",
+    "nodePath": []
+  },
+  "variables": [
+    {
+      "name": "SampleNumber",
+      "type": {
+        "kind": "number"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "02-control-flow.wal",
+        "nodePath": [
+          9
+        ],
+        "nodeId": "L10",
+        "label": "defVar"
+      }
+    },
+    {
+      "name": "SampleString",
+      "type": {
+        "kind": "string"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "02-control-flow.wal",
+        "nodePath": [
+          10
+        ],
+        "nodeId": "L11",
+        "label": "defVar"
+      }
+    },
+    {
+      "name": "vTextIn",
+      "type": {
+        "kind": "string"
+      },
+      "direction": "input",
+      "sensitive": false,
+      "defaultValue": {
+        "kind": "literal",
+        "value": "Test User"
+      },
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "02-control-flow.wal",
+        "nodePath": [
+          11
+        ],
+        "nodeId": "L12",
+        "label": "defVar"
+      }
+    },
+    {
+      "name": "vResult",
+      "type": {
+        "kind": "string"
+      },
+      "direction": "output",
+      "sensitive": false,
+      "defaultValue": {
+        "kind": "literal",
+        "value": "none"
+      },
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "02-control-flow.wal",
+        "nodePath": [
+          12
+        ],
+        "nodeId": "L13",
+        "label": "defVar"
+      }
+    },
+    {
+      "name": "vItem",
+      "type": {
+        "kind": "string"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "02-control-flow.wal",
+        "nodePath": [
+          13
+        ],
+        "nodeId": "L14",
+        "label": "defVar"
+      }
+    },
+    {
+      "name": "vKey",
+      "type": {
+        "kind": "string"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "02-control-flow.wal",
+        "nodePath": [
+          14
+        ],
+        "nodeId": "L15",
+        "label": "defVar"
+      }
+    },
+    {
+      "name": "vNumIn",
+      "type": {
+        "kind": "number"
+      },
+      "direction": "input",
+      "sensitive": false,
+      "defaultValue": {
+        "kind": "literal",
+        "value": 7
+      },
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "02-control-flow.wal",
+        "nodePath": [
+          15
+        ],
+        "nodeId": "L16",
+        "label": "defVar"
+      }
+    },
+    {
+      "name": "vCounter",
+      "type": {
+        "kind": "number"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "defaultValue": {
+        "kind": "literal",
+        "value": 0
+      },
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "02-control-flow.wal",
+        "nodePath": [
+          16
+        ],
+        "nodeId": "L17",
+        "label": "defVar"
+      }
+    },
+    {
+      "name": "vFlag",
+      "type": {
+        "kind": "boolean"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "defaultValue": {
+        "kind": "literal",
+        "value": true
+      },
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "02-control-flow.wal",
+        "nodePath": [
+          17
+        ],
+        "nodeId": "L18",
+        "label": "defVar"
+      }
+    },
+    {
+      "name": "vList",
+      "type": {
+        "kind": "list",
+        "of": {
+          "kind": "string"
+        }
+      },
+      "direction": "local",
+      "sensitive": false,
+      "defaultValue": {
+        "kind": "call",
+        "fn": "list.of",
+        "args": [
+          {
+            "kind": "literal",
+            "value": "Alpha"
+          },
+          {
+            "kind": "literal",
+            "value": "Skip"
+          },
+          {
+            "kind": "literal",
+            "value": "Gamma"
+          }
+        ]
+      },
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "02-control-flow.wal",
+        "nodePath": [
+          18
+        ],
+        "nodeId": "L19",
+        "label": "defVar"
+      }
+    },
+    {
+      "name": "vDict",
+      "type": {
+        "kind": "dict",
+        "of": {
+          "kind": "string"
+        }
+      },
+      "direction": "local",
+      "sensitive": false,
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "02-control-flow.wal",
+        "nodePath": [
+          19
+        ],
+        "nodeId": "L20",
+        "label": "defVar"
+      }
+    },
+    {
+      "name": "vFileInfo",
+      "type": {
+        "kind": "dict",
+        "of": {
+          "kind": "string"
+        }
+      },
+      "direction": "local",
+      "sensitive": false,
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "02-control-flow.wal",
+        "nodePath": [
+          20
+        ],
+        "nodeId": "L21",
+        "label": "defVar"
+      }
+    },
+    {
+      "name": "rosettaEntry1",
+      "type": {
+        "kind": "any"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "02-control-flow.wal",
+        "nodePath": [
+          22
+        ],
+        "nodeId": "L23",
+        "label": "defVar"
+      }
+    },
+    {
+      "name": "rosettaItem2",
+      "type": {
+        "kind": "string"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "02-control-flow.wal",
+        "nodePath": [
+          23
+        ],
+        "nodeId": "L24",
+        "label": "defVar"
+      }
+    },
+    {
+      "name": "rosettaItem3",
+      "type": {
+        "kind": "string"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "02-control-flow.wal",
+        "nodePath": [
+          24
+        ],
+        "nodeId": "L25",
+        "label": "defVar"
+      }
+    },
+    {
+      "name": "rosettaItem4",
+      "type": {
+        "kind": "string"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "02-control-flow.wal",
+        "nodePath": [
+          25
+        ],
+        "nodeId": "L26",
+        "label": "defVar"
+      }
+    }
+  ],
+  "packages": [],
+  "body": [
+    {
+      "id": "L28",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "02-control-flow.wal",
+        "nodePath": [
+          27
+        ],
+        "nodeId": "L28",
+        "label": "strDictAdd @ line 28"
+      },
+      "kind": "action",
+      "op": "vendor:ibm-rpa/strDictAdd",
+      "args": {
+        "key": {
+          "kind": "literal",
+          "value": "k1"
+        },
+        "value": {
+          "kind": "literal",
+          "value": "v1"
+        },
+        "dictionary": {
+          "kind": "var",
+          "name": "vDict",
+          "path": []
+        }
+      },
+      "outputs": {}
+    },
+    {
+      "id": "L29",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "02-control-flow.wal",
+        "nodePath": [
+          28
+        ],
+        "nodeId": "L29",
+        "label": "strDictAdd @ line 29"
+      },
+      "kind": "action",
+      "op": "vendor:ibm-rpa/strDictAdd",
+      "args": {
+        "key": {
+          "kind": "literal",
+          "value": "k2"
+        },
+        "value": {
+          "kind": "literal",
+          "value": "v2"
+        },
+        "dictionary": {
+          "kind": "var",
+          "name": "vDict",
+          "path": []
+        }
+      },
+      "outputs": {}
+    },
+    {
+      "id": "L30",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "02-control-flow.wal",
+        "nodePath": [
+          29
+        ],
+        "nodeId": "L30"
+      },
+      "kind": "comment",
+      "text": "---- Nested conditions ----"
+    },
+    {
+      "id": "L31",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "02-control-flow.wal",
+        "nodePath": [
+          30
+        ],
+        "nodeId": "L31"
+      },
+      "kind": "comment",
+      "text": "RR_02: nested If / Else If / Else on Number, String and Boolean"
+    },
+    {
+      "id": "L32",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "02-control-flow.wal",
+        "nodePath": [
+          31
+        ],
+        "nodeId": "L32",
+        "label": "if @ line 32"
+      },
+      "kind": "if",
+      "branches": [
+        {
+          "condition": {
+            "kind": "binary",
+            "op": "gt",
+            "left": {
+              "kind": "var",
+              "name": "vNumIn",
+              "path": []
+            },
+            "right": {
+              "kind": "literal",
+              "value": 5
+            }
+          },
+          "body": [
+            {
+              "id": "L33",
+              "source": {
+                "platform": "ibm-rpa",
+                "file": "02-control-flow.wal",
+                "nodePath": [
+                  32
+                ],
+                "nodeId": "L33",
+                "label": "if @ line 33"
+              },
+              "kind": "if",
+              "branches": [
+                {
+                  "condition": {
+                    "kind": "binary",
+                    "op": "eq",
+                    "left": {
+                      "kind": "var",
+                      "name": "vTextIn",
+                      "path": []
+                    },
+                    "right": {
+                      "kind": "literal",
+                      "value": "Test User"
+                    }
+                  },
+                  "body": [
+                    {
+                      "id": "L34",
+                      "source": {
+                        "platform": "ibm-rpa",
+                        "file": "02-control-flow.wal",
+                        "nodePath": [
+                          33
+                        ],
+                        "nodeId": "L34",
+                        "label": "setVar @ line 34"
+                      },
+                      "kind": "action",
+                      "op": "vendor:ibm-rpa/setVar",
+                      "args": {
+                        "name": {
+                          "kind": "var",
+                          "name": "vResult",
+                          "path": []
+                        },
+                        "value": {
+                          "kind": "literal",
+                          "value": "Number above 5 and text matches"
+                        }
+                      },
+                      "outputs": {}
+                    }
+                  ]
+                }
+              ],
+              "else": [
+                {
+                  "id": "L36",
+                  "source": {
+                    "platform": "ibm-rpa",
+                    "file": "02-control-flow.wal",
+                    "nodePath": [
+                      35
+                    ],
+                    "nodeId": "L36",
+                    "label": "setVar @ line 36"
+                  },
+                  "kind": "action",
+                  "op": "vendor:ibm-rpa/setVar",
+                  "args": {
+                    "name": {
+                      "kind": "var",
+                      "name": "vResult",
+                      "path": []
+                    },
+                    "value": {
+                      "kind": "literal",
+                      "value": "Number above 5 but text differs"
+                    }
+                  },
+                  "outputs": {}
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "condition": {
+            "kind": "binary",
+            "op": "eq",
+            "left": {
+              "kind": "var",
+              "name": "vFlag",
+              "path": []
+            },
+            "right": {
+              "kind": "literal",
+              "value": true
+            }
+          },
+          "body": [
+            {
+              "id": "L39",
+              "source": {
+                "platform": "ibm-rpa",
+                "file": "02-control-flow.wal",
+                "nodePath": [
+                  38
+                ],
+                "nodeId": "L39",
+                "label": "setVar @ line 39"
+              },
+              "kind": "action",
+              "op": "vendor:ibm-rpa/setVar",
+              "args": {
+                "name": {
+                  "kind": "var",
+                  "name": "vResult",
+                  "path": []
+                },
+                "value": {
+                  "kind": "literal",
+                  "value": "Flag is true"
+                }
+              },
+              "outputs": {}
+            }
+          ]
+        }
+      ],
+      "else": [
+        {
+          "id": "L41",
+          "source": {
+            "platform": "ibm-rpa",
+            "file": "02-control-flow.wal",
+            "nodePath": [
+              40
+            ],
+            "nodeId": "L41",
+            "label": "setVar @ line 41"
+          },
+          "kind": "action",
+          "op": "vendor:ibm-rpa/setVar",
+          "args": {
+            "name": {
+              "kind": "var",
+              "name": "vResult",
+              "path": []
+            },
+            "value": {
+              "kind": "literal",
+              "value": "Else branch reached"
+            }
+          },
+          "outputs": {}
+        }
+      ]
+    },
+    {
+      "id": "L43",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "02-control-flow.wal",
+        "nodePath": [
+          42
+        ],
+        "nodeId": "L43"
+      },
+      "kind": "comment",
+      "text": "---- Loops ----"
+    },
+    {
+      "id": "L44",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "02-control-flow.wal",
+        "nodePath": [
+          43
+        ],
+        "nodeId": "L44"
+      },
+      "kind": "comment",
+      "text": "RR_02: loop types, with Break and Continue under If"
+    },
+    {
+      "id": "L45",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "02-control-flow.wal",
+        "nodePath": [
+          44
+        ],
+        "nodeId": "L45",
+        "label": "for @ line 45"
+      },
+      "kind": "loop",
+      "loop": {
+        "kind": "times",
+        "count": {
+          "kind": "literal",
+          "value": 5
+        },
+        "indexVar": {
+          "kind": "var",
+          "name": "vCounter",
+          "path": []
+        }
+      },
+      "body": [
+        {
+          "id": "L46",
+          "source": {
+            "platform": "ibm-rpa",
+            "file": "02-control-flow.wal",
+            "nodePath": [
+              45
+            ],
+            "nodeId": "L46",
+            "label": "if @ line 46"
+          },
+          "kind": "if",
+          "branches": [
+            {
+              "condition": {
+                "kind": "binary",
+                "op": "eq",
+                "left": {
+                  "kind": "var",
+                  "name": "vCounter",
+                  "path": []
+                },
+                "right": {
+                  "kind": "literal",
+                  "value": 3
+                }
+              },
+              "body": [
+                {
+                  "id": "L47",
+                  "source": {
+                    "platform": "ibm-rpa",
+                    "file": "02-control-flow.wal",
+                    "nodePath": [
+                      46
+                    ],
+                    "nodeId": "L47",
+                    "label": "break @ line 47"
+                  },
+                  "kind": "break"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "L50",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "02-control-flow.wal",
+        "nodePath": [
+          49
+        ],
+        "nodeId": "L50",
+        "label": "while @ line 50"
+      },
+      "kind": "loop",
+      "loop": {
+        "kind": "while",
+        "condition": {
+          "kind": "binary",
+          "op": "lt",
+          "left": {
+            "kind": "var",
+            "name": "vCounter",
+            "path": []
+          },
+          "right": {
+            "kind": "literal",
+            "value": 10
+          }
+        }
+      },
+      "body": [
+        {
+          "id": "L51",
+          "source": {
+            "platform": "ibm-rpa",
+            "file": "02-control-flow.wal",
+            "nodePath": [
+              50
+            ],
+            "nodeId": "L51",
+            "label": "incrementVar @ line 51"
+          },
+          "kind": "action",
+          "op": "vendor:ibm-rpa/incrementVar",
+          "args": {
+            "number": {
+              "kind": "var",
+              "name": "vCounter",
+              "path": []
+            }
+          },
+          "outputs": {}
+        }
+      ]
+    },
+    {
+      "id": "L53",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "02-control-flow.wal",
+        "nodePath": [
+          52
+        ],
+        "nodeId": "L53",
+        "label": "foreach @ line 53"
+      },
+      "kind": "loop",
+      "loop": {
+        "kind": "forEach",
+        "collection": "list",
+        "source": {
+          "kind": "var",
+          "name": "vList",
+          "path": []
+        },
+        "itemVar": {
+          "kind": "var",
+          "name": "vItem",
+          "path": []
+        }
+      },
+      "body": [
+        {
+          "id": "L54",
+          "source": {
+            "platform": "ibm-rpa",
+            "file": "02-control-flow.wal",
+            "nodePath": [
+              53
+            ],
+            "nodeId": "L54",
+            "label": "if @ line 54"
+          },
+          "kind": "if",
+          "branches": [
+            {
+              "condition": {
+                "kind": "binary",
+                "op": "eq",
+                "left": {
+                  "kind": "var",
+                  "name": "vItem",
+                  "path": []
+                },
+                "right": {
+                  "kind": "literal",
+                  "value": "Skip"
+                }
+              },
+              "body": [
+                {
+                  "id": "L55",
+                  "source": {
+                    "platform": "ibm-rpa",
+                    "file": "02-control-flow.wal",
+                    "nodePath": [
+                      54
+                    ],
+                    "nodeId": "L55",
+                    "label": "continue @ line 55"
+                  },
+                  "kind": "continue"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "L57",
+          "source": {
+            "platform": "ibm-rpa",
+            "file": "02-control-flow.wal",
+            "nodePath": [
+              56
+            ],
+            "nodeId": "L57",
+            "label": "setVar @ line 57"
+          },
+          "kind": "action",
+          "op": "vendor:ibm-rpa/setVar",
+          "args": {
+            "name": {
+              "kind": "var",
+              "name": "vResult",
+              "path": []
+            },
+            "value": {
+              "kind": "template",
+              "parts": [
+                {
+                  "kind": "literal",
+                  "value": "Processed "
+                },
+                {
+                  "kind": "var",
+                  "name": "vItem",
+                  "path": []
+                }
+              ]
+            }
+          },
+          "outputs": {}
+        }
+      ]
+    },
+    {
+      "id": "L59",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "02-control-flow.wal",
+        "nodePath": [
+          58
+        ],
+        "nodeId": "L59",
+        "label": "foreach @ line 59"
+      },
+      "kind": "loop",
+      "loop": {
+        "kind": "forEach",
+        "collection": "list",
+        "source": {
+          "kind": "var",
+          "name": "vDict",
+          "path": []
+        },
+        "itemVar": {
+          "kind": "var",
+          "name": "rosettaEntry1",
+          "path": []
+        }
+      },
+      "body": [
+        {
+          "id": "L60",
+          "source": {
+            "platform": "ibm-rpa",
+            "file": "02-control-flow.wal",
+            "nodePath": [
+              59
+            ],
+            "nodeId": "L60",
+            "label": "setVar @ line 60"
+          },
+          "kind": "action",
+          "op": "vendor:ibm-rpa/setVar",
+          "args": {
+            "name": {
+              "kind": "var",
+              "name": "vKey",
+              "path": []
+            },
+            "value": {
+              "kind": "var",
+              "name": "rosettaEntry1",
+              "path": [
+                {
+                  "kind": "key",
+                  "key": {
+                    "kind": "literal",
+                    "value": "Key"
+                  }
+                }
+              ]
+            }
+          },
+          "outputs": {}
+        },
+        {
+          "id": "L61",
+          "source": {
+            "platform": "ibm-rpa",
+            "file": "02-control-flow.wal",
+            "nodePath": [
+              60
+            ],
+            "nodeId": "L61",
+            "label": "strDictGet @ line 61"
+          },
+          "kind": "action",
+          "op": "vendor:ibm-rpa/strDictGet",
+          "args": {
+            "key": {
+              "kind": "var",
+              "name": "vKey",
+              "path": []
+            },
+            "dictionary": {
+              "kind": "var",
+              "name": "vDict",
+              "path": []
+            }
+          },
+          "outputs": {
+            "value": {
+              "kind": "var",
+              "name": "rosettaItem2",
+              "path": []
+            }
+          }
+        },
+        {
+          "id": "L62",
+          "source": {
+            "platform": "ibm-rpa",
+            "file": "02-control-flow.wal",
+            "nodePath": [
+              61
+            ],
+            "nodeId": "L62",
+            "label": "setVar @ line 62"
+          },
+          "kind": "action",
+          "op": "vendor:ibm-rpa/setVar",
+          "args": {
+            "name": {
+              "kind": "var",
+              "name": "vResult",
+              "path": []
+            },
+            "value": {
+              "kind": "template",
+              "parts": [
+                {
+                  "kind": "literal",
+                  "value": "Key "
+                },
+                {
+                  "kind": "var",
+                  "name": "vKey",
+                  "path": []
+                },
+                {
+                  "kind": "literal",
+                  "value": " has value "
+                },
+                {
+                  "kind": "var",
+                  "name": "rosettaItem2",
+                  "path": []
+                }
+              ]
+            }
+          },
+          "outputs": {}
+        }
+      ]
+    },
+    {
+      "id": "L64",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "02-control-flow.wal",
+        "nodePath": [
+          63
+        ],
+        "nodeId": "L64"
+      },
+      "kind": "comment",
+      "text": "TODO [ROSETTA] loop over file not converted yet; source kept below as comments."
+    },
+    {
+      "id": "L65",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "02-control-flow.wal",
+        "nodePath": [
+          64
+        ],
+        "nodeId": "L65"
+      },
+      "kind": "comment",
+      "text": "strDictGet --key \"name\" --dictionary ${vFileInfo} rosettaItem3=value"
+    },
+    {
+      "id": "L66",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "02-control-flow.wal",
+        "nodePath": [
+          65
+        ],
+        "nodeId": "L66"
+      },
+      "kind": "comment",
+      "text": "strDictGet --key \"extension\" --dictionary ${vFileInfo} rosettaItem4=value"
+    },
+    {
+      "id": "L67",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "02-control-flow.wal",
+        "nodePath": [
+          66
+        ],
+        "nodeId": "L67"
+      },
+      "kind": "comment",
+      "text": "setVar --name \"${vResult}\" --value \"File found: ${rosettaItem3}.${rosettaItem4}\""
+    },
+    {
+      "id": "L68",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "02-control-flow.wal",
+        "nodePath": [
+          67
+        ],
+        "nodeId": "L68"
+      },
+      "kind": "comment",
+      "text": "[DISABLED] messageBox --title \"Automation Anywhere Enterprise Client\" --text \"Disabled on purpose: ${vResult}\" --icon \"Information\" --buttons \"OK\" --defaultbutton \"FirstButton\""
+    }
+  ]
+}

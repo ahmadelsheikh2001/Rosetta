@@ -126,6 +126,13 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: Se
   percent-encoded file paths decoded.
 - Reading messages without a node now name their file.
 
+#### IBM RPA → A360, step 1 (ADR-022)
+
+- `@rosetta/source-wal`: reads IBM RPA WAL scripts into the IR: variables and types, comments,
+  If/Else If/Else, For, For Each, While, Do-While, Break/Continue, Throw, subroutines inlined at
+  their `goSub`, every other command as an action with its parameters and outputs. Golden IR over
+  the converted corpus. `onError`/`recover` (the Try/Catch pattern) are reported, not rebuilt yet.
+
 ### Planned (deferred by ADR-016)
 
 - dependency-cruiser layer enforcement
