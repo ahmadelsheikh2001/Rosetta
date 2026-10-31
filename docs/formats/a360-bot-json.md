@@ -163,3 +163,12 @@ Inside `expression` strings, dynamic parts are `$…$`:
 
 Steps are nodes with a `title` attribute and `children`; comments are nodes with a `comment`
 attribute. Both appear wherever statements can (01–04).
+
+## Writing a bot back (A-24)
+
+`PUT /v2/repository/files/{id}/content` with header `Content-Type: application/vnd.aa.taskbot` and the
+raw bot JSON as the body (the same bytes `GET …/content` returns; no wrapper, no multipart, no base64)
+replaces the content of an existing task bot: HTTP 200 with the file metadata; the stored content is
+byte-identical to the body; `hasErrors` is computed separately. Verified 2026-10-31 on a copy of RR_01
+(file `RR_UploadTest`): the editor opened the bot with no error markers and it ran. Creating a new bot
+this way, and the response to invalid content, are not verified yet.
