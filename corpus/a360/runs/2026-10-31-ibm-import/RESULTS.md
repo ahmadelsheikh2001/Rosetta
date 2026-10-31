@@ -102,3 +102,14 @@ out=Machine=<machine> | Bot=\Bots\RPA_Rosetta_Samples\RR_IBM_03-strings-expressi
   Run: COMPLETED, 6/6 lines, about 11.5 s, Excel closed normally. `log.txt` on the Bot Agent machine
   gained `Name=Alice Amount=100`, `Name=Bob Amount=200`, `Name=Carol Amount=300`, as from the
   original RR_05_Excel.
+
+## RR_IBM_RR_08_Parent (Run Task Bot and vault, commit 00b300b)
+
+- Generated with `vaultLocker` RosettaTest and `botFolder` Bots/RPA_Rosetta_Samples. Upload 200,
+  5,793 bytes (SHA-256 `5077b556…0c695346`, checked before upload), stored byte for byte.
+- Editor: 4 lines, no markers. vPassword and vCopyCred default to RosettaTest / DummyLogin /
+  password (checked in the variable dialogs; no value read or shown). Line 1 Run Task Bot calls
+  RR_08_Child in Bots\RPA_Rosetta_Samples with inName = "Test User", outGreeting → vResult; line 2
+  Credential: Assign from `$vPassword$` to vCopyCred; then the vHardcoded assignment and the
+  message box, as in corpus 08.
+- Run: COMPLETED, 4/4 lines, no input prompt, deploy passed.
