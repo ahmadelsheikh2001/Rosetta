@@ -80,6 +80,9 @@ const variableTypes: Readonly<Record<string, string>> = {
 
 const operatorCodes: Readonly<Record<string, string>> = { eq: 'EQ', gt: 'GT', lt: 'LT' };
 
+/** A package function inside an expression: `$vNum.Number:toString$` → `Number`. */
+export const expressionPackage = /\$[A-Za-z_]\w*\.([A-Za-z]\w*):\w+\$/g;
+
 class Generator {
   readonly notes: A360Note[] = [];
   private readonly packages = new Set<string>();
@@ -434,7 +437,11 @@ class Generator {
   }
 
   packageList(nodes: readonly Node[]): Node[] {
-    if (JSON.stringify(nodes).includes('$System:')) this.packages.add('System');
+    // A package used only inside an expression must still be listed, or the bot fails to deploy:
+    // `$System:Date$` (import test, 03), `$vErrLine.Number:toString$` (04).
+    const text = JSON.stringify(nodes);
+    if (text.includes('$System:')) this.packages.add('System');
+    for (const m of text.matchAll(expressionPackage)) if (m[1]) this.packages.add(m[1]);
     return [...this.packages].sort().map((name) => ({
       name,
       version: packageVersions[name] ?? '',

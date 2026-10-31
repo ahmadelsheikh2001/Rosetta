@@ -1,4 +1,4 @@
-import { packageVersions } from './generate.js';
+import { expressionPackage, packageVersions } from './generate.js';
 
 /** A problem found in a generated A360 bot before upload. */
 export interface A360Problem {
@@ -66,6 +66,11 @@ export function checkA360(bot: Json): A360Problem[] {
             add(at, `$System:${name}$ is not a known A360 system value.`);
           if (!packages.has('System'))
             add(at, `$System:${name}$ needs the System package in the bot's packages.`);
+        }
+        for (const m of x.matchAll(expressionPackage)) {
+          const pkg = m[1] ?? '';
+          if (!packages.has(pkg))
+            add(at, `${m[0]} needs the ${pkg} package in the bot's packages.`);
         }
         // $name$, $name[…]$, $name{…}$, $name.Type:…$ (corpus 01–03)
         for (const m of x.matchAll(/\$(?!System:)([A-Za-z_]\w*)(?=[$[{.])/g))

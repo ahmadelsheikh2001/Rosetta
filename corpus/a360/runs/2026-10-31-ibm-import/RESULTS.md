@@ -64,3 +64,14 @@ out=Machine=<machine> | Bot=\Bots\RPA_Rosetta_Samples\RR_IBM_03-strings-expressi
   `$System:AATaskName$` gives the full repository path, as in the original A360 bot.
 - An earlier 01 run, left waiting at its message box, was aborted by the Control Room after about
   30 minutes (RUN_ABORTED); the run that counts is the later one.
+
+## RR_IBM_04-error-handling (Try / Catch / Finally, commit f463263)
+
+- Upload 200, 17,475 bytes, stored byte for byte. Editor: 18 lines, no markers; outer Try with a
+  nested Try, two Catch blocks (shown as "AllErrors", the editor's name for `BotException`), the
+  Throw inside an If, and Finally, as in corpus 04.
+- Run: `deployment.compilation.failed` on line 8, "could not find the action 'toString' in package
+  'Number'". Lines 8 and 12 use `$vErrLine.Number:toString$`, but `Number` was not in the bot's
+  packages. As with `$System:Date$` in 03, a package used only inside an expression must be listed.
+- Fixed: the generator lists every package named in an expression (`$x.Pkg:fn$`), and `checkA360`
+  reports one that is missing. On the uploaded file it reports exactly lines 8 and 12.

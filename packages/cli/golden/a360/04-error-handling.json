@@ -576,6 +576,11 @@
       "settingsAttributes": []
     },
     {
+      "name": "Number",
+      "version": "3.11.5",
+      "settingsAttributes": []
+    },
+    {
       "name": "Step",
       "version": "2.7.0",
       "settingsAttributes": []

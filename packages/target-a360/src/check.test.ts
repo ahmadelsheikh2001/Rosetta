@@ -64,6 +64,16 @@ describe('checkA360', () => {
     ).toEqual(["$System:Date$ needs the System package in the bot's packages."]);
   });
 
+  it('reports a package used only in an expression (04 line 8, deployment.compilation.failed)', () => {
+    expect(
+      messages({
+        nodes: [assign('line $vOut.Number:toString$')],
+        variables: vars,
+        packages: [pkg('String')],
+      }),
+    ).toEqual(["$vOut.Number:toString$ needs the Number package in the bot's packages."]);
+  });
+
   it('reports a package version the Control Room does not have ("Package not found")', () => {
     expect(
       messages({ nodes: [assign('x')], variables: vars, packages: [pkg('String', '0.0.1')] }),
