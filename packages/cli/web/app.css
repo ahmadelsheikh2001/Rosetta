@@ -203,6 +203,37 @@ main .wrap {
 .field select option {
   background: var(--vs-oxford-blue);
 }
+.field input {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background-color: var(--panel-strong);
+}
+.field input::placeholder {
+  color: var(--muted);
+}
+.field .optional {
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+/* Step 1, IBM RPA → A360: what a WAL script does not say */
+.target-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 20px;
+}
+.target-options[hidden] {
+  display: none;
+}
+.target-options .hint {
+  grid-column: 1 / -1;
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
 .arrow {
   color: var(--vs-dodger-blue);
   padding-bottom: 12px;
@@ -543,7 +574,8 @@ footer {
 }
 
 @media (max-width: 720px) {
-  .route {
+  .route,
+  .target-options {
     grid-template-columns: 1fr;
   }
   .arrow {

@@ -167,6 +167,15 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: Se
   `for`, `mapTableRow` into one variable per column) as a loop over the session rows into the
   record variable (`$vRow{Name}$`), and the "Save workbook" comment as a save. `target-a360`
   writes Excel_MS open (session), the row iterator, set cell, save and close. Round trip 05: 6/6.
+- `checkA360` reports Set cell in the header row of a sheet opened with headers (RR_IBM_05 run).
+  Corpus 05 is now revision 2 of RR_05_Excel (C2); the corpus held revision 1 (C1).
+- Sub-bots and the vault back to A360 (corpus 08): `executeScript` with JSON parameters/output →
+  Run Task Bot (inputs and outputs as dictionaries); the `getVaultItem` reads of the initial values
+  → CREDENTIAL variable defaults (vault reference only, never a value); a later read of the same
+  vault item → Credential `assignToCV` copy. WAL has no locker and no bot folder, so
+  `generateA360` takes `vaultLocker` and `botFolder`; without them the notes say what to set. The
+  web UI asks for both (optional) when converting to A360 and validates them. Round trip 08
+  Parent: 4/4.
 
 ### Planned (deferred by ADR-016)
 

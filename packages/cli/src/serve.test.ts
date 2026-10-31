@@ -123,6 +123,30 @@ describe('rosetta serve', () => {
     expect(body.reportHtml).toBeNull();
   });
 
+  it('uses the locker and folder given for IBM RPA → A360, and refuses unsafe ones', async () => {
+    const files = [{ name: 'RR_08_Parent.wal', text: golden('RR_08_Parent.wal') }];
+    const r = await convert({
+      source: 'ibm-rpa',
+      target: 'a360',
+      files,
+      options: { vaultLocker: 'RosettaTest', botFolder: 'Bots/RPA_Rosetta_Samples' },
+    });
+    expect(r.status).toBe(200);
+    const body = JSON.parse(r.body) as { bots: { content: string; notes: unknown[] }[] };
+    const content = body.bots[0]?.content ?? '';
+    expect(content).toContain('"lockerName": "RosettaTest"');
+    expect(content).toContain('Bots/RPA_Rosetta_Samples/RR_08_Child');
+    expect(body.bots[0]?.notes).toEqual([]);
+
+    const bad = await convert({
+      source: 'ibm-rpa',
+      target: 'a360',
+      files,
+      options: { botFolder: 'Bots/../Other' },
+    });
+    expect(bad.status).toBe(400);
+  });
+
   it('reports files that are not A360 bots instead of failing', async () => {
     const r = await convert({
       source: 'a360',

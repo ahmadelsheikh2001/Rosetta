@@ -127,6 +127,81 @@ describe('generateA360', () => {
     expect(r.notes).toEqual([{ kind: 'manual', text: 'sendEmail has no A360 conversion yet' }]);
   });
 
+  it('writes vault defaults, credential copies and Run Task Bot back (corpus 08)', () => {
+    const vault = (out: string) =>
+      action('vendor:ibm-rpa/getVaultItem', {
+        args: { name: lit('Login') },
+        outputs: { password: ref(out) },
+      });
+    const r = generateA360(
+      bot(
+        'b',
+        [
+          vault('vPwd'),
+          action('vendor:ibm-rpa/executeScript', {
+            args: {
+              name: lit('Child'),
+              parameters: lit('{"inName":"Ann"}'),
+              output: {
+                kind: 'template',
+                parts: [lit('{"outText":"'), ref('vText'), lit('"}')],
+              },
+            },
+          }),
+          vault('vCopy'),
+        ],
+        {
+          variables: [
+            variable('vPwd', { kind: 'credential' }, { sensitive: true }),
+            variable('vCopy', { kind: 'credential' }, { sensitive: true }),
+            variable('vText', { kind: 'string' }),
+          ],
+        },
+      ),
+      { vaultLocker: 'L', botFolder: 'Bots/My Folder' },
+    );
+    expect(r.json.variables).toContainEqual(
+      expect.objectContaining({
+        name: 'vPwd',
+        defaultValue: {
+          type: 'CREDENTIAL',
+          credential: { lockerName: 'L', name: 'Login', attributeName: 'password' },
+        },
+      }),
+    );
+    expect(r.json.nodes).toMatchObject([
+      {
+        commandName: 'runTask',
+        attributes: [
+          {
+            value: {
+              taskbotInput: { dictionary: [{ key: 'inName', value: { string: 'Ann' } }] },
+              taskbotFile: {
+                string: 'repository:///Automation%20Anywhere/Bots/My%20Folder/Child',
+              },
+            },
+          },
+          {},
+          {},
+          {},
+        ],
+        returnTo: {
+          type: 'DICTIONARY',
+          dictionary: [{ key: 'outText', value: { variableName: 'vText' } }],
+        },
+      },
+      {
+        commandName: 'assignToCV',
+        attributes: [{ value: { type: 'CREDENTIAL', expression: '$vPwd$' } }],
+        returnTo: { variableName: 'vCopy' },
+      },
+    ]);
+    // vCopy is only ever a copy, so its own vault item is not known
+    expect(r.notes.map((n) => n.text)).toEqual([
+      'Credential vCopy: choose its locker, credential and attribute in the A360 editor.',
+    ]);
+  });
+
   it('never writes a credential value', () => {
     const r = generateA360(
       bot('b', [], {

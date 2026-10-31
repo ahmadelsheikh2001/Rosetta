@@ -56,6 +56,14 @@ export interface A360Note {
   readonly source?: string;
 }
 
+/** What a WAL script does not say about the Control Room it goes to. */
+export interface A360Options {
+  /** Credential Vault locker of the bot's credentials; WAL vault items have no locker. */
+  readonly vaultLocker?: string;
+  /** Repository folder of the bots it runs, e.g. `Bots/Finance` (Run Task Bot, corpus 08). */
+  readonly botFolder?: string;
+}
+
 export interface A360Bot {
   /** The task bot JSON, as the Control Room stores it (A-24: written back with PUT). */
   readonly json: Readonly<Record<string, unknown>>;
@@ -91,7 +99,10 @@ class Generator {
   private loopCount = 0;
   private source: string | undefined;
 
-  constructor(private readonly bot: Bot) {
+  constructor(
+    private readonly bot: Bot,
+    private readonly options: A360Options = {},
+  ) {
     this.types = new Map(bot.variables.map((v) => [v.name, v.type]));
   }
 
@@ -390,6 +401,7 @@ class Generator {
     if (!write) return this.todo(path, `${verb} has no A360 conversion yet`);
     const result = write(a, {
       types: this.types,
+      options: this.options,
       sink: this.sink,
       note: (kind, text) => {
         this.note(kind, text);
@@ -405,6 +417,17 @@ class Generator {
               type: 'SESSION',
               sessionName: { type: 'STRING', string: result.opensSession },
               sessionTarget: 'LOCAL',
+            },
+          }
+        : {}),
+      ...(result.returnDictionary && Object.keys(result.returnDictionary).length
+        ? {
+            returnTo: {
+              type: 'DICTIONARY',
+              dictionary: Object.entries(result.returnDictionary).map(([key, name]) => ({
+                key,
+                value: variableRef(name),
+              })),
             },
           }
         : {}),
@@ -440,10 +463,24 @@ class Generator {
       const d = v.defaultValue;
       if (type === 'STRING' && !d) node.defaultValue = { type, string: '' };
       if (type === 'RECORD') node.defaultValue = { type, record: { schema: [], values: [] } };
-      if (type === 'CREDENTIAL') {
+      const vault = d?.kind === 'call' && d.fn === 'credential.vault' ? d.args : undefined;
+      const text = (e: Expr | undefined) =>
+        e?.kind === 'literal' && e.value !== null ? String(e.value) : undefined;
+      const locker = text(vault?.[0]) ?? this.options.vaultLocker;
+      const name = text(vault?.[1]);
+      const attribute = text(vault?.[2]);
+      if (type === 'CREDENTIAL' && locker && name && attribute) {
+        // only the vault reference is written, never a value
+        node.defaultValue = {
+          type,
+          credential: { lockerName: locker, name, attributeName: attribute },
+        };
+      } else if (type === 'CREDENTIAL') {
         this.note(
           'manual',
-          `Credential ${v.name}: choose its locker, credential and attribute in the A360 editor.`,
+          name
+            ? `Credential ${v.name}: vault item "${name}" (${attribute ?? '?'}) has no locker in WAL; choose it in the A360 editor or give the locker when converting.`
+            : `Credential ${v.name}: choose its locker, credential and attribute in the A360 editor.`,
         );
       } else if (d?.kind === 'literal' && d.value !== null) {
         if (type === 'STRING') node.defaultValue = { type, string: String(d.value) };
@@ -490,6 +527,7 @@ class Generator {
 
 interface CommandContext {
   readonly types: ReadonlyMap<string, IRType>;
+  readonly options: A360Options;
   readonly sink: Sink;
   readonly note: (kind: A360Note['kind'], text: string) => void;
 }
@@ -501,6 +539,8 @@ interface CommandResult {
   readonly returnTo?: string;
   /** Session the command opens (Excel_MS: `returnTo` of type SESSION, corpus 05). */
   readonly opensSession?: string;
+  /** Output key → variable (Run Task Bot: `returnTo` of type DICTIONARY, corpus 08). */
+  readonly returnDictionary?: Readonly<Record<string, string>>;
 }
 
 type CommandWriter = (a: ActionStmt, c: CommandContext) => CommandResult | undefined;
@@ -553,8 +593,86 @@ const sessionValue = (name: string): A360Value => ({
 });
 const bool = (value: boolean): A360Value => ({ type: 'BOOLEAN', boolean: value });
 
+/** A JSON object in a WAL parameter (`executeScript --parameters`), read back from its IR. */
+function jsonArg(e: Expr | undefined): Record<string, unknown> | undefined {
+  const text =
+    e?.kind === 'literal'
+      ? String(e.value)
+      : e?.kind === 'template'
+        ? e.parts
+            .map((p) =>
+              p.kind === 'literal' ? String(p.value) : p.kind === 'var' ? `\${${p.name}}` : '',
+            )
+            .join('')
+        : undefined;
+  if (text === undefined) return undefined;
+  try {
+    const value: unknown = JSON.parse(text);
+    return value && typeof value === 'object' && !Array.isArray(value)
+      ? (value as Record<string, unknown>)
+      : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
 /** WAL verb → A360 command, reversing docs/mappings/a360-to-ibm-rpa.md. */
 export const commands: Readonly<Record<string, CommandWriter>> = {
+  // Run Task Bot (corpus 08): executeScript with JSON --parameters / --output (Studio round 9)
+  executeScript: (a, c) => {
+    const name = literalText(a, 'name');
+    const inputs = jsonArg(a.args.parameters) ?? {};
+    const outputs = jsonArg(a.args.output) ?? {};
+    if (!name || (a.args.parameters && !jsonArg(a.args.parameters))) return undefined;
+    const folder = c.options.botFolder ?? 'Bots';
+    if (!c.options.botFolder)
+      c.note('manual', `Run Task Bot ${name}: check the bot's folder (written as ${folder}).`);
+    const path = `repository:///Automation%20Anywhere/${[...folder.split('/'), name].map(encodeURIComponent).join('/')}`;
+    const ref = (x: unknown) => (typeof x === 'string' ? /^\$\{(\w+)\}$/.exec(x)?.[1] : undefined);
+    return {
+      pkg: 'TaskBot',
+      command: 'runTask',
+      attributes: [
+        attr('taskbot', {
+          type: 'TASKBOT',
+          taskbotInput: {
+            type: 'DICTIONARY',
+            dictionary: Object.entries(inputs).map(([key, value]) => {
+              const v = ref(value);
+              return {
+                key,
+                value: v
+                  ? { type: 'STRING', expression: `$${v}$` }
+                  : { type: 'STRING', string: String(value) },
+              };
+            }),
+          },
+          taskbotFile: { type: 'FILE', string: path },
+        }),
+        attr('repeatOption', { type: 'STRING', string: 'DO_NOT_REPEAT' }),
+        attr('delayNextRepetition', bool(false)),
+        attr('continueOnError', bool(false)),
+      ],
+      returnDictionary: Object.fromEntries(
+        Object.entries(outputs).flatMap(([key, value]) => {
+          const v = ref(value);
+          return v ? [[key, v]] : [];
+        }),
+      ),
+    };
+  },
+  // Credential copy (corpus 08): written by target-wal as a new vault read, see vaultCopies
+  'credential.assign': (a) => {
+    const out = a.outputs.value?.name;
+    const from = a.args.stringVar;
+    if (!out || from?.kind !== 'var') return undefined;
+    return {
+      pkg: 'Credential',
+      command: 'assignToCV',
+      attributes: [attr('stringVar', { type: 'CREDENTIAL', expression: `$${from.name}$` })],
+      returnTo: out,
+    };
+  },
   // Excel advanced (Excel_MS), corpus 05: the workbook is a session, named after the WAL variable
   excelOpen: (a, c) => {
     const out = a.outputs.value;
@@ -904,9 +1022,9 @@ export const commands: Readonly<Record<string, CommandWriter>> = {
 };
 
 /** Generates an A360 task bot from IR (ADR-022 step 2). Unconverted parts become TODO comments. */
-export function generateA360(source: Bot): A360Bot {
+export function generateA360(source: Bot, options: A360Options = {}): A360Bot {
   const bot = undoHelpers(source);
-  const g = new Generator(bot);
+  const g = new Generator(bot, options);
   const nodes = g.block(bot.body, 'n');
   const variables = g.variables(bot.variables);
   return {
@@ -1006,7 +1124,57 @@ function undoHelpers(bot: Bot): Bot {
         return o as unknown as Statement;
       });
   const { body, variables } = initialValues(bot.body, bot.variables);
-  return { ...bot, variables, body: replace(prune(body)) as Statement[] };
+  return {
+    ...bot,
+    variables,
+    body: vaultCopies(replace(prune(body)) as Statement[], variables),
+  };
+}
+
+/**
+ * WAL cannot copy a SecureString (Studio round 8), so target-wal writes an A360 credential copy
+ * (`assignToCV`) as a new read of the same vault item. A read in the body of the vault item that
+ * another credential variable defaults to is that copy again.
+ */
+function vaultCopies(body: Statement[], variables: readonly Variable[]): Statement[] {
+  const key = (name: Expr | undefined, field: string) =>
+    name?.kind === 'literal' ? `${String(name.value)}\u0000${field}` : undefined;
+  const owners = new Map<string, string>();
+  for (const v of variables) {
+    const d = v.defaultValue;
+    if (d?.kind !== 'call' || d.fn !== 'credential.vault') continue;
+    const field = d.args[2];
+    const k = field?.kind === 'literal' ? key(d.args[1], String(field.value)) : undefined;
+    if (k && !owners.has(k)) owners.set(k, v.name);
+  }
+  const copy = (s: Statement): Statement => {
+    if (s.kind !== 'action' || s.op !== 'vendor:ibm-rpa/getVaultItem') return s;
+    const [field, out] = Object.entries(s.outputs)[0] ?? [];
+    const k = field ? key(s.args.name, field) : undefined;
+    const owner = k ? owners.get(k) : undefined;
+    if (!out || !owner || owner === out.name) return s;
+    return {
+      ...s,
+      op: 'credential.assign',
+      args: { stringVar: { kind: 'var', name: owner, path: [] } },
+      outputs: { value: out },
+    };
+  };
+  const block = (stmts: readonly Statement[]): Statement[] =>
+    stmts.map((s) => {
+      const o: Record<string, unknown> = { ...copy(s) };
+      if ('body' in s && Array.isArray(s.body)) o.body = block(s.body as Statement[]);
+      if (s.kind === 'if') {
+        o.branches = s.branches.map((b) => ({ ...b, body: block(b.body) }));
+        if (s.else) o.else = block(s.else);
+      }
+      if (s.kind === 'try') {
+        o.catches = s.catches.map((c) => ({ ...c, body: block(c.body) }));
+        if (s.finally) o.finally = block(s.finally);
+      }
+      return o as unknown as Statement;
+    });
+  return block(body);
 }
 
 /**
@@ -1023,6 +1191,19 @@ function initialValues(
     const s = body[i];
     if (s?.kind !== 'action') break;
     const verb = s.op.replace('vendor:ibm-rpa/', '');
+    if (verb === 'getVaultItem') {
+      // target-wal reads a vault credential default with getVaultItem (corpus 08); WAL has no
+      // lockers, so the locker is left open (null) for the generator options or the editor.
+      const [field, out] = Object.entries(s.outputs)[0] ?? [];
+      const cred = out ? variables.find((x) => x.name === out.name) : undefined;
+      if (!field || cred?.type.kind !== 'credential' || defaults.has(cred.name)) break;
+      defaults.set(cred.name, [
+        { kind: 'literal', value: null },
+        s.args.name ?? { kind: 'literal', value: '' },
+        { kind: 'literal', value: field },
+      ]);
+      continue;
+    }
     const target =
       verb === 'strDictAdd' ? s.args.dictionary : verb === 'add' ? s.args.collection : undefined;
     const v = target?.kind === 'var' ? variables.find((x) => x.name === target.name) : undefined;
@@ -1037,10 +1218,13 @@ function initialValues(
     variables: variables.map((v) => {
       const args = defaults.get(v.name);
       if (!args) return v;
-      return {
-        ...v,
-        defaultValue: { kind: 'call', fn: v.type.kind === 'dict' ? 'dict.of' : 'list.of', args },
-      };
+      const fn =
+        v.type.kind === 'credential'
+          ? 'credential.vault'
+          : v.type.kind === 'dict'
+            ? 'dict.of'
+            : 'list.of';
+      return { ...v, defaultValue: { kind: 'call', fn, args } };
     }),
   };
 }

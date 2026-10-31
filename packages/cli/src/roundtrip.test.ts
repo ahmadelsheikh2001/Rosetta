@@ -43,6 +43,7 @@ const originals: Record<string, string> = {
   '04-error-handling': '04-error-handling/bot.json',
   '05-excel': '05-excel/bot.json',
   RR_08_Child: '08-subbot-credentials/RR_08_Child.json',
+  RR_08_Parent: '08-subbot-credentials/RR_08_Parent.json',
 };
 
 function roundTrip(name: string) {
@@ -53,7 +54,11 @@ function roundTrip(name: string) {
     generatedAt: 'x',
     rosettaVersion: 'x',
   }).text;
-  return generateA360(readWal(wal, { file: `${name}.wal`, name }).bot);
+  // what the WAL script cannot say: the corpus Control Room's locker and folder
+  return generateA360(readWal(wal, { file: `${name}.wal`, name }).bot, {
+    vaultLocker: 'RosettaTest',
+    botFolder: 'Bots/RPA_Rosetta_Samples',
+  });
 }
 
 describe('round trip A360 → IBM RPA → A360', () => {
@@ -65,6 +70,7 @@ describe('round trip A360 → IBM RPA → A360', () => {
     '04-error-handling': 16 / 18, // the two CSV commands have no A360 form yet
     '05-excel': 1,
     RR_08_Child: 1,
+    RR_08_Parent: 1,
   };
 
   it.each(Object.keys(expected))('%s comes back as the original', async (name) => {

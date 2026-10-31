@@ -4,7 +4,13 @@ import type { MappingEntry } from '@rosetta/mappings';
 import { readBotJson } from '@rosetta/source-a360';
 import { readWal } from '@rosetta/source-wal';
 import type { StandardsProfile } from '@rosetta/standards';
-import { checkA360, generateA360, type A360Note, type A360Problem } from '@rosetta/target-a360';
+import {
+  checkA360,
+  generateA360,
+  type A360Note,
+  type A360Options,
+  type A360Problem,
+} from '@rosetta/target-a360';
 import { checkWal, lowerBot } from '@rosetta/target-wal';
 import { lookupFrom } from './assess-folder.js';
 import type { ConvertedBot } from './convert.js';
@@ -72,7 +78,10 @@ export interface A360File {
  * Converts IBM RPA WAL scripts held in memory to A360 task bots (ADR-022): read, generate,
  * check. Each script is read on its own; a bot started with executeScript is not followed.
  */
-export function convertWalFiles(files: readonly InputFile[]): {
+export function convertWalFiles(
+  files: readonly InputFile[],
+  options: A360Options = {},
+): {
   bots: A360File[];
   diagnostics: Diagnostic[];
 } {
@@ -82,7 +91,7 @@ export function convertWalFiles(files: readonly InputFile[]): {
     const name = botName(f.name);
     const read = readWal(f.text, { file: f.name, name });
     diagnostics.push(...read.diagnostics);
-    const { json, notes } = generateA360(read.bot);
+    const { json, notes } = generateA360(read.bot, options);
     bots.push({
       name,
       fileName: `${name}.json`,

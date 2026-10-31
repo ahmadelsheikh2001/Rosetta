@@ -63,6 +63,11 @@ ${asset('app.css')}
       <div class="arrow" aria-hidden="true"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h16M14 6l6 6-6 6"/></svg></div>
       <div class="field"><label for="target">To</label><select id="target">${options(targets)}</select></div>
     </div>
+    <div class="target-options" id="a360-options" hidden>
+      <div class="field"><label for="vault-locker">Credential Vault locker <span class="optional">(optional)</span></label><input id="vault-locker" type="text" maxlength="200" autocomplete="off" spellcheck="false" placeholder="e.g. Finance"></div>
+      <div class="field"><label for="bot-folder">Folder of the bots it runs <span class="optional">(optional)</span></label><input id="bot-folder" type="text" maxlength="200" autocomplete="off" spellcheck="false" placeholder="e.g. Bots/Finance"></div>
+      <p class="hint">WAL scripts do not name the A360 locker of their vault items or the folder of the bots they start. Without these, the notes say what to set in the A360 editor. Only names are used; no credential value is ever read or written.</p>
+    </div>
   </section>
 
   <section class="card" aria-labelledby="s2">

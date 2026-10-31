@@ -1,0 +1,263 @@
+{
+  "triggers": [],
+  "nodes": [
+    {
+      "uid": "95619e26-4071-4d4e-aa6e-215924f725e4",
+      "commandName": "runTask",
+      "packageName": "TaskBot",
+      "disabled": false,
+      "attributes": [
+        {
+          "name": "taskbot",
+          "value": {
+            "type": "TASKBOT",
+            "taskbotInput": {
+              "type": "DICTIONARY",
+              "dictionary": [
+                {
+                  "key": "inName",
+                  "value": {
+                    "type": "STRING",
+                    "string": "Test User"
+                  }
+                }
+              ]
+            },
+            "taskbotFile": {
+              "type": "FILE",
+              "string": "repository:///Automation%20Anywhere/Bots/RPA_Rosetta_Samples/RR_08_Child"
+            }
+          }
+        },
+        {
+          "name": "repeatOption",
+          "value": {
+            "type": "STRING",
+            "string": "DO_NOT_REPEAT"
+          }
+        },
+        {
+          "name": "delayNextRepetition",
+          "value": {
+            "type": "BOOLEAN",
+            "boolean": false
+          }
+        },
+        {
+          "name": "continueOnError",
+          "value": {
+            "type": "BOOLEAN",
+            "boolean": false
+          }
+        }
+      ],
+      "returnTo": {
+        "type": "DICTIONARY",
+        "dictionary": [
+          {
+            "key": "outGreeting",
+            "value": {
+              "type": "VARIABLE",
+              "variableName": "vResult"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "uid": "1ac25a92-7bd6-4eb3-a49c-63cc4c3b41bc",
+      "commandName": "assignToCV",
+      "packageName": "Credential",
+      "disabled": false,
+      "attributes": [
+        {
+          "name": "stringVar",
+          "value": {
+            "type": "CREDENTIAL",
+            "expression": "$vPassword$"
+          }
+        }
+      ],
+      "returnTo": {
+        "type": "VARIABLE",
+        "variableName": "vCopyCred"
+      }
+    },
+    {
+      "uid": "b1ec8d2c-0306-4c3d-a450-83d3026ab367",
+      "commandName": "assign",
+      "packageName": "String",
+      "disabled": false,
+      "attributes": [
+        {
+          "name": "sourceString",
+          "value": {
+            "type": "STRING",
+            "string": "NotARealPassword1"
+          }
+        }
+      ],
+      "returnTo": {
+        "type": "VARIABLE",
+        "variableName": "vHardcoded"
+      }
+    },
+    {
+      "uid": "eb5ffe25-1efd-427e-a661-6d2d88ea9380",
+      "commandName": "messageBox",
+      "packageName": "MessageBox",
+      "disabled": false,
+      "attributes": [
+        {
+          "name": "title",
+          "value": {
+            "type": "STRING",
+            "string": "Automation Anywhere Enterprise Client"
+          }
+        },
+        {
+          "name": "content",
+          "value": {
+            "type": "STRING",
+            "expression": "Result: $vResult$"
+          }
+        },
+        {
+          "name": "scrollLines",
+          "value": {
+            "type": "NUMBER",
+            "number": "30"
+          }
+        },
+        {
+          "name": "closeMsgBox",
+          "value": {
+            "type": "BOOLEAN",
+            "boolean": false
+          }
+        }
+      ]
+    }
+  ],
+  "variables": [
+    {
+      "name": "SampleNumber",
+      "description": "",
+      "type": "NUMBER",
+      "readOnly": false,
+      "input": false,
+      "output": false
+    },
+    {
+      "name": "SampleString",
+      "description": "",
+      "type": "STRING",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "defaultValue": {
+        "type": "STRING",
+        "string": ""
+      }
+    },
+    {
+      "name": "vResult",
+      "description": "",
+      "type": "STRING",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "defaultValue": {
+        "type": "STRING",
+        "string": ""
+      }
+    },
+    {
+      "name": "vCopy",
+      "description": "",
+      "type": "STRING",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "defaultValue": {
+        "type": "STRING",
+        "string": ""
+      }
+    },
+    {
+      "name": "vHardcoded",
+      "description": "",
+      "type": "STRING",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "defaultValue": {
+        "type": "STRING",
+        "string": ""
+      }
+    },
+    {
+      "name": "vPassword",
+      "description": "",
+      "type": "CREDENTIAL",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "defaultValue": {
+        "type": "CREDENTIAL",
+        "credential": {
+          "lockerName": "RosettaTest",
+          "name": "DummyLogin",
+          "attributeName": "password"
+        }
+      }
+    },
+    {
+      "name": "vCopyCred",
+      "description": "",
+      "type": "CREDENTIAL",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "defaultValue": {
+        "type": "CREDENTIAL",
+        "credential": {
+          "lockerName": "RosettaTest",
+          "name": "DummyLogin",
+          "attributeName": "password"
+        }
+      }
+    }
+  ],
+  "packages": [
+    {
+      "name": "Credential",
+      "version": "1.8.0",
+      "settingsAttributes": []
+    },
+    {
+      "name": "MessageBox",
+      "version": "3.8.1",
+      "settingsAttributes": []
+    },
+    {
+      "name": "String",
+      "version": "5.12.6",
+      "settingsAttributes": []
+    },
+    {
+      "name": "TaskBot",
+      "version": "2.10.0-20241119-100739",
+      "settingsAttributes": []
+    }
+  ],
+  "properties": {
+    "botCodeVersion": "7",
+    "improvedNumberSupport": true,
+    "timeout": "0s",
+    "automationPriority": "PRIORITY_MEDIUM",
+    "runInChildWindow": false,
+    "runInChildWindowMode": "DESKTOP"
+  },
+  "workItemTemplateName": null
+}

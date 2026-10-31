@@ -48,6 +48,7 @@ function applyRoute() {
   const target = $('target');
   for (const o of target.options) o.disabled = o.value !== r.target;
   target.value = r.target;
+  $('a360-options').hidden = r.target !== 'a360';
   $('upload-lead').textContent = r.lead;
   $('upload-hint').textContent = r.hint;
   $('file-input').setAttribute('accept', r.accept);
@@ -195,7 +196,15 @@ $('convert').addEventListener('click', async () => {
     const res = await fetch('/api/convert', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ source: $('source').value, target: $('target').value, files }),
+      body: JSON.stringify({
+        source: $('source').value,
+        target: $('target').value,
+        files,
+        options: {
+          vaultLocker: $('vault-locker').value.trim(),
+          botFolder: $('bot-folder').value.trim(),
+        },
+      }),
     });
     const body = await res.json();
     if (!res.ok) throw new Error(body.error || 'The conversion failed.');

@@ -5,6 +5,7 @@ import type { Diagnostic } from '@rosetta/ir';
 import { loadRegistry, registryDir, type MappingEntry } from '@rosetta/mappings';
 import { en, renderHtml, translate } from '@rosetta/report';
 import type { StandardsProfile } from '@rosetta/standards';
+import type { A360Options } from '@rosetta/target-a360';
 import { renderNotes } from '@rosetta/target-wal';
 import { convertFiles, convertWalFiles, renderA360Notes, type InputFile } from './convert-files.js';
 import { ExitCode } from './exit-codes.js';
@@ -72,14 +73,18 @@ function readBody(req: IncomingMessage): Promise<string> {
 }
 
 /** Validates the JSON body of `POST /api/convert`. */
-function parseRequest(text: string): { route: Route; files: InputFile[] } {
+function parseRequest(text: string): {
+  route: Route;
+  files: InputFile[];
+  options: A360Options;
+} {
   let body: unknown;
   try {
     body = JSON.parse(text);
   } catch {
     throw new RequestError(400, 'The request is not valid JSON.');
   }
-  const b = body as { source?: unknown; target?: unknown; files?: unknown };
+  const b = body as { source?: unknown; target?: unknown; files?: unknown; options?: unknown };
   const route = routes.find((r) => r === `${String(b.source)}>${String(b.target)}`);
   if (!route) {
     throw new RequestError(400, 'Only A360 → IBM RPA and IBM RPA → A360 are available.');
@@ -97,7 +102,31 @@ function parseRequest(text: string): { route: Route; files: InputFile[] } {
     }
     return { name: file.name, text: file.text };
   });
-  return { route, files };
+  return { route, files, options: targetOptions(b.options) };
+}
+
+/** A360 names: letters, digits, spaces and `_ - .`; a folder is such names joined by `/`. */
+const NAME = /^[\p{L}\p{N} _.-]{1,200}$/u;
+
+/** IBM RPA → A360 options from the page; empty fields are left out. */
+function targetOptions(raw: unknown): A360Options {
+  const o = (raw && typeof raw === 'object' ? raw : {}) as Record<string, unknown>;
+  const text = (key: string) => {
+    const value = o[key];
+    if (value === undefined || value === '') return undefined;
+    if (typeof value !== 'string') throw new RequestError(400, `${key} must be text.`);
+    return value.trim() || undefined;
+  };
+  const vaultLocker = text('vaultLocker');
+  const botFolder = text('botFolder')?.replace(/^\/+|\/+$/g, '');
+  if (vaultLocker !== undefined && !NAME.test(vaultLocker))
+    throw new RequestError(400, 'The locker name may use letters, digits, spaces and _ - . only.');
+  if (botFolder?.split('/').some((part) => !NAME.test(part) || /^\.+$/.test(part)))
+    throw new RequestError(
+      400,
+      'The folder is names joined by "/" (e.g. Bots/Finance), using letters, digits, spaces and _ - . only.',
+    );
+  return { ...(vaultLocker ? { vaultLocker } : {}), ...(botFolder ? { botFolder } : {}) };
 }
 
 const messagesOf = (diagnostics: readonly Diagnostic[]) =>
@@ -116,12 +145,13 @@ const messagesOf = (diagnostics: readonly Diagnostic[]) =>
 function convertResponse(
   route: Route,
   files: InputFile[],
+  options: A360Options,
   profile: StandardsProfile,
   registry: MappingEntry[],
 ) {
   const generatedAt = new Date().toISOString();
   if (route === 'ibm-rpa>a360') {
-    const result = convertWalFiles(files);
+    const result = convertWalFiles(files, options);
     return {
       generatedAt,
       version,
@@ -195,8 +225,8 @@ export function startServer(profile: StandardsProfile, port: number): Promise<Ru
       }
       readBody(req)
         .then((text) => {
-          const { route, files } = parseRequest(text);
-          json(res, 200, convertResponse(route, files, profile, entries));
+          const { route, files, options } = parseRequest(text);
+          json(res, 200, convertResponse(route, files, options, profile, entries));
         })
         .catch((err: unknown) => {
           if (err instanceof RequestError) json(res, err.status, { error: err.message });
