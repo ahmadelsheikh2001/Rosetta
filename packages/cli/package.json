@@ -23,7 +23,9 @@
     "@rosetta/mappings": "workspace:*",
     "@rosetta/report": "workspace:*",
     "@rosetta/source-a360": "workspace:*",
+    "@rosetta/source-wal": "workspace:*",
     "@rosetta/standards": "workspace:*",
+    "@rosetta/target-a360": "workspace:*",
     "@rosetta/target-wal": "workspace:*"
   },
   "bin": {

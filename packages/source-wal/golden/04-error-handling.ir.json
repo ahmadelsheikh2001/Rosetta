@@ -223,107 +223,38 @@
         ],
         "nodeId": "L22"
       },
-      "kind": "comment",
-      "text": "---- Try Catch Finally ----"
-    },
-    {
-      "id": "L23",
-      "source": {
-        "platform": "ibm-rpa",
-        "file": "04-error-handling.wal",
-        "nodePath": [
-          22
-        ],
-        "nodeId": "L23"
-      },
-      "kind": "comment",
-      "text": "RR_04: outer Try with nested inner Try, Catch, Throw and Finally"
-    },
-    {
-      "id": "L24",
-      "source": {
-        "platform": "ibm-rpa",
-        "file": "04-error-handling.wal",
-        "nodePath": [
-          23
-        ],
-        "nodeId": "L24",
-        "label": "setVar @ line 24"
-      },
-      "kind": "action",
-      "op": "vendor:ibm-rpa/setVar",
-      "args": {
-        "name": {
-          "kind": "var",
-          "name": "rosettaTry1Failed",
-          "path": []
-        },
-        "value": {
-          "kind": "literal",
-          "value": false
-        }
-      },
-      "outputs": {}
-    },
-    {
-      "id": "L25",
-      "source": {
-        "platform": "ibm-rpa",
-        "file": "04-error-handling.wal",
-        "nodePath": [
-          24
-        ],
-        "nodeId": "L25",
-        "label": "goSub Try1"
-      },
-      "kind": "group",
-      "label": "Subroutine Try1",
+      "label": "Try Catch Finally",
       "body": [
         {
-          "id": "L34",
+          "id": "L23",
           "source": {
             "platform": "ibm-rpa",
             "file": "04-error-handling.wal",
             "nodePath": [
-              33
+              22
             ],
-            "nodeId": "L34"
+            "nodeId": "L23"
           },
           "kind": "comment",
-          "text": "A360 Try (ErrorHandler/try @ 1.2)"
+          "text": "RR_04: outer Try with nested inner Try, Catch, Throw and Finally"
         },
         {
-          "id": "L35",
+          "id": "L24",
           "source": {
             "platform": "ibm-rpa",
             "file": "04-error-handling.wal",
             "nodePath": [
-              34
+              23
             ],
-            "nodeId": "L35",
-            "label": "onError"
-          },
-          "kind": "unknown",
-          "raw": "onError --label Catch1",
-          "reason": "onError not understood here"
-        },
-        {
-          "id": "L36",
-          "source": {
-            "platform": "ibm-rpa",
-            "file": "04-error-handling.wal",
-            "nodePath": [
-              35
-            ],
-            "nodeId": "L36",
-            "label": "setVar @ line 36"
+            "nodeId": "L24",
+            "label": "setVar @ line 24"
           },
           "kind": "action",
           "op": "vendor:ibm-rpa/setVar",
           "args": {
             "name": {
               "kind": "var",
-              "name": "rosettaTry2Failed",
+              "name": "rosettaTry1Failed",
               "path": []
             },
             "value": {
@@ -334,259 +265,170 @@
           "outputs": {}
         },
         {
-          "id": "L37",
+          "id": "L25",
           "source": {
             "platform": "ibm-rpa",
             "file": "04-error-handling.wal",
             "nodePath": [
-              36
+              24
             ],
-            "nodeId": "L37",
-            "label": "goSub Try2"
+            "nodeId": "L25",
+            "label": "goSub Try1"
           },
           "kind": "group",
-          "label": "Subroutine Try2",
+          "label": "Subroutine Try1",
           "body": [
             {
-              "id": "L50",
+              "id": "L34",
               "source": {
                 "platform": "ibm-rpa",
                 "file": "04-error-handling.wal",
                 "nodePath": [
-                  49
+                  33
                 ],
-                "nodeId": "L50"
+                "nodeId": "L34"
               },
               "kind": "comment",
-              "text": "A360 Try (ErrorHandler/try @ 1.2.1)"
+              "text": "A360 Try (ErrorHandler/try @ 1.2)"
             },
             {
-              "id": "L51",
+              "id": "L35",
               "source": {
                 "platform": "ibm-rpa",
                 "file": "04-error-handling.wal",
                 "nodePath": [
-                  50
+                  34
                 ],
-                "nodeId": "L51",
+                "nodeId": "L35",
                 "label": "onError"
               },
               "kind": "unknown",
-              "raw": "onError --label Catch2",
+              "raw": "onError --label Catch1",
               "reason": "onError not understood here"
             },
             {
-              "id": "L52",
+              "id": "L36",
               "source": {
                 "platform": "ibm-rpa",
                 "file": "04-error-handling.wal",
                 "nodePath": [
-                  51
+                  35
                 ],
-                "nodeId": "L52"
-              },
-              "kind": "comment",
-              "text": "CSV session \"Default\" opened here; WAL reads the file in one step (readCSV) below."
-            },
-            {
-              "id": "L53",
-              "source": {
-                "platform": "ibm-rpa",
-                "file": "04-error-handling.wal",
-                "nodePath": [
-                  52
-                ],
-                "nodeId": "L53",
-                "label": "readCSV @ line 53"
+                "nodeId": "L36",
+                "label": "setVar @ line 36"
               },
               "kind": "action",
-              "op": "vendor:ibm-rpa/readCSV",
+              "op": "vendor:ibm-rpa/setVar",
               "args": {
-                "filepath": {
+                "name": {
                   "kind": "var",
-                  "name": "vFilePath",
+                  "name": "rosettaTry2Failed",
                   "path": []
                 },
-                "delimiter": {
+                "value": {
                   "kind": "literal",
-                  "value": ","
+                  "value": false
                 }
               },
-              "outputs": {
-                "value": {
-                  "kind": "var",
-                  "name": "vFileTable",
-                  "path": []
-                }
-              }
+              "outputs": {}
             },
             {
-              "id": "L54",
+              "id": "L37",
               "source": {
                 "platform": "ibm-rpa",
                 "file": "04-error-handling.wal",
                 "nodePath": [
-                  53
+                  36
                 ],
-                "nodeId": "L54",
-                "label": "if @ line 54"
+                "nodeId": "L37",
+                "label": "goSub Try2"
               },
-              "kind": "if",
-              "branches": [
-                {
-                  "condition": {
-                    "kind": "binary",
-                    "op": "eq",
-                    "left": {
-                      "kind": "var",
-                      "name": "rosettaTry2Failed",
-                      "path": []
-                    },
-                    "right": {
-                      "kind": "literal",
-                      "value": true
-                    }
-                  },
-                  "body": [
-                    {
-                      "id": "L55",
-                      "source": {
-                        "platform": "ibm-rpa",
-                        "file": "04-error-handling.wal",
-                        "nodePath": [
-                          54
-                        ],
-                        "nodeId": "L55",
-                        "label": "return"
-                      },
-                      "kind": "unknown",
-                      "raw": "return",
-                      "reason": "return not understood here"
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "id": "L38",
-          "source": {
-            "platform": "ibm-rpa",
-            "file": "04-error-handling.wal",
-            "nodePath": [
-              37
-            ],
-            "nodeId": "L38",
-            "label": "onError"
-          },
-          "kind": "unknown",
-          "raw": "onError --label Catch1",
-          "reason": "onError not understood here"
-        },
-        {
-          "id": "L39",
-          "source": {
-            "platform": "ibm-rpa",
-            "file": "04-error-handling.wal",
-            "nodePath": [
-              38
-            ],
-            "nodeId": "L39",
-            "label": "if @ line 39"
-          },
-          "kind": "if",
-          "branches": [
-            {
-              "condition": {
-                "kind": "binary",
-                "op": "eq",
-                "left": {
-                  "kind": "var",
-                  "name": "rosettaTry1Failed",
-                  "path": []
-                },
-                "right": {
-                  "kind": "literal",
-                  "value": true
-                }
-              },
+              "kind": "group",
+              "label": "Subroutine Try2",
               "body": [
                 {
-                  "id": "L40",
+                  "id": "L50",
                   "source": {
                     "platform": "ibm-rpa",
                     "file": "04-error-handling.wal",
                     "nodePath": [
-                      39
+                      49
                     ],
-                    "nodeId": "L40",
-                    "label": "return"
+                    "nodeId": "L50"
+                  },
+                  "kind": "comment",
+                  "text": "A360 Try (ErrorHandler/try @ 1.2.1)"
+                },
+                {
+                  "id": "L51",
+                  "source": {
+                    "platform": "ibm-rpa",
+                    "file": "04-error-handling.wal",
+                    "nodePath": [
+                      50
+                    ],
+                    "nodeId": "L51",
+                    "label": "onError"
                   },
                   "kind": "unknown",
-                  "raw": "return",
-                  "reason": "return not understood here"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "id": "L42",
-          "source": {
-            "platform": "ibm-rpa",
-            "file": "04-error-handling.wal",
-            "nodePath": [
-              41
-            ],
-            "nodeId": "L42",
-            "label": "if @ line 42"
-          },
-          "kind": "if",
-          "branches": [
-            {
-              "condition": {
-                "kind": "binary",
-                "op": "eq",
-                "left": {
-                  "kind": "var",
-                  "name": "vDoThrow",
-                  "path": []
+                  "raw": "onError --label Catch2",
+                  "reason": "onError not understood here"
                 },
-                "right": {
-                  "kind": "literal",
-                  "value": true
-                }
-              },
-              "body": [
                 {
-                  "id": "L43",
+                  "id": "L52",
                   "source": {
                     "platform": "ibm-rpa",
                     "file": "04-error-handling.wal",
                     "nodePath": [
-                      42
+                      51
                     ],
-                    "nodeId": "L43",
-                    "label": "failTest @ line 43"
+                    "nodeId": "L52"
                   },
-                  "kind": "throw",
-                  "message": {
-                    "kind": "literal",
-                    "value": "Custom RR_04 error thrown on purpose"
-                  },
-                  "category": "system"
+                  "kind": "comment",
+                  "text": "CSV session \"Default\" opened here; WAL reads the file in one step (readCSV) below."
                 },
                 {
-                  "id": "L44",
+                  "id": "L53",
                   "source": {
                     "platform": "ibm-rpa",
                     "file": "04-error-handling.wal",
                     "nodePath": [
-                      43
+                      52
                     ],
-                    "nodeId": "L44",
-                    "label": "if @ line 44"
+                    "nodeId": "L53",
+                    "label": "readCSV @ line 53"
+                  },
+                  "kind": "action",
+                  "op": "vendor:ibm-rpa/readCSV",
+                  "args": {
+                    "filepath": {
+                      "kind": "var",
+                      "name": "vFilePath",
+                      "path": []
+                    },
+                    "delimiter": {
+                      "kind": "literal",
+                      "value": ","
+                    }
+                  },
+                  "outputs": {
+                    "value": {
+                      "kind": "var",
+                      "name": "vFileTable",
+                      "path": []
+                    }
+                  }
+                },
+                {
+                  "id": "L54",
+                  "source": {
+                    "platform": "ibm-rpa",
+                    "file": "04-error-handling.wal",
+                    "nodePath": [
+                      53
+                    ],
+                    "nodeId": "L54",
+                    "label": "if @ line 54"
                   },
                   "kind": "if",
                   "branches": [
@@ -596,7 +438,7 @@
                         "op": "eq",
                         "left": {
                           "kind": "var",
-                          "name": "rosettaTry1Failed",
+                          "name": "rosettaTry2Failed",
                           "path": []
                         },
                         "right": {
@@ -606,14 +448,14 @@
                       },
                       "body": [
                         {
-                          "id": "L45",
+                          "id": "L55",
                           "source": {
                             "platform": "ibm-rpa",
                             "file": "04-error-handling.wal",
                             "nodePath": [
-                              44
+                              54
                             ],
-                            "nodeId": "L45",
+                            "nodeId": "L55",
                             "label": "return"
                           },
                           "kind": "unknown",
@@ -625,82 +467,242 @@
                   ]
                 }
               ]
+            },
+            {
+              "id": "L38",
+              "source": {
+                "platform": "ibm-rpa",
+                "file": "04-error-handling.wal",
+                "nodePath": [
+                  37
+                ],
+                "nodeId": "L38",
+                "label": "onError"
+              },
+              "kind": "unknown",
+              "raw": "onError --label Catch1",
+              "reason": "onError not understood here"
+            },
+            {
+              "id": "L39",
+              "source": {
+                "platform": "ibm-rpa",
+                "file": "04-error-handling.wal",
+                "nodePath": [
+                  38
+                ],
+                "nodeId": "L39",
+                "label": "if @ line 39"
+              },
+              "kind": "if",
+              "branches": [
+                {
+                  "condition": {
+                    "kind": "binary",
+                    "op": "eq",
+                    "left": {
+                      "kind": "var",
+                      "name": "rosettaTry1Failed",
+                      "path": []
+                    },
+                    "right": {
+                      "kind": "literal",
+                      "value": true
+                    }
+                  },
+                  "body": [
+                    {
+                      "id": "L40",
+                      "source": {
+                        "platform": "ibm-rpa",
+                        "file": "04-error-handling.wal",
+                        "nodePath": [
+                          39
+                        ],
+                        "nodeId": "L40",
+                        "label": "return"
+                      },
+                      "kind": "unknown",
+                      "raw": "return",
+                      "reason": "return not understood here"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "L42",
+              "source": {
+                "platform": "ibm-rpa",
+                "file": "04-error-handling.wal",
+                "nodePath": [
+                  41
+                ],
+                "nodeId": "L42",
+                "label": "if @ line 42"
+              },
+              "kind": "if",
+              "branches": [
+                {
+                  "condition": {
+                    "kind": "binary",
+                    "op": "eq",
+                    "left": {
+                      "kind": "var",
+                      "name": "vDoThrow",
+                      "path": []
+                    },
+                    "right": {
+                      "kind": "literal",
+                      "value": true
+                    }
+                  },
+                  "body": [
+                    {
+                      "id": "L43",
+                      "source": {
+                        "platform": "ibm-rpa",
+                        "file": "04-error-handling.wal",
+                        "nodePath": [
+                          42
+                        ],
+                        "nodeId": "L43",
+                        "label": "failTest @ line 43"
+                      },
+                      "kind": "throw",
+                      "message": {
+                        "kind": "literal",
+                        "value": "Custom RR_04 error thrown on purpose"
+                      },
+                      "category": "system"
+                    },
+                    {
+                      "id": "L44",
+                      "source": {
+                        "platform": "ibm-rpa",
+                        "file": "04-error-handling.wal",
+                        "nodePath": [
+                          43
+                        ],
+                        "nodeId": "L44",
+                        "label": "if @ line 44"
+                      },
+                      "kind": "if",
+                      "branches": [
+                        {
+                          "condition": {
+                            "kind": "binary",
+                            "op": "eq",
+                            "left": {
+                              "kind": "var",
+                              "name": "rosettaTry1Failed",
+                              "path": []
+                            },
+                            "right": {
+                              "kind": "literal",
+                              "value": true
+                            }
+                          },
+                          "body": [
+                            {
+                              "id": "L45",
+                              "source": {
+                                "platform": "ibm-rpa",
+                                "file": "04-error-handling.wal",
+                                "nodePath": [
+                                  44
+                                ],
+                                "nodeId": "L45",
+                                "label": "return"
+                              },
+                              "kind": "unknown",
+                              "raw": "return",
+                              "reason": "return not understood here"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
             }
           ]
+        },
+        {
+          "id": "L26",
+          "source": {
+            "platform": "ibm-rpa",
+            "file": "04-error-handling.wal",
+            "nodePath": [
+              25
+            ],
+            "nodeId": "L26"
+          },
+          "kind": "comment",
+          "text": "A360 Finally: runs after the protected block, with or without an error"
+        },
+        {
+          "id": "L27",
+          "source": {
+            "platform": "ibm-rpa",
+            "file": "04-error-handling.wal",
+            "nodePath": [
+              26
+            ],
+            "nodeId": "L27",
+            "label": "writeToFile @ line 27"
+          },
+          "kind": "action",
+          "op": "vendor:ibm-rpa/writeToFile",
+          "args": {
+            "value": {
+              "kind": "literal",
+              "value": "cleanup done"
+            },
+            "file": {
+              "kind": "literal",
+              "value": "C:\\RosettaTest\\log.txt"
+            },
+            "encoding": {
+              "kind": "literal",
+              "value": "Default"
+            },
+            "writeasnewline": {
+              "kind": "literal",
+              "value": true
+            }
+          },
+          "outputs": {}
+        },
+        {
+          "id": "L28",
+          "source": {
+            "platform": "ibm-rpa",
+            "file": "04-error-handling.wal",
+            "nodePath": [
+              27
+            ],
+            "nodeId": "L28",
+            "label": "setVar @ line 28"
+          },
+          "kind": "action",
+          "op": "vendor:ibm-rpa/setVar",
+          "args": {
+            "name": {
+              "kind": "var",
+              "name": "vStatus",
+              "path": []
+            },
+            "value": {
+              "kind": "literal",
+              "value": "finished"
+            }
+          },
+          "outputs": {}
         }
-      ]
-    },
-    {
-      "id": "L26",
-      "source": {
-        "platform": "ibm-rpa",
-        "file": "04-error-handling.wal",
-        "nodePath": [
-          25
-        ],
-        "nodeId": "L26"
-      },
-      "kind": "comment",
-      "text": "A360 Finally: runs after the protected block, with or without an error"
-    },
-    {
-      "id": "L27",
-      "source": {
-        "platform": "ibm-rpa",
-        "file": "04-error-handling.wal",
-        "nodePath": [
-          26
-        ],
-        "nodeId": "L27",
-        "label": "writeToFile @ line 27"
-      },
-      "kind": "action",
-      "op": "vendor:ibm-rpa/writeToFile",
-      "args": {
-        "value": {
-          "kind": "literal",
-          "value": "cleanup done"
-        },
-        "file": {
-          "kind": "literal",
-          "value": "C:\\RosettaTest\\log.txt"
-        },
-        "encoding": {
-          "kind": "literal",
-          "value": "Default"
-        },
-        "writeasnewline": {
-          "kind": "literal",
-          "value": true
-        }
-      },
-      "outputs": {}
-    },
-    {
-      "id": "L28",
-      "source": {
-        "platform": "ibm-rpa",
-        "file": "04-error-handling.wal",
-        "nodePath": [
-          27
-        ],
-        "nodeId": "L28",
-        "label": "setVar @ line 28"
-      },
-      "kind": "action",
-      "op": "vendor:ibm-rpa/setVar",
-      "args": {
-        "name": {
-          "kind": "var",
-          "name": "vStatus",
-          "path": []
-        },
-        "value": {
-          "kind": "literal",
-          "value": "finished"
-        }
-      },
-      "outputs": {}
+      ],
+      "kind": "group"
     },
     {
       "id": "L29",
@@ -712,34 +714,89 @@
         ],
         "nodeId": "L29"
       },
-      "kind": "comment",
-      "text": "---- Wrap up ----"
-    },
-    {
-      "id": "L30",
-      "source": {
-        "platform": "ibm-rpa",
-        "file": "04-error-handling.wal",
-        "nodePath": [
-          29
-        ],
-        "nodeId": "L30"
-      },
-      "kind": "comment",
-      "text": "RR_04: wrap up after error handling"
-    },
-    {
-      "id": "L31",
-      "source": {
-        "platform": "ibm-rpa",
-        "file": "04-error-handling.wal",
-        "nodePath": [
-          30
-        ],
-        "nodeId": "L31"
-      },
-      "kind": "comment",
-      "text": "[DISABLED] messageBox --title \"Automation Anywhere Enterprise Client\" --text \"Disabled on purpose: status=${vStatus} inner=${vErrMsg} outer=${vOuterErr}\" --icon \"Information\" --buttons \"OK\" --defaultbutton \"FirstButton\""
+      "label": "Wrap up",
+      "body": [
+        {
+          "id": "L30",
+          "source": {
+            "platform": "ibm-rpa",
+            "file": "04-error-handling.wal",
+            "nodePath": [
+              29
+            ],
+            "nodeId": "L30"
+          },
+          "kind": "comment",
+          "text": "RR_04: wrap up after error handling"
+        },
+        {
+          "id": "L31",
+          "source": {
+            "platform": "ibm-rpa",
+            "file": "04-error-handling.wal",
+            "nodePath": [
+              30
+            ],
+            "nodeId": "L31",
+            "label": "messageBox @ line 31"
+          },
+          "kind": "action",
+          "op": "vendor:ibm-rpa/messageBox",
+          "args": {
+            "title": {
+              "kind": "literal",
+              "value": "Automation Anywhere Enterprise Client"
+            },
+            "text": {
+              "kind": "template",
+              "parts": [
+                {
+                  "kind": "literal",
+                  "value": "Disabled on purpose: status="
+                },
+                {
+                  "kind": "var",
+                  "name": "vStatus",
+                  "path": []
+                },
+                {
+                  "kind": "literal",
+                  "value": " inner="
+                },
+                {
+                  "kind": "var",
+                  "name": "vErrMsg",
+                  "path": []
+                },
+                {
+                  "kind": "literal",
+                  "value": " outer="
+                },
+                {
+                  "kind": "var",
+                  "name": "vOuterErr",
+                  "path": []
+                }
+              ]
+            },
+            "icon": {
+              "kind": "literal",
+              "value": "Information"
+            },
+            "buttons": {
+              "kind": "literal",
+              "value": "OK"
+            },
+            "defaultbutton": {
+              "kind": "literal",
+              "value": "FirstButton"
+            }
+          },
+          "outputs": {},
+          "disabled": true
+        }
+      ],
+      "kind": "group"
     }
   ]
 }

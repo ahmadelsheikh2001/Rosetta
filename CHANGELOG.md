@@ -133,6 +133,19 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: Se
   their `goSub`, every other command as an action with its parameters and outputs. Golden IR over
   the converted corpus. `onError`/`recover` (the Try/Catch pattern) are reported, not rebuilt yet.
 
+#### IBM RPA → A360, step 2 (ADR-022)
+
+- `@rosetta/target-a360`: IR → A360 task bot JSON in the shape of the corpus (node, condition and
+  loop shapes and package versions copied from corpus 01–09; stable uids). Commands: assignments by
+  variable type, message box, log to file (with timestamp), log variables, string commands, number
+  to text / increment, list add, dictionary put, date commands. Undoes what target-wal adds (helper
+  variables, `get`/`strDictGet`, timestamp lines, initial-value lines, machine name). Anything else
+  becomes a TODO comment and a manual note; credential values are never written.
+- `source-wal`: Steps rebuilt from `// ---- title ----` markers; `// [DISABLED]` lines read as
+  disabled code.
+- Round trip A360 → IBM RPA → A360: corpus 01, 03 and RR_08_Child come back as the original,
+  02 at 26/27 (the folder loop has no WAL form).
+
 ### Planned (deferred by ADR-016)
 
 - dependency-cruiser layer enforcement

@@ -384,193 +384,195 @@
         ],
         "nodeId": "L30"
       },
-      "kind": "comment",
-      "text": "---- Assign new values ----"
-    },
-    {
-      "id": "L31",
-      "source": {
-        "platform": "ibm-rpa",
-        "file": "01-variables.wal",
-        "nodePath": [
-          30
-        ],
-        "nodeId": "L31"
-      },
-      "kind": "comment",
-      "text": "RR_01: assign a new value to each variable type"
-    },
-    {
-      "id": "L32",
-      "source": {
-        "platform": "ibm-rpa",
-        "file": "01-variables.wal",
-        "nodePath": [
-          31
-        ],
-        "nodeId": "L32",
-        "label": "setVar @ line 32"
-      },
-      "kind": "action",
-      "op": "vendor:ibm-rpa/setVar",
-      "args": {
-        "name": {
-          "kind": "var",
-          "name": "vStr",
-          "path": []
+      "label": "Assign new values",
+      "body": [
+        {
+          "id": "L31",
+          "source": {
+            "platform": "ibm-rpa",
+            "file": "01-variables.wal",
+            "nodePath": [
+              30
+            ],
+            "nodeId": "L31"
+          },
+          "kind": "comment",
+          "text": "RR_01: assign a new value to each variable type"
         },
-        "value": {
-          "kind": "literal",
-          "value": "Updated Test User"
-        }
-      },
-      "outputs": {}
-    },
-    {
-      "id": "L33",
-      "source": {
-        "platform": "ibm-rpa",
-        "file": "01-variables.wal",
-        "nodePath": [
-          32
-        ],
-        "nodeId": "L33",
-        "label": "setVar @ line 33"
-      },
-      "kind": "action",
-      "op": "vendor:ibm-rpa/setVar",
-      "args": {
-        "name": {
-          "kind": "var",
-          "name": "vNum",
-          "path": []
+        {
+          "id": "L32",
+          "source": {
+            "platform": "ibm-rpa",
+            "file": "01-variables.wal",
+            "nodePath": [
+              31
+            ],
+            "nodeId": "L32",
+            "label": "setVar @ line 32"
+          },
+          "kind": "action",
+          "op": "vendor:ibm-rpa/setVar",
+          "args": {
+            "name": {
+              "kind": "var",
+              "name": "vStr",
+              "path": []
+            },
+            "value": {
+              "kind": "literal",
+              "value": "Updated Test User"
+            }
+          },
+          "outputs": {}
         },
-        "value": {
-          "kind": "literal",
-          "value": 100
-        }
-      },
-      "outputs": {}
-    },
-    {
-      "id": "L34",
-      "source": {
-        "platform": "ibm-rpa",
-        "file": "01-variables.wal",
-        "nodePath": [
-          33
-        ],
-        "nodeId": "L34",
-        "label": "evaluate @ line 34"
-      },
-      "kind": "action",
-      "op": "vendor:ibm-rpa/evaluate",
-      "args": {
-        "expression": {
-          "kind": "template",
-          "parts": [
-            {
+        {
+          "id": "L33",
+          "source": {
+            "platform": "ibm-rpa",
+            "file": "01-variables.wal",
+            "nodePath": [
+              32
+            ],
+            "nodeId": "L33",
+            "label": "setVar @ line 33"
+          },
+          "kind": "action",
+          "op": "vendor:ibm-rpa/setVar",
+          "args": {
+            "name": {
               "kind": "var",
               "name": "vNum",
               "path": []
             },
-            {
+            "value": {
               "kind": "literal",
-              "value": " + 5"
+              "value": 100
             }
-          ]
-        }
-      },
-      "outputs": {
-        "value": {
-          "kind": "var",
-          "name": "vNum",
-          "path": []
-        }
-      }
-    },
-    {
-      "id": "L35",
-      "source": {
-        "platform": "ibm-rpa",
-        "file": "01-variables.wal",
-        "nodePath": [
-          34
-        ],
-        "nodeId": "L35",
-        "label": "setVar @ line 35"
-      },
-      "kind": "action",
-      "op": "vendor:ibm-rpa/setVar",
-      "args": {
-        "name": {
-          "kind": "var",
-          "name": "vBool",
-          "path": []
+          },
+          "outputs": {}
         },
-        "value": {
-          "kind": "literal",
-          "value": false
-        }
-      },
-      "outputs": {}
-    },
-    {
-      "id": "L36",
-      "source": {
-        "platform": "ibm-rpa",
-        "file": "01-variables.wal",
-        "nodePath": [
-          35
-        ],
-        "nodeId": "L36",
-        "label": "add @ line 36"
-      },
-      "kind": "action",
-      "op": "vendor:ibm-rpa/add",
-      "args": {
-        "collection": {
-          "kind": "var",
-          "name": "vList",
-          "path": []
+        {
+          "id": "L34",
+          "source": {
+            "platform": "ibm-rpa",
+            "file": "01-variables.wal",
+            "nodePath": [
+              33
+            ],
+            "nodeId": "L34",
+            "label": "evaluate @ line 34"
+          },
+          "kind": "action",
+          "op": "vendor:ibm-rpa/evaluate",
+          "args": {
+            "expression": {
+              "kind": "template",
+              "parts": [
+                {
+                  "kind": "var",
+                  "name": "vNum",
+                  "path": []
+                },
+                {
+                  "kind": "literal",
+                  "value": " + 5"
+                }
+              ]
+            }
+          },
+          "outputs": {
+            "value": {
+              "kind": "var",
+              "name": "vNum",
+              "path": []
+            }
+          }
         },
-        "value": {
-          "kind": "var",
-          "name": "vStr",
-          "path": []
-        }
-      },
-      "outputs": {}
-    },
-    {
-      "id": "L37",
-      "source": {
-        "platform": "ibm-rpa",
-        "file": "01-variables.wal",
-        "nodePath": [
-          36
-        ],
-        "nodeId": "L37",
-        "label": "strDictAdd @ line 37"
-      },
-      "kind": "action",
-      "op": "vendor:ibm-rpa/strDictAdd",
-      "args": {
-        "key": {
-          "kind": "literal",
-          "value": "country"
+        {
+          "id": "L35",
+          "source": {
+            "platform": "ibm-rpa",
+            "file": "01-variables.wal",
+            "nodePath": [
+              34
+            ],
+            "nodeId": "L35",
+            "label": "setVar @ line 35"
+          },
+          "kind": "action",
+          "op": "vendor:ibm-rpa/setVar",
+          "args": {
+            "name": {
+              "kind": "var",
+              "name": "vBool",
+              "path": []
+            },
+            "value": {
+              "kind": "literal",
+              "value": false
+            }
+          },
+          "outputs": {}
         },
-        "value": {
-          "kind": "literal",
-          "value": "Testland"
+        {
+          "id": "L36",
+          "source": {
+            "platform": "ibm-rpa",
+            "file": "01-variables.wal",
+            "nodePath": [
+              35
+            ],
+            "nodeId": "L36",
+            "label": "add @ line 36"
+          },
+          "kind": "action",
+          "op": "vendor:ibm-rpa/add",
+          "args": {
+            "collection": {
+              "kind": "var",
+              "name": "vList",
+              "path": []
+            },
+            "value": {
+              "kind": "var",
+              "name": "vStr",
+              "path": []
+            }
+          },
+          "outputs": {}
         },
-        "dictionary": {
-          "kind": "var",
-          "name": "vDict",
-          "path": []
+        {
+          "id": "L37",
+          "source": {
+            "platform": "ibm-rpa",
+            "file": "01-variables.wal",
+            "nodePath": [
+              36
+            ],
+            "nodeId": "L37",
+            "label": "strDictAdd @ line 37"
+          },
+          "kind": "action",
+          "op": "vendor:ibm-rpa/strDictAdd",
+          "args": {
+            "key": {
+              "kind": "literal",
+              "value": "country"
+            },
+            "value": {
+              "kind": "literal",
+              "value": "Testland"
+            },
+            "dictionary": {
+              "kind": "var",
+              "name": "vDict",
+              "path": []
+            }
+          },
+          "outputs": {}
         }
-      },
-      "outputs": {}
+      ],
+      "kind": "group"
     },
     {
       "id": "L38",
@@ -582,473 +584,500 @@
         ],
         "nodeId": "L38"
       },
-      "kind": "comment",
-      "text": "---- Show and log values ----"
-    },
-    {
-      "id": "L39",
-      "source": {
-        "platform": "ibm-rpa",
-        "file": "01-variables.wal",
-        "nodePath": [
-          38
-        ],
-        "nodeId": "L39"
-      },
-      "kind": "comment",
-      "text": "RR_01: display and log selected variables"
-    },
-    {
-      "id": "L40",
-      "source": {
-        "platform": "ibm-rpa",
-        "file": "01-variables.wal",
-        "nodePath": [
-          39
-        ],
-        "nodeId": "L40",
-        "label": "get @ line 40"
-      },
-      "kind": "action",
-      "op": "vendor:ibm-rpa/get",
-      "args": {
-        "collection": {
-          "kind": "var",
-          "name": "vList",
-          "path": []
+      "label": "Show and log values",
+      "body": [
+        {
+          "id": "L39",
+          "source": {
+            "platform": "ibm-rpa",
+            "file": "01-variables.wal",
+            "nodePath": [
+              38
+            ],
+            "nodeId": "L39"
+          },
+          "kind": "comment",
+          "text": "RR_01: display and log selected variables"
         },
-        "index": {
-          "kind": "literal",
-          "value": 1
-        }
-      },
-      "outputs": {
-        "value": {
-          "kind": "var",
-          "name": "rosettaItem1",
-          "path": []
-        }
-      }
-    },
-    {
-      "id": "L41",
-      "source": {
-        "platform": "ibm-rpa",
-        "file": "01-variables.wal",
-        "nodePath": [
-          40
-        ],
-        "nodeId": "L41",
-        "label": "strDictGet @ line 41"
-      },
-      "kind": "action",
-      "op": "vendor:ibm-rpa/strDictGet",
-      "args": {
-        "key": {
-          "kind": "literal",
-          "value": "name"
-        },
-        "dictionary": {
-          "kind": "var",
-          "name": "vDict",
-          "path": []
-        }
-      },
-      "outputs": {
-        "value": {
-          "kind": "var",
-          "name": "rosettaItem2",
-          "path": []
-        }
-      }
-    },
-    {
-      "id": "L42",
-      "source": {
-        "platform": "ibm-rpa",
-        "file": "01-variables.wal",
-        "nodePath": [
-          41
-        ],
-        "nodeId": "L42",
-        "label": "messageBox @ line 42"
-      },
-      "kind": "action",
-      "op": "vendor:ibm-rpa/messageBox",
-      "args": {
-        "title": {
-          "kind": "literal",
-          "value": "RR_01 Variables"
-        },
-        "text": {
-          "kind": "template",
-          "parts": [
-            {
-              "kind": "literal",
-              "value": "vStr="
-            },
-            {
+        {
+          "id": "L40",
+          "source": {
+            "platform": "ibm-rpa",
+            "file": "01-variables.wal",
+            "nodePath": [
+              39
+            ],
+            "nodeId": "L40",
+            "label": "get @ line 40"
+          },
+          "kind": "action",
+          "op": "vendor:ibm-rpa/get",
+          "args": {
+            "collection": {
               "kind": "var",
-              "name": "vStr",
+              "name": "vList",
               "path": []
             },
-            {
+            "index": {
               "kind": "literal",
-              "value": " | vNum="
-            },
-            {
-              "kind": "var",
-              "name": "vNum",
-              "path": []
-            },
-            {
-              "kind": "literal",
-              "value": " | vBool="
-            },
-            {
-              "kind": "var",
-              "name": "vBool",
-              "path": []
-            },
-            {
-              "kind": "literal",
-              "value": " | first item="
-            },
-            {
+              "value": 1
+            }
+          },
+          "outputs": {
+            "value": {
               "kind": "var",
               "name": "rosettaItem1",
               "path": []
-            },
-            {
+            }
+          }
+        },
+        {
+          "id": "L41",
+          "source": {
+            "platform": "ibm-rpa",
+            "file": "01-variables.wal",
+            "nodePath": [
+              40
+            ],
+            "nodeId": "L41",
+            "label": "strDictGet @ line 41"
+          },
+          "kind": "action",
+          "op": "vendor:ibm-rpa/strDictGet",
+          "args": {
+            "key": {
               "kind": "literal",
-              "value": " | name="
+              "value": "name"
             },
-            {
+            "dictionary": {
+              "kind": "var",
+              "name": "vDict",
+              "path": []
+            }
+          },
+          "outputs": {
+            "value": {
               "kind": "var",
               "name": "rosettaItem2",
               "path": []
             }
-          ]
+          }
         },
-        "icon": {
-          "kind": "literal",
-          "value": "Information"
-        },
-        "buttons": {
-          "kind": "literal",
-          "value": "OK"
-        },
-        "defaultbutton": {
-          "kind": "literal",
-          "value": "FirstButton"
-        }
-      },
-      "outputs": {}
-    },
-    {
-      "id": "L43",
-      "source": {
-        "platform": "ibm-rpa",
-        "file": "01-variables.wal",
-        "nodePath": [
-          42
-        ],
-        "nodeId": "L43",
-        "label": "strDictGet @ line 43"
-      },
-      "kind": "action",
-      "op": "vendor:ibm-rpa/strDictGet",
-      "args": {
-        "key": {
-          "kind": "literal",
-          "value": "city"
-        },
-        "dictionary": {
-          "kind": "var",
-          "name": "vDict",
-          "path": []
-        }
-      },
-      "outputs": {
-        "value": {
-          "kind": "var",
-          "name": "rosettaItem3",
-          "path": []
-        }
-      }
-    },
-    {
-      "id": "L44",
-      "source": {
-        "platform": "ibm-rpa",
-        "file": "01-variables.wal",
-        "nodePath": [
-          43
-        ],
-        "nodeId": "L44",
-        "label": "get @ line 44"
-      },
-      "kind": "action",
-      "op": "vendor:ibm-rpa/get",
-      "args": {
-        "collection": {
-          "kind": "var",
-          "name": "vList",
-          "path": []
-        },
-        "index": {
-          "kind": "literal",
-          "value": 2
-        }
-      },
-      "outputs": {
-        "value": {
-          "kind": "var",
-          "name": "rosettaItem4",
-          "path": []
-        }
-      }
-    },
-    {
-      "id": "L45",
-      "source": {
-        "platform": "ibm-rpa",
-        "file": "01-variables.wal",
-        "nodePath": [
-          44
-        ],
-        "nodeId": "L45",
-        "label": "getCurrentDateAndTime @ line 45"
-      },
-      "kind": "action",
-      "op": "vendor:ibm-rpa/getCurrentDateAndTime",
-      "args": {
-        "localorutc": {
-          "kind": "literal",
-          "value": "LocalTime"
-        }
-      },
-      "outputs": {
-        "value": {
-          "kind": "var",
-          "name": "rosettaLogNow",
-          "path": []
-        }
-      }
-    },
-    {
-      "id": "L46",
-      "source": {
-        "platform": "ibm-rpa",
-        "file": "01-variables.wal",
-        "nodePath": [
-          45
-        ],
-        "nodeId": "L46",
-        "label": "dateTimeToText @ line 46"
-      },
-      "kind": "action",
-      "op": "vendor:ibm-rpa/dateTimeToText",
-      "args": {
-        "date": {
-          "kind": "var",
-          "name": "rosettaLogNow",
-          "path": []
-        },
-        "usecustomformat": {
-          "kind": "literal",
-          "value": true
-        },
-        "customformat": {
-          "kind": "literal",
-          "value": "M/d/yyyy h:mm:ss tt"
-        },
-        "culture": {
-          "kind": "literal",
-          "value": "en-US"
-        }
-      },
-      "outputs": {
-        "value": {
-          "kind": "var",
-          "name": "rosettaLogStamp",
-          "path": []
-        }
-      }
-    },
-    {
-      "id": "L47",
-      "source": {
-        "platform": "ibm-rpa",
-        "file": "01-variables.wal",
-        "nodePath": [
-          46
-        ],
-        "nodeId": "L47",
-        "label": "writeToFile @ line 47"
-      },
-      "kind": "action",
-      "op": "vendor:ibm-rpa/writeToFile",
-      "args": {
-        "value": {
-          "kind": "template",
-          "parts": [
-            {
+        {
+          "id": "L42",
+          "source": {
+            "platform": "ibm-rpa",
+            "file": "01-variables.wal",
+            "nodePath": [
+              41
+            ],
+            "nodeId": "L42",
+            "label": "messageBox @ line 42"
+          },
+          "kind": "action",
+          "op": "vendor:ibm-rpa/messageBox",
+          "args": {
+            "title": {
               "kind": "literal",
-              "value": "("
+              "value": "RR_01 Variables"
             },
-            {
+            "text": {
+              "kind": "template",
+              "parts": [
+                {
+                  "kind": "literal",
+                  "value": "vStr="
+                },
+                {
+                  "kind": "var",
+                  "name": "vStr",
+                  "path": []
+                },
+                {
+                  "kind": "literal",
+                  "value": " | vNum="
+                },
+                {
+                  "kind": "var",
+                  "name": "vNum",
+                  "path": []
+                },
+                {
+                  "kind": "literal",
+                  "value": " | vBool="
+                },
+                {
+                  "kind": "var",
+                  "name": "vBool",
+                  "path": []
+                },
+                {
+                  "kind": "literal",
+                  "value": " | first item="
+                },
+                {
+                  "kind": "var",
+                  "name": "rosettaItem1",
+                  "path": []
+                },
+                {
+                  "kind": "literal",
+                  "value": " | name="
+                },
+                {
+                  "kind": "var",
+                  "name": "rosettaItem2",
+                  "path": []
+                }
+              ]
+            },
+            "icon": {
+              "kind": "literal",
+              "value": "Information"
+            },
+            "buttons": {
+              "kind": "literal",
+              "value": "OK"
+            },
+            "defaultbutton": {
+              "kind": "literal",
+              "value": "FirstButton"
+            }
+          },
+          "outputs": {}
+        },
+        {
+          "id": "L43",
+          "source": {
+            "platform": "ibm-rpa",
+            "file": "01-variables.wal",
+            "nodePath": [
+              42
+            ],
+            "nodeId": "L43",
+            "label": "strDictGet @ line 43"
+          },
+          "kind": "action",
+          "op": "vendor:ibm-rpa/strDictGet",
+          "args": {
+            "key": {
+              "kind": "literal",
+              "value": "city"
+            },
+            "dictionary": {
               "kind": "var",
-              "name": "rosettaLogStamp",
+              "name": "vDict",
               "path": []
-            },
-            {
-              "kind": "literal",
-              "value": ") vStr="
-            },
-            {
-              "kind": "var",
-              "name": "vStr",
-              "path": []
-            },
-            {
-              "kind": "literal",
-              "value": " | vNum="
-            },
-            {
-              "kind": "var",
-              "name": "vNum",
-              "path": []
-            },
-            {
-              "kind": "literal",
-              "value": " | city="
-            },
-            {
+            }
+          },
+          "outputs": {
+            "value": {
               "kind": "var",
               "name": "rosettaItem3",
               "path": []
+            }
+          }
+        },
+        {
+          "id": "L44",
+          "source": {
+            "platform": "ibm-rpa",
+            "file": "01-variables.wal",
+            "nodePath": [
+              43
+            ],
+            "nodeId": "L44",
+            "label": "get @ line 44"
+          },
+          "kind": "action",
+          "op": "vendor:ibm-rpa/get",
+          "args": {
+            "collection": {
+              "kind": "var",
+              "name": "vList",
+              "path": []
             },
-            {
+            "index": {
               "kind": "literal",
-              "value": " | item1="
-            },
-            {
+              "value": 2
+            }
+          },
+          "outputs": {
+            "value": {
               "kind": "var",
               "name": "rosettaItem4",
               "path": []
             }
-          ]
+          }
         },
-        "file": {
-          "kind": "literal",
-          "value": "C:\\RosettaTest\\log.txt"
-        },
-        "encoding": {
-          "kind": "literal",
-          "value": "Default"
-        },
-        "writeasnewline": {
-          "kind": "literal",
-          "value": true
-        }
-      },
-      "outputs": {}
-    },
-    {
-      "id": "L48",
-      "source": {
-        "platform": "ibm-rpa",
-        "file": "01-variables.wal",
-        "nodePath": [
-          47
-        ],
-        "nodeId": "L48",
-        "label": "writeToFile @ line 48"
-      },
-      "kind": "action",
-      "op": "vendor:ibm-rpa/writeToFile",
-      "args": {
-        "value": {
-          "kind": "template",
-          "parts": [
-            {
+        {
+          "id": "L45",
+          "source": {
+            "platform": "ibm-rpa",
+            "file": "01-variables.wal",
+            "nodePath": [
+              44
+            ],
+            "nodeId": "L45",
+            "label": "getCurrentDateAndTime @ line 45"
+          },
+          "kind": "action",
+          "op": "vendor:ibm-rpa/getCurrentDateAndTime",
+          "args": {
+            "localorutc": {
               "kind": "literal",
-              "value": "Task bot name : "
-            },
-            {
-              "kind": "system",
-              "name": "ibm-rpa:scriptName"
-            },
-            {
-              "kind": "literal",
-              "value": "\n\nvBool (Boolean) = "
-            },
-            {
-              "kind": "var",
-              "name": "vBool",
-              "path": []
-            },
-            {
-              "kind": "literal",
-              "value": "\nvDate (Datetime) = "
-            },
-            {
-              "kind": "var",
-              "name": "vDate",
-              "path": []
-            },
-            {
-              "kind": "literal",
-              "value": "\nvNum (Number) = "
-            },
-            {
-              "kind": "var",
-              "name": "vNum",
-              "path": []
-            },
-            {
-              "kind": "literal",
-              "value": "\nvStr (String) = "
-            },
-            {
-              "kind": "var",
-              "name": "vStr",
-              "path": []
-            },
-            {
-              "kind": "literal",
-              "value": "\n----------------------------------------------------------------------------------------------------\n"
+              "value": "LocalTime"
             }
-          ]
+          },
+          "outputs": {
+            "value": {
+              "kind": "var",
+              "name": "rosettaLogNow",
+              "path": []
+            }
+          }
         },
-        "file": {
-          "kind": "literal",
-          "value": "C:\\RosettaTest\\log.txt"
+        {
+          "id": "L46",
+          "source": {
+            "platform": "ibm-rpa",
+            "file": "01-variables.wal",
+            "nodePath": [
+              45
+            ],
+            "nodeId": "L46",
+            "label": "dateTimeToText @ line 46"
+          },
+          "kind": "action",
+          "op": "vendor:ibm-rpa/dateTimeToText",
+          "args": {
+            "date": {
+              "kind": "var",
+              "name": "rosettaLogNow",
+              "path": []
+            },
+            "usecustomformat": {
+              "kind": "literal",
+              "value": true
+            },
+            "customformat": {
+              "kind": "literal",
+              "value": "M/d/yyyy h:mm:ss tt"
+            },
+            "culture": {
+              "kind": "literal",
+              "value": "en-US"
+            }
+          },
+          "outputs": {
+            "value": {
+              "kind": "var",
+              "name": "rosettaLogStamp",
+              "path": []
+            }
+          }
         },
-        "encoding": {
-          "kind": "literal",
-          "value": "Default"
+        {
+          "id": "L47",
+          "source": {
+            "platform": "ibm-rpa",
+            "file": "01-variables.wal",
+            "nodePath": [
+              46
+            ],
+            "nodeId": "L47",
+            "label": "writeToFile @ line 47"
+          },
+          "kind": "action",
+          "op": "vendor:ibm-rpa/writeToFile",
+          "args": {
+            "value": {
+              "kind": "template",
+              "parts": [
+                {
+                  "kind": "literal",
+                  "value": "("
+                },
+                {
+                  "kind": "var",
+                  "name": "rosettaLogStamp",
+                  "path": []
+                },
+                {
+                  "kind": "literal",
+                  "value": ") vStr="
+                },
+                {
+                  "kind": "var",
+                  "name": "vStr",
+                  "path": []
+                },
+                {
+                  "kind": "literal",
+                  "value": " | vNum="
+                },
+                {
+                  "kind": "var",
+                  "name": "vNum",
+                  "path": []
+                },
+                {
+                  "kind": "literal",
+                  "value": " | city="
+                },
+                {
+                  "kind": "var",
+                  "name": "rosettaItem3",
+                  "path": []
+                },
+                {
+                  "kind": "literal",
+                  "value": " | item1="
+                },
+                {
+                  "kind": "var",
+                  "name": "rosettaItem4",
+                  "path": []
+                }
+              ]
+            },
+            "file": {
+              "kind": "literal",
+              "value": "C:\\RosettaTest\\log.txt"
+            },
+            "encoding": {
+              "kind": "literal",
+              "value": "Default"
+            },
+            "writeasnewline": {
+              "kind": "literal",
+              "value": true
+            }
+          },
+          "outputs": {}
         },
-        "writeasnewline": {
-          "kind": "literal",
-          "value": true
+        {
+          "id": "L48",
+          "source": {
+            "platform": "ibm-rpa",
+            "file": "01-variables.wal",
+            "nodePath": [
+              47
+            ],
+            "nodeId": "L48",
+            "label": "writeToFile @ line 48"
+          },
+          "kind": "action",
+          "op": "vendor:ibm-rpa/writeToFile",
+          "args": {
+            "value": {
+              "kind": "template",
+              "parts": [
+                {
+                  "kind": "literal",
+                  "value": "Task bot name : "
+                },
+                {
+                  "kind": "system",
+                  "name": "ibm-rpa:scriptName"
+                },
+                {
+                  "kind": "literal",
+                  "value": "\n\nvBool (Boolean) = "
+                },
+                {
+                  "kind": "var",
+                  "name": "vBool",
+                  "path": []
+                },
+                {
+                  "kind": "literal",
+                  "value": "\nvDate (Datetime) = "
+                },
+                {
+                  "kind": "var",
+                  "name": "vDate",
+                  "path": []
+                },
+                {
+                  "kind": "literal",
+                  "value": "\nvNum (Number) = "
+                },
+                {
+                  "kind": "var",
+                  "name": "vNum",
+                  "path": []
+                },
+                {
+                  "kind": "literal",
+                  "value": "\nvStr (String) = "
+                },
+                {
+                  "kind": "var",
+                  "name": "vStr",
+                  "path": []
+                },
+                {
+                  "kind": "literal",
+                  "value": "\n----------------------------------------------------------------------------------------------------\n"
+                }
+              ]
+            },
+            "file": {
+              "kind": "literal",
+              "value": "C:\\RosettaTest\\log.txt"
+            },
+            "encoding": {
+              "kind": "literal",
+              "value": "Default"
+            },
+            "writeasnewline": {
+              "kind": "literal",
+              "value": true
+            }
+          },
+          "outputs": {}
+        },
+        {
+          "id": "L49",
+          "source": {
+            "platform": "ibm-rpa",
+            "file": "01-variables.wal",
+            "nodePath": [
+              48
+            ],
+            "nodeId": "L49",
+            "label": "messageBox @ line 49"
+          },
+          "kind": "action",
+          "op": "vendor:ibm-rpa/messageBox",
+          "args": {
+            "title": {
+              "kind": "literal",
+              "value": "Automation Anywhere Enterprise Client"
+            },
+            "text": {
+              "kind": "literal",
+              "value": "This action is disabled on purpose"
+            },
+            "icon": {
+              "kind": "literal",
+              "value": "Information"
+            },
+            "buttons": {
+              "kind": "literal",
+              "value": "OK"
+            },
+            "defaultbutton": {
+              "kind": "literal",
+              "value": "FirstButton"
+            }
+          },
+          "outputs": {},
+          "disabled": true
         }
-      },
-      "outputs": {}
-    },
-    {
-      "id": "L49",
-      "source": {
-        "platform": "ibm-rpa",
-        "file": "01-variables.wal",
-        "nodePath": [
-          48
-        ],
-        "nodeId": "L49"
-      },
-      "kind": "comment",
-      "text": "[DISABLED] messageBox --title \"Automation Anywhere Enterprise Client\" --text \"This action is disabled on purpose\" --icon \"Information\" --buttons \"OK\" --defaultbutton \"FirstButton\""
+      ],
+      "kind": "group"
     }
   ]
 }

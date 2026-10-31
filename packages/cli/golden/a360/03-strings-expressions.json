@@ -1,0 +1,811 @@
+{
+  "triggers": [],
+  "nodes": [
+    {
+      "uid": "8451be63-d9b2-4c65-afde-2849b84dc0ae",
+      "commandName": "step",
+      "packageName": "Step",
+      "disabled": false,
+      "children": [
+        {
+          "uid": "0af2c3fc-b613-492f-a6b9-c77343839efb",
+          "commandName": "assign",
+          "packageName": "String",
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "sourceString",
+              "value": {
+                "type": "STRING",
+                "expression": "Prefix-$vText$-$vNumStr$-Suffix"
+              }
+            }
+          ],
+          "returnTo": {
+            "type": "VARIABLE",
+            "variableName": "vOut"
+          }
+        },
+        {
+          "uid": "09cbf061-c77d-4d56-aad2-c298cab7286b",
+          "commandName": "trim",
+          "packageName": "String",
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "sourceString",
+              "value": {
+                "type": "STRING",
+                "expression": "$vText$"
+              }
+            },
+            {
+              "name": "trimAtBeginning",
+              "value": {
+                "type": "BOOLEAN",
+                "boolean": true
+              }
+            },
+            {
+              "name": "trimAtEnd",
+              "value": {
+                "type": "BOOLEAN",
+                "boolean": true
+              }
+            }
+          ],
+          "returnTo": {
+            "type": "VARIABLE",
+            "variableName": "vText"
+          }
+        },
+        {
+          "uid": "c5c0c131-4b24-434d-afa4-312c5bee3eea",
+          "commandName": "subString",
+          "packageName": "String",
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "sourceString",
+              "value": {
+                "type": "STRING",
+                "expression": "$vText$"
+              }
+            },
+            {
+              "name": "startIndex",
+              "value": {
+                "type": "NUMBER",
+                "number": "1"
+              }
+            },
+            {
+              "name": "subStringLength",
+              "value": {
+                "type": "NUMBER",
+                "number": "5"
+              }
+            },
+            {
+              "name": "returnBlankIfRangeNotFound",
+              "value": {
+                "type": "BOOLEAN",
+                "boolean": false
+              }
+            }
+          ],
+          "returnTo": {
+            "type": "VARIABLE",
+            "variableName": "vOut"
+          }
+        },
+        {
+          "uid": "406fb388-db4c-4c02-ae2a-e0d0f85e8a7b",
+          "commandName": "replace",
+          "packageName": "String",
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "sourceString",
+              "value": {
+                "type": "STRING",
+                "expression": "$vText$"
+              }
+            },
+            {
+              "name": "find",
+              "value": {
+                "type": "STRING",
+                "string": "Rosetta"
+              }
+            },
+            {
+              "name": "isCaseSensitive",
+              "value": {
+                "type": "STRING",
+                "string": "false"
+              }
+            },
+            {
+              "name": "isRegularExpression",
+              "value": {
+                "type": "STRING",
+                "string": "false"
+              }
+            },
+            {
+              "name": "startIndex",
+              "value": {
+                "type": "NUMBER",
+                "number": "1"
+              }
+            },
+            {
+              "name": "count",
+              "value": {
+                "type": "NUMBER",
+                "number": "-1"
+              }
+            },
+            {
+              "name": "replaceWith",
+              "value": {
+                "type": "STRING",
+                "string": "IBM"
+              }
+            }
+          ],
+          "returnTo": {
+            "type": "VARIABLE",
+            "variableName": "vOut"
+          }
+        },
+        {
+          "uid": "e0bd9132-df64-4aa7-abf0-79c6cc1cc2a3",
+          "commandName": "split",
+          "packageName": "String",
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "sourceString",
+              "value": {
+                "type": "STRING",
+                "expression": "$vText$"
+              }
+            },
+            {
+              "name": "delimiter",
+              "value": {
+                "type": "STRING",
+                "string": " "
+              }
+            },
+            {
+              "name": "isCaseSensitive",
+              "value": {
+                "type": "STRING",
+                "string": "false"
+              }
+            },
+            {
+              "name": "substrings",
+              "value": {
+                "type": "STRING",
+                "string": "ALL"
+              }
+            }
+          ],
+          "returnTo": {
+            "type": "VARIABLE",
+            "variableName": "vParts"
+          }
+        },
+        {
+          "uid": "0fcc2d5b-391b-41fd-acc8-b19135d3abd8",
+          "commandName": "uppercase",
+          "packageName": "String",
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "sourceString",
+              "value": {
+                "type": "STRING",
+                "expression": "$vText$"
+              }
+            }
+          ],
+          "returnTo": {
+            "type": "VARIABLE",
+            "variableName": "vOut"
+          }
+        },
+        {
+          "uid": "f42bad64-216d-4857-ac29-7765b9d90720",
+          "commandName": "lowercase",
+          "packageName": "String",
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "sourceString",
+              "value": {
+                "type": "STRING",
+                "expression": "$vText$"
+              }
+            }
+          ],
+          "returnTo": {
+            "type": "VARIABLE",
+            "variableName": "vOut"
+          }
+        },
+        {
+          "uid": "ae8b45f1-fc35-4364-a622-13ee0d8b2cc5",
+          "commandName": "find",
+          "packageName": "String",
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "sourceString",
+              "value": {
+                "type": "STRING",
+                "expression": "$vText$"
+              }
+            },
+            {
+              "name": "find",
+              "value": {
+                "type": "STRING",
+                "string": "Rosetta"
+              }
+            },
+            {
+              "name": "isCaseSensitive",
+              "value": {
+                "type": "STRING",
+                "string": "false"
+              }
+            },
+            {
+              "name": "isRegularExpression",
+              "value": {
+                "type": "STRING",
+                "string": "false"
+              }
+            },
+            {
+              "name": "startIndex",
+              "value": {
+                "type": "NUMBER",
+                "number": "1"
+              }
+            }
+          ],
+          "returnTo": {
+            "type": "VARIABLE",
+            "variableName": "vIndex"
+          }
+        },
+        {
+          "uid": "db59d921-8d35-426b-a65d-853a6c8b8f4a",
+          "commandName": "length",
+          "packageName": "String",
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "sourceString",
+              "value": {
+                "type": "STRING",
+                "expression": "$vText$"
+              }
+            }
+          ],
+          "returnTo": {
+            "type": "VARIABLE",
+            "variableName": "vLen"
+          }
+        }
+      ],
+      "attributes": [
+        {
+          "name": "title",
+          "value": {
+            "type": "STRING",
+            "string": "String operations"
+          }
+        }
+      ]
+    },
+    {
+      "uid": "6c7a8ae9-b9a5-4e98-ac1e-e03536facebd",
+      "commandName": "step",
+      "packageName": "Step",
+      "disabled": false,
+      "children": [
+        {
+          "uid": "afbdabae-f520-45af-a0c9-21070930442a",
+          "commandName": "Comment",
+          "packageName": "Comment",
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "comment",
+              "value": {
+                "type": "STRING",
+                "string": "RR_03: number/string conversions and datetime add + custom format"
+              }
+            }
+          ]
+        },
+        {
+          "uid": "b51f5088-67f6-4d0b-a706-3300440a788c",
+          "commandName": "toNumber",
+          "packageName": "String",
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "sourceString",
+              "value": {
+                "type": "STRING",
+                "expression": "$vNumStr$"
+              }
+            }
+          ],
+          "returnTo": {
+            "type": "VARIABLE",
+            "variableName": "vNum"
+          }
+        },
+        {
+          "uid": "13131874-fa30-408c-a866-f8b6112ff02a",
+          "commandName": "toString",
+          "packageName": "Number",
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "input",
+              "value": {
+                "type": "NUMBER",
+                "expression": "$vNum$"
+              }
+            },
+            {
+              "name": "numFormatDigits",
+              "value": {
+                "type": "NUMBER",
+                "number": "0"
+              }
+            }
+          ],
+          "returnTo": {
+            "type": "VARIABLE",
+            "variableName": "vOut"
+          }
+        },
+        {
+          "uid": "18247d65-86b5-446c-ad01-123cdccae0a7",
+          "commandName": "assign",
+          "packageName": "Datetime",
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "option",
+              "value": {
+                "type": "STRING",
+                "string": "variable"
+              }
+            },
+            {
+              "name": "dateTime",
+              "value": {
+                "type": "DATETIME",
+                "expression": "$System:Date$"
+              }
+            }
+          ],
+          "returnTo": {
+            "type": "VARIABLE",
+            "variableName": "vDate"
+          }
+        },
+        {
+          "uid": "6bab6f42-ad8b-43bd-a48d-8a816a0536d1",
+          "commandName": "add",
+          "packageName": "Datetime",
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "source",
+              "value": {
+                "type": "DATETIME",
+                "expression": "$vDate$"
+              }
+            },
+            {
+              "name": "val",
+              "value": {
+                "type": "NUMBER",
+                "number": "7"
+              }
+            },
+            {
+              "name": "unit",
+              "value": {
+                "type": "STRING",
+                "string": "DAYS"
+              }
+            }
+          ],
+          "returnTo": {
+            "type": "VARIABLE",
+            "variableName": "vDate"
+          }
+        },
+        {
+          "uid": "ee42a1d3-cc6f-4452-ab8f-2c0c69a5ffde",
+          "commandName": "toString",
+          "packageName": "Datetime",
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "source",
+              "value": {
+                "type": "DATETIME",
+                "expression": "$vDate$"
+              }
+            },
+            {
+              "name": "selectPattern",
+              "value": {
+                "type": "STRING",
+                "string": "CUSTOM"
+              }
+            },
+            {
+              "name": "patternInput",
+              "value": {
+                "type": "STRING",
+                "string": "dd/MM/yyyy"
+              }
+            }
+          ],
+          "returnTo": {
+            "type": "VARIABLE",
+            "variableName": "vDateStr"
+          }
+        }
+      ],
+      "attributes": [
+        {
+          "name": "title",
+          "value": {
+            "type": "STRING",
+            "string": "Conversions and dates"
+          }
+        }
+      ]
+    },
+    {
+      "uid": "ea07ca42-a407-4bed-af91-feba11f564e9",
+      "commandName": "step",
+      "packageName": "Step",
+      "disabled": false,
+      "children": [
+        {
+          "uid": "7371150d-798b-4efe-a4ee-965c70aa894b",
+          "commandName": "Comment",
+          "packageName": "Comment",
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "comment",
+              "value": {
+                "type": "STRING",
+                "string": "RR_03: system variables plus list index and dictionary key expressions"
+              }
+            }
+          ]
+        },
+        {
+          "uid": "b926c8af-5dbf-485f-a138-99c6e6ff3f3e",
+          "commandName": "assign",
+          "packageName": "String",
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "sourceString",
+              "value": {
+                "type": "STRING",
+                "expression": "Machine=$System:Machine$ | Bot=$System:AATaskName$ | CR={{ROSETTA: a360:AAControlRoom}}"
+              }
+            }
+          ],
+          "returnTo": {
+            "type": "VARIABLE",
+            "variableName": "vOut"
+          }
+        },
+        {
+          "uid": "cd1925a8-bccd-4848-a300-a798b3f6355e",
+          "commandName": "messageBox",
+          "packageName": "MessageBox",
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "title",
+              "value": {
+                "type": "STRING",
+                "string": "RR_03 Expressions"
+              }
+            },
+            {
+              "name": "content",
+              "value": {
+                "type": "STRING",
+                "expression": "part0=$vParts[0]$ | list1=$vList[1]$ | name=$vDict{name}$ | date=$vDateStr$ | len=$vLen.Number:toString$ | idx=$vIndex.Number:toString$ | out=$vOut$"
+              }
+            },
+            {
+              "name": "scrollLines",
+              "value": {
+                "type": "NUMBER",
+                "number": "30"
+              }
+            },
+            {
+              "name": "closeMsgBox",
+              "value": {
+                "type": "BOOLEAN",
+                "boolean": false
+              }
+            }
+          ]
+        },
+        {
+          "uid": "aadb86db-a7f9-4c9f-acab-7283b88d6f38",
+          "commandName": "messageBox",
+          "packageName": "MessageBox",
+          "disabled": true,
+          "attributes": [
+            {
+              "name": "title",
+              "value": {
+                "type": "STRING",
+                "string": "Automation Anywhere Enterprise Client"
+              }
+            },
+            {
+              "name": "content",
+              "value": {
+                "type": "STRING",
+                "expression": "Disabled on purpose: $vList[0]$"
+              }
+            },
+            {
+              "name": "scrollLines",
+              "value": {
+                "type": "NUMBER",
+                "number": "30"
+              }
+            },
+            {
+              "name": "closeMsgBox",
+              "value": {
+                "type": "BOOLEAN",
+                "boolean": false
+              }
+            }
+          ]
+        }
+      ],
+      "attributes": [
+        {
+          "name": "title",
+          "value": {
+            "type": "STRING",
+            "string": "System variables and expressions"
+          }
+        }
+      ]
+    }
+  ],
+  "variables": [
+    {
+      "name": "SampleNumber",
+      "description": "",
+      "type": "NUMBER",
+      "readOnly": false,
+      "input": false,
+      "output": false
+    },
+    {
+      "name": "SampleString",
+      "description": "",
+      "type": "STRING",
+      "readOnly": false,
+      "input": false,
+      "output": false
+    },
+    {
+      "name": "vText",
+      "description": "",
+      "type": "STRING",
+      "readOnly": false,
+      "input": true,
+      "output": false,
+      "defaultValue": {
+        "type": "STRING",
+        "string": "  Hello Rosetta Test  "
+      }
+    },
+    {
+      "name": "vOut",
+      "description": "",
+      "type": "STRING",
+      "readOnly": false,
+      "input": false,
+      "output": true,
+      "defaultValue": {
+        "type": "STRING",
+        "string": "none"
+      }
+    },
+    {
+      "name": "vNumStr",
+      "description": "",
+      "type": "STRING",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "defaultValue": {
+        "type": "STRING",
+        "string": "42"
+      }
+    },
+    {
+      "name": "vDateStr",
+      "description": "",
+      "type": "STRING",
+      "readOnly": false,
+      "input": false,
+      "output": false
+    },
+    {
+      "name": "vNum",
+      "description": "",
+      "type": "NUMBER",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "defaultValue": {
+        "type": "NUMBER",
+        "number": "0"
+      }
+    },
+    {
+      "name": "vIndex",
+      "description": "",
+      "type": "NUMBER",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "defaultValue": {
+        "type": "NUMBER",
+        "number": "0"
+      }
+    },
+    {
+      "name": "vLen",
+      "description": "",
+      "type": "NUMBER",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "defaultValue": {
+        "type": "NUMBER",
+        "number": "0"
+      }
+    },
+    {
+      "name": "vDate",
+      "description": "",
+      "type": "DATETIME",
+      "readOnly": false,
+      "input": false,
+      "output": false
+    },
+    {
+      "name": "vParts",
+      "description": "",
+      "type": "LIST",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "subtype": "STRING"
+    },
+    {
+      "name": "vList",
+      "description": "",
+      "type": "LIST",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "subtype": "STRING",
+      "defaultValue": {
+        "type": "LIST",
+        "list": [
+          {
+            "type": "STRING",
+            "string": "Alpha"
+          },
+          {
+            "type": "STRING",
+            "string": "Beta"
+          }
+        ]
+      }
+    },
+    {
+      "name": "vDict",
+      "description": "",
+      "type": "DICTIONARY",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "subtype": "STRING",
+      "defaultValue": {
+        "type": "DICTIONARY",
+        "dictionary": [
+          {
+            "key": "name",
+            "value": {
+              "type": "STRING",
+              "string": "Test User"
+            },
+            "entryType": "STRING"
+          }
+        ]
+      }
+    }
+  ],
+  "packages": [
+    {
+      "name": "Comment",
+      "version": "2.17.0",
+      "settingsAttributes": []
+    },
+    {
+      "name": "Datetime",
+      "version": "2.17.3",
+      "settingsAttributes": []
+    },
+    {
+      "name": "MessageBox",
+      "version": "3.8.1",
+      "settingsAttributes": []
+    },
+    {
+      "name": "Number",
+      "version": "3.11.5",
+      "settingsAttributes": []
+    },
+    {
+      "name": "Step",
+      "version": "2.7.0",
+      "settingsAttributes": []
+    },
+    {
+      "name": "String",
+      "version": "5.12.6",
+      "settingsAttributes": []
+    }
+  ],
+  "properties": {
+    "botCodeVersion": "7",
+    "improvedNumberSupport": true,
+    "timeout": "0s",
+    "automationPriority": "PRIORITY_MEDIUM",
+    "runInChildWindow": false,
+    "runInChildWindowMode": "DESKTOP"
+  },
+  "workItemTemplateName": null
+}

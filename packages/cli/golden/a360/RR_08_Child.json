@@ -1,0 +1,74 @@
+{
+  "triggers": [],
+  "nodes": [
+    {
+      "uid": "39c5a985-3e33-4bf9-a09f-1616dfb3bb73",
+      "commandName": "assign",
+      "packageName": "String",
+      "disabled": false,
+      "attributes": [
+        {
+          "name": "sourceString",
+          "value": {
+            "type": "STRING",
+            "expression": "Hello $inName$"
+          }
+        }
+      ],
+      "returnTo": {
+        "type": "VARIABLE",
+        "variableName": "outGreeting"
+      }
+    }
+  ],
+  "variables": [
+    {
+      "name": "SampleNumber",
+      "description": "",
+      "type": "NUMBER",
+      "readOnly": false,
+      "input": false,
+      "output": false
+    },
+    {
+      "name": "SampleString",
+      "description": "",
+      "type": "STRING",
+      "readOnly": false,
+      "input": false,
+      "output": false
+    },
+    {
+      "name": "inName",
+      "description": "",
+      "type": "STRING",
+      "readOnly": false,
+      "input": true,
+      "output": false
+    },
+    {
+      "name": "outGreeting",
+      "description": "",
+      "type": "STRING",
+      "readOnly": false,
+      "input": false,
+      "output": true
+    }
+  ],
+  "packages": [
+    {
+      "name": "String",
+      "version": "5.12.6",
+      "settingsAttributes": []
+    }
+  ],
+  "properties": {
+    "botCodeVersion": "7",
+    "improvedNumberSupport": true,
+    "timeout": "0s",
+    "automationPriority": "PRIORITY_MEDIUM",
+    "runInChildWindow": false,
+    "runInChildWindowMode": "DESKTOP"
+  },
+  "workItemTemplateName": null
+}

@@ -87,6 +87,8 @@ const predicates: Readonly<Record<string, string>> = {
 const generated =
   /^\/\/ (=+|(Bot|Description|Source|Converted|Generator|Inputs|Outputs|Status): .*|---- (Helper variables|Initial values|Subroutines) added by the conversion.*|---- Initial values ----)$/;
 
+const DISABLED = '// [DISABLED] ';
+
 interface Line {
   /** 1-based line number. */
   readonly n: number;
@@ -146,7 +148,7 @@ class Reader {
       (sub ? sub.lines : main).push(line);
     });
     if (sub) this.report(WalCode.Structure, 'warning', { line: 0, verb: 'beginSub' });
-    return new Parser(this, main).parse(new Set()).block;
+    return steps(new Parser(this, main).parse(new Set()).block);
   }
 
   subroutine(name: string, n: number): Statement {
@@ -215,6 +217,33 @@ class Reader {
   }
 }
 
+/**
+ * RPA Rosetta writes an A360 Step as a `// ---- title ----` comment before its commands
+ * (target-wal). At the top level, each such marker starts a group that runs to the next one.
+ */
+function steps(block: Statement[]): Statement[] {
+  const out: Statement[] = [];
+  let group: { id: string; source?: SourceRef; label: string; body: Statement[] } | undefined;
+  for (const s of block) {
+    const marker = s.kind === 'comment' ? /^---- (.*) ----$/.exec(s.text) : null;
+    if (marker) {
+      if (group) out.push({ ...group, kind: 'group' });
+      group = {
+        id: s.id,
+        ...(s.source ? { source: s.source } : {}),
+        label: marker[1] ?? '',
+        body: [],
+      };
+    } else if (group) {
+      group.body.push(s);
+    } else {
+      out.push(s);
+    }
+  }
+  if (group) out.push({ ...group, kind: 'group' });
+  return out;
+}
+
 function unknown(r: Reader, n: number, text: string, reason: string): Statement {
   return { id: `L${n}`, source: r.ref(n, text.split(' ')[0]), kind: 'unknown', raw: text, reason };
 }
@@ -259,6 +288,18 @@ class Parser {
       const line = this.lines[this.pos++];
       if (!line) break;
       const n = line.n;
+      if (line.text.startsWith(DISABLED)) {
+        // RPA Rosetta keeps disabled A360 code as `// [DISABLED] <command>` lines (target-wal):
+        // read the run of such lines as code and mark it disabled.
+        const run: Line[] = [{ n, text: line.text.slice(DISABLED.length) }];
+        while (this.lines[this.pos]?.text.startsWith(DISABLED)) {
+          const next = this.lines[this.pos++];
+          if (next) run.push({ n: next.n, text: next.text.slice(DISABLED.length) });
+        }
+        for (const s of new Parser(this.r, run).parse(new Set()).block)
+          block.push({ ...s, disabled: true });
+        continue;
+      }
       if (line.text.startsWith('//')) {
         if (!generated.test(line.text))
           block.push({

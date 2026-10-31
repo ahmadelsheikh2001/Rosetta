@@ -83,9 +83,15 @@ importers:
       '@rosetta/source-a360':
         specifier: workspace:*
         version: link:../source-a360
+      '@rosetta/source-wal':
+        specifier: workspace:*
+        version: link:../source-wal
       '@rosetta/standards':
         specifier: workspace:*
         version: link:../standards
+      '@rosetta/target-a360':
+        specifier: workspace:*
+        version: link:../target-a360
       '@rosetta/target-wal':
         specifier: workspace:*
         version: link:../target-wal
@@ -170,6 +176,12 @@ importers:
       zod:
         specifier: ^4.6.7
         version: 4.6.7
+
+  packages/target-a360:
+    dependencies:
+      '@rosetta/ir':
+        specifier: workspace:*
+        version: link:../ir
 
   packages/target-wal:
     dependencies:

@@ -32,6 +32,12 @@
     },
     {
       "path": "../design-tokens"
+    },
+    {
+      "path": "../source-wal"
+    },
+    {
+      "path": "../target-a360"
     }
   ]
 }

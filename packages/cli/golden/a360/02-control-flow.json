@@ -1,0 +1,1021 @@
+{
+  "triggers": [],
+  "nodes": [
+    {
+      "uid": "b6e38bb4-0642-46b1-a374-356042b820ca",
+      "commandName": "step",
+      "packageName": "Step",
+      "disabled": false,
+      "children": [
+        {
+          "uid": "952a4114-ed55-4054-a37a-c2dac6fff338",
+          "commandName": "Comment",
+          "packageName": "Comment",
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "comment",
+              "value": {
+                "type": "STRING",
+                "string": "RR_02: nested If / Else If / Else on Number, String and Boolean"
+              }
+            }
+          ]
+        },
+        {
+          "uid": "0b292dac-cae6-411c-a1c4-6fdefe60885e",
+          "commandName": "if",
+          "packageName": "If",
+          "disabled": false,
+          "children": [
+            {
+              "uid": "44b8134e-53f4-4454-abb4-b2f1060a9af0",
+              "commandName": "if",
+              "packageName": "If",
+              "disabled": false,
+              "children": [
+                {
+                  "uid": "085c7cc0-7648-4c25-a23e-8c92c061edb9",
+                  "commandName": "assign",
+                  "packageName": "String",
+                  "disabled": false,
+                  "attributes": [
+                    {
+                      "name": "sourceString",
+                      "value": {
+                        "type": "STRING",
+                        "string": "Number above 5 and text matches"
+                      }
+                    }
+                  ],
+                  "returnTo": {
+                    "type": "VARIABLE",
+                    "variableName": "vResult"
+                  }
+                }
+              ],
+              "branches": [
+                {
+                  "uid": "7391f167-cf42-465e-a9c0-3ee33c8d7d0d",
+                  "commandName": "else",
+                  "packageName": "If",
+                  "disabled": false,
+                  "children": [
+                    {
+                      "uid": "0b6e6d4d-d36b-4f77-a2a2-4dfa7451ee13",
+                      "commandName": "assign",
+                      "packageName": "String",
+                      "disabled": false,
+                      "attributes": [
+                        {
+                          "name": "sourceString",
+                          "value": {
+                            "type": "STRING",
+                            "string": "Number above 5 but text differs"
+                          }
+                        }
+                      ],
+                      "returnTo": {
+                        "type": "VARIABLE",
+                        "variableName": "vResult"
+                      }
+                    }
+                  ]
+                }
+              ],
+              "attributes": [
+                {
+                  "attributes": [
+                    {
+                      "name": "variable",
+                      "value": {
+                        "type": "STRING",
+                        "expression": "$vTextIn$"
+                      }
+                    },
+                    {
+                      "name": "operator",
+                      "value": {
+                        "type": "STRING",
+                        "string": "EQ"
+                      }
+                    },
+                    {
+                      "name": "value",
+                      "value": {
+                        "type": "STRING",
+                        "string": "Test User"
+                      }
+                    },
+                    {
+                      "name": "matchCase",
+                      "value": {
+                        "type": "BOOLEAN",
+                        "boolean": true
+                      }
+                    },
+                    {
+                      "name": "isIgnoreCarriage",
+                      "value": {
+                        "type": "BOOLEAN",
+                        "boolean": false
+                      }
+                    }
+                  ],
+                  "name": "condition",
+                  "value": {
+                    "type": "CONDITIONAL",
+                    "conditionalName": "stringVariable",
+                    "packageName": "String"
+                  }
+                }
+              ]
+            }
+          ],
+          "branches": [
+            {
+              "uid": "f1b9c7cc-eeaa-44ef-a304-fe10d09a44d5",
+              "commandName": "elseIf",
+              "packageName": "If",
+              "disabled": false,
+              "children": [
+                {
+                  "uid": "09b4c7bd-61b7-44aa-adc5-9d63fffb50c2",
+                  "commandName": "assign",
+                  "packageName": "String",
+                  "disabled": false,
+                  "attributes": [
+                    {
+                      "name": "sourceString",
+                      "value": {
+                        "type": "STRING",
+                        "string": "Flag is true"
+                      }
+                    }
+                  ],
+                  "returnTo": {
+                    "type": "VARIABLE",
+                    "variableName": "vResult"
+                  }
+                }
+              ],
+              "attributes": [
+                {
+                  "attributes": [
+                    {
+                      "name": "variable",
+                      "value": {
+                        "type": "BOOLEAN",
+                        "expression": "$vFlag$"
+                      }
+                    },
+                    {
+                      "name": "operator",
+                      "value": {
+                        "type": "STRING",
+                        "string": "EQ"
+                      }
+                    },
+                    {
+                      "name": "value",
+                      "value": {
+                        "type": "BOOLEAN",
+                        "boolean": true
+                      }
+                    }
+                  ],
+                  "name": "condition",
+                  "value": {
+                    "type": "CONDITIONAL",
+                    "conditionalName": "booleanVariable",
+                    "packageName": "Boolean"
+                  }
+                }
+              ]
+            },
+            {
+              "uid": "512a7b53-6904-4b69-aaec-520efddba7a6",
+              "commandName": "else",
+              "packageName": "If",
+              "disabled": false,
+              "children": [
+                {
+                  "uid": "62641989-f8ca-479c-a808-ea0c5b5a92e5",
+                  "commandName": "assign",
+                  "packageName": "String",
+                  "disabled": false,
+                  "attributes": [
+                    {
+                      "name": "sourceString",
+                      "value": {
+                        "type": "STRING",
+                        "string": "Else branch reached"
+                      }
+                    }
+                  ],
+                  "returnTo": {
+                    "type": "VARIABLE",
+                    "variableName": "vResult"
+                  }
+                }
+              ]
+            }
+          ],
+          "attributes": [
+            {
+              "attributes": [
+                {
+                  "name": "variable",
+                  "value": {
+                    "type": "NUMBER",
+                    "expression": "$vNumIn$"
+                  }
+                },
+                {
+                  "name": "operator",
+                  "value": {
+                    "type": "STRING",
+                    "string": "GT"
+                  }
+                },
+                {
+                  "name": "value",
+                  "value": {
+                    "type": "NUMBER",
+                    "number": "5"
+                  }
+                }
+              ],
+              "name": "condition",
+              "value": {
+                "type": "CONDITIONAL",
+                "conditionalName": "numberVariable",
+                "packageName": "Number"
+              }
+            }
+          ]
+        }
+      ],
+      "attributes": [
+        {
+          "name": "title",
+          "value": {
+            "type": "STRING",
+            "string": "Nested conditions"
+          }
+        }
+      ]
+    },
+    {
+      "uid": "4321619c-8e70-4e93-a42f-da182e373f58",
+      "commandName": "step",
+      "packageName": "Step",
+      "disabled": false,
+      "children": [
+        {
+          "uid": "b6d3a81b-f2b3-4769-a204-213ecc04813d",
+          "commandName": "Comment",
+          "packageName": "Comment",
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "comment",
+              "value": {
+                "type": "STRING",
+                "string": "RR_02: loop types, with Break and Continue under If"
+              }
+            }
+          ]
+        },
+        {
+          "uid": "adc186fd-a74d-4737-ac5d-174250eff36a",
+          "commandName": "loop.commands.start",
+          "packageName": "Loop",
+          "disabled": false,
+          "children": [
+            {
+              "uid": "f3f029df-1662-4d17-a38c-eedce3866d5c",
+              "commandName": "if",
+              "packageName": "If",
+              "disabled": false,
+              "children": [
+                {
+                  "uid": "42217218-001d-4706-abbe-a3762e2cee8b",
+                  "commandName": "loop.commands.break",
+                  "packageName": "Loop",
+                  "disabled": false,
+                  "attributes": [
+                    {
+                      "name": "anchor",
+                      "value": {
+                        "type": "STRING",
+                        "string": "Loop1"
+                      }
+                    }
+                  ]
+                }
+              ],
+              "attributes": [
+                {
+                  "attributes": [
+                    {
+                      "name": "variable",
+                      "value": {
+                        "type": "NUMBER",
+                        "expression": "$vCounter$"
+                      }
+                    },
+                    {
+                      "name": "operator",
+                      "value": {
+                        "type": "STRING",
+                        "string": "EQ"
+                      }
+                    },
+                    {
+                      "name": "value",
+                      "value": {
+                        "type": "NUMBER",
+                        "number": "3"
+                      }
+                    }
+                  ],
+                  "name": "condition",
+                  "value": {
+                    "type": "CONDITIONAL",
+                    "conditionalName": "numberVariable",
+                    "packageName": "Number"
+                  }
+                }
+              ]
+            }
+          ],
+          "anchor": {
+            "type": "STRING",
+            "string": "Loop1"
+          },
+          "attributes": [
+            {
+              "name": "loopType",
+              "value": {
+                "type": "STRING",
+                "string": "ITERATOR"
+              }
+            },
+            {
+              "name": "iterator",
+              "returnTo": {
+                "type": "VARIABLE",
+                "variableName": "vCounter"
+              },
+              "attributes": [
+                {
+                  "name": "times",
+                  "value": {
+                    "type": "NUMBER",
+                    "number": "5"
+                  }
+                }
+              ],
+              "value": {
+                "type": "ITERATOR",
+                "iteratorName": "loop.iterators.times",
+                "packageName": "Loop"
+              }
+            }
+          ]
+        },
+        {
+          "uid": "1b62ecc7-334e-4359-aafc-22d4e0f0360f",
+          "commandName": "loop.commands.start",
+          "packageName": "Loop",
+          "disabled": false,
+          "children": [
+            {
+              "uid": "453e93fa-8b18-4c5f-a0da-21f8e7cdb317",
+              "commandName": "increment",
+              "packageName": "Number",
+              "disabled": false,
+              "attributes": [
+                {
+                  "name": "source",
+                  "value": {
+                    "type": "NUMBER",
+                    "expression": "$vCounter$"
+                  }
+                },
+                {
+                  "name": "by",
+                  "value": {
+                    "type": "NUMBER",
+                    "number": "1"
+                  }
+                }
+              ],
+              "returnTo": {
+                "type": "VARIABLE",
+                "variableName": "vCounter"
+              }
+            }
+          ],
+          "anchor": {
+            "type": "STRING",
+            "string": "Loop2"
+          },
+          "attributes": [
+            {
+              "name": "loopType",
+              "value": {
+                "type": "STRING",
+                "string": "WHILE"
+              }
+            },
+            {
+              "attributes": [
+                {
+                  "name": "variable",
+                  "value": {
+                    "type": "NUMBER",
+                    "expression": "$vCounter$"
+                  }
+                },
+                {
+                  "name": "operator",
+                  "value": {
+                    "type": "STRING",
+                    "string": "LT"
+                  }
+                },
+                {
+                  "name": "value",
+                  "value": {
+                    "type": "NUMBER",
+                    "number": "10"
+                  }
+                }
+              ],
+              "name": "condition",
+              "value": {
+                "type": "CONDITIONAL",
+                "conditionalName": "numberVariable",
+                "packageName": "Number"
+              }
+            },
+            {
+              "name": "checkConditionAtEnd",
+              "value": {
+                "type": "BOOLEAN",
+                "boolean": false
+              }
+            }
+          ]
+        },
+        {
+          "uid": "5c3ecf3a-08e6-47cd-a112-0708a1f621d6",
+          "commandName": "loop.commands.start",
+          "packageName": "Loop",
+          "disabled": false,
+          "children": [
+            {
+              "uid": "9b02f524-5526-4e89-ae00-9e83da296f4a",
+              "commandName": "if",
+              "packageName": "If",
+              "disabled": false,
+              "children": [
+                {
+                  "uid": "d94e1efb-f1d2-4efa-ad1a-100d0241529a",
+                  "commandName": "loop.commands.continue",
+                  "packageName": "Loop",
+                  "disabled": false,
+                  "attributes": [
+                    {
+                      "name": "anchor",
+                      "value": {
+                        "type": "STRING",
+                        "string": "Loop3"
+                      }
+                    }
+                  ]
+                }
+              ],
+              "attributes": [
+                {
+                  "attributes": [
+                    {
+                      "name": "variable",
+                      "value": {
+                        "type": "STRING",
+                        "expression": "$vItem$"
+                      }
+                    },
+                    {
+                      "name": "operator",
+                      "value": {
+                        "type": "STRING",
+                        "string": "EQ"
+                      }
+                    },
+                    {
+                      "name": "value",
+                      "value": {
+                        "type": "STRING",
+                        "string": "Skip"
+                      }
+                    },
+                    {
+                      "name": "matchCase",
+                      "value": {
+                        "type": "BOOLEAN",
+                        "boolean": true
+                      }
+                    },
+                    {
+                      "name": "isIgnoreCarriage",
+                      "value": {
+                        "type": "BOOLEAN",
+                        "boolean": false
+                      }
+                    }
+                  ],
+                  "name": "condition",
+                  "value": {
+                    "type": "CONDITIONAL",
+                    "conditionalName": "stringVariable",
+                    "packageName": "String"
+                  }
+                }
+              ]
+            },
+            {
+              "uid": "879db658-c7e1-4959-a602-1490be2a1fa9",
+              "commandName": "assign",
+              "packageName": "String",
+              "disabled": false,
+              "attributes": [
+                {
+                  "name": "sourceString",
+                  "value": {
+                    "type": "STRING",
+                    "expression": "Processed $vItem$"
+                  }
+                }
+              ],
+              "returnTo": {
+                "type": "VARIABLE",
+                "variableName": "vResult"
+              }
+            }
+          ],
+          "anchor": {
+            "type": "STRING",
+            "string": "Loop3"
+          },
+          "attributes": [
+            {
+              "name": "loopType",
+              "value": {
+                "type": "STRING",
+                "string": "ITERATOR"
+              }
+            },
+            {
+              "name": "iterator",
+              "returnTo": {
+                "type": "VARIABLE",
+                "variableName": "vItem"
+              },
+              "attributes": [
+                {
+                  "name": "list",
+                  "value": {
+                    "type": "VARIABLE",
+                    "variableName": "vList"
+                  }
+                },
+                {
+                  "name": "forOptions",
+                  "value": {
+                    "type": "STRING",
+                    "string": "all"
+                  }
+                }
+              ],
+              "value": {
+                "type": "ITERATOR",
+                "iteratorName": "list.iterators.list",
+                "packageName": "List"
+              }
+            }
+          ]
+        },
+        {
+          "uid": "5a29a538-d97a-4b84-ae98-daddcebe19c2",
+          "commandName": "loop.commands.start",
+          "packageName": "Loop",
+          "disabled": false,
+          "children": [
+            {
+              "uid": "01be1f0e-2f07-4381-a28d-0e9a22b752d1",
+              "commandName": "assign",
+              "packageName": "String",
+              "disabled": false,
+              "attributes": [
+                {
+                  "name": "sourceString",
+                  "value": {
+                    "type": "STRING",
+                    "expression": "$rosettaEntry1{Key}$"
+                  }
+                }
+              ],
+              "returnTo": {
+                "type": "VARIABLE",
+                "variableName": "vKey"
+              }
+            },
+            {
+              "uid": "9c4284c2-3449-46cf-a384-8614d26f735b",
+              "commandName": "assign",
+              "packageName": "String",
+              "disabled": false,
+              "attributes": [
+                {
+                  "name": "sourceString",
+                  "value": {
+                    "type": "STRING",
+                    "expression": "Key $vKey$ has value $vDict{$vKey$}$"
+                  }
+                }
+              ],
+              "returnTo": {
+                "type": "VARIABLE",
+                "variableName": "vResult"
+              }
+            }
+          ],
+          "anchor": {
+            "type": "STRING",
+            "string": "Loop4"
+          },
+          "attributes": [
+            {
+              "name": "loopType",
+              "value": {
+                "type": "STRING",
+                "string": "ITERATOR"
+              }
+            },
+            {
+              "name": "iterator",
+              "returnTo": {
+                "type": "VARIABLE",
+                "variableName": "rosettaEntry1"
+              },
+              "attributes": [
+                {
+                  "name": "list",
+                  "value": {
+                    "type": "VARIABLE",
+                    "variableName": "vDict"
+                  }
+                },
+                {
+                  "name": "forOptions",
+                  "value": {
+                    "type": "STRING",
+                    "string": "all"
+                  }
+                }
+              ],
+              "value": {
+                "type": "ITERATOR",
+                "iteratorName": "list.iterators.list",
+                "packageName": "List"
+              }
+            }
+          ]
+        },
+        {
+          "uid": "90bb4dc8-a078-459c-a08d-5ef80c3129e8",
+          "commandName": "Comment",
+          "packageName": "Comment",
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "comment",
+              "value": {
+                "type": "STRING",
+                "string": "TODO [ROSETTA] loop over file not converted yet; source kept below as comments."
+              }
+            }
+          ]
+        },
+        {
+          "uid": "7750be4d-60c7-4315-a7a2-0af48de009be",
+          "commandName": "Comment",
+          "packageName": "Comment",
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "comment",
+              "value": {
+                "type": "STRING",
+                "string": "strDictGet --key \"name\" --dictionary ${vFileInfo} rosettaItem3=value"
+              }
+            }
+          ]
+        },
+        {
+          "uid": "50110f64-71d1-4acc-aab0-c37a2e8759a3",
+          "commandName": "Comment",
+          "packageName": "Comment",
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "comment",
+              "value": {
+                "type": "STRING",
+                "string": "strDictGet --key \"extension\" --dictionary ${vFileInfo} rosettaItem4=value"
+              }
+            }
+          ]
+        },
+        {
+          "uid": "7dfe9b7c-fb5f-4743-a3ac-da9aa53373c4",
+          "commandName": "Comment",
+          "packageName": "Comment",
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "comment",
+              "value": {
+                "type": "STRING",
+                "string": "setVar --name \"${vResult}\" --value \"File found: ${rosettaItem3}.${rosettaItem4}\""
+              }
+            }
+          ]
+        },
+        {
+          "uid": "6e15523f-8722-447a-aa57-073310ba1eb3",
+          "commandName": "messageBox",
+          "packageName": "MessageBox",
+          "disabled": true,
+          "attributes": [
+            {
+              "name": "title",
+              "value": {
+                "type": "STRING",
+                "string": "Automation Anywhere Enterprise Client"
+              }
+            },
+            {
+              "name": "content",
+              "value": {
+                "type": "STRING",
+                "expression": "Disabled on purpose: $vResult$"
+              }
+            },
+            {
+              "name": "scrollLines",
+              "value": {
+                "type": "NUMBER",
+                "number": "30"
+              }
+            },
+            {
+              "name": "closeMsgBox",
+              "value": {
+                "type": "BOOLEAN",
+                "boolean": false
+              }
+            }
+          ]
+        }
+      ],
+      "attributes": [
+        {
+          "name": "title",
+          "value": {
+            "type": "STRING",
+            "string": "Loops"
+          }
+        }
+      ]
+    }
+  ],
+  "variables": [
+    {
+      "name": "SampleNumber",
+      "description": "",
+      "type": "NUMBER",
+      "readOnly": false,
+      "input": false,
+      "output": false
+    },
+    {
+      "name": "SampleString",
+      "description": "",
+      "type": "STRING",
+      "readOnly": false,
+      "input": false,
+      "output": false
+    },
+    {
+      "name": "vTextIn",
+      "description": "",
+      "type": "STRING",
+      "readOnly": false,
+      "input": true,
+      "output": false,
+      "defaultValue": {
+        "type": "STRING",
+        "string": "Test User"
+      }
+    },
+    {
+      "name": "vResult",
+      "description": "",
+      "type": "STRING",
+      "readOnly": false,
+      "input": false,
+      "output": true,
+      "defaultValue": {
+        "type": "STRING",
+        "string": "none"
+      }
+    },
+    {
+      "name": "vItem",
+      "description": "",
+      "type": "STRING",
+      "readOnly": false,
+      "input": false,
+      "output": false
+    },
+    {
+      "name": "vKey",
+      "description": "",
+      "type": "STRING",
+      "readOnly": false,
+      "input": false,
+      "output": false
+    },
+    {
+      "name": "vNumIn",
+      "description": "",
+      "type": "NUMBER",
+      "readOnly": false,
+      "input": true,
+      "output": false,
+      "defaultValue": {
+        "type": "NUMBER",
+        "number": "7"
+      }
+    },
+    {
+      "name": "vCounter",
+      "description": "",
+      "type": "NUMBER",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "defaultValue": {
+        "type": "NUMBER",
+        "number": "0"
+      }
+    },
+    {
+      "name": "vFlag",
+      "description": "",
+      "type": "BOOLEAN",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "defaultValue": {
+        "type": "BOOLEAN",
+        "boolean": true
+      }
+    },
+    {
+      "name": "vList",
+      "description": "",
+      "type": "LIST",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "subtype": "STRING",
+      "defaultValue": {
+        "type": "LIST",
+        "list": [
+          {
+            "type": "STRING",
+            "string": "Alpha"
+          },
+          {
+            "type": "STRING",
+            "string": "Skip"
+          },
+          {
+            "type": "STRING",
+            "string": "Gamma"
+          }
+        ]
+      }
+    },
+    {
+      "name": "vDict",
+      "description": "",
+      "type": "DICTIONARY",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "subtype": "STRING",
+      "defaultValue": {
+        "type": "DICTIONARY",
+        "dictionary": [
+          {
+            "key": "k1",
+            "value": {
+              "type": "STRING",
+              "string": "v1"
+            },
+            "entryType": "STRING"
+          },
+          {
+            "key": "k2",
+            "value": {
+              "type": "STRING",
+              "string": "v2"
+            },
+            "entryType": "STRING"
+          }
+        ]
+      }
+    },
+    {
+      "name": "vFileInfo",
+      "description": "",
+      "type": "DICTIONARY",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "subtype": "STRING"
+    }
+  ],
+  "packages": [
+    {
+      "name": "Boolean",
+      "version": "2.13.3",
+      "settingsAttributes": []
+    },
+    {
+      "name": "Comment",
+      "version": "2.17.0",
+      "settingsAttributes": []
+    },
+    {
+      "name": "If",
+      "version": "3.8.0-20241115-115929",
+      "settingsAttributes": []
+    },
+    {
+      "name": "List",
+      "version": "2.16.2",
+      "settingsAttributes": []
+    },
+    {
+      "name": "Loop",
+      "version": "3.10.0-20251030-061555",
+      "settingsAttributes": []
+    },
+    {
+      "name": "MessageBox",
+      "version": "3.8.1",
+      "settingsAttributes": []
+    },
+    {
+      "name": "Number",
+      "version": "3.11.5",
+      "settingsAttributes": []
+    },
+    {
+      "name": "Step",
+      "version": "2.7.0",
+      "settingsAttributes": []
+    },
+    {
+      "name": "String",
+      "version": "5.12.6",
+      "settingsAttributes": []
+    }
+  ],
+  "properties": {
+    "botCodeVersion": "7",
+    "improvedNumberSupport": true,
+    "timeout": "0s",
+    "automationPriority": "PRIORITY_MEDIUM",
+    "runInChildWindow": false,
+    "runInChildWindowMode": "DESKTOP"
+  },
+  "workItemTemplateName": null
+}

@@ -1,0 +1,573 @@
+{
+  "triggers": [],
+  "nodes": [
+    {
+      "uid": "ecc308be-716e-4240-abbb-007d008daba7",
+      "commandName": "step",
+      "packageName": "Step",
+      "disabled": false,
+      "children": [
+        {
+          "uid": "e2a50348-911c-4f68-a632-78461b0d5c67",
+          "commandName": "Comment",
+          "packageName": "Comment",
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "comment",
+              "value": {
+                "type": "STRING",
+                "string": "RR_01: assign a new value to each variable type"
+              }
+            }
+          ]
+        },
+        {
+          "uid": "8dcc3917-a946-46ff-ab21-7aeb560edb96",
+          "commandName": "assign",
+          "packageName": "String",
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "sourceString",
+              "value": {
+                "type": "STRING",
+                "string": "Updated Test User"
+              }
+            }
+          ],
+          "returnTo": {
+            "type": "VARIABLE",
+            "variableName": "vStr"
+          }
+        },
+        {
+          "uid": "6e136c6e-0c66-4897-a94c-426eafe53df1",
+          "commandName": "assignToNumber",
+          "packageName": "Number",
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "input",
+              "value": {
+                "type": "NUMBER",
+                "number": "100"
+              }
+            }
+          ],
+          "returnTo": {
+            "type": "VARIABLE",
+            "variableName": "vNum"
+          }
+        },
+        {
+          "uid": "d8e61e53-b2d3-4f64-a4df-bb07d31d945b",
+          "commandName": "increment",
+          "packageName": "Number",
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "source",
+              "value": {
+                "type": "NUMBER",
+                "expression": "$vNum$"
+              }
+            },
+            {
+              "name": "by",
+              "value": {
+                "type": "NUMBER",
+                "number": "5"
+              }
+            }
+          ],
+          "returnTo": {
+            "type": "VARIABLE",
+            "variableName": "vNum"
+          }
+        },
+        {
+          "uid": "afce4520-46e8-48f9-a760-95dc5bc5a15c",
+          "commandName": "assign",
+          "packageName": "Boolean",
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "source",
+              "value": {
+                "type": "STRING",
+                "string": "constant"
+              }
+            },
+            {
+              "name": "userDefined",
+              "value": {
+                "type": "STRING",
+                "string": "false"
+              }
+            }
+          ],
+          "returnTo": {
+            "type": "VARIABLE",
+            "variableName": "vBool"
+          }
+        },
+        {
+          "uid": "b6ac8b42-ba0b-4e07-abde-e97ca343dd54",
+          "commandName": "addItem",
+          "packageName": "List",
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "sourceList",
+              "value": {
+                "type": "VARIABLE",
+                "variableName": "vList"
+              }
+            },
+            {
+              "name": "listItem",
+              "value": {
+                "type": "VARIABLE",
+                "variableName": "vStr"
+              }
+            },
+            {
+              "name": "itemPosition",
+              "value": {
+                "type": "STRING",
+                "string": "END"
+              }
+            }
+          ]
+        },
+        {
+          "uid": "66ece0e5-7006-4cfb-a1d8-425fbdc0d27b",
+          "commandName": "put",
+          "packageName": "Dictionary",
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "sourceMap",
+              "value": {
+                "type": "VARIABLE",
+                "variableName": "vDict"
+              }
+            },
+            {
+              "name": "key",
+              "value": {
+                "type": "STRING",
+                "string": "country"
+              }
+            },
+            {
+              "name": "varOrManual",
+              "value": {
+                "type": "STRING",
+                "string": "Manual"
+              }
+            },
+            {
+              "name": "subtype",
+              "value": {
+                "type": "STRING",
+                "string": "String"
+              }
+            },
+            {
+              "name": "stringVal",
+              "value": {
+                "type": "STRING",
+                "string": "Testland"
+              }
+            }
+          ]
+        }
+      ],
+      "attributes": [
+        {
+          "name": "title",
+          "value": {
+            "type": "STRING",
+            "string": "Assign new values"
+          }
+        }
+      ]
+    },
+    {
+      "uid": "9123535c-21aa-42fa-a3af-e9991d9cd47a",
+      "commandName": "step",
+      "packageName": "Step",
+      "disabled": false,
+      "children": [
+        {
+          "uid": "fee153b2-b89a-43e2-a26f-591eb380e319",
+          "commandName": "Comment",
+          "packageName": "Comment",
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "comment",
+              "value": {
+                "type": "STRING",
+                "string": "RR_01: display and log selected variables"
+              }
+            }
+          ]
+        },
+        {
+          "uid": "558d6b15-b210-46a8-a581-8a7b83198381",
+          "commandName": "messageBox",
+          "packageName": "MessageBox",
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "title",
+              "value": {
+                "type": "STRING",
+                "string": "RR_01 Variables"
+              }
+            },
+            {
+              "name": "content",
+              "value": {
+                "type": "STRING",
+                "expression": "vStr=$vStr$ | vNum=$vNum.Number:toString$ | vBool=$vBool.Boolean:toString$ | first item=$vList[0]$ | name=$vDict{name}$"
+              }
+            },
+            {
+              "name": "scrollLines",
+              "value": {
+                "type": "NUMBER",
+                "number": "30"
+              }
+            },
+            {
+              "name": "closeMsgBox",
+              "value": {
+                "type": "BOOLEAN",
+                "boolean": false
+              }
+            }
+          ]
+        },
+        {
+          "uid": "0b09ee4c-a658-42ab-acea-5bd2233b2961",
+          "commandName": "logToFile",
+          "packageName": "LogToFile",
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "filePath",
+              "value": {
+                "type": "FILE",
+                "string": "file:///C:/RosettaTest/log.txt"
+              }
+            },
+            {
+              "name": "logContent",
+              "value": {
+                "type": "STRING",
+                "expression": "vStr=$vStr$ | vNum=$vNum.Number:toString$ | city=$vDict{city}$ | item1=$vList[1]$"
+              }
+            },
+            {
+              "name": "appendTimestamp",
+              "value": {
+                "type": "BOOLEAN",
+                "boolean": true
+              }
+            },
+            {
+              "name": "logOption",
+              "value": {
+                "type": "STRING",
+                "string": "APPEND_FILE"
+              }
+            },
+            {
+              "name": "encodingValue",
+              "value": {
+                "type": "STRING",
+                "string": "ANSI"
+              }
+            }
+          ]
+        },
+        {
+          "uid": "79a95bf2-b384-477b-ab55-b27cc55d1f8b",
+          "commandName": "logVariablesToFile",
+          "packageName": "LogToFile",
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "filePath",
+              "value": {
+                "type": "FILE",
+                "string": "file:///C:/RosettaTest/log.txt"
+              }
+            },
+            {
+              "name": "logOption",
+              "value": {
+                "type": "STRING",
+                "string": "APPEND_FILE"
+              }
+            },
+            {
+              "name": "appendTimestamp",
+              "value": {
+                "type": "BOOLEAN",
+                "boolean": false
+              }
+            },
+            {
+              "name": "variables",
+              "value": {
+                "type": "VARIABLEMAP",
+                "variableMapNames": [
+                  "vbool",
+                  "vdate",
+                  "vnum",
+                  "vstr"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "uid": "3de6b21a-169d-46f7-ad41-09b08f369b90",
+          "commandName": "messageBox",
+          "packageName": "MessageBox",
+          "disabled": true,
+          "attributes": [
+            {
+              "name": "title",
+              "value": {
+                "type": "STRING",
+                "string": "Automation Anywhere Enterprise Client"
+              }
+            },
+            {
+              "name": "content",
+              "value": {
+                "type": "STRING",
+                "string": "This action is disabled on purpose"
+              }
+            },
+            {
+              "name": "scrollLines",
+              "value": {
+                "type": "NUMBER",
+                "number": "30"
+              }
+            },
+            {
+              "name": "closeMsgBox",
+              "value": {
+                "type": "BOOLEAN",
+                "boolean": false
+              }
+            }
+          ]
+        }
+      ],
+      "attributes": [
+        {
+          "name": "title",
+          "value": {
+            "type": "STRING",
+            "string": "Show and log values"
+          }
+        }
+      ]
+    }
+  ],
+  "variables": [
+    {
+      "name": "SampleNumber",
+      "description": "",
+      "type": "NUMBER",
+      "readOnly": false,
+      "input": false,
+      "output": false
+    },
+    {
+      "name": "SampleString",
+      "description": "",
+      "type": "STRING",
+      "readOnly": false,
+      "input": false,
+      "output": false
+    },
+    {
+      "name": "vStr",
+      "description": "",
+      "type": "STRING",
+      "readOnly": false,
+      "input": true,
+      "output": false,
+      "defaultValue": {
+        "type": "STRING",
+        "string": "Test User"
+      }
+    },
+    {
+      "name": "vNum",
+      "description": "",
+      "type": "NUMBER",
+      "readOnly": false,
+      "input": false,
+      "output": true,
+      "defaultValue": {
+        "type": "NUMBER",
+        "number": "12345"
+      }
+    },
+    {
+      "name": "vBool",
+      "description": "",
+      "type": "BOOLEAN",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "defaultValue": {
+        "type": "BOOLEAN",
+        "boolean": true
+      }
+    },
+    {
+      "name": "vDate",
+      "description": "",
+      "type": "DATETIME",
+      "readOnly": false,
+      "input": false,
+      "output": false
+    },
+    {
+      "name": "vList",
+      "description": "",
+      "type": "LIST",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "subtype": "STRING",
+      "defaultValue": {
+        "type": "LIST",
+        "list": [
+          {
+            "type": "STRING",
+            "string": "Alpha"
+          },
+          {
+            "type": "STRING",
+            "string": "Beta"
+          }
+        ]
+      }
+    },
+    {
+      "name": "vDict",
+      "description": "",
+      "type": "DICTIONARY",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "subtype": "STRING",
+      "defaultValue": {
+        "type": "DICTIONARY",
+        "dictionary": [
+          {
+            "key": "name",
+            "value": {
+              "type": "STRING",
+              "string": "Test User"
+            },
+            "entryType": "STRING"
+          },
+          {
+            "key": "city",
+            "value": {
+              "type": "STRING",
+              "string": "Test City"
+            },
+            "entryType": "STRING"
+          }
+        ]
+      }
+    },
+    {
+      "name": "vTable",
+      "description": "",
+      "type": "TABLE",
+      "readOnly": false,
+      "input": false,
+      "output": false
+    },
+    {
+      "name": "vCred",
+      "description": "",
+      "type": "CREDENTIAL",
+      "readOnly": false,
+      "input": false,
+      "output": false
+    }
+  ],
+  "packages": [
+    {
+      "name": "Boolean",
+      "version": "2.13.3",
+      "settingsAttributes": []
+    },
+    {
+      "name": "Comment",
+      "version": "2.17.0",
+      "settingsAttributes": []
+    },
+    {
+      "name": "Dictionary",
+      "version": "3.16.2",
+      "settingsAttributes": []
+    },
+    {
+      "name": "List",
+      "version": "2.16.2",
+      "settingsAttributes": []
+    },
+    {
+      "name": "LogToFile",
+      "version": "3.11.1",
+      "settingsAttributes": []
+    },
+    {
+      "name": "MessageBox",
+      "version": "3.8.1",
+      "settingsAttributes": []
+    },
+    {
+      "name": "Number",
+      "version": "3.11.5",
+      "settingsAttributes": []
+    },
+    {
+      "name": "Step",
+      "version": "2.7.0",
+      "settingsAttributes": []
+    },
+    {
+      "name": "String",
+      "version": "5.12.6",
+      "settingsAttributes": []
+    }
+  ],
+  "properties": {
+    "botCodeVersion": "7",
+    "improvedNumberSupport": true,
+    "timeout": "0s",
+    "automationPriority": "PRIORITY_MEDIUM",
+    "runInChildWindow": false,
+    "runInChildWindowMode": "DESKTOP"
+  },
+  "workItemTemplateName": null
+}
