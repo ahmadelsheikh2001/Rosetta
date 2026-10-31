@@ -75,3 +75,9 @@ out=Machine=<machine> | Bot=\Bots\RPA_Rosetta_Samples\RR_IBM_03-strings-expressi
   packages. As with `$System:Date$` in 03, a package used only inside an expression must be listed.
 - Fixed: the generator lists every package named in an expression (`$x.Pkg:fn$`), and `checkA360`
   reports one that is missing. On the uploaded file it reports exactly lines 8 and 12.
+- Re-test with the fix (commit a955ee7): upload 200, 17,570 bytes (only change: Number 3.11.5 in
+  packages). Editor: 18 lines, no markers. Run: COMPLETED, 18/18 lines, no error. The log file on
+  the Bot Agent machine gained, as in A360's own run of corpus 04 minus the CSV read:
+  `Outer catch: Custom RR_04 error thrown on purpose (line 10)` then `cleanup done`, and no inner
+  catch line (the CSV read is still a TODO comment, so the inner Try does not fail). The Throw
+  reached the outer Catch with its message and line number, and Finally ran after it.
