@@ -23,6 +23,6 @@ for --variable ${rosettaIndex3} --from 1 --to ${rosettaRows2} --step 1
 mapTableRow --dataTable ${rosettaTable1} --row ${rosettaIndex3} --mappings "name=Name=${vRow_Name},name=Amount=${vRow_Amount}"
 writeToFile --value "Name=${vRow_Name} Amount=${vRow_Amount}" --file "C:\\RosettaTest\\log.txt" --encoding "Default" --writeasnewline
 next
-excelSet --value "Done" --file ${rosettaExcelDefault} --getfirstsheet --usingcell --cell "C1"
+excelSet --value "Done" --file ${rosettaExcelDefault} --getfirstsheet --usingcell --cell "C2"
 // A360 Save workbook: WAL saves the workbook when it is closed (excelClose --save)
 excelClose --file ${rosettaExcelDefault} --save

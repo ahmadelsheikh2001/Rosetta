@@ -94,3 +94,6 @@ out=Machine=<machine> | Bot=\Bots\RPA_Rosetta_Samples\RR_IBM_03-strings-expressi
   Control Room's RR_05_Excel with `corpus/a360/05-excel/bot.json`.
 - `checkA360` now reports Set cell in row 1 of a session opened with "Sheet contains a header". The
   round trip accepts a problem only when the original has it too.
+- Settled: RR_05_Excel in the Control Room is revision 2 (2026-10-30 21:16 UTC), which writes C2.
+  Its SHA-256 (`3fe7d93b…3b4d72`, from the agent) equals the corpus file with C1 → C2, so the corpus
+  held revision 1. `corpus/a360/05-excel/bot.json` is now revision 2 and the outputs follow.
