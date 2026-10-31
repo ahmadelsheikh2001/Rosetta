@@ -10,11 +10,16 @@ const LOGO_WIDTH = 150;
 /** Conversions offered in the UI. Planned ones are listed but cannot be chosen yet. */
 const sources = [
   { value: 'a360', label: 'Automation Anywhere A360' },
+  { value: 'ibm-rpa', label: 'IBM RPA (WAL script)' },
   { value: 'uipath', label: 'UiPath (planned)', disabled: true },
   { value: 'blueprism', label: 'Blue Prism (planned)', disabled: true },
   { value: 'powerautomate', label: 'Power Automate (planned)', disabled: true },
 ];
-const targets = [{ value: 'ibm-rpa', label: 'IBM RPA (WAL script)' }];
+/** The target follows the source (app.js); both directions exist (ADR-022). */
+const targets = [
+  { value: 'ibm-rpa', label: 'IBM RPA (WAL script)' },
+  { value: 'a360', label: 'Automation Anywhere A360 (task bot)' },
+];
 
 const options = (list: readonly { value: string; label: string; disabled?: boolean }[]) =>
   list
@@ -47,7 +52,7 @@ ${asset('app.css')}
 <main><div class="wrap">
   <section class="intro">
     <h1>Convert your bots</h1>
-    <p>Choose the platforms, upload the bot files and get the IBM RPA scripts with notes on everything to check.</p>
+    <p>Choose the platforms, upload the bot files and get the converted bots with notes on everything to check.</p>
   </section>
 
   <section class="card" aria-labelledby="s1">
@@ -62,11 +67,11 @@ ${asset('app.css')}
 
   <section class="card" aria-labelledby="s2">
     <h2 id="s2"><span class="step">2</span>Upload the bot files</h2>
-    <p class="lead">A360 task bot files (.json), one per bot. Upload a parent and its child bots together.</p>
+    <p class="lead" id="upload-lead">A360 task bot files (.json), one per bot. Upload a parent and its child bots together.</p>
     <label class="drop" id="drop" tabindex="0">
       <svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5M4 16v4h16v-4"/></svg>
       <strong>Drop files here or click to browse</strong>
-      <span class="hint">Export from the Control Room: the bot's raw content (.json). Zip exports are not supported yet.</span>
+      <span class="hint" id="upload-hint">Export from the Control Room: the bot's raw content (.json). Zip exports are not supported yet.</span>
       <input id="file-input" class="sr-only" type="file" accept=".json,application/json" multiple>
     </label>
     <ul class="files" id="file-list" aria-label="Chosen files"></ul>
@@ -76,7 +81,7 @@ ${asset('app.css')}
 
   <section class="card" id="result" hidden aria-live="polite"></section>
 
-  <footer>RPA Rosetta · Valleysoft Center of Excellence. The IBM RPA scripts are drafts until verified in IBM RPA Studio.</footer>
+  <footer>RPA Rosetta · Valleysoft Center of Excellence. Converted bots are drafts until run on the target platform.</footer>
 </div></main>
 <script>
 ${asset('app.js')}

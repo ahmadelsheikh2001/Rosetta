@@ -1,6 +1,6 @@
 # ADR-022: Both directions: IBM RPA → A360 as well as A360 → IBM RPA
 
-- **Status:** Accepted (step 1 in progress)
+- **Status:** Accepted (steps 1–4 done; command coverage of the reverse direction growing)
 - **Date:** 2026-10-31
 
 ## Context

@@ -1,11 +1,12 @@
 import { createServer, type IncomingMessage, type Server, type ServerResponse } from 'node:http';
 import type { AddressInfo } from 'node:net';
 import { parseArgs } from 'node:util';
+import type { Diagnostic } from '@rosetta/ir';
 import { loadRegistry, registryDir, type MappingEntry } from '@rosetta/mappings';
 import { en, renderHtml, translate } from '@rosetta/report';
 import type { StandardsProfile } from '@rosetta/standards';
 import { renderNotes } from '@rosetta/target-wal';
-import { convertFiles, type InputFile } from './convert-files.js';
+import { convertFiles, convertWalFiles, renderA360Notes, type InputFile } from './convert-files.js';
 import { ExitCode } from './exit-codes.js';
 import { serveHelp } from './help.js';
 import type { Io } from './io.js';
@@ -16,8 +17,9 @@ import { pageHtml } from './web/page.js';
 export const MAX_BODY = 25 * 1024 * 1024;
 const MAX_FILES = 200;
 
-/** Conversions the UI offers. Only A360 → IBM RPA exists today; the others are listed as planned. */
-const supported = { source: 'a360', target: 'ibm-rpa' } as const;
+/** Conversions the UI offers (ADR-022: both directions); the page lists others as planned. */
+const routes = ['a360>ibm-rpa', 'ibm-rpa>a360'] as const;
+type Route = (typeof routes)[number];
 
 /** Only this machine may use the server (ADR-021): the bots never leave it. */
 const LOCAL = '127.0.0.1';
@@ -70,7 +72,7 @@ function readBody(req: IncomingMessage): Promise<string> {
 }
 
 /** Validates the JSON body of `POST /api/convert`. */
-function parseRequest(text: string): { files: InputFile[] } {
+function parseRequest(text: string): { route: Route; files: InputFile[] } {
   let body: unknown;
   try {
     body = JSON.parse(text);
@@ -78,8 +80,9 @@ function parseRequest(text: string): { files: InputFile[] } {
     throw new RequestError(400, 'The request is not valid JSON.');
   }
   const b = body as { source?: unknown; target?: unknown; files?: unknown };
-  if (b.source !== supported.source || b.target !== supported.target) {
-    throw new RequestError(400, 'Only Automation Anywhere A360 → IBM RPA is available.');
+  const route = routes.find((r) => r === `${String(b.source)}>${String(b.target)}`);
+  if (!route) {
+    throw new RequestError(400, 'Only A360 → IBM RPA and IBM RPA → A360 are available.');
   }
   if (!Array.isArray(b.files) || b.files.length === 0) {
     throw new RequestError(400, 'No files were uploaded.');
@@ -94,11 +97,46 @@ function parseRequest(text: string): { files: InputFile[] } {
     }
     return { name: file.name, text: file.text };
   });
-  return { files };
+  return { route, files };
 }
 
-function convertResponse(files: InputFile[], profile: StandardsProfile, registry: MappingEntry[]) {
+const messagesOf = (diagnostics: readonly Diagnostic[]) =>
+  diagnostics
+    .filter((d) => d.severity !== 'info')
+    .map((d) => ({
+      file: d.source?.file ?? '',
+      severity: d.severity,
+      text: translate(en, d.messageId, d.params),
+    }));
+
+/**
+ * One response shape for both directions. `content` is the generated file; notes and problems
+ * carry a `line` for WAL and an `at` (node path) for A360. Only A360 sources get a report.
+ */
+function convertResponse(
+  route: Route,
+  files: InputFile[],
+  profile: StandardsProfile,
+  registry: MappingEntry[],
+) {
   const generatedAt = new Date().toISOString();
+  if (route === 'ibm-rpa>a360') {
+    const result = convertWalFiles(files);
+    return {
+      generatedAt,
+      version,
+      bots: result.bots.map((b) => ({
+        name: b.name,
+        fileName: b.fileName,
+        content: b.text,
+        notes: b.notes,
+        notesMarkdown: renderA360Notes(b),
+        problems: b.problems.map((p) => ({ ...p, severity: 'error' })),
+      })),
+      messages: messagesOf(result.diagnostics),
+      reportHtml: null,
+    };
+  }
   const result = convertFiles(files, profile, registry, generatedAt);
   return {
     generatedAt,
@@ -106,18 +144,12 @@ function convertResponse(files: InputFile[], profile: StandardsProfile, registry
     bots: result.bots.map((b) => ({
       name: b.name,
       fileName: b.script.fileName,
-      wal: b.script.text,
+      content: b.script.text,
       notes: b.script.notes,
       notesMarkdown: renderNotes(b.script.fileName, b.script.notes, b.problems),
       problems: b.problems,
     })),
-    messages: result.diagnostics
-      .filter((d) => d.severity !== 'info')
-      .map((d) => ({
-        file: d.source?.file ?? '',
-        severity: d.severity,
-        text: translate(en, d.messageId, d.params),
-      })),
+    messages: messagesOf(result.diagnostics),
     reportHtml: renderHtml(result.assessment),
   };
 }
@@ -163,8 +195,8 @@ export function startServer(profile: StandardsProfile, port: number): Promise<Ru
       }
       readBody(req)
         .then((text) => {
-          const { files } = parseRequest(text);
-          json(res, 200, convertResponse(files, profile, entries));
+          const { route, files } = parseRequest(text);
+          json(res, 200, convertResponse(route, files, profile, entries));
         })
         .catch((err: unknown) => {
           if (err instanceof RequestError) json(res, err.status, { error: err.message });

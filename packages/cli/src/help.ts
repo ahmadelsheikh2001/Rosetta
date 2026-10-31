@@ -65,10 +65,10 @@ ${profileOptions}
 
 export const serveHelp = `rosetta serve [options]
 
-Starts the web UI on this computer: choose the source and target platform,
-upload bot files, convert them and download the IBM RPA scripts, their notes
-and the assessment report. It listens on 127.0.0.1 only, so the files never
-leave this computer.
+Starts the web UI on this computer: choose the direction (A360 → IBM RPA or
+IBM RPA → A360), upload bot files, convert them and download the converted
+bots and their notes (and, from A360, the assessment report). It listens on
+127.0.0.1 only, so the files never leave this computer.
 
 Options:
   --port <n>                Port (default: 4173; 0 picks a free one)

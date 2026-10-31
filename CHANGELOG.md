@@ -144,7 +144,18 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: Se
 - `source-wal`: Steps rebuilt from `// ---- title ----` markers; `// [DISABLED]` lines read as
   disabled code.
 - Round trip A360 → IBM RPA → A360: corpus 01, 03 and RR_08_Child come back as the original,
-  02 at 26/27 (the folder loop has no WAL form).
+  02 at 25/27 (the folder loop has no WAL form).
+
+#### IBM RPA → A360, steps 3 and 4 (ADR-022)
+
+- `checkA360`: reports before upload what the A360 editor and compiler rejected in the import test
+  (undeclared variables, iterator over the wrong variable type, unknown package versions,
+  `$System:…$` without the System package). The four converted bots run in A360 (corpus run
+  2026-10-31-ibm-import).
+- Web UI: "IBM RPA (WAL script)" as a source, converted to A360 task bots. Upload `.wal` files;
+  each bot shows its JSON, notes and A360 check problems, with downloads (`.json`, notes, zip).
+  The target follows the chosen source. `POST /api/convert` accepts `ibm-rpa` → `a360` and
+  returns `content` (was `wal`) for both directions.
 
 ### Planned (deferred by ADR-016)
 

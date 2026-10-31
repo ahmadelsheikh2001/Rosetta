@@ -4,6 +4,64 @@
 const $ = (id) => document.getElementById(id);
 const chosen = new Map(); // file name → File
 let last = null; // last conversion response
+let lastRoute = null; // the direction it was made for
+
+/** The two directions (ADR-022). Texts follow the source platform chosen in step 1. */
+const routes = {
+  a360: {
+    target: 'ibm-rpa',
+    accept: '.json,application/json',
+    lead: 'A360 task bot files (.json), one per bot. Upload a parent and its child bots together.',
+    hint: "Export from the Control Room: the bot's raw content (.json). Zip exports are not supported yet.",
+    button: 'Convert to IBM RPA',
+    output: 'IBM RPA scripts',
+    code: 'IBM RPA script',
+    check: 'Static check',
+    sourceLabel: 'A360: ',
+    mime: 'text/plain',
+    zip: 'rosetta-ibm-rpa.zip',
+    closing:
+      'The IBM RPA scripts are a draft: open each one in IBM RPA Studio, run it and compare the result with the A360 bot.',
+  },
+  'ibm-rpa': {
+    target: 'a360',
+    accept: '.wal',
+    lead: 'IBM RPA scripts (.wal), one per bot. Each script becomes one A360 task bot.',
+    hint: 'Save the script from IBM RPA Studio as a .wal file. Studio packages are not supported yet.',
+    button: 'Convert to A360',
+    output: 'A360 task bots',
+    code: 'A360 task bot',
+    check: 'A360 check',
+    sourceLabel: 'IBM RPA: ',
+    mime: 'application/json',
+    zip: 'rosetta-a360.zip',
+    closing:
+      'The A360 bots are a draft: create an empty task bot in the Control Room, write this file as its content, then open it in the editor, run it and compare the result with the IBM RPA script.',
+  },
+};
+const route = () => routes[$('source').value] || routes.a360;
+
+// ---- Step 1: the direction ----
+
+function applyRoute() {
+  const r = route();
+  const target = $('target');
+  for (const o of target.options) o.disabled = o.value !== r.target;
+  target.value = r.target;
+  $('upload-lead').textContent = r.lead;
+  $('upload-hint').textContent = r.hint;
+  $('file-input').setAttribute('accept', r.accept);
+  $('convert').querySelector('.label').textContent = r.button;
+}
+
+$('source').addEventListener('change', () => {
+  // files of the other platform would not convert; start over
+  chosen.clear();
+  $('result').hidden = true;
+  $('error').hidden = true;
+  applyRoute();
+  renderFiles();
+});
 
 function el(tag, attrs, ...children) {
   const node = document.createElement(tag);
@@ -142,6 +200,7 @@ $('convert').addEventListener('click', async () => {
     const body = await res.json();
     if (!res.ok) throw new Error(body.error || 'The conversion failed.');
     last = body;
+    lastRoute = route();
     renderResult(body);
   } catch (err) {
     showError(err instanceof Error ? err.message : String(err));
@@ -175,6 +234,7 @@ function renderResult(r) {
     { errors: 0, manual: 0, verify: 0 },
   );
   const clean = r.bots.filter((b) => b.problems.length === 0).length;
+  const to = lastRoute;
 
   const messages = r.messages.length
     ? el(
@@ -208,7 +268,7 @@ function renderResult(r) {
             'Download all (.zip)',
           )
         : null,
-      r.bots.length
+      r.bots.length && r.reportHtml
         ? el(
             'button',
             { class: 'secondary', type: 'button', onclick: openReport },
@@ -220,19 +280,20 @@ function renderResult(r) {
     el(
       'div',
       { class: 'stats' },
-      stat('IBM RPA scripts', r.bots.length),
-      stat('Passed the static check', clean + ' / ' + r.bots.length),
+      stat(to.output, r.bots.length),
+      stat('Passed the ' + to.check.toLowerCase(), clean + ' / ' + r.bots.length),
       stat('Manual items', total.manual),
-      stat('Lines to check in Studio', total.verify),
+      to.target === 'ibm-rpa'
+        ? stat('Lines to check in Studio', total.verify)
+        : stat(
+            'Behaviour notes',
+            r.bots.map(counts).reduce((a, c) => a + c.semantic, 0),
+          ),
     ),
     messages,
     r.bots.length === 0 ? el('p', {}, 'No bot could be converted from these files.') : null,
     ...r.bots.map(renderBot),
-    el(
-      'p',
-      { class: 'lead' },
-      'The IBM RPA scripts are a draft: open each one in IBM RPA Studio, run it and compare the result with the A360 bot.',
-    ),
+    el('p', { class: 'lead' }, to.closing),
   ];
   section.replaceChildren(...parts.filter((p) => p !== null));
   section.hidden = false;
@@ -250,15 +311,17 @@ function stat(label, value) {
 
 function renderBot(bot, index) {
   const c = counts(bot);
+  const to = lastRoute;
   const id = 'bot' + index;
-  const lines = bot.wal.replace(/\r\n$/, '').split('\r\n');
+  const lines = bot.content.replace(/\r?\n$/, '').split(/\r?\n/);
   const kindOf = new Map();
   for (const n of bot.notes) {
+    if (n.line === undefined) continue;
     if (n.kind === 'manual' || !kindOf.has(n.line)) kindOf.set(n.line, n.kind);
   }
   const code = el(
     'pre',
-    { class: 'code', tabindex: '0', 'aria-label': 'IBM RPA script ' + bot.fileName },
+    { class: 'code', tabindex: '0', 'aria-label': to.code + ' ' + bot.fileName },
     lines.map((text, i) => {
       const kind = kindOf.get(i + 1);
       const classes = ['ln'];
@@ -279,8 +342,8 @@ function renderBot(bot, index) {
         'li',
         {},
         gotoLine(id, p.line),
-        chip('blocked', 'stop', 'Static check'),
-        el('span', {}, p.message),
+        chip('blocked', 'stop', to.check),
+        el('span', {}, p.message, p.at ? el('span', { class: 'src' }, p.at) : null),
       ),
     ),
     bot.notes.map((n) =>
@@ -293,7 +356,12 @@ function renderBot(bot, index) {
           : n.kind === 'semantic'
             ? chip('info', 'info', 'Behaviour')
             : chip('auto', 'check', 'Check in Studio'),
-        el('span', {}, n.text, n.source ? el('span', { class: 'src' }, 'A360: ' + n.source) : null),
+        el(
+          'span',
+          {},
+          n.text,
+          n.source ? el('span', { class: 'src' }, to.sourceLabel + n.source) : null,
+        ),
       ),
     ),
     bot.notes.length + bot.problems.length === 0
@@ -328,7 +396,7 @@ function renderBot(bot, index) {
       { class: 'bot-head' },
       el('h3', {}, bot.name, el('span', { class: 'file' }, bot.fileName)),
       c.errors === 0
-        ? chip('auto', 'check', 'Static check OK')
+        ? chip('auto', 'check', to.check + ' OK')
         : chip('blocked', 'stop', c.errors + ' errors'),
       c.manual ? chip('review', 'warn', c.manual + ' manual') : null,
       c.semantic ? chip('info', 'info', c.semantic + ' behaviour') : null,
@@ -337,10 +405,10 @@ function renderBot(bot, index) {
         {
           class: 'secondary',
           type: 'button',
-          onclick: () => save(bot.fileName, bot.wal, 'text/plain'),
+          onclick: () => save(bot.fileName, bot.content, to.mime),
         },
         icon('download'),
-        '.wal',
+        bot.fileName.slice(bot.fileName.lastIndexOf('.')),
       ),
       el(
         'button',
@@ -358,7 +426,7 @@ function renderBot(bot, index) {
           class: 'secondary',
           type: 'button',
           onclick: async (e) => {
-            await navigator.clipboard.writeText(bot.wal);
+            await navigator.clipboard.writeText(bot.content);
             const b = e.currentTarget;
             b.lastChild.textContent = 'Copied';
             setTimeout(() => (b.lastChild.textContent = 'Copy'), 1500);
@@ -371,7 +439,7 @@ function renderBot(bot, index) {
     el(
       'div',
       { class: 'tabs', role: 'tablist' },
-      tab('IBM RPA script', codePanel, true),
+      tab(to.code, codePanel, true),
       tab('Notes (' + (bot.notes.length + bot.problems.length) + ')', notesPanel, false),
     ),
     codePanel,
@@ -387,6 +455,8 @@ function selectTab(button, panel) {
 }
 
 function gotoLine(id, line) {
+  // A360 notes point at nodes, not lines
+  if (line === undefined) return null;
   return el(
     'button',
     {
@@ -428,10 +498,10 @@ function openReport() {
 function downloadAll() {
   const files = [];
   for (const b of last.bots) {
-    files.push([b.fileName, b.wal], [b.name + '.notes.md', b.notesMarkdown]);
+    files.push([b.fileName, b.content], [b.name + '.notes.md', b.notesMarkdown]);
   }
-  files.push(['report.html', last.reportHtml]);
-  save('rosetta-ibm-rpa.zip', zip(files), 'application/zip');
+  if (last.reportHtml) files.push(['report.html', last.reportHtml]);
+  save(lastRoute.zip, zip(files), 'application/zip');
 }
 
 // Minimal ZIP writer (stored, no compression), so no library is needed.
@@ -503,4 +573,5 @@ function zip(entries) {
   return new Blob([...parts, ...central, end], { type: 'application/zip' });
 }
 
+applyRoute();
 renderFiles();

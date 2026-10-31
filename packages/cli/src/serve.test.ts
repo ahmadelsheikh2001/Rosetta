@@ -8,6 +8,9 @@ import { startServer, type RunningServer } from './serve.js';
 const corpus = (path: string) =>
   readFileSync(fileURLToPath(new URL(`../../../corpus/a360/${path}`, import.meta.url)), 'utf8');
 
+const golden = (name: string) =>
+  readFileSync(fileURLToPath(new URL(`../golden/wal/${name}`, import.meta.url)), 'utf8');
+
 let running: RunningServer;
 beforeAll(async () => {
   running = await startServer(defaultProfile, 0);
@@ -67,6 +70,8 @@ describe('rosetta serve', () => {
     expect(r.status).toBe(200);
     expect(r.body).toContain('alt="Valleysoft"');
     expect(r.body).toContain('Convert to IBM RPA');
+    expect(r.body).toContain('<option value="ibm-rpa">IBM RPA (WAL script)</option>');
+    expect(r.body).toContain('Automation Anywhere A360 (task bot)');
     expect(r.body).not.toMatch(/(src|href)="https?:/i);
     expect(r.body).not.toMatch(/<link|@import/i);
     expect(String(r.headers['content-security-policy'])).toContain("default-src 'none'");
@@ -84,15 +89,38 @@ describe('rosetta serve', () => {
     });
     expect(r.status).toBe(200);
     const body = JSON.parse(r.body) as {
-      bots: { name: string; fileName: string; wal: string; problems: unknown[] }[];
+      bots: { name: string; fileName: string; content: string; problems: unknown[] }[];
       messages: unknown[];
       reportHtml: string;
     };
     expect(body.bots.map((b) => b.fileName)).toEqual(['RR_08_Parent.wal', 'RR_08_Child.wal']);
-    expect(body.bots[0]?.wal).toContain('executeScript --name "RR_08_Child"');
+    expect(body.bots[0]?.content).toContain('executeScript --name "RR_08_Child"');
     expect(body.bots.every((b) => b.problems.length === 0)).toBe(true);
     expect(body.messages).toEqual([]);
     expect(body.reportHtml).toContain('RR_08_Parent');
+  });
+
+  it('converts uploaded IBM RPA scripts to A360 task bots that pass the A360 check', async () => {
+    const r = await convert({
+      source: 'ibm-rpa',
+      target: 'a360',
+      files: [{ name: '03-strings-expressions.wal', text: golden('03-strings-expressions.wal') }],
+    });
+    expect(r.status).toBe(200);
+    const body = JSON.parse(r.body) as {
+      bots: { fileName: string; content: string; problems: unknown[]; notesMarkdown: string }[];
+      messages: unknown[];
+      reportHtml: string | null;
+    };
+    expect(body.bots.map((b) => b.fileName)).toEqual(['03-strings-expressions.json']);
+    const bot = JSON.parse(body.bots[0]?.content ?? '') as { packages: { name: string }[] };
+    expect(bot.packages.map((p) => p.name)).toContain('System');
+    expect(body.bots[0]?.problems).toEqual([]);
+    expect(body.bots[0]?.notesMarkdown).toContain(
+      '# 03-strings-expressions.json: conversion notes',
+    );
+    expect(body.messages).toEqual([]);
+    expect(body.reportHtml).toBeNull();
   });
 
   it('reports files that are not A360 bots instead of failing', async () => {
@@ -111,7 +139,7 @@ describe('rosetta serve', () => {
     expect(body.messages[0]?.text).toMatch(/Not valid JSON/);
   });
 
-  it('accepts only the available conversion', async () => {
+  it('accepts only the available conversions', async () => {
     const r = await convert({
       source: 'uipath',
       target: 'ibm-rpa',
