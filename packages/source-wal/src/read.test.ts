@@ -171,6 +171,50 @@ describe('readWal', () => {
     expect(bot.body[1]).toMatchObject({ label: 'Subroutine Greet', body: [{ kind: 'action' }] });
   });
 
+  it('reads the onError subroutines of ADR-020 back as Try / Catch / Finally', () => {
+    const { bot, diagnostics } = read(
+      [
+        'setVar --name "${rosettaTry1Failed}" --value False',
+        'goSub --label Try1',
+        '// A360 Finally: runs after the protected block, with or without an error',
+        'logMessage --message "cleanup" --type "Info"',
+        '// A360 Finally end',
+        'logMessage --message "after" --type "Info"',
+        'beginSub --name Try1',
+        '// A360 Try (ErrorHandler/try @ 1)',
+        'onError --label Catch1',
+        'failTest --message "boom"',
+        'if --left "${rosettaTry1Failed}" --operator "Is_True"',
+        'return',
+        'endIf',
+        'endSub',
+        'beginSub --name Catch1',
+        '// A360 Catch (BotException)',
+        'setVar --name "${rosettaTry1Failed}" --value True',
+        'setVar --name "${vErr}" --value "${rpa:errorMessage}"',
+        'setVar --name "${vLine}" --value ${rpa:errorLineNumber}',
+        'logMessage --message "${vErr}" --type "Info"',
+        'recover',
+        'endSub',
+      ].join('\n'),
+    );
+    expect(diagnostics).toEqual([]);
+    expect(bot.body.map((s) => s.kind)).toEqual(['try', 'action']);
+    expect(bot.body[0]).toMatchObject({
+      kind: 'try',
+      body: [{ kind: 'throw', message: lit('boom') }],
+      catches: [
+        {
+          errorType: 'BotException',
+          errorVar: v('vErr'),
+          lineVar: v('vLine'),
+          body: [{ kind: 'action', args: { message: v('vErr') } }],
+        },
+      ],
+      finally: [{ kind: 'action', args: { message: lit('cleanup') } }],
+    });
+  });
+
   it('reports what it cannot read instead of failing', () => {
     const { bot, diagnostics } = read('setVar --name "x --value 1\nonError --label Catch1');
     expect(bot.body.map((s) => s.kind)).toEqual(['unknown', 'unknown']);

@@ -1,4 +1,4 @@
-import { action, bot, comment, lit, ref, variable, type Expr } from '@rosetta/ir';
+import { action, bot, comment, lit, ref, tryCatch, variable, type Expr } from '@rosetta/ir';
 import { describe, expect, it } from 'vitest';
 import { generateA360, packageVersions } from './generate.js';
 import { exprText, fileValue } from './values.js';
@@ -78,6 +78,42 @@ describe('generateA360', () => {
       'Number/assignToNumber',
       'Boolean/assign',
     ]);
+  });
+
+  it('writes Try / Catch / Finally as branches of the try node (corpus 04)', () => {
+    const r = generateA360(
+      bot(
+        'b',
+        [
+          tryCatch(
+            [comment('body')],
+            [{ body: [comment('caught')], errorType: 'BotException', errorVar: ref('vText') }],
+            [comment('cleanup')],
+          ),
+        ],
+        { variables: [variable('vText', { kind: 'string' })] },
+      ),
+    );
+    expect(r.json.nodes).toMatchObject([
+      {
+        packageName: 'ErrorHandler',
+        commandName: 'try',
+        children: [{ packageName: 'Comment' }],
+        branches: [
+          {
+            commandName: 'catch',
+            attributes: [
+              { name: 'exceptionType', value: { exceptionName: 'BotException' } },
+              { name: 'continueOnError', value: { boolean: false } },
+            ],
+            returns: { errorMessage: { type: 'VARIABLE', variableName: 'vText' } },
+            children: [{ packageName: 'Comment' }],
+          },
+          { commandName: 'finally', children: [{ packageName: 'Comment' }] },
+        ],
+      },
+    ]);
+    expect(r.notes).toEqual([]);
   });
 
   it('writes a TODO comment and a manual note for commands it cannot convert', () => {

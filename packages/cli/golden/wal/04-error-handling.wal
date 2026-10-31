@@ -26,6 +26,7 @@ goSub --label Try1
 // A360 Finally: runs after the protected block, with or without an error
 writeToFile --value "cleanup done" --file "C:\\RosettaTest\\log.txt" --encoding "Default" --writeasnewline
 setVar --name "${vStatus}" --value "finished"
+// A360 Finally end
 // ---- Wrap up ----
 // RR_04: wrap up after error handling
 // [DISABLED] messageBox --title "Automation Anywhere Enterprise Client" --text "Disabled on purpose: status=${vStatus} inner=${vErrMsg} outer=${vOuterErr}" --icon "Information" --buttons "OK" --defaultbutton "FirstButton"

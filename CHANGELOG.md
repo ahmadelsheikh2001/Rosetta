@@ -156,6 +156,11 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: Se
   each bot shows its JSON, notes and A360 check problems, with downloads (`.json`, notes, zip).
   The target follows the chosen source. `POST /api/convert` accepts `ibm-rpa` → `a360` and
   returns `content` (was `wal`) for both directions.
+- Try / Catch / Finally back to A360: `source-wal` reads the onError subroutines of ADR-020 (Try
+  subroutine, Catch subroutine with error message and line variables, flag guards, restored outer
+  handler) as an IR try; `target-a360` writes the try node with catch and finally branches as in
+  corpus 04. target-wal now closes the Finally commands with `// A360 Finally end`. Round trip 04:
+  16/18 (the CSV commands have no A360 form yet).
 
 ### Planned (deferred by ADR-016)
 

@@ -174,6 +174,7 @@ class Generator {
       case 'action':
         return this.action(s, path);
       case 'try':
+        return this.tryNode(s, path);
       case 'callBot':
       case 'stop':
       case 'unknown':
@@ -232,6 +233,40 @@ class Generator {
     }
     this.note('manual', 'Condition could not be converted; set it in the A360 editor.');
     return [];
+  }
+
+  /**
+   * Try / Catch / Finally as in corpus 04: catch and finally are branches of the try node; the
+   * catch returns the error message and line number into variables.
+   */
+  private tryNode(s: Extract<Statement, { kind: 'try' }>, path: string): Node {
+    const branches: Node[] = s.catches.map((c, i) => {
+      const returns: Record<string, A360Value> = {};
+      if (c.errorVar) returns.errorMessage = variableRef(c.errorVar.name);
+      if (c.lineVar) returns.errorLineNumber = variableRef(c.lineVar.name);
+      return this.node(`${path}.c${i}`, 'ErrorHandler', 'catch', {
+        children: this.block(c.body, `${path}.c${i}`),
+        attributes: [
+          attr('exceptionType', {
+            type: 'EXCEPTION',
+            exceptionName: c.errorType ?? 'BotException',
+            packageName: 'ErrorHandler',
+          }),
+          attr('continueOnError', { type: 'BOOLEAN', boolean: false }),
+        ],
+        ...(Object.keys(returns).length ? { returns } : {}),
+      });
+    });
+    if (s.finally)
+      branches.push(
+        this.node(`${path}.finally`, 'ErrorHandler', 'finally', {
+          children: this.block(s.finally, `${path}.finally`),
+        }),
+      );
+    return this.node(path, 'ErrorHandler', 'try', {
+      children: this.block(s.body, path),
+      ...(branches.length ? { branches } : {}),
+    });
   }
 
   private ifNode(s: Extract<Statement, { kind: 'if' }>, path: string): Node {
@@ -841,6 +876,10 @@ function undoHelpers(bot: Bot): Bot {
         if (s.kind === 'if') {
           o.branches = s.branches.map((b) => ({ ...b, body: prune(b.body) }));
           if (s.else) o.else = prune(s.else);
+        }
+        if (s.kind === 'try') {
+          o.catches = s.catches.map((c) => ({ ...c, body: prune(c.body) }));
+          if (s.finally) o.finally = prune(s.finally);
         }
         return o as unknown as Statement;
       });

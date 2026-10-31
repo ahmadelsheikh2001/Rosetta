@@ -89,6 +89,21 @@ const generated =
 
 const DISABLED = '// [DISABLED] ';
 
+/**
+ * How target-wal writes an A360 Try (ADR-020): `goSub TryN`, whose subroutine starts with this
+ * comment and `onError --label CatchN`; the Catch subroutine sets the `rosettaTryNFailed` flag,
+ * which guards the Try body, and ends with `recover`. Finally commands follow the `goSub`
+ * between the two Finally comments.
+ */
+const TRY_COMMENT = '// A360 Try (';
+const CATCH_COMMENT = /^\/\/ A360 Catch \((.*)\)$/;
+const FINALLY = '// A360 Finally: ';
+const FINALLY_END = '// A360 Finally end';
+const STEP_MARKER = /^\/\/ ---- .* ----$/;
+const TRY_FLAG = /^"\$\{rosettaTry\d+Failed\}"$/;
+const ERROR_MESSAGE = /^setVar --name "\$\{(\w+)\}" --value "\$\{rpa:errorMessage\}"$/;
+const ERROR_LINE = /^setVar --name "\$\{(\w+)\}" --value \$\{rpa:errorLineNumber\}$/;
+
 interface Line {
   /** 1-based line number. */
   readonly n: number;
@@ -161,6 +176,7 @@ class Reader {
     }
     this.inlining.push(name);
     try {
+      if (lines[0]?.text.startsWith(TRY_COMMENT)) return this.tryOf(name, lines.slice(1), n);
       return {
         id: `L${n}`,
         source: this.ref(n, `goSub ${name}`),
@@ -171,6 +187,51 @@ class Reader {
     } finally {
       this.inlining.pop();
     }
+  }
+
+  /** True for a Catch subroutine written by target-wal: it sets a `rosettaTryNFailed` flag. */
+  isCatch(name: string): boolean {
+    return (this.subs.get(name) ?? []).some((l) =>
+      TRY_FLAG.test(String(parseCommand(l.text)?.params.get('name') ?? '')),
+    );
+  }
+
+  /** A Try subroutine and its Catch subroutine (ADR-020) → an IR try; Finally is added by the caller. */
+  private tryOf(name: string, lines: readonly Line[], n: number): Statement {
+    const handler = parseCommand(lines[0]?.text ?? '');
+    const catchName =
+      handler?.verb === 'onError' ? unquote(String(handler.params.get('label') ?? '')) : '';
+    const body = new Parser(this, lines).parse(new Set()).block;
+    const catchLines = this.subs.get(catchName);
+    if (!catchLines)
+      return { id: `L${n}`, source: this.ref(n, `goSub ${name}`), kind: 'try', body, catches: [] };
+    let errorType: string | undefined;
+    let errorVar: VarRefExpr | undefined;
+    let lineVar: VarRefExpr | undefined;
+    const rest = catchLines.filter((l) => {
+      const type = CATCH_COMMENT.exec(l.text);
+      const message = ERROR_MESSAGE.exec(l.text);
+      const line = ERROR_LINE.exec(l.text);
+      if (type) errorType = type[1] === 'all errors' ? undefined : type[1];
+      else if (message) errorVar = { kind: 'var', name: message[1] ?? '', path: [] };
+      else if (line) lineVar = { kind: 'var', name: line[1] ?? '', path: [] };
+      else return l.text !== 'recover';
+      return false;
+    });
+    return {
+      id: `L${n}`,
+      source: this.ref(n, `goSub ${name}`),
+      kind: 'try',
+      body,
+      catches: [
+        {
+          body: new Parser(this, rest).parse(new Set()).block,
+          ...(errorType ? { errorType } : {}),
+          ...(errorVar ? { errorVar } : {}),
+          ...(lineVar ? { lineVar } : {}),
+        },
+      ],
+    };
   }
 
   declare(cmd: WalCommand, n: number): void {
@@ -285,12 +346,21 @@ class Parser {
     private readonly lines: readonly Line[],
   ) {}
 
-  parse(stop: ReadonlySet<string>): { block: Statement[]; end?: { verb: string; line: Line } } {
+  /** `inFinally`: also ends at the Finally end comment (consumed) or a Step marker (not consumed). */
+  parse(
+    stop: ReadonlySet<string>,
+    inFinally = false,
+  ): { block: Statement[]; end?: { verb: string; line: Line } } {
     const block: Statement[] = [];
     while (this.pos < this.lines.length) {
       const line = this.lines[this.pos++];
       if (!line) break;
       const n = line.n;
+      if (inFinally && line.text === FINALLY_END) return { block };
+      if (inFinally && STEP_MARKER.test(line.text)) {
+        this.pos--;
+        return { block };
+      }
       if (line.text.startsWith(DISABLED)) {
         // RPA Rosetta keeps disabled A360 code as `// [DISABLED] <command>` lines (target-wal):
         // read the run of such lines as code and mark it disabled.
@@ -321,6 +391,25 @@ class Parser {
       }
       if (stop.has(cmd.verb)) return { block, end: { verb: cmd.verb, line } };
       const s = this.statement(cmd, line);
+      if (s?.kind === 'try') {
+        // a nested Try restores the enclosing handler right after its goSub
+        for (let next = this.lines[this.pos]; next; next = this.lines[this.pos]) {
+          const c = parseCommand(next.text);
+          if (
+            c?.verb !== 'onError' ||
+            !this.r.isCatch(unquote(String(c.params.get('label') ?? '')))
+          )
+            break;
+          this.pos++;
+        }
+      }
+      if (s?.kind === 'try' && this.lines[this.pos]?.text.startsWith(FINALLY)) {
+        this.pos++;
+        const r = this.parse(stop, true);
+        block.push({ ...s, finally: r.block });
+        if (r.end) return { block, end: r.end };
+        continue;
+      }
       if (s) block.push(s);
     }
     if (stop.size > 0)
@@ -335,7 +424,17 @@ class Parser {
       case 'defVar':
         this.r.declare(cmd, n);
         return undefined;
+      case 'setVar':
+        // the Try flag of ADR-020 is part of the Try, not of the bot
+        if (TRY_FLAG.test(String(cmd.params.get('name') ?? ''))) return undefined;
+        return this.action(cmd, base);
       case 'if': {
+        if (TRY_FLAG.test(String(cmd.params.get('left') ?? ''))) {
+          // `if flag / return / endIf`: leaves the Try body after an error (ADR-020)
+          while (this.pos < this.lines.length && this.lines[this.pos]?.text !== 'endIf') this.pos++;
+          this.pos++;
+          return undefined;
+        }
         const branches = [{ condition: condition(cmd), body: [] as Statement[] }];
         let elseBody: Statement[] | undefined;
         let r = this.parse(new Set(['elseIf', 'else', 'endIf']));
@@ -462,6 +561,9 @@ class Parser {
       case 'goSub':
         return this.r.subroutine(unquote(String(cmd.params.get('label') ?? '')), n);
       case 'onError':
+        // setting or restoring the handler of a Try (ADR-020) is part of the Try
+        if (this.r.isCatch(unquote(String(cmd.params.get('label') ?? '')))) return undefined;
+        return this.notHere(cmd, line);
       case 'recover':
       case 'return':
       case 'endIf':
@@ -471,11 +573,15 @@ class Parser {
       case 'loopWhile':
       case 'elseIf':
       case 'else':
-        this.r.report(WalCode.Unsupported, 'warning', { verb: cmd.verb, detail: line.text }, n);
-        return unknown(this.r, n, line.text, `${cmd.verb} not understood here`);
+        return this.notHere(cmd, line);
       default:
         return this.action(cmd, base);
     }
+  }
+
+  private notHere(cmd: WalCommand, line: Line): Statement {
+    this.r.report(WalCode.Unsupported, 'warning', { verb: cmd.verb, detail: line.text }, line.n);
+    return unknown(this.r, line.n, line.text, `${cmd.verb} not understood here`);
   }
 
   private action(cmd: WalCommand, base: { id: string; source: SourceRef }): Statement {

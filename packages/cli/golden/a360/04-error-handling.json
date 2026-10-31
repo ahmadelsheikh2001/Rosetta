@@ -1,0 +1,598 @@
+{
+  "triggers": [],
+  "nodes": [
+    {
+      "uid": "102b123c-5b5a-49e8-ae1a-ef34601ee6a0",
+      "commandName": "step",
+      "packageName": "Step",
+      "disabled": false,
+      "children": [
+        {
+          "uid": "97f09dc8-75ee-4243-a993-8c1758e82bfe",
+          "commandName": "Comment",
+          "packageName": "Comment",
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "comment",
+              "value": {
+                "type": "STRING",
+                "string": "RR_04: outer Try with nested inner Try, Catch, Throw and Finally"
+              }
+            }
+          ]
+        },
+        {
+          "uid": "18d538f3-ccaf-477d-a3ab-d69bc2f7b4a9",
+          "commandName": "try",
+          "packageName": "ErrorHandler",
+          "disabled": false,
+          "children": [
+            {
+              "uid": "8d3532d8-502a-4259-ae82-7cf1964487cc",
+              "commandName": "try",
+              "packageName": "ErrorHandler",
+              "disabled": false,
+              "children": [
+                {
+                  "uid": "cafad27d-e5e2-40ca-a0be-1b31e45ccfe4",
+                  "commandName": "Comment",
+                  "packageName": "Comment",
+                  "disabled": false,
+                  "attributes": [
+                    {
+                      "name": "comment",
+                      "value": {
+                        "type": "STRING",
+                        "string": "CSV session \"Default\" opened here; WAL reads the file in one step (readCSV) below."
+                      }
+                    }
+                  ]
+                },
+                {
+                  "uid": "3f842143-3b49-4b92-affe-a345ddd8bfb9",
+                  "commandName": "Comment",
+                  "packageName": "Comment",
+                  "disabled": false,
+                  "attributes": [
+                    {
+                      "name": "comment",
+                      "value": {
+                        "type": "STRING",
+                        "string": "TODO [ROSETTA] readCSV has no A360 conversion yet"
+                      }
+                    }
+                  ]
+                }
+              ],
+              "branches": [
+                {
+                  "uid": "dfb66901-36f9-42a1-acf5-6c2dc5b75191",
+                  "commandName": "catch",
+                  "packageName": "ErrorHandler",
+                  "disabled": false,
+                  "children": [
+                    {
+                      "uid": "fbe774a3-a190-4f30-a9f1-e4349c4e01ca",
+                      "commandName": "logToFile",
+                      "packageName": "LogToFile",
+                      "disabled": false,
+                      "attributes": [
+                        {
+                          "name": "filePath",
+                          "value": {
+                            "type": "FILE",
+                            "string": "file:///C:/RosettaTest/log.txt"
+                          }
+                        },
+                        {
+                          "name": "logContent",
+                          "value": {
+                            "type": "STRING",
+                            "expression": "Inner catch: $vErrMsg$ (line $vErrLine.Number:toString$)"
+                          }
+                        },
+                        {
+                          "name": "appendTimestamp",
+                          "value": {
+                            "type": "BOOLEAN",
+                            "boolean": false
+                          }
+                        },
+                        {
+                          "name": "logOption",
+                          "value": {
+                            "type": "STRING",
+                            "string": "APPEND_FILE"
+                          }
+                        },
+                        {
+                          "name": "encodingValue",
+                          "value": {
+                            "type": "STRING",
+                            "string": "ANSI"
+                          }
+                        }
+                      ]
+                    }
+                  ],
+                  "attributes": [
+                    {
+                      "name": "exceptionType",
+                      "value": {
+                        "type": "EXCEPTION",
+                        "exceptionName": "BotException",
+                        "packageName": "ErrorHandler"
+                      }
+                    },
+                    {
+                      "name": "continueOnError",
+                      "value": {
+                        "type": "BOOLEAN",
+                        "boolean": false
+                      }
+                    }
+                  ],
+                  "returns": {
+                    "errorMessage": {
+                      "type": "VARIABLE",
+                      "variableName": "vErrMsg"
+                    },
+                    "errorLineNumber": {
+                      "type": "VARIABLE",
+                      "variableName": "vErrLine"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "uid": "27d92429-ff7f-44f1-a10d-4ac48b615eb1",
+              "commandName": "if",
+              "packageName": "If",
+              "disabled": false,
+              "children": [
+                {
+                  "uid": "21077fb7-1557-4cc6-ae40-b163eb25f790",
+                  "commandName": "throw",
+                  "packageName": "ErrorHandler",
+                  "disabled": false,
+                  "attributes": [
+                    {
+                      "name": "message",
+                      "value": {
+                        "type": "STRING",
+                        "string": "Custom RR_04 error thrown on purpose"
+                      }
+                    },
+                    {
+                      "name": "exceptionType",
+                      "value": {
+                        "type": "EXCEPTION",
+                        "exceptionName": "BotException",
+                        "packageName": "ErrorHandler"
+                      }
+                    }
+                  ]
+                }
+              ],
+              "attributes": [
+                {
+                  "attributes": [
+                    {
+                      "name": "variable",
+                      "value": {
+                        "type": "BOOLEAN",
+                        "expression": "$vDoThrow$"
+                      }
+                    },
+                    {
+                      "name": "operator",
+                      "value": {
+                        "type": "STRING",
+                        "string": "EQ"
+                      }
+                    },
+                    {
+                      "name": "value",
+                      "value": {
+                        "type": "BOOLEAN",
+                        "boolean": true
+                      }
+                    }
+                  ],
+                  "name": "condition",
+                  "value": {
+                    "type": "CONDITIONAL",
+                    "conditionalName": "booleanVariable",
+                    "packageName": "Boolean"
+                  }
+                }
+              ]
+            }
+          ],
+          "branches": [
+            {
+              "uid": "fb59b9ed-a921-4cd9-aadb-b05e2ee28f1e",
+              "commandName": "catch",
+              "packageName": "ErrorHandler",
+              "disabled": false,
+              "children": [
+                {
+                  "uid": "89cd2320-9c48-4334-affe-7c1c038ba8f6",
+                  "commandName": "logToFile",
+                  "packageName": "LogToFile",
+                  "disabled": false,
+                  "attributes": [
+                    {
+                      "name": "filePath",
+                      "value": {
+                        "type": "FILE",
+                        "string": "file:///C:/RosettaTest/log.txt"
+                      }
+                    },
+                    {
+                      "name": "logContent",
+                      "value": {
+                        "type": "STRING",
+                        "expression": "Outer catch: $vOuterErr$ (line $vErrLine.Number:toString$)"
+                      }
+                    },
+                    {
+                      "name": "appendTimestamp",
+                      "value": {
+                        "type": "BOOLEAN",
+                        "boolean": false
+                      }
+                    },
+                    {
+                      "name": "logOption",
+                      "value": {
+                        "type": "STRING",
+                        "string": "APPEND_FILE"
+                      }
+                    },
+                    {
+                      "name": "encodingValue",
+                      "value": {
+                        "type": "STRING",
+                        "string": "ANSI"
+                      }
+                    }
+                  ]
+                }
+              ],
+              "attributes": [
+                {
+                  "name": "exceptionType",
+                  "value": {
+                    "type": "EXCEPTION",
+                    "exceptionName": "BotException",
+                    "packageName": "ErrorHandler"
+                  }
+                },
+                {
+                  "name": "continueOnError",
+                  "value": {
+                    "type": "BOOLEAN",
+                    "boolean": false
+                  }
+                }
+              ],
+              "returns": {
+                "errorMessage": {
+                  "type": "VARIABLE",
+                  "variableName": "vOuterErr"
+                },
+                "errorLineNumber": {
+                  "type": "VARIABLE",
+                  "variableName": "vErrLine"
+                }
+              }
+            },
+            {
+              "uid": "1049030b-ce13-4c31-a6c0-652c7604dbc8",
+              "commandName": "finally",
+              "packageName": "ErrorHandler",
+              "disabled": false,
+              "children": [
+                {
+                  "uid": "85dc9668-f19d-466e-ac1d-8948527e5f55",
+                  "commandName": "logToFile",
+                  "packageName": "LogToFile",
+                  "disabled": false,
+                  "attributes": [
+                    {
+                      "name": "filePath",
+                      "value": {
+                        "type": "FILE",
+                        "string": "file:///C:/RosettaTest/log.txt"
+                      }
+                    },
+                    {
+                      "name": "logContent",
+                      "value": {
+                        "type": "STRING",
+                        "string": "cleanup done"
+                      }
+                    },
+                    {
+                      "name": "appendTimestamp",
+                      "value": {
+                        "type": "BOOLEAN",
+                        "boolean": false
+                      }
+                    },
+                    {
+                      "name": "logOption",
+                      "value": {
+                        "type": "STRING",
+                        "string": "APPEND_FILE"
+                      }
+                    },
+                    {
+                      "name": "encodingValue",
+                      "value": {
+                        "type": "STRING",
+                        "string": "ANSI"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "uid": "26dee935-9f4f-4de2-a65d-c4e40191c4f2",
+                  "commandName": "assign",
+                  "packageName": "String",
+                  "disabled": false,
+                  "attributes": [
+                    {
+                      "name": "sourceString",
+                      "value": {
+                        "type": "STRING",
+                        "string": "finished"
+                      }
+                    }
+                  ],
+                  "returnTo": {
+                    "type": "VARIABLE",
+                    "variableName": "vStatus"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "attributes": [
+        {
+          "name": "title",
+          "value": {
+            "type": "STRING",
+            "string": "Try Catch Finally"
+          }
+        }
+      ]
+    },
+    {
+      "uid": "480badf0-db36-4433-a3ce-e35a112f8550",
+      "commandName": "step",
+      "packageName": "Step",
+      "disabled": false,
+      "children": [
+        {
+          "uid": "4ae0309b-cd59-4403-a1a9-7892eceb5f07",
+          "commandName": "Comment",
+          "packageName": "Comment",
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "comment",
+              "value": {
+                "type": "STRING",
+                "string": "RR_04: wrap up after error handling"
+              }
+            }
+          ]
+        },
+        {
+          "uid": "5d553605-1dea-47f6-a565-1f9ec01d32e7",
+          "commandName": "messageBox",
+          "packageName": "MessageBox",
+          "disabled": true,
+          "attributes": [
+            {
+              "name": "title",
+              "value": {
+                "type": "STRING",
+                "string": "Automation Anywhere Enterprise Client"
+              }
+            },
+            {
+              "name": "content",
+              "value": {
+                "type": "STRING",
+                "expression": "Disabled on purpose: status=$vStatus$ inner=$vErrMsg$ outer=$vOuterErr$"
+              }
+            },
+            {
+              "name": "scrollLines",
+              "value": {
+                "type": "NUMBER",
+                "number": "30"
+              }
+            },
+            {
+              "name": "closeMsgBox",
+              "value": {
+                "type": "BOOLEAN",
+                "boolean": false
+              }
+            }
+          ]
+        }
+      ],
+      "attributes": [
+        {
+          "name": "title",
+          "value": {
+            "type": "STRING",
+            "string": "Wrap up"
+          }
+        }
+      ]
+    }
+  ],
+  "variables": [
+    {
+      "name": "SampleNumber",
+      "description": "",
+      "type": "NUMBER",
+      "readOnly": false,
+      "input": false,
+      "output": false
+    },
+    {
+      "name": "SampleString",
+      "description": "",
+      "type": "STRING",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "defaultValue": {
+        "type": "STRING",
+        "string": ""
+      }
+    },
+    {
+      "name": "vFilePath",
+      "description": "",
+      "type": "STRING",
+      "readOnly": false,
+      "input": true,
+      "output": false,
+      "defaultValue": {
+        "type": "STRING",
+        "string": "C:\\RosettaTest\\missing.txt"
+      }
+    },
+    {
+      "name": "vStatus",
+      "description": "",
+      "type": "STRING",
+      "readOnly": false,
+      "input": false,
+      "output": true,
+      "defaultValue": {
+        "type": "STRING",
+        "string": "not started"
+      }
+    },
+    {
+      "name": "vErrMsg",
+      "description": "",
+      "type": "STRING",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "defaultValue": {
+        "type": "STRING",
+        "string": ""
+      }
+    },
+    {
+      "name": "vOuterErr",
+      "description": "",
+      "type": "STRING",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "defaultValue": {
+        "type": "STRING",
+        "string": ""
+      }
+    },
+    {
+      "name": "vErrLine",
+      "description": "",
+      "type": "NUMBER",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "defaultValue": {
+        "type": "NUMBER",
+        "number": "0"
+      }
+    },
+    {
+      "name": "vDoThrow",
+      "description": "",
+      "type": "BOOLEAN",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "defaultValue": {
+        "type": "BOOLEAN",
+        "boolean": true
+      }
+    },
+    {
+      "name": "vFileTable",
+      "description": "",
+      "type": "TABLE",
+      "readOnly": false,
+      "input": false,
+      "output": false
+    }
+  ],
+  "packages": [
+    {
+      "name": "Boolean",
+      "version": "2.13.3",
+      "settingsAttributes": []
+    },
+    {
+      "name": "Comment",
+      "version": "2.17.0",
+      "settingsAttributes": []
+    },
+    {
+      "name": "ErrorHandler",
+      "version": "2.13.0-20241115-120032",
+      "settingsAttributes": []
+    },
+    {
+      "name": "If",
+      "version": "3.8.0-20241115-115929",
+      "settingsAttributes": []
+    },
+    {
+      "name": "LogToFile",
+      "version": "3.11.1",
+      "settingsAttributes": []
+    },
+    {
+      "name": "MessageBox",
+      "version": "3.8.1",
+      "settingsAttributes": []
+    },
+    {
+      "name": "Step",
+      "version": "2.7.0",
+      "settingsAttributes": []
+    },
+    {
+      "name": "String",
+      "version": "5.12.6",
+      "settingsAttributes": []
+    }
+  ],
+  "properties": {
+    "botCodeVersion": "7",
+    "improvedNumberSupport": true,
+    "timeout": "0s",
+    "automationPriority": "PRIORITY_MEDIUM",
+    "runInChildWindow": false,
+    "runInChildWindowMode": "DESKTOP"
+  },
+  "workItemTemplateName": null
+}

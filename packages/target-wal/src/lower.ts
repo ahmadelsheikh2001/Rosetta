@@ -613,6 +613,8 @@ class Lowerer {
           : []),
       );
       this.block(s.finally);
+      // lets source-wal tell the Finally commands from the ones after the Try (ADR-022)
+      main.comment('A360 Finally end');
     }
   }
 
