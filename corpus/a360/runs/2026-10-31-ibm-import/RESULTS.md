@@ -81,3 +81,16 @@ out=Machine=<machine> | Bot=\Bots\RPA_Rosetta_Samples\RR_IBM_03-strings-expressi
   `Outer catch: Custom RR_04 error thrown on purpose (line 10)` then `cleanup done`, and no inner
   catch line (the CSV read is still a TODO comment, so the inner Try does not fail). The Throw
   reached the outer Catch with its message and line number, and Finally ran after it.
+
+## RR_IBM_05-excel (Excel, commit d85bb9c)
+
+- Upload 200, 8,092 bytes, stored byte for byte. Editor: 6 lines, no markers; Open, "For each row
+  in worksheet" into `$vRow$` with the log inside, Set cell C1, Save, Close (save on close), as in
+  corpus 05. Set cell and Close show session "Default".
+- Run: RUN_FAILED at line 4, `ba.bot.execution.error`: "Unable to set the value in the specified
+  cell because it is in the header row and Contains header is enabled." Lines 1–3 ran.
+- The corpus file itself writes C1 with `containsHeader` true, so the conversion is faithful; the
+  browser agent reports that RR_05_Excel in the Control Room writes C2. To settle: compare the
+  Control Room's RR_05_Excel with `corpus/a360/05-excel/bot.json`.
+- `checkA360` now reports Set cell in row 1 of a session opened with "Sheet contains a header". The
+  round trip accepts a problem only when the original has it too.

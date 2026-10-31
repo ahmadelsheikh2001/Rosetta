@@ -68,13 +68,10 @@ describe('round trip A360 → IBM RPA → A360', () => {
   };
 
   it.each(Object.keys(expected))('%s comes back as the original', async (name) => {
-    const original = tree(
-      (
-        JSON.parse(readFileSync(`${corpus}/${originals[name] ?? ''}`, 'utf8')) as {
-          nodes: A360Node[];
-        }
-      ).nodes,
-    );
+    const source = JSON.parse(readFileSync(`${corpus}/${originals[name] ?? ''}`, 'utf8')) as {
+      nodes: A360Node[];
+    };
+    const original = tree(source.nodes);
     const result = roundTrip(name);
     const again = tree(result.json.nodes as A360Node[]);
     const left = [...again];
@@ -85,8 +82,10 @@ describe('round trip A360 → IBM RPA → A360', () => {
       return true;
     }).length;
     expect(matched / original.length).toBeGreaterThanOrEqual(expected[name] ?? 1);
-    // what the A360 editor and compiler rejected in the import test must not come back
-    expect(checkA360(result.json)).toEqual([]);
+    // what A360 rejected in the import test must not come back, unless the original has it too
+    // (05: Set cell C1 under a header row, as in the corpus file)
+    const known = checkA360(source as unknown as Record<string, unknown>).map((p) => p.message);
+    expect(checkA360(result.json).map((p) => p.message)).toEqual(known);
     await expect(`${JSON.stringify(result.json, null, 2)}\n`).toMatchFileSnapshot(
       `../golden/a360/${name}.json`,
     );

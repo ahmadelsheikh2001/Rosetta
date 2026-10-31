@@ -51,6 +51,15 @@ export function checkA360(bot: Json): A360Problem[] {
       add(at, `Variable "${name}" is not declared ("Variable not found").`);
   };
 
+  /** Excel sessions opened with "Sheet contains a header" (Excel_MS OpenSpreadsheet). */
+  const headerSessions = new Set<string>();
+  const sessionOf = (v: unknown): string | undefined => {
+    const name = isObject(v) && isObject(v.sessionName) ? v.sessionName.string : undefined;
+    return typeof name === 'string' ? name : undefined;
+  };
+  const attrValue = (node: Json, name: string): unknown =>
+    ((node.attributes as Json[] | undefined) ?? []).find((a) => a.name === name)?.value;
+
   const visit = (x: unknown, at: string): void => {
     if (Array.isArray(x)) {
       x.forEach((y, i) => {
@@ -84,6 +93,23 @@ export function checkA360(bot: Json): A360Problem[] {
       !packages.has(x.packageName)
     )
       add(at, `${x.packageName}/${x.commandName} uses a package missing from the bot's packages.`);
+    if (x.packageName === 'Excel_MS' && x.commandName === 'OpenSpreadsheet') {
+      const header = attrValue(x, 'containsHeader');
+      const session = sessionOf(x.returnTo);
+      if (session && isObject(header) && header.boolean === true) headerSessions.add(session);
+    }
+    if (x.packageName === 'Excel_MS' && x.commandName === 'SetCell') {
+      // RR_IBM_05 run: "Unable to set the value in the specified cell because it is in the header
+      // row and Contains header is enabled" (ba.bot.execution.error)
+      const cell = attrValue(x, 'cell');
+      const session = sessionOf(attrValue(x, 'session'));
+      const text = isObject(cell) && typeof cell.string === 'string' ? cell.string : '';
+      if (session && headerSessions.has(session) && /^[A-Za-z]+1$/.test(text))
+        add(
+          at,
+          `Set cell ${text} is in the header row of session "${session}", opened with "Sheet contains a header": A360 stops the bot.`,
+        );
+    }
     if (x.type === 'VARIABLE' && typeof x.variableName === 'string') declared(x.variableName, at);
     if (x.type === 'VARIABLEMAP' && Array.isArray(x.variableMapNames))
       for (const n of x.variableMapNames) declared(String(n), at);

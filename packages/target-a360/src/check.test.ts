@@ -74,6 +74,33 @@ describe('checkA360', () => {
     ).toEqual(["$vOut.Number:toString$ needs the Number package in the bot's packages."]);
   });
 
+  it('reports Set cell in the header row of a sheet opened with headers (RR_IBM_05 run)', () => {
+    const session = { type: 'SESSION', sessionName: { type: 'STRING', string: 'Default' } };
+    const open = {
+      packageName: 'Excel_MS',
+      commandName: 'OpenSpreadsheet',
+      attributes: [{ name: 'containsHeader', value: { type: 'BOOLEAN', boolean: true } }],
+      returnTo: { ...session, sessionTarget: 'LOCAL' },
+    };
+    const set = (cell: string) => ({
+      packageName: 'Excel_MS',
+      commandName: 'SetCell',
+      attributes: [
+        { name: 'cell', value: { type: 'STRING', string: cell } },
+        { name: 'session', value: session },
+      ],
+    });
+    expect(
+      messages({
+        nodes: [open, set('C1'), set('C2')],
+        variables: vars,
+        packages: [pkg('Excel_MS')],
+      }),
+    ).toEqual([
+      'Set cell C1 is in the header row of session "Default", opened with "Sheet contains a header": A360 stops the bot.',
+    ]);
+  });
+
   it('reports a package version the Control Room does not have ("Package not found")', () => {
     expect(
       messages({ nodes: [assign('x')], variables: vars, packages: [pkg('String', '0.0.1')] }),
