@@ -41,6 +41,7 @@ const originals: Record<string, string> = {
   '02-control-flow': '02-control-flow/bot.json',
   '03-strings-expressions': '03-strings-expressions/bot.json',
   '04-error-handling': '04-error-handling/bot.json',
+  '05-excel': '05-excel/bot.json',
   RR_08_Child: '08-subbot-credentials/RR_08_Child.json',
 };
 
@@ -62,6 +63,7 @@ describe('round trip A360 → IBM RPA → A360', () => {
     '02-control-flow': 25 / 27, // the folder loop and its body have no WAL form yet
     '03-strings-expressions': 1,
     '04-error-handling': 16 / 18, // the two CSV commands have no A360 form yet
+    '05-excel': 1,
     RR_08_Child: 1,
   };
 

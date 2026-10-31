@@ -244,23 +244,18 @@
         "nodeId": "L26",
         "label": "defVar"
       }
+    },
+    {
+      "name": "CsvTxtRow",
+      "type": {
+        "kind": "record"
+      },
+      "direction": "local",
+      "sensitive": false
     }
   ],
   "packages": [],
   "body": [
-    {
-      "id": "L12",
-      "source": {
-        "platform": "ibm-rpa",
-        "file": "09-web-form.wal",
-        "nodePath": [
-          11
-        ],
-        "nodeId": "L12"
-      },
-      "kind": "comment",
-      "text": "CsvTxtRow (A360 Record): one String variable per column the bot reads"
-    },
     {
       "id": "L23",
       "source": {

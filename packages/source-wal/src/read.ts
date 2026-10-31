@@ -12,6 +12,7 @@ import type {
   Variable,
   VarRefExpr,
 } from '@rosetta/ir';
+import { rebuildTables } from './tables.js';
 import { parseCommand, unquote, type WalCommand } from './tokens.js';
 import { walValue } from './values.js';
 
@@ -605,13 +606,16 @@ class Parser {
 /** Reads one IBM RPA WAL script into IR. Never throws on bad input. */
 export function readWal(text: string, options: WalReadOptions): WalReadResult {
   const r = new Reader(options);
-  const body = r.read(text.charCodeAt(0) === 0xfeff ? text.slice(1) : text);
+  const { body, variables } = rebuildTables(
+    r.read(text.charCodeAt(0) === 0xfeff ? text.slice(1) : text),
+    r.variables,
+  );
   return {
     bot: {
       id: options.file,
       name: options.name,
       source: r.ref(0),
-      variables: r.variables,
+      variables,
       packages: [],
       body,
     },

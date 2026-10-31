@@ -161,6 +161,12 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: Se
   handler) as an IR try; `target-a360` writes the try node with catch and finally branches as in
   corpus 04. target-wal now closes the Finally commands with `// A360 Finally end`. Round trip 04:
   16/18 (the CSV commands have no A360 form yet).
+- A package used only inside an expression (`$x.Number:toString$`) is listed in the bot's
+  packages; A360 refused to deploy RR_IBM_04 without it. `checkA360` reports it too.
+- Excel back to A360 (corpus 05): `source-wal` reads target-wal's table loop (`excelGetTable`,
+  `for`, `mapTableRow` into one variable per column) as a loop over the session rows into the
+  record variable (`$vRow{Name}$`), and the "Save workbook" comment as a save. `target-a360`
+  writes Excel_MS open (session), the row iterator, set cell, save and close. Round trip 05: 6/6.
 
 ### Planned (deferred by ADR-016)
 

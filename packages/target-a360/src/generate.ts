@@ -343,6 +343,34 @@ class Generator {
             },
           },
         ];
+      } else if (
+        spec.collection === 'tableRow' &&
+        spec.source.kind === 'call' &&
+        spec.source.fn === 'excel.rows' &&
+        spec.source.args[0]?.kind === 'literal'
+      ) {
+        // corpus 05: Excel_MS "For each row in worksheet" into a record variable
+        this.packages.add('Excel_MS');
+        attributes = [
+          attr('loopType', { type: 'STRING', string: 'ITERATOR' }),
+          {
+            name: 'iterator',
+            returnTo: variableRef(spec.itemVar.name),
+            attributes: [
+              attr('loopSelection', { type: 'STRING', string: 'ALL_ROWS' }),
+              attr('readOption', { type: 'STRING', string: 'READ_CELL_TEXT' }),
+              attr('session', {
+                type: 'SESSION',
+                sessionName: { type: 'STRING', string: String(spec.source.args[0].value) },
+              }),
+            ],
+            value: {
+              type: 'ITERATOR',
+              iteratorName: 'loop.iterators.excel',
+              packageName: 'Excel_MS',
+            },
+          },
+        ];
       } else {
         return this.todo(path, `loop over ${spec.collection} not converted to A360 yet`);
       }
@@ -371,6 +399,15 @@ class Generator {
     return this.node(path, result.pkg, result.command, {
       attributes: result.attributes,
       ...(result.returnTo ? { returnTo: variableRef(result.returnTo) } : {}),
+      ...(result.opensSession
+        ? {
+            returnTo: {
+              type: 'SESSION',
+              sessionName: { type: 'STRING', string: result.opensSession },
+              sessionTarget: 'LOCAL',
+            },
+          }
+        : {}),
     });
   }
 
@@ -402,6 +439,7 @@ class Generator {
       }
       const d = v.defaultValue;
       if (type === 'STRING' && !d) node.defaultValue = { type, string: '' };
+      if (type === 'RECORD') node.defaultValue = { type, record: { schema: [], values: [] } };
       if (type === 'CREDENTIAL') {
         this.note(
           'manual',
@@ -461,6 +499,8 @@ interface CommandResult {
   readonly command: string;
   readonly attributes: Attribute[];
   readonly returnTo?: string;
+  /** Session the command opens (Excel_MS: `returnTo` of type SESSION, corpus 05). */
+  readonly opensSession?: string;
 }
 
 type CommandWriter = (a: ActionStmt, c: CommandContext) => CommandResult | undefined;
@@ -502,8 +542,83 @@ const stringCommand =
     };
   };
 
+/** A360 session of a WAL Excel instance variable: target-wal names it `rosettaExcel<Session>`. */
+const excelSession = (e: Expr | undefined): string | undefined =>
+  e?.kind === 'var' && e.path.length === 0
+    ? (/^rosettaExcel(\w+)$/.exec(e.name)?.[1] ?? e.name)
+    : undefined;
+const sessionValue = (name: string): A360Value => ({
+  type: 'SESSION',
+  sessionName: { type: 'STRING', string: name },
+});
+const bool = (value: boolean): A360Value => ({ type: 'BOOLEAN', boolean: value });
+
 /** WAL verb → A360 command, reversing docs/mappings/a360-to-ibm-rpa.md. */
 export const commands: Readonly<Record<string, CommandWriter>> = {
+  // Excel advanced (Excel_MS), corpus 05: the workbook is a session, named after the WAL variable
+  excelOpen: (a, c) => {
+    const out = a.outputs.value;
+    if (!out) return undefined;
+    return {
+      pkg: 'Excel_MS',
+      command: 'OpenSpreadsheet',
+      attributes: [
+        attr('excelSourceOption', { type: 'STRING', string: 'desktopfilepath' }),
+        attr('filePath', fileValue(arg(a, 'file'), c.types, c.sink)),
+        attr('containsHeader', bool(flag(a, 'hasheaders'))),
+        attr('isSpecificSheet', bool(false)),
+        attr('fileAccessMode', { type: 'STRING', string: 'EDIT' }),
+        attr('isSecure', bool(false)),
+        attr('loadAddIns', bool(false)),
+        attr('excludeHiddenSheets', bool(false)),
+        attr('containsChart', bool(false)),
+        attr('setSensitivity', bool(false)),
+        attr('disableUpdateLinks', bool(false)),
+      ],
+      opensSession: excelSession(out) ?? 'Default',
+    };
+  },
+  excelSet: (a, c) => {
+    const session = excelSession(a.args.file);
+    // only the form target-wal writes: a specific cell of the first sheet
+    if (!session || !flag(a, 'usingcell') || !flag(a, 'getfirstsheet')) return undefined;
+    c.note('semantic', 'WAL writes to the first sheet; A360 writes to the active sheet.');
+    return {
+      pkg: 'Excel_MS',
+      command: 'SetCell',
+      attributes: [
+        attr('cellOption', { type: 'STRING', string: 'SPECIFIC_CELL' }),
+        attr('cell', stringValue(arg(a, 'cell'), c.types, c.sink)),
+        attr('value', stringValue(arg(a, 'value'), c.types, c.sink)),
+        attr('session', sessionValue(session)),
+      ],
+    };
+  },
+  excelSave: (a) => {
+    const session = excelSession(a.args.file);
+    if (!session) return undefined;
+    return {
+      pkg: 'Excel_MS',
+      command: 'SaveSpreadSheet',
+      attributes: [
+        attr('session', sessionValue(session)),
+        attr('isDisplayErrorEnabled', bool(false)),
+      ],
+    };
+  },
+  excelClose: (a) => {
+    const session = excelSession(a.args.file);
+    if (!session) return undefined;
+    return {
+      pkg: 'Excel_MS',
+      command: 'CloseSpreadsheet',
+      attributes: [
+        attr('session', sessionValue(session)),
+        attr('isSave', bool(flag(a, 'save'))),
+        attr('isDisplayErrorEnabled', bool(false)),
+      ],
+    };
+  },
   setVar: (a, c) => {
     const out = target(a);
     const value = arg(a, 'value');

@@ -215,6 +215,50 @@ describe('readWal', () => {
     });
   });
 
+  it('reads the Excel table loop of target-wal back as a loop over the session rows', () => {
+    const { bot } = read(
+      [
+        '// vRow (A360 Record): one String variable per column the bot reads',
+        'defVar --name vRow_Name --type String',
+        'defVar --name rosettaExcelDefault --type Excel',
+        'defVar --name rosettaTable1 --type DataTable',
+        'defVar --name rosettaRows2 --type Numeric',
+        'defVar --name rosettaIndex3 --type Numeric',
+        'excelOpen --file "C:\\\\in.xlsx" rosettaExcelDefault=value',
+        'excelGetTable --file ${rosettaExcelDefault} --getfirstsheet --entiretable --hasheaders rosettaTable1=value rosettaRows2=rows',
+        'for --variable ${rosettaIndex3} --from 1 --to ${rosettaRows2} --step 1',
+        'mapTableRow --dataTable ${rosettaTable1} --row ${rosettaIndex3} --mappings "name=Name=${vRow_Name}"',
+        'logMessage --message "${vRow_Name}" --type "Info"',
+        'next',
+        '// A360 Save workbook: WAL saves the workbook when it is closed (excelClose --save)',
+        'excelClose --file ${rosettaExcelDefault} --save',
+      ].join('\n'),
+    );
+    expect(bot.variables.map((x) => x.name)).not.toContain('vRow_Name');
+    expect(bot.variables.find((x) => x.name === 'vRow')?.type).toEqual({ kind: 'record' });
+    expect(bot.body).toMatchObject([
+      { kind: 'action', op: 'vendor:ibm-rpa/excelOpen', args: { hasheaders: lit(true) } },
+      {
+        kind: 'loop',
+        loop: {
+          kind: 'forEach',
+          collection: 'tableRow',
+          source: { kind: 'call', fn: 'excel.rows', args: [lit('Default')] },
+          itemVar: v('vRow'),
+        },
+        body: [
+          {
+            args: {
+              message: { kind: 'var', name: 'vRow', path: [{ kind: 'key', key: lit('Name') }] },
+            },
+          },
+        ],
+      },
+      { kind: 'action', op: 'vendor:ibm-rpa/excelSave' },
+      { kind: 'action', op: 'vendor:ibm-rpa/excelClose' },
+    ]);
+  });
+
   it('reports what it cannot read instead of failing', () => {
     const { bot, diagnostics } = read('setVar --name "x --value 1\nonError --label Catch1');
     expect(bot.body.map((s) => s.kind)).toEqual(['unknown', 'unknown']);
