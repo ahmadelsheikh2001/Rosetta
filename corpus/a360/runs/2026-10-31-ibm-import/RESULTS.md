@@ -97,3 +97,8 @@ out=Machine=<machine> | Bot=\Bots\RPA_Rosetta_Samples\RR_IBM_03-strings-expressi
 - Settled: RR_05_Excel in the Control Room is revision 2 (2026-10-30 21:16 UTC), which writes C2.
   Its SHA-256 (`3fe7d93b…3b4d72`, from the agent) equals the corpus file with C1 → C2, so the corpus
   held revision 1. `corpus/a360/05-excel/bot.json` is now revision 2 and the outputs follow.
+- Re-test with revision 2 (commit 870fcac): the file uploaded is the regenerated one (8,092 bytes,
+  SHA-256 `f7c01d6b…ea34c9`, checked by the agent). Editor: 6 lines, no markers, Set cell "C2".
+  Run: COMPLETED, 6/6 lines, about 11.5 s, Excel closed normally. `log.txt` on the Bot Agent machine
+  gained `Name=Alice Amount=100`, `Name=Bob Amount=200`, `Name=Carol Amount=300`, as from the
+  original RR_05_Excel.
