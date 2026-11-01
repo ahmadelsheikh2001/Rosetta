@@ -94,7 +94,7 @@ describe('rosetta assess', () => {
     expect(out).toContain('2 file(s) could not be read');
     const html = readFileSync(join(dir, 'r', 'report.html'), 'utf8');
     expect(html).toContain('Files that could not be read');
-    expect(html).toContain('Export zips are not supported yet');
+    expect(html).toContain('Export export.zip: not a readable zip');
   });
 });
 

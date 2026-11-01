@@ -135,7 +135,7 @@ export const en = {
 
   'lift.json': 'Not valid JSON: {detail}',
   'lift.schema': 'Not a recognised A360 bot file (at "{path}": {detail}).',
-  'lift.zip': 'Export zips are not supported yet; provide the bot JSON files instead.',
+  'lift.zip': 'Export {file}: {problem}',
   'lift.wal.parse': 'Line {line}: a quoted value is not closed.',
   'lift.wal.structure': 'A block is not closed or closed twice ({verb}).',
   'lift.wal.unsupported': '{verb} is not converted yet: {detail}',

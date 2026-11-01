@@ -72,12 +72,12 @@ ${asset('app.css')}
 
   <section class="card" aria-labelledby="s2">
     <h2 id="s2"><span class="step">2</span>Upload the bot files</h2>
-    <p class="lead" id="upload-lead">A360 task bot files (.json), one per bot. Upload a parent and its child bots together.</p>
+    <p class="lead" id="upload-lead">A360 task bot files (.json) or Control Room export zips. Upload a parent and its child bots together.</p>
     <label class="drop" id="drop" tabindex="0">
       <svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5M4 16v4h16v-4"/></svg>
       <strong>Drop files here or click to browse</strong>
-      <span class="hint" id="upload-hint">Export from the Control Room: the bot's raw content (.json). Zip exports are not supported yet.</span>
-      <input id="file-input" class="sr-only" type="file" accept=".json,application/json" multiple>
+      <span class="hint" id="upload-hint">An export zip is opened here in the browser: only its task bots are read, packages and other files are skipped.</span>
+      <input id="file-input" class="sr-only" type="file" accept=".json,.zip,application/json,application/zip" multiple>
     </label>
     <ul class="files" id="file-list" aria-label="Chosen files"></ul>
     <button class="primary" id="convert" type="button" disabled><span class="label">Convert to IBM RPA</span><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16M14 6l6 6-6 6"/></svg></button>

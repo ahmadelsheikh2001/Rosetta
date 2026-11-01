@@ -10,9 +10,9 @@ let lastRoute = null; // the direction it was made for
 const routes = {
   a360: {
     target: 'ibm-rpa',
-    accept: '.json,application/json',
-    lead: 'A360 task bot files (.json), one per bot. Upload a parent and its child bots together.',
-    hint: "Export from the Control Room: the bot's raw content (.json). Zip exports are not supported yet.",
+    accept: '.json,.zip,application/json,application/zip',
+    lead: 'A360 task bot files (.json) or Control Room export zips. Upload a parent and its child bots together.',
+    hint: 'An export zip is opened here in the browser: only its task bots are read, packages and other files are skipped.',
     button: 'Convert to IBM RPA',
     output: 'IBM RPA scripts',
     code: 'IBM RPA script',
@@ -190,9 +190,18 @@ $('convert').addEventListener('click', async () => {
   const spin = el('span', { class: 'spinner', 'aria-hidden': 'true' });
   button.prepend(spin);
   try {
-    const files = await Promise.all(
-      [...chosen.values()].map(async (f) => ({ name: f.name, text: await f.text() })),
-    );
+    const notes = [];
+    const files = (
+      await Promise.all(
+        [...chosen.values()].map(async (f) => {
+          if (!/\.zip$/i.test(f.name)) return [{ name: f.name, text: await f.text() }];
+          const zip = await botsFromZip(f);
+          notes.push(...zip.problems.map((p) => ({ file: f.name, severity: 'warning', text: p })));
+          return zip.files;
+        }),
+      )
+    ).flat();
+    if (files.length === 0) throw new Error(notes.map((n) => n.file + ': ' + n.text).join(' · '));
     const res = await fetch('/api/convert', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -208,6 +217,7 @@ $('convert').addEventListener('click', async () => {
     });
     const body = await res.json();
     if (!res.ok) throw new Error(body.error || 'The conversion failed.');
+    body.messages = [...notes, ...body.messages];
     last = body;
     lastRoute = route();
     renderResult(body);
@@ -511,6 +521,87 @@ function downloadAll() {
   }
   if (last.reportHtml) files.push(['report.html', last.reportHtml]);
   save(lastRoute.zip, zip(files), 'application/zip');
+}
+
+// ---- Export zips (read in the browser; the zip itself is never uploaded) ----
+
+const BOT_TYPES = ['application/vnd.aa.taskbot', 'application/vnd.aa.headlessbot'];
+
+/**
+ * Task bots of a Control Room export zip, as listed in its manifest.json (same rules as
+ * readExportZip in source-a360). Only those entries are inflated, so packages are never read.
+ */
+async function botsFromZip(file) {
+  const buf = new Uint8Array(await file.arrayBuffer());
+  const view = new DataView(buf.buffer);
+  let eocd = -1;
+  for (let i = buf.length - 22; i >= Math.max(0, buf.length - 65557); i--) {
+    if (view.getUint32(i, true) === 0x06054b50) {
+      eocd = i;
+      break;
+    }
+  }
+  if (eocd < 0) return { files: [], problems: ['not a readable zip'] };
+  const utf8 = new TextDecoder();
+  const entries = new Map();
+  let p = view.getUint32(eocd + 16, true);
+  for (let n = view.getUint16(eocd + 10, true); n > 0; n--) {
+    if (view.getUint32(p, true) !== 0x02014b50)
+      return { files: [], problems: ['corrupt zip directory'] };
+    const nameLen = view.getUint16(p + 28, true);
+    const name = utf8.decode(buf.subarray(p + 46, p + 46 + nameLen));
+    entries.set(name, {
+      flags: view.getUint16(p + 8, true),
+      method: view.getUint16(p + 10, true),
+      size: view.getUint32(p + 20, true),
+      local: view.getUint32(p + 42, true),
+    });
+    p += 46 + nameLen + view.getUint16(p + 30, true) + view.getUint16(p + 32, true);
+  }
+  const read = async (e) => {
+    if (e.flags & 1) throw new Error('encrypted entry');
+    const start =
+      e.local + 30 + view.getUint16(e.local + 26, true) + view.getUint16(e.local + 28, true);
+    const raw = buf.subarray(start, start + e.size);
+    if (e.method === 0) return utf8.decode(raw);
+    if (e.method !== 8) throw new Error('compression method ' + e.method);
+    const stream = new Blob([raw]).stream().pipeThrough(new DecompressionStream('deflate-raw'));
+    return new Response(stream).text();
+  };
+  const manifestEntry = entries.get('manifest.json');
+  if (!manifestEntry)
+    return { files: [], problems: ['no manifest.json: not a Control Room export'] };
+  const manifest = JSON.parse(await read(manifestEntry));
+  const files = [];
+  const problems = [];
+  const skipped = new Map();
+  for (const f of manifest.files || []) {
+    if (typeof f.path !== 'string') continue;
+    if (!BOT_TYPES.includes(f.contentType)) {
+      skipped.set(f.contentType, (skipped.get(f.contentType) || 0) + 1);
+      continue;
+    }
+    const path = f.path.replace(/\\/g, '/');
+    const entry = entries.get(path);
+    if (!entry) {
+      problems.push(path + ': listed in the manifest but missing from the zip');
+      continue;
+    }
+    try {
+      files.push({ name: path.split('/').pop() + '.json', text: await read(entry) });
+    } catch (err) {
+      problems.push(path + ': ' + (err instanceof Error ? err.message : String(err)));
+    }
+  }
+  for (const [type, n] of skipped)
+    if (String(type).startsWith('application/vnd.aa.'))
+      problems.push(
+        n +
+          ' ' +
+          type.slice('application/vnd.aa.'.length) +
+          ' file(s) not converted (not a task bot)',
+      );
+  return { files, problems };
 }
 
 // Minimal ZIP writer (stored, no compression), so no library is needed.

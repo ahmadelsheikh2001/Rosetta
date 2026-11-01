@@ -185,6 +185,10 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: Se
   commands name the sheet with `--sheet`), Delay (`delay --timeout` time span), Number decrement
   (`evaluate`), create folder (`createDir`) and create file (`writeToFile` with empty content).
   Manual places on the same bots: 38.
+- Control Room export zips are read: `readExportZip` (source-a360) takes the task bots and API task
+  bots listed in `manifest.json` and leaves packages, forms, AI agents and workflows unread (they
+  are reported). `rosetta convert` / `assess` read zips in the input folder; the web UI opens a
+  zip in the browser and uploads only its bots.
 
 ### Planned (deferred by ADR-016)
 
