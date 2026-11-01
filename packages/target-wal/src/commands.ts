@@ -26,7 +26,13 @@ export interface ExcelSession {
   readonly header: boolean;
   /** A360 "Save workbook" ran: WAL saves on close. */
   saved: boolean;
+  /** Sheet chosen with "Switch to sheet" or "Create workbook", as WAL text; else the first sheet. */
+  sheet?: string;
 }
+
+/** Sheet parameter of an Excel command: the session's sheet, or the first sheet. */
+export const sheetArg = (session: ExcelSession): string =>
+  session.sheet ? `--sheet ${session.sheet}` : '--getfirstsheet';
 
 type Lowerer = (a: ActionStmt, w: WalWriter, s: LowerState) => void;
 
@@ -193,6 +199,53 @@ export const lowerers: Readonly<Record<string, Lowerer>> = {
     }
     const expr = `${textOf(src ?? { kind: 'literal', value: 0 }, h.sink)} + ${textOf(by ?? { kind: 'literal', value: 1 }, h.sink)}`;
     h.emit(`evaluate --expression ${quote(expr)} ${h.out()}=value`, doc('evaluate'));
+  },
+  // A-25: same shape as increment
+  'number.decrement': (a, w) => {
+    const h = helpers(a, w);
+    const expr = `${textOf(a.args.source ?? { kind: 'literal', value: 0 }, h.sink)} - ${textOf(a.args.by ?? { kind: 'literal', value: 1 }, h.sink)}`;
+    h.emit(`evaluate --expression ${quote(expr)} ${h.out()}=value`, doc('evaluate'));
+  },
+  // A-25: Delay "regular" waits a fixed time; WAL delay takes a time span (documented)
+  'flow.delay': (a, w) => {
+    const h = helpers(a, w);
+    if (h.str('delayType') !== 'REGULAR') {
+      manual(a, w, `delay type ${h.str('delayType') ?? '?'} not supported (only a fixed time)`);
+      return;
+    }
+    const time = h.str('delayTime');
+    const unit = h.str('timeUnit');
+    const ms = { MILLISECONDS: 1, SECONDS: 1000, MINUTES: 60000 }[unit ?? ''];
+    if (time === undefined || !/^\d+(\.\d+)?$/.test(time) || ms === undefined) {
+      manual(
+        a,
+        w,
+        `delay of ${time ?? 'a variable'} ${unit ?? ''} not converted (only a fixed number)`,
+      );
+      return;
+    }
+    const total = Math.round(Number(time) * ms);
+    const pad = (n: number, size = 2) => String(n).padStart(size, '0');
+    const span = `${pad(Math.floor(total / 3600000))}:${pad(Math.floor(total / 60000) % 60)}:${pad(Math.floor(total / 1000) % 60)}${total % 1000 ? `.${pad(total % 1000, 3)}` : ''}`;
+    h.emit(`delay --timeout ${span}`, doc('delay'));
+  },
+  // A-25: Folder / File create (documented createDir; writeToFile creates a missing file)
+  'folder.create': (a, w) => {
+    const h = helpers(a, w);
+    h.emit(
+      `createDir --path ${h.text('folderPath')}`,
+      doc('createDir'),
+      ...(h.flag('isOverwrite')
+        ? [semantic('A360 replaces an existing folder; WAL createDir keeps it and its files.')]
+        : []),
+    );
+  },
+  'file.create': (a, w) => {
+    const h = helpers(a, w);
+    h.emit(
+      `writeToFile --value "" --file ${pathOf(a.args.filePath ?? { kind: 'literal', value: '' }, h.sink)}${h.flag('isOverwrite') ? ' --overwrite' : ''}`,
+      doc('writeToFile with empty content (creates the file)'),
+    );
   },
   'number.toString': (a, w) => {
     const h = helpers(a, w);
@@ -540,9 +593,72 @@ export const lowerers: Readonly<Record<string, Lowerer>> = {
       return;
     }
     h.emit(
-      `excelSet --value ${h.text('value')} --file ${ref(session.handle)} --getfirstsheet --usingcell --cell ${h.text('cell')}`,
+      `excelSet --value ${h.text('value')} --file ${ref(session.handle)} ${sheetArg(session)} --usingcell --cell ${h.text('cell')}`,
       doc('excelSet (Set Value in Excel)'),
-      semantic('A360 writes to the active sheet; WAL writes to the first sheet.'),
+      ...(session.sheet
+        ? []
+        : [semantic('A360 writes to the active sheet; WAL writes to the first sheet.')]),
+    );
+  },
+  // Create workbook (A-25): excelOpen on a path that does not exist creates the file (documented)
+  'excel.create': (a, w, s) => {
+    const h = helpers(a, w);
+    const session = sessionName(a);
+    const handle = s.helper(
+      `excel${session.replace(/\W/g, '')}`,
+      (n) => `defVar --name ${n} --type Excel`,
+    );
+    const sheet = a.args.sheetName ? h.text('sheetName') : undefined;
+    s.excelSessions.set(session, {
+      handle,
+      header: false,
+      saved: false,
+      ...(sheet ? { sheet } : {}),
+    });
+    h.emit(
+      `excelOpen --file ${pathOf(a.args.filePath ?? { kind: 'literal', value: '' }, h.sink)} ${handle}=value`,
+      doc('excelOpen on a new file path (creates the workbook)'),
+      semantic('A360 creates the workbook here; WAL writes it when it is closed with --save.'),
+      ...(h.flag('isOverwrite')
+        ? [
+            semantic(
+              'A360 replaces an existing file; WAL excelOpen opens it instead. Delete the file first if it may exist.',
+            ),
+          ]
+        : []),
+      ...(sheet
+        ? [
+            semantic(
+              `A360 names the first sheet ${sheet}; WAL writes to a sheet of that name, added next to the default first sheet.`,
+            ),
+          ]
+        : []),
+    );
+  },
+  // Excel commands name their sheet in WAL (excelSet --sheet); A360 switches the active one
+  'excel.switchSheet': (a, w, s) => {
+    const h = helpers(a, w);
+    const session = excelSession(a, w, s);
+    if (!session) return;
+    if (h.str('sheetOption') !== 'BYNAME') {
+      manual(a, w, `sheet option ${h.str('sheetOption') ?? '?'} not supported (only by name)`);
+      return;
+    }
+    session.sheet = h.text('sheetName');
+    w.comment(`A360 Switch to sheet ${session.sheet}: the Excel commands below name this sheet`);
+  },
+  'excel.createSheet': (a, w, s) => {
+    const h = helpers(a, w);
+    const session = excelSession(a, w, s);
+    if (!session) return;
+    if (h.str('sheetOption') !== 'BYNAME') {
+      manual(a, w, `sheet option ${h.str('sheetOption') ?? '?'} not supported (only by name)`);
+      return;
+    }
+    // excelSet creates a sheet it does not find (documented); A1 of a new sheet is empty anyway
+    h.emit(
+      `excelSet --value "" --file ${ref(session.handle)} --sheet ${h.text('sheetName')} --usingcell --cell "A1"`,
+      doc('excelSet --sheet (creates a missing sheet)'),
     );
   },
   'excel.save': (a, w, s) => {

@@ -1,0 +1,24 @@
+id: a360.excelms.switchtosheet
+from: external A360 exports (Bot Store, GitHub), not stored, see A-25
+node:
+  uid: '00000000-0000-4000-a000-000000000012'
+  commandName: 'SwitchToSheet'
+  packageName: 'Excel_MS'
+  disabled: false
+  attributes:
+    - name: 'sheetOption'
+      value:
+        type: 'STRING'
+        string: 'BYNAME'
+    - name: 'sheetName'
+      value:
+        type: 'STRING'
+        string: 'Main'
+    - name: 'session'
+      value:
+        type: 'SESSION'
+        sessionName:
+          type: 'STRING'
+          string: 'Default'
+expect:
+  op: excel.switchSheet

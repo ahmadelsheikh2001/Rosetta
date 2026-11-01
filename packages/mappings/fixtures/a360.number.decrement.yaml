@@ -1,0 +1,21 @@
+id: a360.number.decrement
+from: external A360 exports (Bot Store, GitHub), not stored, see A-25
+node:
+  uid: '00000000-0000-4000-a000-000000000014'
+  commandName: 'decrement'
+  packageName: 'Number'
+  disabled: false
+  attributes:
+    - name: 'source'
+      value:
+        type: 'NUMBER'
+        expression: '$vRow$'
+    - name: 'by'
+      value:
+        type: 'NUMBER'
+        number: '1'
+  returnTo:
+    type: 'VARIABLE'
+    variableName: 'vRow'
+expect:
+  op: number.decrement

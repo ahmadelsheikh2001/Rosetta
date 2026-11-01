@@ -1,0 +1,18 @@
+id: a360.folder.createfolder
+from: external A360 exports (Bot Store, GitHub), not stored, see A-25
+node:
+  uid: '00000000-0000-4000-a000-000000000015'
+  commandName: 'createFolder'
+  packageName: 'Folder'
+  disabled: false
+  attributes:
+    - name: 'folderPath'
+      value:
+        type: 'STRING'
+        string: "C:\\RosettaTest\\out10"
+    - name: 'isOverwrite'
+      value:
+        type: 'BOOLEAN'
+        boolean: false
+expect:
+  op: folder.create

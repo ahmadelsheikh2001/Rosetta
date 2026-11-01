@@ -206,6 +206,12 @@ export const walCommands: Readonly<Record<string, CommandSpec>> = {
     ],
     required: ['value', 'file|createrandomfile'],
   },
+  createDir: {
+    evidence: 'documented',
+    params: ['path', 'fileSystem'],
+    required: ['path'],
+  },
+  delay: { evidence: 'documented', params: ['timeout'] },
   readCSV: {
     evidence: 'documented',
     params: ['filepath', 'delimiter', 'hasheaders', 'encoding', 'missingfieldaction'],

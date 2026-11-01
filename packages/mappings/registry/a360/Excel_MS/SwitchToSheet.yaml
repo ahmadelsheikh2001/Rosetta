@@ -1,0 +1,10 @@
+id: a360.excelms.switchtosheet
+source:
+  platform: a360
+  package: Excel_MS
+  command: SwitchToSheet
+status: partial
+irOp: excel.switchSheet
+evidence:
+  - external A360 exports (Bot Store, GitHub), not stored, see A-25
+notes: Lifted to a canonical op; the WAL form is a draft until verified in IBM RPA Studio (ADR-017). Attribute shape from external exports (A-25).

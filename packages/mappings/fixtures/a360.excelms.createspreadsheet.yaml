@@ -1,0 +1,32 @@
+id: a360.excelms.createspreadsheet
+from: external A360 exports (Bot Store, GitHub), not stored, see A-25
+node:
+  uid: '00000000-0000-4000-a000-000000000010'
+  commandName: 'CreateSpreadsheet'
+  packageName: 'Excel_MS'
+  disabled: false
+  attributes:
+    - name: 'filePath'
+      value:
+        type: 'FILE'
+        string: 'file:///C:/RosettaTest/out10/out10.xlsx'
+    - name: 'isOverwrite'
+      value:
+        type: 'BOOLEAN'
+        boolean: true
+    - name: 'sheetName'
+      value:
+        type: 'STRING'
+        string: 'Main'
+    - name: 'setSensitivity'
+      value:
+        type: 'BOOLEAN'
+        boolean: false
+  returnTo:
+    type: 'SESSION'
+    sessionName:
+      type: 'STRING'
+      string: 'Default'
+    sessionTarget: 'LOCAL'
+expect:
+  op: excel.create

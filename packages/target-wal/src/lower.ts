@@ -10,7 +10,7 @@ import {
   type Variable,
 } from '@rosetta/ir';
 import type { StandardsProfile } from '@rosetta/standards';
-import { lowerers, manual, type LowerState } from './commands.js';
+import { lowerers, manual, sheetArg, type LowerState } from './commands.js';
 import { accessKey, pathOf, textOf, valueOf, withAccesses, type NoteSink } from './expr.js';
 import {
   errorLineRef,
@@ -426,7 +426,7 @@ class Lowerer {
     if (excel) {
       const rows = this.helperVar('Rows', (n) => `defVar --name ${n} --type Numeric`);
       w.line(
-        `excelGetTable --file ${ref(excel.handle)} --getfirstsheet --entiretable${excel.header ? ' --hasheaders' : ''} ${table}=value ${rows}=rows`,
+        `excelGetTable --file ${ref(excel.handle)} ${sheetArg(excel)} --entiretable${excel.header ? ' --hasheaders' : ''} ${table}=value ${rows}=rows`,
         docNote('excelGetTable (Get Excel Table)'),
         {
           kind: 'semantic',

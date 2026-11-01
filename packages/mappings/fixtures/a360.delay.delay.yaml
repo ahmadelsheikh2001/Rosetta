@@ -1,0 +1,22 @@
+id: a360.delay.delay
+from: external A360 exports (Bot Store, GitHub), not stored, see A-25
+node:
+  uid: '00000000-0000-4000-a000-000000000013'
+  commandName: 'delay'
+  packageName: 'Delay'
+  disabled: false
+  attributes:
+    - name: 'delayType'
+      value:
+        type: 'STRING'
+        string: 'REGULAR'
+    - name: 'delayTime'
+      value:
+        type: 'NUMBER'
+        number: '5'
+    - name: 'timeUnit'
+      value:
+        type: 'STRING'
+        string: 'SECONDS'
+expect:
+  op: flow.delay

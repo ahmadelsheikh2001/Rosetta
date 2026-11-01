@@ -177,6 +177,15 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: Se
   web UI asks for both (optional) when converting to A360 and validates them. Round trip 08
   Parent: 4/4.
 
+#### Commands from real-world A360 exports (A-25)
+
+- Measured on 11 external task bots (Bot Store and GitHub exports, kept outside the repo): 291
+  commands, 108 places left as manual work. The most frequent gaps are now converted to WAL:
+  Excel create workbook (`excelOpen` on a new path), create worksheet and switch to sheet (Excel
+  commands name the sheet with `--sheet`), Delay (`delay --timeout` time span), Number decrement
+  (`evaluate`), create folder (`createDir`) and create file (`writeToFile` with empty content).
+  Manual places on the same bots: 38.
+
 ### Planned (deferred by ADR-016)
 
 - dependency-cruiser layer enforcement
