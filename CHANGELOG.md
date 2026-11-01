@@ -191,6 +191,14 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: Se
   dotted node path; Email connect (Outlook) / send / close → `outlookConnect`, `emailSend`
   (addresses split into a list at ";"), `emailDisconnect`. Generic A360 lifting now keeps outputs
   returned as a dictionary by key. Manual places on the 11 external bots: 27.
+- IBM RPA → A360 for hand-written scripts (measured on a real 822-line Studio script, kept outside
+  the repo; notes 451 → 235): string conditions is empty (`EQ ""`), contains (`INCLUDE`) and not
+  equal (`NEQ`), number `LTE`; `excelSet` on a named sheet by row and column → Switch to sheet
+  (only when the sheet changes) and Set cell at the address (`B3`, `AB$row$`); `logMessage` →
+  Log to file with the level in front, into the `logFile` option (web UI field; default
+  `C:\Logs\<bot>.log` with a note); `replaceText` with a real regex → String replace with the
+  regular-expression option and a note on Java vs .NET rules. Still manual: `getRegex` (no A360
+  shape seen yet), a cell whose column is a variable, PDF / OCR.
 - `.wal` files saved by Studio 30.0.2 are read: they are a protobuf envelope around the script
   (W-19). `readWalFile` (source-wal) and the web UI take the script out; before, the header bytes
   became an unknown command and the footer broke the last `endSub`.

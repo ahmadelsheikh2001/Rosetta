@@ -126,7 +126,21 @@ function targetOptions(raw: unknown): A360Options {
       400,
       'The folder is names joined by "/" (e.g. Bots/Finance), using letters, digits, spaces and _ - . only.',
     );
-  return { ...(vaultLocker ? { vaultLocker } : {}), ...(botFolder ? { botFolder } : {}) };
+  const logFile = text('logFile');
+  // a Windows file path on the Bot Agent machine: drive, folders and a name, no ".." parts
+  if (
+    logFile !== undefined &&
+    (!/^[A-Za-z]:\\[^<>:"|?*]+$/.test(logFile) ||
+      /\p{Cc}/u.test(logFile) ||
+      logFile.length > 260 ||
+      /\\\.\.(\\|$)/.test(logFile))
+  )
+    throw new RequestError(400, 'The log file is a full Windows path, e.g. C:\\Logs\\MyBot.log.');
+  return {
+    ...(vaultLocker ? { vaultLocker } : {}),
+    ...(botFolder ? { botFolder } : {}),
+    ...(logFile ? { logFile } : {}),
+  };
 }
 
 const messagesOf = (diagnostics: readonly Diagnostic[]) =>

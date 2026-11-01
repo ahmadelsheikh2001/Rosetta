@@ -202,6 +202,114 @@ describe('generateA360', () => {
     ]);
   });
 
+  it('writes string conditions: is empty, contains, not equal (A-25 operators)', () => {
+    const ifOn = (condition: Expr) =>
+      ({ id: 'i', kind: 'if', branches: [{ condition, body: [] }] }) as const;
+    const r = generateA360(
+      bot(
+        'b',
+        [
+          ifOn({ kind: 'call', fn: 'is.empty', args: [ref('vText')] }),
+          ifOn({ kind: 'call', fn: 'string.contains', args: [ref('vText'), lit('Plan')] }),
+          ifOn({ kind: 'binary', op: 'ne', left: ref('vText'), right: lit('x') }),
+          ifOn({
+            kind: 'unary',
+            op: 'not',
+            operand: { kind: 'call', fn: 'is.empty', args: [ref('vText')] },
+          }),
+        ],
+        { variables: [variable('vText', { kind: 'string' })] },
+      ),
+    );
+    const operators = (
+      r.json.nodes as {
+        attributes: { attributes: { name: string; value: { string?: string } }[] }[];
+      }[]
+    ).map((n) => n.attributes[0]?.attributes.find((x) => x.name === 'operator')?.value.string);
+    expect(operators).toEqual(['EQ', 'INCLUDE', 'NEQ', 'NEQ']);
+    expect(r.notes).toEqual([]);
+  });
+
+  it('writes a cell on a named sheet as Switch to sheet, once, then Set cell', () => {
+    const set = (row: Expr, column: number) =>
+      action('vendor:ibm-rpa/excelSet', {
+        args: {
+          value: lit('v'),
+          file: ref('rosettaExcelOut'),
+          sheet: lit('Invoice'),
+          row,
+          column: lit(column),
+        },
+      });
+    const r = generateA360(
+      bot('b', [set(lit(3), 2), set(ref('vRow'), 28)], {
+        variables: [variable('vRow', { kind: 'number' })],
+      }),
+    );
+    expect(r.json.nodes).toMatchObject([
+      { commandName: 'SwitchToSheet', attributes: [{}, { value: { string: 'Invoice' } }, {}] },
+      { commandName: 'SetCell', attributes: [{}, { value: { string: 'B3' } }, {}, {}] },
+      {
+        commandName: 'SetCell',
+        attributes: [{}, { value: { expression: 'AB$vRow.Number:toString$' } }, {}, {}],
+      },
+    ]);
+  });
+
+  it('writes logMessage to the log file with its level, and a real regex replace', () => {
+    const r = generateA360(
+      bot(
+        'b',
+        [
+          action('vendor:ibm-rpa/logMessage', {
+            args: { message: lit('Done'), type: lit('Warning') },
+          }),
+          action('vendor:ibm-rpa/replaceText', {
+            args: {
+              texttoparse: ref('vText'),
+              useregex: lit(true),
+              pattern: ref('vPattern'),
+              regexOptions: lit('0'),
+            },
+            outputs: { value: ref('vText') },
+          }),
+        ],
+        {
+          variables: [
+            variable('vText', { kind: 'string' }),
+            variable('vPattern', { kind: 'string' }),
+          ],
+        },
+      ),
+      { logFile: 'C:\\Logs\\b.log' },
+    );
+    expect(r.json.nodes).toMatchObject([
+      {
+        commandName: 'logToFile',
+        attributes: [
+          { value: { string: 'file:///C:/Logs/b.log' } },
+          { value: { string: '[Warning] Done' } },
+          {},
+          {},
+          {},
+        ],
+      },
+      {
+        commandName: 'replace',
+        attributes: [
+          {},
+          { value: { expression: '$vPattern$' } },
+          { value: { string: 'true' } },
+          { value: { string: 'true' } },
+          {},
+          {},
+          { value: { string: '' } },
+        ],
+      },
+    ]);
+    expect(r.notes.map((n) => n.kind)).toEqual(['semantic']);
+  });
+
   it('never writes a credential value', () => {
     const r = generateA360(
       bot('b', [], {

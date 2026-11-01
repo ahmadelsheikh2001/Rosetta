@@ -62,6 +62,8 @@ export interface A360Options {
   readonly vaultLocker?: string;
   /** Repository folder of the bots it runs, e.g. `Bots/Finance` (Run Task Bot, corpus 08). */
   readonly botFolder?: string;
+  /** File that receives what WAL writes with logMessage (A360 has no run log). */
+  readonly logFile?: string;
 }
 
 export interface A360Bot {
@@ -86,7 +88,14 @@ const variableTypes: Readonly<Record<string, string>> = {
   record: 'RECORD',
 };
 
-const operatorCodes: Readonly<Record<string, string>> = { eq: 'EQ', gt: 'GT', lt: 'LT' };
+/** IR operator → A360 condition operator (corpus 02; NEQ and LTE seen in Bot Store exports). */
+const operatorCodes: Readonly<Record<string, string>> = {
+  eq: 'EQ',
+  ne: 'NEQ',
+  gt: 'GT',
+  lt: 'LT',
+  le: 'LTE',
+};
 
 /** A package function inside an expression: `$vNum.Number:toString$` → `Number`. */
 export const expressionPackage = /\$[A-Za-z_]\w*\.([A-Za-z]\w*):\w+\$/g;
@@ -96,6 +105,9 @@ class Generator {
   private readonly packages = new Set<string>();
   private readonly types: Map<string, IRType>;
   private readonly loops: string[] = [];
+  /** Excel session → the sheet last switched to (JSON of its expression), while known. */
+  private readonly sheets = new Map<string, string>();
+  private logNoted = false;
   private loopCount = 0;
   private source: string | undefined;
 
@@ -139,20 +151,109 @@ class Generator {
   }
 
   block(stmts: readonly Statement[], path: string): Node[] {
-    return stmts.flatMap((s, i) => {
+    const nodes = stmts.flatMap((s, i) => {
       const saved = this.source;
       this.source = s.source?.label;
       try {
         const n = this.statement(s, `${path}.${i}`);
-        if (!n) return [];
-        return s.disabled ? [{ ...n, disabled: true }] : [n];
+        const list = n === undefined ? [] : Array.isArray(n) ? n : [n];
+        return s.disabled ? list.map((x) => ({ ...x, disabled: true })) : list;
       } finally {
         this.source = saved;
       }
     });
+    // a nested block may have switched sheets: after it, the active sheet is not known
+    this.sheets.clear();
+    return nodes;
   }
 
-  private statement(s: Statement, path: string): Node | undefined {
+  /**
+   * WAL `excelSet --sheet S --row R --column C` → A360 "Switch to sheet" (when the sheet changes)
+   * and "Set cell" at the cell address (corpus 05; Switch to sheet as in A-25).
+   */
+  private excelSetOnSheet(a: ActionStmt, path: string): Node[] | Node {
+    const session = excelSession(a.args.file);
+    const sheet = a.args.sheet;
+    const column = a.args.column;
+    const row = a.args.row;
+    const usingCell = a.args.usingcell?.kind === 'literal' && a.args.usingcell.value === true;
+    let cell: A360Value | undefined;
+    if (usingCell && a.args.cell) cell = stringValue(a.args.cell, this.types, this.sink);
+    else if (column?.kind === 'literal' && typeof column.value === 'number' && row) {
+      let n = column.value;
+      let letters = '';
+      for (; n > 0; n = Math.floor((n - 1) / 26))
+        letters = String.fromCharCode(65 + ((n - 1) % 26)) + letters;
+      cell =
+        row.kind === 'literal'
+          ? { type: 'STRING', string: `${letters}${String(row.value)}` }
+          : { type: 'STRING', expression: `${letters}${exprText(row, this.types, this.sink)}` };
+    }
+    if (!session || !sheet || !cell)
+      return this.todo(path, 'excelSet: a cell by column variable is not converted to A360 yet');
+    const nodes: Node[] = [];
+    const key = JSON.stringify(sheet);
+    if (this.sheets.get(session) !== key) {
+      nodes.push(
+        this.node(`${path}.sheet`, 'Excel_MS', 'SwitchToSheet', {
+          attributes: [
+            attr('sheetOption', { type: 'STRING', string: 'BYNAME' }),
+            attr('sheetName', stringValue(sheet, this.types, this.sink)),
+            attr('session', sessionValue(session)),
+          ],
+        }),
+      );
+      this.sheets.set(session, key);
+    }
+    nodes.push(
+      this.node(path, 'Excel_MS', 'SetCell', {
+        attributes: [
+          attr('cellOption', { type: 'STRING', string: 'SPECIFIC_CELL' }),
+          attr('cell', cell),
+          attr(
+            'value',
+            stringValue(a.args.value ?? { kind: 'literal', value: '' }, this.types, this.sink),
+          ),
+          attr('session', sessionValue(session)),
+        ],
+      }),
+    );
+    return nodes;
+  }
+
+  /**
+   * WAL `logMessage` writes to the Studio / Control Center log; A360 has no such log, so it becomes
+   * Log to file (corpus 01 shape) into the file given in the options, with the level in front.
+   */
+  private logMessage(a: ActionStmt, path: string): Node {
+    const file = this.options.logFile ?? `C:\\Logs\\${this.bot.name}.log`;
+    if (!this.options.logFile && !this.logNoted) {
+      this.logNoted = true;
+      this.note(
+        'manual',
+        `logMessage lines are written to ${file}; A360 has no run log. Give the log file when converting, or change the path.`,
+      );
+    }
+    const level = a.args.type?.kind === 'literal' ? String(a.args.type.value) : 'Info';
+    const message = a.args.message ?? { kind: 'literal', value: '' };
+    const content: Expr =
+      level === 'Info'
+        ? message
+        : message.kind === 'literal'
+          ? { kind: 'literal', value: `[${level}] ${String(message.value)}` }
+          : { kind: 'template', parts: [{ kind: 'literal', value: `[${level}] ` }, message] };
+    return this.node(path, 'LogToFile', 'logToFile', {
+      attributes: [
+        attr('filePath', fileValue({ kind: 'literal', value: file }, this.types, this.sink)),
+        attr('logContent', stringValue(content, this.types, this.sink)),
+        attr('appendTimestamp', { type: 'BOOLEAN', boolean: true }),
+        attr('logOption', { type: 'STRING', string: 'APPEND_FILE' }),
+        attr('encodingValue', { type: 'STRING', string: 'ANSI' }),
+      ],
+    });
+  }
+
+  private statement(s: Statement, path: string): Node | Node[] | undefined {
     switch (s.kind) {
       case 'comment':
         return this.node(path, 'Comment', 'Comment', {
@@ -198,11 +299,25 @@ class Generator {
 
   /** IR condition → A360 CONDITIONAL attribute, typed by the left side's variable (corpus 02). */
   private condition(e: Expr): Attribute | undefined {
+    // string predicates (A-25: INCLUDE and NEQ in Bot Store exports); "is empty" is = ""
+    const empty: Expr = { kind: 'literal', value: '' };
+    const negated = e.kind === 'unary' && e.op === 'not' ? e.operand : undefined;
+    const call = negated ?? e;
+    if (call.kind === 'call' && call.args[0]) {
+      const [subject, other] = call.args;
+      if (call.fn === 'is.empty' || call.fn === 'is.nullOrEmpty')
+        return this.stringCondition(negated ? 'NEQ' : 'EQ', subject, empty);
+      if (call.fn === 'string.contains' && other && !negated)
+        return this.stringCondition('INCLUDE', subject, other);
+      return undefined;
+    }
     if (e.kind !== 'binary' || !operatorCodes[e.op]) return undefined;
     const left = e.left;
     const kind =
       left.kind === 'var' && left.path.length === 0 ? this.types.get(left.name)?.kind : undefined;
     const op = attr('operator', { type: 'STRING', string: operatorCodes[e.op] ?? 'EQ' });
+    // NEQ is seen on strings only (A-25)
+    if (kind === 'number' && e.op === 'ne') return undefined;
     if (kind === 'number')
       return {
         attributes: [
@@ -223,19 +338,25 @@ class Generator {
         name: 'condition',
         value: { type: 'CONDITIONAL', conditionalName: 'booleanVariable', packageName: 'Boolean' },
       };
-    if (e.op === 'eq')
-      return {
-        attributes: [
-          attr('variable', { type: 'STRING', expression: exprText(left, this.types, this.sink) }),
-          op,
-          attr('value', stringValue(e.right, this.types, this.sink)),
-          attr('matchCase', { type: 'BOOLEAN', boolean: true }),
-          attr('isIgnoreCarriage', { type: 'BOOLEAN', boolean: false }),
-        ],
-        name: 'condition',
-        value: { type: 'CONDITIONAL', conditionalName: 'stringVariable', packageName: 'String' },
-      };
+    if (kind === 'boolean') return undefined;
+    if (e.op === 'eq' || e.op === 'ne')
+      return this.stringCondition(operatorCodes[e.op] ?? 'EQ', left, e.right);
     return undefined;
+  }
+
+  /** String condition (corpus 02; INCLUDE and NEQ as in Bot Store exports, A-25). */
+  private stringCondition(operator: string, left: Expr, right: Expr): Attribute {
+    return {
+      attributes: [
+        attr('variable', { type: 'STRING', expression: exprText(left, this.types, this.sink) }),
+        attr('operator', { type: 'STRING', string: operator }),
+        attr('value', stringValue(right, this.types, this.sink)),
+        attr('matchCase', { type: 'BOOLEAN', boolean: true }),
+        attr('isIgnoreCarriage', { type: 'BOOLEAN', boolean: false }),
+      ],
+      name: 'condition',
+      value: { type: 'CONDITIONAL', conditionalName: 'stringVariable', packageName: 'String' },
+    };
   }
 
   private conditionOrTodo(e: Expr): Attribute[] {
@@ -395,8 +516,10 @@ class Generator {
     }
   }
 
-  private action(a: ActionStmt, path: string): Node {
+  private action(a: ActionStmt, path: string): Node | Node[] {
     const verb = a.op.startsWith('vendor:ibm-rpa/') ? a.op.slice('vendor:ibm-rpa/'.length) : a.op;
+    if (verb === 'excelSet' && a.args.sheet) return this.excelSetOnSheet(a, path);
+    if (verb === 'logMessage') return this.logMessage(a, path);
     const write = commands[verb];
     if (!write) return this.todo(path, `${verb} has no A360 conversion yet`);
     const result = write(a, {
@@ -615,6 +738,10 @@ function jsonArg(e: Expr | undefined): Record<string, unknown> | undefined {
     return undefined;
   }
 }
+
+/** A regex that only escapes special characters, i.e. a plain text search (`a\.b`, not `a.b`). */
+const escapedLiteral = (pattern: string): boolean =>
+  !/[.^$*+?()[\]{}|\\]/.test(pattern.replace(/\\[.^$*+?()[\]{}|\\/-]/g, ''));
 
 /** WAL verb → A360 command, reversing docs/mappings/a360-to-ibm-rpa.md. */
 export const commands: Readonly<Record<string, CommandWriter>> = {
@@ -837,13 +964,24 @@ export const commands: Readonly<Record<string, CommandWriter>> = {
     const out = target(a);
     if (!out) return undefined;
     const regex = flag(a, 'useregex');
-    // RPA Rosetta writes case-insensitive A360 searches as an escaped regex with IgnoreCase
     const pattern = regex ? arg(a, 'pattern') : arg(a, 'textpattern');
+    // .NET RegexOptions: IgnoreCase is 1; WAL writes the number or the name
+    const optionsArg = a.args.regexOptions;
+    const options =
+      optionsArg?.kind === 'literal' && optionsArg.value !== null ? String(optionsArg.value) : '';
+    const ignoreCase =
+      /IgnoreCase/i.test(options) || (/^\d+$/.test(options) && (Number(options) & 1) === 1);
+    // RPA Rosetta writes case-insensitive A360 searches as an escaped regex with IgnoreCase
     const literal =
-      regex && pattern.kind === 'literal'
+      regex && ignoreCase && pattern.kind === 'literal' && escapedLiteral(String(pattern.value))
         ? String(pattern.value).replace(/\\(.)/g, '$1')
         : undefined;
-    if (regex && literal === undefined) return undefined;
+    const realRegex = regex && literal === undefined;
+    if (realRegex)
+      c.note(
+        'semantic',
+        'A360 runs this regular expression with Java rules; WAL used .NET rules. Check the pattern.',
+      );
     return {
       pkg: 'String',
       command: 'replace',
@@ -855,8 +993,8 @@ export const commands: Readonly<Record<string, CommandWriter>> = {
             ? { type: 'STRING', string: literal }
             : stringValue(pattern, c.types, c.sink),
         ),
-        attr('isCaseSensitive', { type: 'STRING', string: regex ? 'false' : 'true' }),
-        attr('isRegularExpression', { type: 'STRING', string: 'false' }),
+        attr('isCaseSensitive', { type: 'STRING', string: regex && ignoreCase ? 'false' : 'true' }),
+        attr('isRegularExpression', { type: 'STRING', string: realRegex ? 'true' : 'false' }),
         attr('startIndex', { type: 'NUMBER', number: '1' }),
         attr('count', { type: 'NUMBER', number: '-1' }),
         attr('replaceWith', stringValue(arg(a, 'replacement'), c.types, c.sink)),

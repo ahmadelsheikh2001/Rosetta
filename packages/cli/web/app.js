@@ -250,6 +250,7 @@ $('convert').addEventListener('click', async () => {
         options: {
           vaultLocker: $('vault-locker').value.trim(),
           botFolder: $('bot-folder').value.trim(),
+          logFile: $('log-file').value.trim(),
         },
       }),
     });

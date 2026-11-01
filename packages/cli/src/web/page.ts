@@ -77,6 +77,7 @@ ${asset('app.css')}
     <div class="target-options" id="a360-options" hidden>
       <div class="field"><label for="vault-locker">Credential Vault locker <span class="optional">(optional)</span></label><input id="vault-locker" type="text" maxlength="200" autocomplete="off" spellcheck="false" placeholder="e.g. Finance"></div>
       <div class="field"><label for="bot-folder">Folder of the bots it runs <span class="optional">(optional)</span></label><input id="bot-folder" type="text" maxlength="200" autocomplete="off" spellcheck="false" placeholder="e.g. Bots/Finance"></div>
+      <div class="field"><label for="log-file">Log file for logMessage <span class="optional">(optional)</span></label><input id="log-file" type="text" maxlength="260" autocomplete="off" spellcheck="false" placeholder="e.g. C:\\Logs\\MyBot.log"></div>
       <p class="hint">WAL scripts do not name the A360 locker of their vault items or the folder of the bots they start. Without these, the notes say what to set in the A360 editor. Only names are used; no credential value is ever read or written.</p>
     </div>
   </section>
