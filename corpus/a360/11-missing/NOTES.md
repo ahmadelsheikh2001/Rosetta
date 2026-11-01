@@ -32,5 +32,7 @@ String 5.12.6; TaskBot 2.10.0-20241119-100739
 
 - The bot does not run: A360 refuses "Automation with errors" because of line 11. The error is the
   sample's, kept on purpose; `checkA360` now reports a NUMBER or BOOLEAN variable inside text.
-- Lines 9 and 10 show no marker in the editor; whether they compute as expected is not run yet
-  (A-26). Expected values: pos=9, pos2=0, match=0042, calc=45, cell=C7.
+- Lines 9 and 10 show no marker in the editor. A copy with the message fixed (RR_11b_Missing,
+  `.Number:toString` on the numbers) ran to completion on 2026-11-01; the owner read
+  `pos=9 pos2=0 match=0042 calc=45 cell=C7`: the arithmetic Assign, the list item by a number
+  variable and the JavaScript regex helper work, and String Find returns 0 when nothing is found.
