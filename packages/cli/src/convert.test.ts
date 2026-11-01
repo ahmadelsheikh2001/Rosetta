@@ -51,6 +51,9 @@ describe('conversion of the real corpus', () => {
       'get',
       'strDictGet',
       'readCSV',
+      // seen in a script saved by Studio 30.0.2 (W-19)
+      'fileCopy',
+      'stopExecution',
       'if',
       'elseIf',
       'else',
@@ -292,7 +295,7 @@ describe('rosetta convert', () => {
       cwd: dir,
     });
     expect(code).toBe(ExitCode.Ok);
-    expect(out).toContain('Converted 8 bot(s)');
+    expect(out).toContain('Converted 9 bot(s)');
     const files = readdirSync(join(dir, 'wal')).sort();
     expect(files).toContain('CONVERSION.md');
     expect(files).toContain('04-error-handling.wal');

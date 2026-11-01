@@ -199,6 +199,16 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: Se
   `C:\Logs\<bot>.log` with a note); `replaceText` with a real regex → String replace with the
   regular-expression option and a note on Java vs .NET rules. Still manual: `getRegex` (no A360
   shape seen yet), a cell whose column is a variable, PDF / OCR.
+- Corpus 11 (RR_11_Missing, built in our Control Room): File Copy, String Find (regex), JavaScript
+  Open / Run / Close, PDF Extract text, OCR Capture text by path, Task Bot Stop, arithmetic Number
+  Assign and a list item by number. IBM RPA → A360 now writes: `getRegex` / `isMatch` with a
+  JavaScript helper opened once around the bot (parameters as one list, regex flags from
+  RegexOptions, n-th match still manual); `recognizeText` and `pdfText` → OCR Capture text by path
+  (PDF Extract text writes only to a file); `fileCopy` → File Copy; `stopExecution` → Task Bot
+  Stop. `checkA360` reports a NUMBER or BOOLEAN variable inside text ("Invalid expression", seen
+  in corpus 11). A360 → IBM RPA: File Copy → `fileCopy`, Task Bot Stop → `stopExecution`; fixed
+  a list default with a backslash (now added item by item, escaped) and arithmetic in Number
+  Assign (now `evaluate`, was a quoted `setVar`). ABE OCR: manual places 106 → 15.
 - IBM RPA → A360: `dateDifference` → Datetime Difference between dates in seconds (shape from an
   external export; TimeSpan variables become NUMBER with a note); `evaluate` arithmetic on number
   variables → Number: Assign expression; `excelSet` with the column in a variable → cell address

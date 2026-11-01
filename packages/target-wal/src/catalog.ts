@@ -212,6 +212,9 @@ export const walCommands: Readonly<Record<string, CommandSpec>> = {
     required: ['path'],
   },
   delay: { evidence: 'documented', params: ['timeout'] },
+  // seen in a script saved by Studio 30.0.2 (W-19)
+  fileCopy: { evidence: 'documented', params: ['from', 'to'], required: ['from', 'to'] },
+  stopExecution: { evidence: 'documented', params: [] },
   // web services and email (A-25; IBM RPA 30.0.x reference)
   httpRequest: {
     evidence: 'documented',

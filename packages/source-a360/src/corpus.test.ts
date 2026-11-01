@@ -30,6 +30,7 @@ describe('corpus', () => {
       'RR_08_Child',
       'RR_08_Parent',
       '09-web-form',
+      '11-missing',
     ]);
   });
 

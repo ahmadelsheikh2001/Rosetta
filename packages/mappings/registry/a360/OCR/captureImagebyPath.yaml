@@ -1,0 +1,10 @@
+id: a360.ocr.captureimagebypath
+source:
+  platform: a360
+  package: OCR
+  command: captureImagebyPath
+status: partial
+irOp: ocr.captureByPath
+evidence:
+  - corpus/a360/11-missing/bot.json
+notes: Lifted to a canonical op; the WAL form is a draft until verified in IBM RPA Studio (ADR-017).

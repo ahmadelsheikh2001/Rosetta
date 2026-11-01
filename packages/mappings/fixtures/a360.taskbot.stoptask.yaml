@@ -1,0 +1,11 @@
+id: a360.taskbot.stoptask
+from: corpus/a360/11-missing/bot.json
+node:
+  {
+    'uid': '9e1b330a-29e0-4de1-ac14-2db3a1e79473',
+    'commandName': 'stopTask',
+    'packageName': 'TaskBot',
+    'disabled': false,
+  }
+expect:
+  op: task.stop

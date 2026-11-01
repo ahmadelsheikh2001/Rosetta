@@ -1,0 +1,26 @@
+id: a360.file.copyfiles
+from: corpus/a360/11-missing/bot.json
+node:
+  {
+    'uid': '67b8da20-4da0-4494-afaf-8322349f175c',
+    'commandName': 'copyFiles',
+    'packageName': 'File',
+    'disabled': false,
+    'attributes':
+      [
+        {
+          'name': 'sourceFilePath',
+          'value': { 'type': 'FILE', 'string': 'file:///C:/RosettaTest/out10/note.txt' },
+        },
+        {
+          'name': 'destinationPath',
+          'value': { 'type': 'STRING', 'string': "C:\\RosettaTest\\note-copy.txt" },
+        },
+        { 'name': 'isOverwrite', 'value': { 'type': 'BOOLEAN', 'boolean': true } },
+        { 'name': 'isParallel', 'value': { 'type': 'BOOLEAN', 'boolean': false } },
+        { 'name': 'isSize', 'value': { 'type': 'BOOLEAN', 'boolean': false } },
+        { 'name': 'isDate', 'value': { 'type': 'BOOLEAN', 'boolean': false } },
+      ],
+  }
+expect:
+  op: file.copy

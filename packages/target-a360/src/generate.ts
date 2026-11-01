@@ -34,6 +34,9 @@ export const packageVersions: Readonly<Record<string, string>> = {
   Dictionary: '3.16.2',
   ErrorHandler: '2.13.0-20241115-120032',
   Excel_MS: '6.23.20',
+  JavaScript: '2.18.3',
+  OCR: '2.18.3',
+  PDF: '3.11.0',
   File: '6.16.2',
   If: '3.8.0-20241115-115929',
   List: '2.16.2',
@@ -123,6 +126,176 @@ class Generator {
 
   /** Variables the conversion adds (e.g. the column letters), declared after the bot's own. */
   readonly extraVariables: Node[] = [];
+  /** pdfOpen handle → the file it opened. */
+  private readonly pdfFiles = new Map<string, Expr>();
+  /** A regex helper ran: the JavaScript session must be opened and closed around the bot. */
+  usesRegexScript = false;
+
+  private extraVariable(name: string, type: string, subtype?: string): string {
+    if (!this.extraVariables.some((v) => v.name === name))
+      this.extraVariables.push({
+        name,
+        description: 'Added by RPA Rosetta',
+        type,
+        ...(subtype ? { subtype } : {}),
+        readOnly: false,
+        input: false,
+        output: false,
+        ...(type === 'STRING' ? { defaultValue: { type, string: '' } } : {}),
+      });
+    return name;
+  }
+
+  /**
+   * WAL getRegex / isMatch → A360 Run JavaScript (corpus 11: Open, Run with one list of
+   * parameters, Close). A360 has no regex extract of its own. The parameters are joined with a
+   * separator and split into the list, so they can come from variables at run time.
+   */
+  private regexCall(a: ActionStmt, path: string, fn: 'getRegex' | 'isMatch'): Node | Node[] {
+    const out = a.outputs.value?.name;
+    const text = a.args.text;
+    const pattern = a.args.regexPattern;
+    if (!out || !text || !pattern) return this.todo(path, `${fn}: text, pattern or result missing`);
+    if (a.args.getbyindex?.kind === 'literal' && a.args.getbyindex.value === true)
+      return this.todo(path, 'getRegex: the n-th match is not converted to A360 yet');
+    this.usesRegexScript = true;
+    this.packages.add('JavaScript');
+    const options = a.args.regexOptions;
+    const bits =
+      options?.kind === 'literal' && /^\d+$/.test(String(options.value))
+        ? Number(options.value)
+        : 0;
+    const named = options?.kind === 'literal' ? String(options.value) : '';
+    // .NET RegexOptions: IgnoreCase 1, Multiline 2, Singleline 16
+    const flags =
+      (bits & 1 || /IgnoreCase/i.test(named) ? 'i' : '') +
+        (bits & 2 || /Multiline/i.test(named) ? 'm' : '') +
+        (bits & 16 || /Singleline/i.test(named) ? 's' : '') || '-';
+    const sep: Expr = { kind: 'literal', value: REGEX_SEPARATOR };
+    const parts: Expr[] = [text, sep, pattern];
+    if (fn === 'getRegex') parts.push(sep, a.args.groupnumber ?? { kind: 'literal', value: '0' });
+    parts.push(sep, { kind: 'literal', value: flags });
+    const input = this.extraVariable('rosettaRegexInput', 'STRING');
+    const args = this.extraVariable('rosettaRegexArgs', 'LIST', 'STRING');
+    this.note(
+      'semantic',
+      'This regular expression runs in JavaScript; WAL used .NET rules. Check the pattern.',
+    );
+    const nodes: Node[] = [
+      this.node(`${path}.in`, 'String', 'assign', {
+        attributes: [
+          attr('sourceString', stringValue({ kind: 'template', parts }, this.types, this.sink)),
+        ],
+        returnTo: variableRef(input),
+      }),
+      this.node(`${path}.args`, 'String', 'split', {
+        attributes: [
+          attr('sourceString', { type: 'STRING', expression: `$${input}$` }),
+          attr('delimiter', { type: 'STRING', string: REGEX_SEPARATOR }),
+          attr('isCaseSensitive', { type: 'STRING', string: 'false' }),
+          attr('substrings', { type: 'STRING', string: 'ALL' }),
+        ],
+        returnTo: variableRef(args),
+      }),
+    ];
+    const result = fn === 'getRegex' ? out : this.extraVariable('rosettaRegexResult', 'STRING');
+    nodes.push(
+      this.node(path, 'JavaScript', 'javascript.commands.executeFunction', {
+        attributes: [
+          attr('session', { type: 'STRING', string: REGEX_SESSION }),
+          attr('functionName', { type: 'STRING', string: fn }),
+          attr('argument', variableRef(args)),
+        ],
+        returnTo: variableRef(result),
+      }),
+    );
+    if (fn === 'isMatch') {
+      const assign = (p: string, value: boolean) =>
+        this.node(p, 'Boolean', 'assign', {
+          attributes: [
+            attr('source', { type: 'STRING', string: 'constant' }),
+            attr('userDefined', { type: 'STRING', string: String(value) }),
+          ],
+          returnTo: variableRef(out),
+        });
+      this.packages.add('If');
+      this.packages.add('Boolean');
+      nodes.push(
+        this.node(`${path}.if`, 'If', 'if', {
+          children: [assign(`${path}.true`, true)],
+          branches: [
+            this.node(`${path}.else`, 'If', 'else', { children: [assign(`${path}.false`, false)] }),
+          ],
+          attributes: [
+            this.stringCondition(
+              'EQ',
+              { kind: 'var', name: result, path: [] },
+              { kind: 'literal', value: 'true' },
+            ),
+          ],
+        }),
+      );
+    }
+    return nodes;
+  }
+
+  /** OCR: Capture text by path (corpus 11) into the result; WAL recognizeText / pdfText. */
+  private ocr(a: ActionStmt, path: string, file: Expr | undefined): Node | Node[] {
+    const out = a.outputs.value?.name;
+    if (!out || !file) return this.todo(path, 'OCR: file or result missing');
+    const nodes: Node[] = [
+      this.node(path, 'OCR', 'captureImagebyPath', {
+        attributes: [
+          attr('imagePathOption', { type: 'STRING', string: 'Image Path' }),
+          attr('imagePath', fileValue(file, this.types, this.sink)),
+          attr('checkFilterText', { type: 'BOOLEAN', boolean: false }),
+          attr('checkTrimText', { type: 'BOOLEAN', boolean: false }),
+          attr('loadProfile', { type: 'BOOLEAN', boolean: false }),
+          attr('ocrLocale', { type: 'STRING', string: 'Based on Locale' }),
+        ],
+        returnTo: variableRef(out),
+      }),
+    ];
+    if (a.args.method || a.args.language)
+      this.note(
+        'semantic',
+        'A360 OCR is not the WAL engine (e.g. ABBYY) and reads by locale; check the language and the result quality.',
+      );
+    // A360 stops the bot when OCR fails, so a run that goes on succeeded
+    const success = a.outputs.success?.name;
+    if (success)
+      nodes.push(
+        this.node(`${path}.ok`, 'Boolean', 'assign', {
+          attributes: [
+            attr('source', { type: 'STRING', string: 'constant' }),
+            attr('userDefined', { type: 'STRING', string: 'true' }),
+          ],
+          returnTo: variableRef(success),
+        }),
+      );
+    if (a.outputs.confidence)
+      this.note(
+        'manual',
+        `OCR confidence (${a.outputs.confidence.name}) has no A360 equivalent; its value stays as it was.`,
+      );
+    return nodes;
+  }
+
+  /** The JavaScript session of the regex helpers, opened before the bot and closed after it. */
+  regexScript(): { open: Node; close: Node } {
+    return {
+      open: this.node('n.regex.open', 'JavaScript', 'javascript.commands.openScript', {
+        attributes: [
+          attr('session', { type: 'STRING', string: REGEX_SESSION }),
+          attr('scriptOption', { type: 'STRING', string: 'SCRIPT' }),
+          attr('script', { type: 'STRING', string: REGEX_SCRIPT }),
+        ],
+      }),
+      close: this.node('n.regex.close', 'JavaScript', 'javascript.commands.closeScript', {
+        attributes: [attr('session', { type: 'STRING', string: REGEX_SESSION })],
+      }),
+    };
+  }
 
   /** `$rosettaColumns[$n$]$` gives the letter of column n (index 0 is empty, so n is 1-based). */
   private columnLetters(): string {
@@ -561,6 +734,26 @@ class Generator {
   private action(a: ActionStmt, path: string): Node | Node[] {
     const verb = a.op.startsWith('vendor:ibm-rpa/') ? a.op.slice('vendor:ibm-rpa/'.length) : a.op;
     if (verb === 'excelSet' && a.args.sheet) return this.excelSetOnSheet(a, path);
+    if (verb === 'getRegex' || verb === 'isMatch') return this.regexCall(a, path, verb);
+    if (verb === 'recognizeText') return this.ocr(a, path, a.args.source);
+    if (verb === 'pdfOpen') {
+      // the PDF is read by path in A360 (pdfText below); nothing to open
+      const handle = a.outputs.value?.name;
+      if (handle && a.args.file) this.pdfFiles.set(handle, a.args.file);
+      return [];
+    }
+    if (verb === 'pdfText') {
+      const file = a.args.file?.kind === 'var' ? this.pdfFiles.get(a.args.file.name) : undefined;
+      if (!file)
+        return this.todo(path, 'pdfText: the PDF was not opened with pdfOpen in this script');
+      this.note(
+        'semantic',
+        'The PDF text is read with OCR (Capture text by path); PDF: Extract text writes only to a file.',
+      );
+      return this.ocr(a, path, file);
+    }
+    if (verb === 'pdfClose') return [];
+    if (verb === 'stopExecution') return this.node(path, 'TaskBot', 'stopTask', {});
     if (verb === 'logMessage') return this.logMessage(a, path);
     const write = commands[verb];
     if (!write) return this.todo(path, `${verb} has no A360 conversion yet`);
@@ -793,6 +986,15 @@ function jsonArg(e: Expr | undefined): Record<string, unknown> | undefined {
     return undefined;
   }
 }
+
+/** Regex helpers for getRegex / isMatch, run with A360 Run JavaScript (corpus 11). */
+const REGEX_SESSION = 'RosettaRegex';
+const REGEX_SEPARATOR = '|~|';
+const REGEX_SCRIPT = [
+  'function rx(pattern, flags) { return new RegExp(pattern, flags === "-" ? "" : flags); }',
+  'function getRegex(text, pattern, group, flags) { var m = rx(pattern, flags).exec(text); return m && m[group] != null ? String(m[group]) : ""; }',
+  'function isMatch(text, pattern, flags) { return rx(pattern, flags).test(text) ? "true" : "false"; }',
+].join(' ');
 
 const isTimeSpan = (t: IRType): boolean => t.kind === 'unknown' && t.sourceType === 'TimeSpan';
 
@@ -1203,6 +1405,19 @@ export const commands: Readonly<Record<string, CommandWriter>> = {
       ],
     };
   },
+  // File: Copy (corpus 11): source as a file URI, destination as plain text
+  fileCopy: (a, c) => ({
+    pkg: 'File',
+    command: 'copyFiles',
+    attributes: [
+      attr('sourceFilePath', fileValue(arg(a, 'from'), c.types, c.sink)),
+      attr('destinationPath', stringValue(arg(a, 'to'), c.types, c.sink)),
+      attr('isOverwrite', bool(flag(a, 'overwrite'))),
+      attr('isParallel', bool(false)),
+      attr('isSize', bool(false)),
+      attr('isDate', bool(false)),
+    ],
+  }),
   // Difference between dates, as in an external A360 export (A-25): target minus source
   dateDifference: (a, c) => {
     const out = target(a);
@@ -1267,7 +1482,9 @@ export const commands: Readonly<Record<string, CommandWriter>> = {
 export function generateA360(source: Bot, options: A360Options = {}): A360Bot {
   const bot = undoHelpers(source);
   const g = new Generator(bot, options);
-  const nodes = g.block(bot.body, 'n');
+  const body = g.block(bot.body, 'n');
+  const script = g.usesRegexScript ? g.regexScript() : undefined;
+  const nodes = script ? [script.open, ...body, script.close] : body;
   const variables = [...g.variables(bot.variables), ...g.extraVariables];
   return {
     json: {

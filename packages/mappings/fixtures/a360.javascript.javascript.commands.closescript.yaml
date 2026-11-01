@@ -1,0 +1,12 @@
+id: a360.javascript.javascript.commands.closescript
+from: corpus/a360/11-missing/bot.json
+node:
+  {
+    'uid': 'd7b5342c-8112-4aa8-9b84-95f9a3ac6bd3',
+    'commandName': 'javascript.commands.closeScript',
+    'packageName': 'JavaScript',
+    'disabled': false,
+    'attributes': [{ 'name': 'session', 'value': { 'string': 'Default', 'type': 'STRING' } }],
+  }
+expect:
+  op: javascript.close

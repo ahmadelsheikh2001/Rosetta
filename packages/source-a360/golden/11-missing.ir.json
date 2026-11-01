@@ -1,0 +1,703 @@
+{
+  "id": "11-missing/bot.json",
+  "name": "11-missing",
+  "source": {
+    "platform": "a360",
+    "file": "11-missing/bot.json",
+    "nodePath": []
+  },
+  "variables": [
+    {
+      "name": "SampleNumber",
+      "type": {
+        "kind": "number"
+      },
+      "direction": "local",
+      "sensitive": false
+    },
+    {
+      "name": "SampleString",
+      "type": {
+        "kind": "string"
+      },
+      "direction": "local",
+      "sensitive": false
+    },
+    {
+      "name": "vPos",
+      "type": {
+        "kind": "number"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "defaultValue": {
+        "kind": "literal",
+        "value": 0
+      }
+    },
+    {
+      "name": "vPos2",
+      "type": {
+        "kind": "number"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "defaultValue": {
+        "kind": "literal",
+        "value": 0
+      }
+    },
+    {
+      "name": "vJsArgs",
+      "type": {
+        "kind": "list",
+        "of": {
+          "kind": "string"
+        }
+      },
+      "direction": "local",
+      "sensitive": false,
+      "defaultValue": {
+        "kind": "call",
+        "fn": "list.of",
+        "args": [
+          {
+            "kind": "literal",
+            "value": "Invoice INV-2026-0042 total 300"
+          },
+          {
+            "kind": "literal",
+            "value": "INV-(\\d+)-(\\d+)"
+          },
+          {
+            "kind": "literal",
+            "value": "2"
+          }
+        ]
+      }
+    },
+    {
+      "name": "vMatch",
+      "type": {
+        "kind": "string"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "defaultValue": {
+        "kind": "literal",
+        "value": ""
+      }
+    },
+    {
+      "name": "vOcrText",
+      "type": {
+        "kind": "string"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "defaultValue": {
+        "kind": "literal",
+        "value": ""
+      }
+    },
+    {
+      "name": "vCalc",
+      "type": {
+        "kind": "number"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "defaultValue": {
+        "kind": "literal",
+        "value": 0
+      }
+    },
+    {
+      "name": "vCol",
+      "type": {
+        "kind": "number"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "defaultValue": {
+        "kind": "literal",
+        "value": 3
+      }
+    },
+    {
+      "name": "vRow",
+      "type": {
+        "kind": "number"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "defaultValue": {
+        "kind": "literal",
+        "value": 7
+      }
+    },
+    {
+      "name": "vCols",
+      "type": {
+        "kind": "list",
+        "of": {
+          "kind": "string"
+        }
+      },
+      "direction": "local",
+      "sensitive": false,
+      "defaultValue": {
+        "kind": "call",
+        "fn": "list.of",
+        "args": [
+          {
+            "kind": "literal",
+            "value": ""
+          },
+          {
+            "kind": "literal",
+            "value": "A"
+          },
+          {
+            "kind": "literal",
+            "value": "B"
+          },
+          {
+            "kind": "literal",
+            "value": "C"
+          }
+        ]
+      }
+    },
+    {
+      "name": "vCell",
+      "type": {
+        "kind": "string"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "defaultValue": {
+        "kind": "literal",
+        "value": ""
+      }
+    }
+  ],
+  "packages": [
+    {
+      "name": "File",
+      "version": "6.16.2"
+    },
+    {
+      "name": "JavaScript",
+      "version": "2.18.3"
+    },
+    {
+      "name": "MessageBox",
+      "version": "3.8.1"
+    },
+    {
+      "name": "Number",
+      "version": "3.11.5"
+    },
+    {
+      "name": "OCR",
+      "version": "2.18.3"
+    },
+    {
+      "name": "PDF",
+      "version": "3.11.0"
+    },
+    {
+      "name": "String",
+      "version": "5.12.6"
+    },
+    {
+      "name": "TaskBot",
+      "version": "2.10.0-20241119-100739"
+    }
+  ],
+  "body": [
+    {
+      "id": "67b8da20-4da0-4494-afaf-8322349f175c",
+      "source": {
+        "platform": "a360",
+        "file": "11-missing/bot.json",
+        "nodePath": [
+          0
+        ],
+        "nodeId": "67b8da20-4da0-4494-afaf-8322349f175c",
+        "label": "File/copyFiles"
+      },
+      "kind": "action",
+      "op": "vendor:a360/File/copyFiles",
+      "args": {
+        "sourceFilePath": {
+          "kind": "literal",
+          "value": "file:///C:/RosettaTest/out10/note.txt"
+        },
+        "destinationPath": {
+          "kind": "literal",
+          "value": "C:\\RosettaTest\\note-copy.txt"
+        },
+        "isOverwrite": {
+          "kind": "literal",
+          "value": true
+        },
+        "isParallel": {
+          "kind": "literal",
+          "value": false
+        },
+        "isSize": {
+          "kind": "literal",
+          "value": false
+        },
+        "isDate": {
+          "kind": "literal",
+          "value": false
+        }
+      },
+      "outputs": {}
+    },
+    {
+      "id": "0af6a7c0-e683-4641-ab2a-ed63e7bf1e00",
+      "source": {
+        "platform": "a360",
+        "file": "11-missing/bot.json",
+        "nodePath": [
+          1
+        ],
+        "nodeId": "0af6a7c0-e683-4641-ab2a-ed63e7bf1e00",
+        "label": "String/find"
+      },
+      "kind": "action",
+      "op": "vendor:a360/String/find",
+      "args": {
+        "sourceString": {
+          "kind": "literal",
+          "value": "Invoice INV-2026-0042 total 300"
+        },
+        "find": {
+          "kind": "literal",
+          "value": "INV-\\d+"
+        },
+        "isCaseSensitive": {
+          "kind": "literal",
+          "value": "false"
+        },
+        "isRegularExpression": {
+          "kind": "literal",
+          "value": "true"
+        },
+        "startIndex": {
+          "kind": "literal",
+          "value": 1
+        }
+      },
+      "outputs": {
+        "result": {
+          "kind": "var",
+          "name": "vPos",
+          "path": []
+        }
+      }
+    },
+    {
+      "id": "a72e9b64-53dd-4f1d-a227-25fc91b29a77",
+      "source": {
+        "platform": "a360",
+        "file": "11-missing/bot.json",
+        "nodePath": [
+          2
+        ],
+        "nodeId": "a72e9b64-53dd-4f1d-a227-25fc91b29a77",
+        "label": "String/find"
+      },
+      "kind": "action",
+      "op": "vendor:a360/String/find",
+      "args": {
+        "sourceString": {
+          "kind": "literal",
+          "value": "Invoice INV-2026-0042 total 300"
+        },
+        "find": {
+          "kind": "literal",
+          "value": "XYZ\\d+"
+        },
+        "isCaseSensitive": {
+          "kind": "literal",
+          "value": "false"
+        },
+        "isRegularExpression": {
+          "kind": "literal",
+          "value": "true"
+        },
+        "startIndex": {
+          "kind": "literal",
+          "value": 1
+        }
+      },
+      "outputs": {
+        "result": {
+          "kind": "var",
+          "name": "vPos2",
+          "path": []
+        }
+      }
+    },
+    {
+      "id": "baea3c39-3a1f-4f6c-9761-73bd78121c5a",
+      "source": {
+        "platform": "a360",
+        "file": "11-missing/bot.json",
+        "nodePath": [
+          3
+        ],
+        "nodeId": "baea3c39-3a1f-4f6c-9761-73bd78121c5a",
+        "label": "JavaScript/javascript.commands.openScript"
+      },
+      "kind": "action",
+      "op": "vendor:a360/JavaScript/javascript.commands.openScript",
+      "args": {
+        "session": {
+          "kind": "literal",
+          "value": "Default"
+        },
+        "scriptOption": {
+          "kind": "literal",
+          "value": "SCRIPT"
+        },
+        "script": {
+          "kind": "literal",
+          "value": "function getRegex(text, pattern, group) { var m = new RegExp(pattern).exec(text); return m ? m[group] : \"\"; }"
+        }
+      },
+      "outputs": {}
+    },
+    {
+      "id": "1a4774a6-d0d9-4982-980f-9882f220fa34",
+      "source": {
+        "platform": "a360",
+        "file": "11-missing/bot.json",
+        "nodePath": [
+          4
+        ],
+        "nodeId": "1a4774a6-d0d9-4982-980f-9882f220fa34",
+        "label": "JavaScript/javascript.commands.executeFunction"
+      },
+      "kind": "action",
+      "op": "vendor:a360/JavaScript/javascript.commands.executeFunction",
+      "args": {
+        "session": {
+          "kind": "literal",
+          "value": "Default"
+        },
+        "functionName": {
+          "kind": "literal",
+          "value": "getRegex"
+        },
+        "argument": {
+          "kind": "var",
+          "name": "vJsArgs",
+          "path": []
+        }
+      },
+      "outputs": {
+        "result": {
+          "kind": "var",
+          "name": "vMatch",
+          "path": []
+        }
+      }
+    },
+    {
+      "id": "d7b5342c-8112-4aa8-9b84-95f9a3ac6bd3",
+      "source": {
+        "platform": "a360",
+        "file": "11-missing/bot.json",
+        "nodePath": [
+          5
+        ],
+        "nodeId": "d7b5342c-8112-4aa8-9b84-95f9a3ac6bd3",
+        "label": "JavaScript/javascript.commands.closeScript"
+      },
+      "kind": "action",
+      "op": "vendor:a360/JavaScript/javascript.commands.closeScript",
+      "args": {
+        "session": {
+          "kind": "literal",
+          "value": "Default"
+        }
+      },
+      "outputs": {}
+    },
+    {
+      "id": "9bbd3b2b-b8ce-43a0-b473-4a236d71fcc4",
+      "source": {
+        "platform": "a360",
+        "file": "11-missing/bot.json",
+        "nodePath": [
+          6
+        ],
+        "nodeId": "9bbd3b2b-b8ce-43a0-b473-4a236d71fcc4",
+        "label": "PDF/extractText"
+      },
+      "kind": "action",
+      "op": "vendor:a360/PDF/extractText",
+      "args": {
+        "filePath": {
+          "kind": "literal",
+          "value": "file:///C:/RosettaTest/sample.pdf"
+        },
+        "extractTextType": {
+          "kind": "literal",
+          "value": "PLAIN"
+        },
+        "pageOption": {
+          "kind": "literal",
+          "value": "ALL"
+        },
+        "outputFile": {
+          "kind": "literal",
+          "value": "file:///C:/RosettaTest/vPdfText.txt"
+        },
+        "overwriteFile": {
+          "kind": "literal",
+          "value": true
+        }
+      },
+      "outputs": {}
+    },
+    {
+      "id": "d10a8afb-bea3-456e-aa1d-1e929e06b5ee",
+      "source": {
+        "platform": "a360",
+        "file": "11-missing/bot.json",
+        "nodePath": [
+          7
+        ],
+        "nodeId": "d10a8afb-bea3-456e-aa1d-1e929e06b5ee",
+        "label": "OCR/captureImagebyPath"
+      },
+      "kind": "action",
+      "op": "vendor:a360/OCR/captureImagebyPath",
+      "args": {
+        "imagePathOption": {
+          "kind": "literal",
+          "value": "Image Path"
+        },
+        "imagePath": {
+          "kind": "literal",
+          "value": "file:///C:/RosettaTest/sample.png"
+        },
+        "checkFilterText": {
+          "kind": "literal",
+          "value": false
+        },
+        "checkTrimText": {
+          "kind": "literal",
+          "value": false
+        },
+        "loadProfile": {
+          "kind": "literal",
+          "value": false
+        },
+        "ocrLocale": {
+          "kind": "literal",
+          "value": "Based on Locale"
+        }
+      },
+      "outputs": {
+        "result": {
+          "kind": "var",
+          "name": "vOcrText",
+          "path": []
+        }
+      }
+    },
+    {
+      "id": "1648352f-2fe0-4fb8-9a81-644b464fc3f2",
+      "source": {
+        "platform": "a360",
+        "file": "11-missing/bot.json",
+        "nodePath": [
+          8
+        ],
+        "nodeId": "1648352f-2fe0-4fb8-9a81-644b464fc3f2",
+        "label": "Number/assignToNumber"
+      },
+      "kind": "action",
+      "op": "vendor:a360/Number/assignToNumber",
+      "args": {
+        "input": {
+          "kind": "template",
+          "parts": [
+            {
+              "kind": "var",
+              "name": "vPos",
+              "path": []
+            },
+            {
+              "kind": "literal",
+              "value": " * 10 / 2"
+            }
+          ]
+        }
+      },
+      "outputs": {
+        "result": {
+          "kind": "var",
+          "name": "vCalc",
+          "path": []
+        }
+      }
+    },
+    {
+      "id": "dbc6d474-ea5a-4ad7-9a9d-f08a542ee8eb",
+      "source": {
+        "platform": "a360",
+        "file": "11-missing/bot.json",
+        "nodePath": [
+          9
+        ],
+        "nodeId": "dbc6d474-ea5a-4ad7-9a9d-f08a542ee8eb",
+        "label": "String/assign"
+      },
+      "kind": "action",
+      "op": "vendor:a360/String/assign",
+      "args": {
+        "sourceString": {
+          "kind": "template",
+          "parts": [
+            {
+              "kind": "var",
+              "name": "vCols",
+              "path": [
+                {
+                  "kind": "index",
+                  "index": {
+                    "kind": "var",
+                    "name": "vCol",
+                    "path": []
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "call",
+              "fn": "convert.toString",
+              "args": [
+                {
+                  "kind": "var",
+                  "name": "vRow",
+                  "path": []
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "outputs": {
+        "result": {
+          "kind": "var",
+          "name": "vCell",
+          "path": []
+        }
+      }
+    },
+    {
+      "id": "a1ede2f6-711b-4866-8eac-97024974948d",
+      "source": {
+        "platform": "a360",
+        "file": "11-missing/bot.json",
+        "nodePath": [
+          10
+        ],
+        "nodeId": "a1ede2f6-711b-4866-8eac-97024974948d",
+        "label": "MessageBox/messageBox"
+      },
+      "kind": "action",
+      "op": "vendor:a360/MessageBox/messageBox",
+      "args": {
+        "title": {
+          "kind": "literal",
+          "value": "Automation Anywhere Enterprise Client"
+        },
+        "content": {
+          "kind": "template",
+          "parts": [
+            {
+              "kind": "literal",
+              "value": "pos="
+            },
+            {
+              "kind": "var",
+              "name": "vPos",
+              "path": []
+            },
+            {
+              "kind": "literal",
+              "value": " pos2="
+            },
+            {
+              "kind": "var",
+              "name": "vPos2",
+              "path": []
+            },
+            {
+              "kind": "literal",
+              "value": " match="
+            },
+            {
+              "kind": "var",
+              "name": "vMatch",
+              "path": []
+            },
+            {
+              "kind": "literal",
+              "value": " calc="
+            },
+            {
+              "kind": "var",
+              "name": "vCalc",
+              "path": []
+            },
+            {
+              "kind": "literal",
+              "value": " cell="
+            },
+            {
+              "kind": "var",
+              "name": "vCell",
+              "path": []
+            }
+          ]
+        },
+        "scrollLines": {
+          "kind": "literal",
+          "value": 30
+        },
+        "closeMsgBox": {
+          "kind": "literal",
+          "value": false
+        }
+      },
+      "outputs": {}
+    },
+    {
+      "id": "9e1b330a-29e0-4de1-ac14-2db3a1e79473",
+      "source": {
+        "platform": "a360",
+        "file": "11-missing/bot.json",
+        "nodePath": [
+          11
+        ],
+        "nodeId": "9e1b330a-29e0-4de1-ac14-2db3a1e79473",
+        "label": "TaskBot/stopTask"
+      },
+      "kind": "action",
+      "op": "vendor:a360/TaskBot/stopTask",
+      "args": {},
+      "outputs": {}
+    }
+  ]
+}

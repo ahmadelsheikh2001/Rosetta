@@ -1,0 +1,25 @@
+id: a360.pdf.extracttext
+from: corpus/a360/11-missing/bot.json
+node:
+  {
+    'uid': '9bbd3b2b-b8ce-43a0-b473-4a236d71fcc4',
+    'commandName': 'extractText',
+    'packageName': 'PDF',
+    'disabled': false,
+    'attributes':
+      [
+        {
+          'name': 'filePath',
+          'value': { 'type': 'FILE', 'string': 'file:///C:/RosettaTest/sample.pdf' },
+        },
+        { 'name': 'extractTextType', 'value': { 'type': 'STRING', 'string': 'PLAIN' } },
+        { 'name': 'pageOption', 'value': { 'type': 'STRING', 'string': 'ALL' } },
+        {
+          'name': 'outputFile',
+          'value': { 'type': 'FILE', 'string': 'file:///C:/RosettaTest/vPdfText.txt' },
+        },
+        { 'name': 'overwriteFile', 'value': { 'type': 'BOOLEAN', 'boolean': true } },
+      ],
+  }
+expect:
+  op: pdf.extractText

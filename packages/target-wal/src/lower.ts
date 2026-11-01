@@ -680,7 +680,9 @@ class Lowerer {
         }
       } else if (d?.kind === 'call' && d.fn === 'list.of' && d.args.length > 0) {
         const items = d.args.map((a) => (a.kind === 'literal' ? String(a.value) : undefined));
-        if (items.every((i): i is string => i !== undefined && !/[,[\]"]/.test(i))) {
+        // a backslash would need escaping inside the list text (corpus 11: `INV-(\d+)`); such items
+        // are added one by one instead, where values are escaped
+        if (items.every((i): i is string => i !== undefined && !/[,[\]"\\]/.test(i))) {
           // documented: defVar --type List --innertype String --value "[a,b,c]"
           line += ` --value "[${items.join(',')}]"`;
           notes.push(docNote('list initial value "[a,b,c]"'));

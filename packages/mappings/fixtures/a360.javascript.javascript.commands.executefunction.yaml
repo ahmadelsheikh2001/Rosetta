@@ -1,0 +1,18 @@
+id: a360.javascript.javascript.commands.executefunction
+from: corpus/a360/11-missing/bot.json
+node:
+  {
+    'uid': '1a4774a6-d0d9-4982-980f-9882f220fa34',
+    'commandName': 'javascript.commands.executeFunction',
+    'packageName': 'JavaScript',
+    'disabled': false,
+    'attributes':
+      [
+        { 'name': 'session', 'value': { 'type': 'STRING', 'string': 'Default' } },
+        { 'name': 'functionName', 'value': { 'type': 'STRING', 'string': 'getRegex' } },
+        { 'name': 'argument', 'value': { 'type': 'VARIABLE', 'variableName': 'vJsArgs' } },
+      ],
+    'returnTo': { 'type': 'VARIABLE', 'variableName': 'vMatch' },
+  }
+expect:
+  op: javascript.run

@@ -1,0 +1,24 @@
+id: a360.ocr.captureimagebypath
+from: corpus/a360/11-missing/bot.json
+node:
+  {
+    'uid': 'd10a8afb-bea3-456e-aa1d-1e929e06b5ee',
+    'commandName': 'captureImagebyPath',
+    'packageName': 'OCR',
+    'disabled': false,
+    'attributes':
+      [
+        { 'name': 'imagePathOption', 'value': { 'type': 'STRING', 'string': 'Image Path' } },
+        {
+          'name': 'imagePath',
+          'value': { 'type': 'FILE', 'string': 'file:///C:/RosettaTest/sample.png' },
+        },
+        { 'name': 'checkFilterText', 'value': { 'type': 'BOOLEAN', 'boolean': false } },
+        { 'name': 'checkTrimText', 'value': { 'type': 'BOOLEAN', 'boolean': false } },
+        { 'name': 'loadProfile', 'value': { 'type': 'BOOLEAN', 'boolean': false } },
+        { 'name': 'ocrLocale', 'value': { 'type': 'STRING', 'string': 'Based on Locale' } },
+      ],
+    'returnTo': { 'type': 'VARIABLE', 'variableName': 'vOcrText' },
+  }
+expect:
+  op: ocr.captureByPath

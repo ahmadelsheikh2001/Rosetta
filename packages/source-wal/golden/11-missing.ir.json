@@ -1,0 +1,793 @@
+{
+  "id": "11-missing.wal",
+  "name": "11-missing",
+  "source": {
+    "platform": "ibm-rpa",
+    "file": "11-missing.wal",
+    "nodePath": []
+  },
+  "variables": [
+    {
+      "name": "SampleNumber",
+      "type": {
+        "kind": "number"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "11-missing.wal",
+        "nodePath": [
+          9
+        ],
+        "nodeId": "L10",
+        "label": "defVar"
+      }
+    },
+    {
+      "name": "SampleString",
+      "type": {
+        "kind": "string"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "11-missing.wal",
+        "nodePath": [
+          10
+        ],
+        "nodeId": "L11",
+        "label": "defVar"
+      }
+    },
+    {
+      "name": "vPos",
+      "type": {
+        "kind": "number"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "defaultValue": {
+        "kind": "literal",
+        "value": 0
+      },
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "11-missing.wal",
+        "nodePath": [
+          11
+        ],
+        "nodeId": "L12",
+        "label": "defVar"
+      }
+    },
+    {
+      "name": "vPos2",
+      "type": {
+        "kind": "number"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "defaultValue": {
+        "kind": "literal",
+        "value": 0
+      },
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "11-missing.wal",
+        "nodePath": [
+          12
+        ],
+        "nodeId": "L13",
+        "label": "defVar"
+      }
+    },
+    {
+      "name": "vJsArgs",
+      "type": {
+        "kind": "list",
+        "of": {
+          "kind": "string"
+        }
+      },
+      "direction": "local",
+      "sensitive": false,
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "11-missing.wal",
+        "nodePath": [
+          13
+        ],
+        "nodeId": "L14",
+        "label": "defVar"
+      }
+    },
+    {
+      "name": "vMatch",
+      "type": {
+        "kind": "string"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "11-missing.wal",
+        "nodePath": [
+          14
+        ],
+        "nodeId": "L15",
+        "label": "defVar"
+      }
+    },
+    {
+      "name": "vOcrText",
+      "type": {
+        "kind": "string"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "11-missing.wal",
+        "nodePath": [
+          15
+        ],
+        "nodeId": "L16",
+        "label": "defVar"
+      }
+    },
+    {
+      "name": "vCalc",
+      "type": {
+        "kind": "number"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "defaultValue": {
+        "kind": "literal",
+        "value": 0
+      },
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "11-missing.wal",
+        "nodePath": [
+          16
+        ],
+        "nodeId": "L17",
+        "label": "defVar"
+      }
+    },
+    {
+      "name": "vCol",
+      "type": {
+        "kind": "number"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "defaultValue": {
+        "kind": "literal",
+        "value": 3
+      },
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "11-missing.wal",
+        "nodePath": [
+          17
+        ],
+        "nodeId": "L18",
+        "label": "defVar"
+      }
+    },
+    {
+      "name": "vRow",
+      "type": {
+        "kind": "number"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "defaultValue": {
+        "kind": "literal",
+        "value": 7
+      },
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "11-missing.wal",
+        "nodePath": [
+          18
+        ],
+        "nodeId": "L19",
+        "label": "defVar"
+      }
+    },
+    {
+      "name": "vCols",
+      "type": {
+        "kind": "list",
+        "of": {
+          "kind": "string"
+        }
+      },
+      "direction": "local",
+      "sensitive": false,
+      "defaultValue": {
+        "kind": "call",
+        "fn": "list.of",
+        "args": [
+          {
+            "kind": "literal",
+            "value": "A"
+          },
+          {
+            "kind": "literal",
+            "value": "B"
+          },
+          {
+            "kind": "literal",
+            "value": "C"
+          }
+        ]
+      },
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "11-missing.wal",
+        "nodePath": [
+          19
+        ],
+        "nodeId": "L20",
+        "label": "defVar"
+      }
+    },
+    {
+      "name": "vCell",
+      "type": {
+        "kind": "string"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "11-missing.wal",
+        "nodePath": [
+          20
+        ],
+        "nodeId": "L21",
+        "label": "defVar"
+      }
+    },
+    {
+      "name": "rosettaItem1",
+      "type": {
+        "kind": "string"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "11-missing.wal",
+        "nodePath": [
+          22
+        ],
+        "nodeId": "L23",
+        "label": "defVar"
+      }
+    },
+    {
+      "name": "rosettaIndex2",
+      "type": {
+        "kind": "number"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "11-missing.wal",
+        "nodePath": [
+          23
+        ],
+        "nodeId": "L24",
+        "label": "defVar"
+      }
+    }
+  ],
+  "packages": [],
+  "body": [
+    {
+      "id": "L26",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "11-missing.wal",
+        "nodePath": [
+          25
+        ],
+        "nodeId": "L26",
+        "label": "add @ line 26"
+      },
+      "kind": "action",
+      "op": "vendor:ibm-rpa/add",
+      "args": {
+        "collection": {
+          "kind": "var",
+          "name": "vJsArgs",
+          "path": []
+        },
+        "value": {
+          "kind": "literal",
+          "value": "Invoice INV-2026-0042 total 300"
+        }
+      },
+      "outputs": {}
+    },
+    {
+      "id": "L27",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "11-missing.wal",
+        "nodePath": [
+          26
+        ],
+        "nodeId": "L27",
+        "label": "add @ line 27"
+      },
+      "kind": "action",
+      "op": "vendor:ibm-rpa/add",
+      "args": {
+        "collection": {
+          "kind": "var",
+          "name": "vJsArgs",
+          "path": []
+        },
+        "value": {
+          "kind": "literal",
+          "value": "INV-(\\d+)-(\\d+)"
+        }
+      },
+      "outputs": {}
+    },
+    {
+      "id": "L28",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "11-missing.wal",
+        "nodePath": [
+          27
+        ],
+        "nodeId": "L28",
+        "label": "add @ line 28"
+      },
+      "kind": "action",
+      "op": "vendor:ibm-rpa/add",
+      "args": {
+        "collection": {
+          "kind": "var",
+          "name": "vJsArgs",
+          "path": []
+        },
+        "value": {
+          "kind": "literal",
+          "value": "2"
+        }
+      },
+      "outputs": {}
+    },
+    {
+      "id": "L29",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "11-missing.wal",
+        "nodePath": [
+          28
+        ],
+        "nodeId": "L29",
+        "label": "fileCopy @ line 29"
+      },
+      "kind": "action",
+      "op": "vendor:ibm-rpa/fileCopy",
+      "args": {
+        "from": {
+          "kind": "literal",
+          "value": "C:\\RosettaTest\\out10\\note.txt"
+        },
+        "to": {
+          "kind": "literal",
+          "value": "C:\\RosettaTest\\note-copy.txt"
+        }
+      },
+      "outputs": {}
+    },
+    {
+      "id": "L30",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "11-missing.wal",
+        "nodePath": [
+          29
+        ],
+        "nodeId": "L30",
+        "label": "parseText @ line 30"
+      },
+      "kind": "action",
+      "op": "vendor:ibm-rpa/parseText",
+      "args": {
+        "text": {
+          "kind": "literal",
+          "value": "Invoice INV-2026-0042 total 300"
+        },
+        "useRegex": {
+          "kind": "literal",
+          "value": true
+        },
+        "regexPattern": {
+          "kind": "literal",
+          "value": "INV-\\\\d\\+"
+        },
+        "regexOptions": {
+          "kind": "literal",
+          "value": "IgnoreCase"
+        },
+        "startindex": {
+          "kind": "literal",
+          "value": 1
+        }
+      },
+      "outputs": {
+        "value": {
+          "kind": "var",
+          "name": "vPos",
+          "path": []
+        }
+      }
+    },
+    {
+      "id": "L31",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "11-missing.wal",
+        "nodePath": [
+          30
+        ],
+        "nodeId": "L31",
+        "label": "parseText @ line 31"
+      },
+      "kind": "action",
+      "op": "vendor:ibm-rpa/parseText",
+      "args": {
+        "text": {
+          "kind": "literal",
+          "value": "Invoice INV-2026-0042 total 300"
+        },
+        "useRegex": {
+          "kind": "literal",
+          "value": true
+        },
+        "regexPattern": {
+          "kind": "literal",
+          "value": "XYZ\\\\d\\+"
+        },
+        "regexOptions": {
+          "kind": "literal",
+          "value": "IgnoreCase"
+        },
+        "startindex": {
+          "kind": "literal",
+          "value": 1
+        }
+      },
+      "outputs": {
+        "value": {
+          "kind": "var",
+          "name": "vPos2",
+          "path": []
+        }
+      }
+    },
+    {
+      "id": "L32",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "11-missing.wal",
+        "nodePath": [
+          31
+        ],
+        "nodeId": "L32"
+      },
+      "kind": "comment",
+      "text": "TODO [ROSETTA] javascript.open: no conversion for this command yet"
+    },
+    {
+      "id": "L33",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "11-missing.wal",
+        "nodePath": [
+          32
+        ],
+        "nodeId": "L33"
+      },
+      "kind": "comment",
+      "text": "TODO [ROSETTA] javascript.run: no conversion for this command yet"
+    },
+    {
+      "id": "L34",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "11-missing.wal",
+        "nodePath": [
+          33
+        ],
+        "nodeId": "L34"
+      },
+      "kind": "comment",
+      "text": "TODO [ROSETTA] javascript.close: no conversion for this command yet"
+    },
+    {
+      "id": "L35",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "11-missing.wal",
+        "nodePath": [
+          34
+        ],
+        "nodeId": "L35"
+      },
+      "kind": "comment",
+      "text": "TODO [ROSETTA] pdf.extractText: no conversion for this command yet"
+    },
+    {
+      "id": "L36",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "11-missing.wal",
+        "nodePath": [
+          35
+        ],
+        "nodeId": "L36"
+      },
+      "kind": "comment",
+      "text": "TODO [ROSETTA] ocr.captureByPath: no conversion for this command yet"
+    },
+    {
+      "id": "L37",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "11-missing.wal",
+        "nodePath": [
+          36
+        ],
+        "nodeId": "L37",
+        "label": "evaluate @ line 37"
+      },
+      "kind": "action",
+      "op": "vendor:ibm-rpa/evaluate",
+      "args": {
+        "expression": {
+          "kind": "template",
+          "parts": [
+            {
+              "kind": "var",
+              "name": "vPos",
+              "path": []
+            },
+            {
+              "kind": "literal",
+              "value": " * 10 / 2"
+            }
+          ]
+        }
+      },
+      "outputs": {
+        "value": {
+          "kind": "var",
+          "name": "vCalc",
+          "path": []
+        }
+      }
+    },
+    {
+      "id": "L38",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "11-missing.wal",
+        "nodePath": [
+          37
+        ],
+        "nodeId": "L38",
+        "label": "evaluate @ line 38"
+      },
+      "kind": "action",
+      "op": "vendor:ibm-rpa/evaluate",
+      "args": {
+        "expression": {
+          "kind": "template",
+          "parts": [
+            {
+              "kind": "var",
+              "name": "vCol",
+              "path": []
+            },
+            {
+              "kind": "literal",
+              "value": " + 1"
+            }
+          ]
+        }
+      },
+      "outputs": {
+        "value": {
+          "kind": "var",
+          "name": "rosettaIndex2",
+          "path": []
+        }
+      }
+    },
+    {
+      "id": "L39",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "11-missing.wal",
+        "nodePath": [
+          38
+        ],
+        "nodeId": "L39",
+        "label": "get @ line 39"
+      },
+      "kind": "action",
+      "op": "vendor:ibm-rpa/get",
+      "args": {
+        "collection": {
+          "kind": "var",
+          "name": "vCols",
+          "path": []
+        },
+        "index": {
+          "kind": "var",
+          "name": "rosettaIndex2",
+          "path": []
+        }
+      },
+      "outputs": {
+        "value": {
+          "kind": "var",
+          "name": "rosettaItem1",
+          "path": []
+        }
+      }
+    },
+    {
+      "id": "L40",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "11-missing.wal",
+        "nodePath": [
+          39
+        ],
+        "nodeId": "L40",
+        "label": "setVar @ line 40"
+      },
+      "kind": "action",
+      "op": "vendor:ibm-rpa/setVar",
+      "args": {
+        "name": {
+          "kind": "var",
+          "name": "vCell",
+          "path": []
+        },
+        "value": {
+          "kind": "template",
+          "parts": [
+            {
+              "kind": "var",
+              "name": "rosettaItem1",
+              "path": []
+            },
+            {
+              "kind": "var",
+              "name": "vRow",
+              "path": []
+            }
+          ]
+        }
+      },
+      "outputs": {}
+    },
+    {
+      "id": "L41",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "11-missing.wal",
+        "nodePath": [
+          40
+        ],
+        "nodeId": "L41",
+        "label": "messageBox @ line 41"
+      },
+      "kind": "action",
+      "op": "vendor:ibm-rpa/messageBox",
+      "args": {
+        "title": {
+          "kind": "literal",
+          "value": "Automation Anywhere Enterprise Client"
+        },
+        "text": {
+          "kind": "template",
+          "parts": [
+            {
+              "kind": "literal",
+              "value": "pos="
+            },
+            {
+              "kind": "var",
+              "name": "vPos",
+              "path": []
+            },
+            {
+              "kind": "literal",
+              "value": " pos2="
+            },
+            {
+              "kind": "var",
+              "name": "vPos2",
+              "path": []
+            },
+            {
+              "kind": "literal",
+              "value": " match="
+            },
+            {
+              "kind": "var",
+              "name": "vMatch",
+              "path": []
+            },
+            {
+              "kind": "literal",
+              "value": " calc="
+            },
+            {
+              "kind": "var",
+              "name": "vCalc",
+              "path": []
+            },
+            {
+              "kind": "literal",
+              "value": " cell="
+            },
+            {
+              "kind": "var",
+              "name": "vCell",
+              "path": []
+            }
+          ]
+        },
+        "icon": {
+          "kind": "literal",
+          "value": "Information"
+        },
+        "buttons": {
+          "kind": "literal",
+          "value": "OK"
+        },
+        "defaultbutton": {
+          "kind": "literal",
+          "value": "FirstButton"
+        }
+      },
+      "outputs": {}
+    },
+    {
+      "id": "L42",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "11-missing.wal",
+        "nodePath": [
+          41
+        ],
+        "nodeId": "L42",
+        "label": "stopExecution @ line 42"
+      },
+      "kind": "action",
+      "op": "vendor:ibm-rpa/stopExecution",
+      "args": {},
+      "outputs": {}
+    }
+  ]
+}

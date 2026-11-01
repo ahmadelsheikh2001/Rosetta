@@ -1,0 +1,24 @@
+id: a360.javascript.javascript.commands.openscript
+from: corpus/a360/11-missing/bot.json
+node:
+  {
+    'uid': 'baea3c39-3a1f-4f6c-9761-73bd78121c5a',
+    'commandName': 'javascript.commands.openScript',
+    'packageName': 'JavaScript',
+    'disabled': false,
+    'attributes':
+      [
+        { 'name': 'session', 'value': { 'type': 'STRING', 'string': 'Default' } },
+        { 'name': 'scriptOption', 'value': { 'type': 'STRING', 'string': 'SCRIPT' } },
+        {
+          'name': 'script',
+          'value':
+            {
+              'type': 'STRING',
+              'string': 'function getRegex(text, pattern, group) { var m = new RegExp(pattern).exec(text); return m ? m[group] : ""; }',
+            },
+        },
+      ],
+  }
+expect:
+  op: javascript.open

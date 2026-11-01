@@ -1,0 +1,42 @@
+// ======================================================================
+// Bot:         11-missing
+// Source:      11-missing/bot.json (Automation Anywhere A360)
+// Converted:   2026-10-29T00:00:00.000Z
+// Generator:   RPA Rosetta 0.0.0
+// Inputs:      none
+// Outputs:     none
+// Status:      DRAFT - syntax from the IBM RPA 30.0.x reference, being verified in Studio 30.0.2
+// ======================================================================
+defVar --name SampleNumber --type Numeric
+defVar --name SampleString --type String
+defVar --name vPos --type Numeric --value 0
+defVar --name vPos2 --type Numeric --value 0
+defVar --name vJsArgs --type List --innertype String
+defVar --name vMatch --type String
+defVar --name vOcrText --type String
+defVar --name vCalc --type Numeric --value 0
+defVar --name vCol --type Numeric --value 3
+defVar --name vRow --type Numeric --value 7
+defVar --name vCols --type List --innertype String --value "[,A,B,C]"
+defVar --name vCell --type String
+// ---- Helper variables added by the conversion ----
+defVar --name rosettaItem1 --type String
+defVar --name rosettaIndex2 --type Numeric
+// ---- Initial values ----
+add --collection "${vJsArgs}" --value "Invoice INV-2026-0042 total 300"
+add --collection "${vJsArgs}" --value "INV-(\\d+)-(\\d+)"
+add --collection "${vJsArgs}" --value "2"
+fileCopy --from "C:\\RosettaTest\\out10\\note.txt" --to "C:\\RosettaTest\\note-copy.txt"
+parseText --text "Invoice INV-2026-0042 total 300" --useRegex --regexPattern "INV-\\\\d\\+" --regexOptions "IgnoreCase" --startindex 1 vPos=value
+parseText --text "Invoice INV-2026-0042 total 300" --useRegex --regexPattern "XYZ\\\\d\\+" --regexOptions "IgnoreCase" --startindex 1 vPos2=value
+// TODO [ROSETTA] javascript.open: no conversion for this command yet
+// TODO [ROSETTA] javascript.run: no conversion for this command yet
+// TODO [ROSETTA] javascript.close: no conversion for this command yet
+// TODO [ROSETTA] pdf.extractText: no conversion for this command yet
+// TODO [ROSETTA] ocr.captureByPath: no conversion for this command yet
+evaluate --expression "${vPos} * 10 / 2" vCalc=value
+evaluate --expression "${vCol} + 1" rosettaIndex2=value
+get --collection "${vCols}" --index ${rosettaIndex2} rosettaItem1=value
+setVar --name "${vCell}" --value "${rosettaItem1}${vRow}"
+messageBox --title "Automation Anywhere Enterprise Client" --text "pos=${vPos} pos2=${vPos2} match=${vMatch} calc=${vCalc} cell=${vCell}" --icon "Information" --buttons "OK" --defaultbutton "FirstButton"
+stopExecution

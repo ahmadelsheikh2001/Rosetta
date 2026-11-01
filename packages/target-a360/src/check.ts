@@ -110,6 +110,18 @@ export function checkA360(bot: Json): A360Problem[] {
           `Set cell ${text} is in the header row of session "${session}", opened with "Sheet contains a header": A360 stops the bot.`,
         );
     }
+    // a number or boolean variable in text needs .Number:toString / .Boolean:toString (corpus 11:
+    // the editor marks the message box "Invalid expression"); a list index takes the number itself
+    if (x.type === 'STRING' && typeof x.expression === 'string')
+      for (const m of x.expression.matchAll(/(?<![[{])\$([A-Za-z_]\w*)\$/g)) {
+        const name = m[1] ?? '';
+        const type = variables.get(name.toLowerCase());
+        if (type === 'NUMBER' || type === 'BOOLEAN')
+          add(
+            `${at}.expression`,
+            `$${name}$ is a ${type} variable inside text: write $${name}.${type === 'NUMBER' ? 'Number' : 'Boolean'}:toString$ ("Invalid expression").`,
+          );
+      }
     if (x.type === 'VARIABLE' && typeof x.variableName === 'string') declared(x.variableName, at);
     if (x.type === 'VARIABLEMAP' && Array.isArray(x.variableMapNames))
       for (const n of x.variableMapNames) declared(String(n), at);

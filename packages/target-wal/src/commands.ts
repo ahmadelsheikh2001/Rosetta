@@ -294,6 +294,15 @@ export const lowerers: Readonly<Record<string, Lowerer>> = {
       h.emit(assignment(h.out(), h.text('sourceString')));
       return;
     }
+    // arithmetic in Number: Assign (`$a$ * 10 / 2`, corpus 11) is computed with evaluate; setVar
+    // would take it as text ("Not a number", round 1)
+    if (a.args.input?.kind === 'template') {
+      h.emit(
+        `evaluate --expression ${quote(textOf(a.args.input, h.sink))} ${h.out()}=value`,
+        doc('evaluate'),
+      );
+      return;
+    }
     if (a.args.input) {
       h.emit(assignment(h.out(), h.num('input')));
       return;
@@ -476,6 +485,20 @@ export const lowerers: Readonly<Record<string, Lowerer>> = {
         ? [semantic('A360 replaces an existing folder; WAL createDir keeps it and its files.')]
         : []),
     );
+  },
+  // corpus 11; WAL form as in a script saved by Studio 30.0.2 (fileCopy --from --to, stopExecution)
+  'file.copy': (a, w) => {
+    const h = helpers(a, w);
+    h.emit(
+      `fileCopy --from ${pathOf(a.args.sourceFilePath ?? { kind: 'literal', value: '' }, h.sink)} --to ${h.text('destinationPath')}`,
+      doc('fileCopy'),
+      ...(h.flag('isOverwrite')
+        ? [semantic('A360 replaces an existing file; check that WAL fileCopy does too.')]
+        : []),
+    );
+  },
+  'task.stop': (_a, w) => {
+    w.line('stopExecution', doc('stopExecution'));
   },
   'file.create': (a, w) => {
     const h = helpers(a, w);

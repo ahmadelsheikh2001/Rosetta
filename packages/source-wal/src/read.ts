@@ -61,6 +61,8 @@ const types: Readonly<Record<string, IRType>> = {
   Excel: { kind: 'handle', resource: 'excel' },
   Browser: { kind: 'handle', resource: 'browser' },
   DbConnection: { kind: 'handle', resource: 'database' },
+  // a PDF opened with pdfOpen (A360 reads the file by path)
+  Pdf: { kind: 'handle', resource: 'file' },
   // key-value entry of a StringDictionary in a foreach (documented collection type)
   StringKeyValuePair: { kind: 'any' },
 };

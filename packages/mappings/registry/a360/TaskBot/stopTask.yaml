@@ -1,0 +1,10 @@
+id: a360.taskbot.stoptask
+source:
+  platform: a360
+  package: TaskBot
+  command: stopTask
+status: partial
+irOp: task.stop
+evidence:
+  - corpus/a360/11-missing/bot.json
+notes: Lifted to a canonical op; the WAL form is a draft until verified in IBM RPA Studio (ADR-017).
