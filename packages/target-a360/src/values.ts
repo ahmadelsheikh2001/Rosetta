@@ -35,10 +35,13 @@ export function exprText(e: Expr, types: ReadonlyMap<string, IRType>, sink: Sink
       let out = e.name;
       for (const step of e.path) {
         const inner = step.kind === 'index' ? step.index : step.key;
+        // a list index takes the number itself (`$list[$i$]$`), not its text
         const text =
           inner.kind === 'literal'
             ? String(inner.value)
-            : `$${exprText(inner, types, sink).replace(/^\$|\$$/g, '')}$`;
+            : step.kind === 'index' && inner.kind === 'var' && inner.path.length === 0
+              ? `$${inner.name}$`
+              : `$${exprText(inner, types, sink).replace(/^\$|\$$/g, '')}$`;
         out += step.kind === 'index' ? `[${text}]` : `{${text}}`;
       }
       const kind = e.path.length === 0 ? types.get(e.name)?.kind : undefined;

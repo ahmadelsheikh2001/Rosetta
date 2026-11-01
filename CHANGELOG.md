@@ -199,6 +199,11 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: Se
   `C:\Logs\<bot>.log` with a note); `replaceText` with a real regex → String replace with the
   regular-expression option and a note on Java vs .NET rules. Still manual: `getRegex` (no A360
   shape seen yet), a cell whose column is a variable, PDF / OCR.
+- IBM RPA → A360: `dateDifference` → Datetime Difference between dates in seconds (shape from an
+  external export; TimeSpan variables become NUMBER with a note); `evaluate` arithmetic on number
+  variables → Number: Assign expression; `excelSet` with the column in a variable → cell address
+  from a column-letters list (`$rosettaColumns[$n$]$$row$`). The last two are A-26 (to verify).
+  ABE OCR: manual places 145 → 106, all of them now getRegex, isMatch, PDF, OCR, stop, file copy.
 - A script's own `onError --label H` becomes a Try around the rest of its block with H as the
   Catch (a trailing `recover` is noted: A360 leaves the Try). Variables of a type A360 lacks
   (TimeSpan, Pdf) are declared as STRING with a note, so converted commands that use them do not

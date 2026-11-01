@@ -115,7 +115,39 @@ class Generator {
     private readonly bot: Bot,
     private readonly options: A360Options = {},
   ) {
-    this.types = new Map(bot.variables.map((v) => [v.name, v.type]));
+    // a WAL TimeSpan becomes a number of seconds (Difference between dates, A-25)
+    this.types = new Map(
+      bot.variables.map((v) => [v.name, isTimeSpan(v.type) ? { kind: 'number' } : v.type]),
+    );
+  }
+
+  /** Variables the conversion adds (e.g. the column letters), declared after the bot's own. */
+  readonly extraVariables: Node[] = [];
+
+  /** `$rosettaColumns[$n$]$` gives the letter of column n (index 0 is empty, so n is 1-based). */
+  private columnLetters(): string {
+    const name = 'rosettaColumns';
+    if (!this.extraVariables.some((v) => v.name === name)) {
+      const letters = [''];
+      for (let n = 1; n <= 104; n++) {
+        let s = '';
+        for (let k = n; k > 0; k = Math.floor((k - 1) / 26))
+          s = String.fromCharCode(65 + ((k - 1) % 26)) + s;
+        letters.push(s);
+      }
+      this.packages.add('List');
+      this.extraVariables.push({
+        name,
+        description: 'Column letters by number, added by RPA Rosetta (WAL excelSet --column)',
+        type: 'LIST',
+        subtype: 'STRING',
+        readOnly: false,
+        input: false,
+        output: false,
+        defaultValue: { type: 'LIST', list: letters.map((s) => ({ type: 'STRING', string: s })) },
+      });
+    }
+    return name;
   }
 
   private note(kind: A360Note['kind'], text: string): void {
@@ -179,7 +211,17 @@ class Generator {
     const usingCell = a.args.usingcell?.kind === 'literal' && a.args.usingcell.value === true;
     let cell: A360Value | undefined;
     if (usingCell && a.args.cell) cell = stringValue(a.args.cell, this.types, this.sink);
-    else if (column?.kind === 'literal' && typeof column.value === 'number' && row) {
+    else if (column?.kind === 'var' && column.path.length === 0 && row) {
+      const letters: Expr = {
+        kind: 'var',
+        name: this.columnLetters(),
+        path: [{ kind: 'index', index: column }],
+      };
+      cell = {
+        type: 'STRING',
+        expression: `${exprText(letters, this.types, this.sink)}${row.kind === 'literal' ? String(row.value) : exprText(row, this.types, this.sink)}`,
+      };
+    } else if (column?.kind === 'literal' && typeof column.value === 'number' && row) {
       let n = column.value;
       let letters = '';
       for (; n > 0; n = Math.floor((n - 1) / 26))
@@ -566,7 +608,14 @@ class Generator {
         ? v.type.kind === 'list'
           ? 'LIST'
           : 'DICTIONARY'
-        : variableTypes[v.type.kind];
+        : isTimeSpan(v.type)
+          ? 'NUMBER'
+          : variableTypes[v.type.kind];
+      if (isTimeSpan(v.type))
+        this.note(
+          'semantic',
+          `Variable ${v.name}: a WAL TimeSpan (d.hh:mm:ss) becomes a number of seconds in A360.`,
+        );
       if (!type) {
         // declared all the same: a command that is converted may still use it ("Variable not
         // found" otherwise, as checkA360 reports)
@@ -744,6 +793,8 @@ function jsonArg(e: Expr | undefined): Record<string, unknown> | undefined {
     return undefined;
   }
 }
+
+const isTimeSpan = (t: IRType): boolean => t.kind === 'unknown' && t.sourceType === 'TimeSpan';
 
 /** A regex that only escapes special characters, i.e. a plain text search (`a\.b`, not `a.b`). */
 const escapedLiteral = (pattern: string): boolean =>
@@ -1063,7 +1114,38 @@ export const commands: Readonly<Record<string, CommandWriter>> = {
     const m = e?.kind === 'template' ? e.parts : undefined;
     const [ref, plus] = m ?? [];
     const step = plus?.kind === 'literal' ? /^ \+ (-?\d+(\.\d+)?)$/.exec(String(plus.value)) : null;
-    if (!out || m?.length !== 2 || ref?.kind !== 'var' || !step) return undefined;
+    if (!out) return undefined;
+    if (m?.length !== 2 || ref?.kind !== 'var' || !step) {
+      // arithmetic on number variables and numbers: `${a} * ${b} / 100` → `$a$ * $b$ / 100`
+      const parts = m ?? [];
+      const arithmetic =
+        parts.length > 0 &&
+        parts.every((p) =>
+          p.kind === 'var'
+            ? p.path.length === 0 && c.types.get(p.name)?.kind === 'number'
+            : p.kind === 'literal' && /^[\d\s.+\-*/()]*$/.test(String(p.value)),
+        );
+      if (!arithmetic) return undefined;
+      c.note(
+        'semantic',
+        'Arithmetic written as one Number: Assign expression; check it in the A360 editor (A-26).',
+      );
+      return {
+        pkg: 'Number',
+        command: 'assignToNumber',
+        attributes: [
+          attr('input', {
+            type: 'NUMBER',
+            expression: parts
+              .map((p) =>
+                p.kind === 'var' ? `$${p.name}$` : String((p as { value: unknown }).value),
+              )
+              .join(''),
+          }),
+        ],
+        returnTo: out,
+      };
+    }
     return {
       pkg: 'Number',
       command: 'increment',
@@ -1121,6 +1203,22 @@ export const commands: Readonly<Record<string, CommandWriter>> = {
       ],
     };
   },
+  // Difference between dates, as in an external A360 export (A-25): target minus source
+  dateDifference: (a, c) => {
+    const out = target(a);
+    if (!out) return undefined;
+    c.note('semantic', 'WAL gives a time span (d.hh:mm:ss); A360 gives the difference in seconds.');
+    return {
+      pkg: 'Datetime',
+      command: 'differenceBetweenDates',
+      attributes: [
+        attr('source', datetimeValue(arg(a, 'subtractdate'), c.types, c.sink)),
+        attr('target', datetimeValue(arg(a, 'fromdate'), c.types, c.sink)),
+        attr('unit', { type: 'STRING', string: 'SECONDS' }),
+      ],
+      returnTo: out,
+    };
+  },
   getCurrentDateAndTime: (a) => {
     const out = target(a);
     if (!out) return undefined;
@@ -1170,7 +1268,7 @@ export function generateA360(source: Bot, options: A360Options = {}): A360Bot {
   const bot = undoHelpers(source);
   const g = new Generator(bot, options);
   const nodes = g.block(bot.body, 'n');
-  const variables = g.variables(bot.variables);
+  const variables = [...g.variables(bot.variables), ...g.extraVariables];
   return {
     json: {
       triggers: [],

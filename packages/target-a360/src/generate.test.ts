@@ -310,6 +310,78 @@ describe('generateA360', () => {
     expect(r.notes.map((n) => n.kind)).toEqual(['semantic']);
   });
 
+  it('writes date difference in seconds, arithmetic, and a cell whose column is a variable', () => {
+    const r = generateA360(
+      bot(
+        'b',
+        [
+          action('vendor:ibm-rpa/dateDifference', {
+            args: { subtractdate: ref('dStart'), fromdate: ref('dEnd') },
+            outputs: { value: ref('tsTook') },
+          }),
+          action('vendor:ibm-rpa/evaluate', {
+            args: {
+              expression: {
+                kind: 'template',
+                parts: [ref('nA'), lit(' * '), ref('nB'), lit(' / 100')],
+              },
+            },
+            outputs: { value: ref('nA') },
+          }),
+          action('vendor:ibm-rpa/excelSet', {
+            args: {
+              value: lit('v'),
+              file: ref('rosettaExcelOut'),
+              sheet: lit('S'),
+              row: ref('nB'),
+              column: ref('nA'),
+            },
+          }),
+        ],
+        {
+          variables: [
+            variable('dStart', { kind: 'datetime' }),
+            variable('dEnd', { kind: 'datetime' }),
+            variable('tsTook', { kind: 'unknown', sourceType: 'TimeSpan' }),
+            variable('nA', { kind: 'number' }),
+            variable('nB', { kind: 'number' }),
+          ],
+        },
+      ),
+    );
+    expect(r.json.nodes).toMatchObject([
+      {
+        commandName: 'differenceBetweenDates',
+        attributes: [
+          { name: 'source', value: { expression: '$dStart$' } },
+          { name: 'target', value: { expression: '$dEnd$' } },
+          { name: 'unit', value: { string: 'SECONDS' } },
+        ],
+      },
+      {
+        commandName: 'assignToNumber',
+        attributes: [{ value: { expression: '$nA$ * $nB$ / 100' } }],
+      },
+      { commandName: 'SwitchToSheet' },
+      {
+        commandName: 'SetCell',
+        attributes: [
+          {},
+          { value: { expression: '$rosettaColumns[$nA$]$$nB.Number:toString$' } },
+          {},
+          {},
+        ],
+      },
+    ]);
+    const vars = r.json.variables as {
+      name: string;
+      type: string;
+      defaultValue?: { list?: unknown[] };
+    }[];
+    expect(vars.find((v) => v.name === 'tsTook')?.type).toBe('NUMBER');
+    expect(vars.find((v) => v.name === 'rosettaColumns')?.defaultValue?.list).toHaveLength(105);
+  });
+
   it('never writes a credential value', () => {
     const r = generateA360(
       bot('b', [], {
