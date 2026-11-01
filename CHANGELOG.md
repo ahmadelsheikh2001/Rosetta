@@ -191,6 +191,10 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: Se
   dotted node path; Email connect (Outlook) / send / close → `outlookConnect`, `emailSend`
   (addresses split into a list at ";"), `emailDisconnect`. Generic A360 lifting now keeps outputs
   returned as a dictionary by key. Manual places on the 11 external bots: 27.
+- Web UI redesigned with tabs: Convert (direction and files side by side, action bar), Results
+  (summary, messages folded, list of bots on the left and the chosen bot on the right) and
+  Assessment report (shown in the page, with open and download). Sizes in MB; phone layout
+  stacks.
 - Control Room export zips are read: `readExportZip` (source-a360) takes the task bots and API task
   bots listed in `manifest.json` and leaves packages, forms, AI agents and workflows unread (they
   are reported). `rosetta convert` / `assess` read zips in the input folder; the web UI opens a

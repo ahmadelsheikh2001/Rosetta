@@ -58,11 +58,34 @@ function applyRoute() {
 $('source').addEventListener('change', () => {
   // files of the other platform would not convert; start over
   chosen.clear();
-  $('result').hidden = true;
+  resetResults();
   $('error').hidden = true;
   applyRoute();
   renderFiles();
 });
+
+// ---- Main tabs: Convert, Results, Assessment report ----
+
+const views = ['convert', 'results', 'report'];
+
+function showView(name) {
+  for (const v of views) {
+    $('tab-' + v).setAttribute('aria-selected', String(v === name));
+    $('view-' + v).hidden = v !== name;
+  }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+for (const v of views) $('tab-' + v).addEventListener('click', () => showView(v));
+
+function resetResults() {
+  last = null;
+  $('tab-results').disabled = true;
+  $('tab-report').disabled = true;
+  $('results-count').textContent = '';
+  $('view-results').replaceChildren();
+  $('view-report').replaceChildren();
+  showView('convert');
+}
 
 function el(tag, attrs, ...children) {
   const node = document.createElement(tag);
@@ -89,6 +112,7 @@ function icon(name, size) {
     download: 'M12 4v11M7 10l5 5 5-5M5 20h14',
     copy: 'M9 9h10v11H9zM5 15V4h10',
     open: 'M14 4h6v6M20 4l-9 9M18 14v6H4V6h6',
+    back: 'M20 12H4M10 6l-6 6 6 6',
   };
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   svg.setAttribute('viewBox', '0 0 24 24');
@@ -108,7 +132,12 @@ function icon(name, size) {
 
 const chip = (kind, iconName, label) =>
   el('span', { class: 'chip ' + kind }, icon(iconName, 14), label);
-const kb = (n) => (n < 1024 ? n + ' B' : (n / 1024).toFixed(n < 10240 ? 1 : 0) + ' KB');
+const kb = (n) =>
+  n < 1024
+    ? n + ' B'
+    : n < 1048576
+      ? (n / 1024).toFixed(n < 10240 ? 1 : 0) + ' KB'
+      : (n / 1048576).toFixed(1) + ' MB';
 
 // ---- Step 2: choosing files ----
 
@@ -143,6 +172,10 @@ function renderFiles() {
     ),
   );
   $('convert').disabled = chosen.size === 0;
+  const total = [...chosen.values()].reduce((n, f) => n + f.size, 0);
+  $('action-hint').textContent = chosen.size
+    ? chosen.size + (chosen.size === 1 ? ' file' : ' files') + ' ready · ' + kb(total)
+    : 'Add at least one file to convert.';
 }
 
 const drop = $('drop');
@@ -247,7 +280,7 @@ function counts(bot) {
 }
 
 function renderResult(r) {
-  const section = $('result');
+  const section = $('view-results');
   const total = r.bots.map(counts).reduce(
     (a, c) => ({
       errors: a.errors + c.errors,
@@ -261,42 +294,95 @@ function renderResult(r) {
 
   const messages = r.messages.length
     ? el(
-        'div',
-        { class: 'alert warn', role: 'status' },
-        icon('warn', 18),
+        'details',
+        { class: 'alert warn' },
         el(
-          'div',
+          'summary',
           {},
-          el('strong', {}, 'Some files could not be read completely'),
+          icon('warn', 18),
           el(
-            'ul',
+            'strong',
             {},
-            r.messages.map((m) => el('li', {}, m.file + ': ' + m.text)),
+            r.messages.length +
+              (r.messages.length === 1 ? ' message' : ' messages') +
+              ' about the files',
           ),
+          el('span', { class: 'more' }, 'Show'),
+        ),
+        el(
+          'ul',
+          {},
+          r.messages.map((m) => el('li', {}, el('span', { class: 'mfile' }, m.file), m.text)),
         ),
       )
     : null;
+
+  // left: one entry per bot; right: the chosen bot
+  const detail = el('div', { class: 'detail' });
+  const items = r.bots.map((bot, i) => {
+    const c = counts(bot);
+    return el(
+      'button',
+      {
+        class: 'botitem',
+        type: 'button',
+        role: 'tab',
+        'aria-selected': 'false',
+        onclick: () => select(i),
+      },
+      el('span', { class: 'botname' }, bot.name),
+      el(
+        'span',
+        { class: 'botmeta' },
+        c.errors
+          ? chip('blocked sm', 'stop', c.errors + ' errors')
+          : chip('auto sm', 'check', 'OK'),
+        c.manual ? chip('review sm', 'warn', c.manual + ' manual') : null,
+      ),
+    );
+  });
+  function select(i) {
+    items.forEach((b, j) => b.setAttribute('aria-selected', String(i === j)));
+    detail.replaceChildren(renderBot(r.bots[i], i));
+  }
+  const workspace = r.bots.length
+    ? el(
+        'div',
+        { class: 'workspace' },
+        el(
+          'nav',
+          { class: 'botlist', role: 'tablist', 'aria-label': 'Converted bots' },
+          el('div', { class: 'listhead' }, to.output + ' (' + r.bots.length + ')'),
+          items,
+        ),
+        detail,
+      )
+    : el('p', { class: 'empty-state' }, 'No bot could be converted from these files.');
+  if (r.bots.length) select(0);
 
   // replaceChildren would print null as text; drop the parts that are not shown
   const parts = [
     el(
       'div',
       { class: 'result-head' },
-      el('h2', {}, el('span', { class: 'step' }, '3'), 'Result'),
+      el(
+        'div',
+        { class: 'titles' },
+        el('h1', {}, 'Results'),
+        el('p', {}, to.output + ' · ' + new Date(r.generatedAt).toLocaleString()),
+      ),
+      el(
+        'button',
+        { class: 'secondary', type: 'button', onclick: () => showView('convert') },
+        icon('back'),
+        'Convert more',
+      ),
       r.bots.length
         ? el(
             'button',
-            { class: 'secondary', type: 'button', onclick: downloadAll },
+            { class: 'secondary accent', type: 'button', onclick: downloadAll },
             icon('download'),
             'Download all (.zip)',
-          )
-        : null,
-      r.bots.length && r.reportHtml
-        ? el(
-            'button',
-            { class: 'secondary', type: 'button', onclick: openReport },
-            icon('open'),
-            'Open assessment report',
           )
         : null,
     ),
@@ -314,13 +400,73 @@ function renderResult(r) {
           ),
     ),
     messages,
-    r.bots.length === 0 ? el('p', {}, 'No bot could be converted from these files.') : null,
-    ...r.bots.map(renderBot),
-    el('p', { class: 'lead' }, to.closing),
+    workspace,
+    el('p', { class: 'closing' }, icon('info', 16), to.closing),
   ];
   section.replaceChildren(...parts.filter((p) => p !== null));
-  section.hidden = false;
-  section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  renderReport(r);
+  $('tab-results').disabled = false;
+  $('results-count').textContent = String(r.bots.length);
+  $('tab-report').disabled = !r.reportHtml;
+  showView('results');
+}
+
+function renderReport(r) {
+  const view = $('view-report');
+  if (!r.reportHtml) {
+    view.replaceChildren();
+    return;
+  }
+  // the report is a whole page of its own; shown here in a frame that grows to its height
+  const frame = el('iframe', {
+    class: 'report-frame',
+    title: 'Assessment report',
+    sandbox: 'allow-same-origin',
+  });
+  frame.srcdoc = r.reportHtml;
+  frame.addEventListener('load', () => {
+    const doc = frame.contentDocument;
+    if (doc)
+      frame.style.height =
+        Math.max(doc.documentElement.scrollHeight, doc.body ? doc.body.scrollHeight : 0) + 'px';
+  });
+  view.replaceChildren(
+    el(
+      'div',
+      { class: 'result-head' },
+      el(
+        'div',
+        { class: 'titles' },
+        el('h1', {}, 'Assessment report'),
+        el(
+          'p',
+          {},
+          'Coverage, complexity, effort and source quality of the uploaded bots. Open it on its own to print or save as PDF.',
+        ),
+      ),
+      el(
+        'div',
+        { class: 'buttons' },
+        el(
+          'button',
+          { class: 'secondary accent', type: 'button', onclick: openReport },
+          icon('open', 20),
+          'Open the report',
+        ),
+        el(
+          'button',
+          {
+            class: 'secondary',
+            type: 'button',
+            onclick: () => save('report.html', last.reportHtml, 'text/html'),
+          },
+          icon('download'),
+          'Download report.html',
+        ),
+      ),
+    ),
+    frame,
+  );
 }
 
 function stat(label, value) {
@@ -418,11 +564,15 @@ function renderBot(bot, index) {
       'div',
       { class: 'bot-head' },
       el('h3', {}, bot.name, el('span', { class: 'file' }, bot.fileName)),
-      c.errors === 0
-        ? chip('auto', 'check', to.check + ' OK')
-        : chip('blocked', 'stop', c.errors + ' errors'),
-      c.manual ? chip('review', 'warn', c.manual + ' manual') : null,
-      c.semantic ? chip('info', 'info', c.semantic + ' behaviour') : null,
+      el(
+        'div',
+        { class: 'bot-chips' },
+        c.errors === 0
+          ? chip('auto', 'check', to.check + ' OK')
+          : chip('blocked', 'stop', c.errors + ' errors'),
+        c.manual ? chip('review', 'warn', c.manual + ' manual') : null,
+        c.semantic ? chip('info', 'info', c.semantic + ' behaviour') : null,
+      ),
       el(
         'button',
         {

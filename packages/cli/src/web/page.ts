@@ -21,6 +21,10 @@ const targets = [
   { value: 'a360', label: 'Automation Anywhere A360 (task bot)' },
 ];
 
+/** Inline line icon (currentColor), as in app.js. */
+const icon = (path: string, size = 18) =>
+  `<svg viewBox="0 0 24 24" width="${String(size)}" height="${String(size)}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${path}"/></svg>`;
+
 const options = (list: readonly { value: string; label: string; disabled?: boolean }[]) =>
   list
     .map((o) => `<option value="${o.value}"${o.disabled ? ' disabled' : ''}>${o.label}</option>`)
@@ -49,15 +53,22 @@ ${asset('app.css')}
   <div class="titles"><span class="product">RPA Rosetta</span><span class="subtitle">Bot migration accelerator</span></div>
   <span class="local"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 11h12v10H6zM8 11V7a4 4 0 018 0v4"/></svg>Runs on this computer · files never leave it</span>
 </div></header>
+<nav class="mainnav" aria-label="Sections"><div class="wrap" role="tablist">
+  <button class="navtab" type="button" role="tab" id="tab-convert" aria-controls="view-convert" aria-selected="true">${icon('M4 12h16M14 6l6 6-6 6')}Convert</button>
+  <button class="navtab" type="button" role="tab" id="tab-results" aria-controls="view-results" aria-selected="false" disabled>${icon('M4 5h16M4 12h16M4 19h10')}Results<span class="count" id="results-count"></span></button>
+  <button class="navtab" type="button" role="tab" id="tab-report" aria-controls="view-report" aria-selected="false" disabled>${icon('M6 3h9l5 5v13H6zM14 3v6h6M9 13h8M9 17h8')}Assessment report</button>
+</div></nav>
 <main><div class="wrap">
-  <section class="intro">
+  <section id="view-convert" role="tabpanel" aria-labelledby="tab-convert" class="view">
+  <div class="intro">
     <h1>Convert your bots</h1>
-    <p>Choose the platforms, upload the bot files and get the converted bots with notes on everything to check.</p>
-  </section>
+    <p>Choose the direction, add the bot files and get the converted bots with notes on everything to check.</p>
+  </div>
 
+  <div class="convert-grid">
   <section class="card" aria-labelledby="s1">
-    <h2 id="s1"><span class="step">1</span>Choose the conversion</h2>
-    <p class="lead">More source platforms will be added; they are listed so you can see what is coming.</p>
+    <h2 id="s1"><span class="step">1</span>Direction</h2>
+    <p class="lead">More source platforms are listed so you can see what is coming.</p>
     <div class="route">
       <div class="field"><label for="source">From</label><select id="source">${options(sources)}</select></div>
       <div class="arrow" aria-hidden="true"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h16M14 6l6 6-6 6"/></svg></div>
@@ -71,7 +82,7 @@ ${asset('app.css')}
   </section>
 
   <section class="card" aria-labelledby="s2">
-    <h2 id="s2"><span class="step">2</span>Upload the bot files</h2>
+    <h2 id="s2"><span class="step">2</span>Bot files</h2>
     <p class="lead" id="upload-lead">A360 task bot files (.json) or Control Room export zips. Upload a parent and its child bots together.</p>
     <label class="drop" id="drop" tabindex="0">
       <svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5M4 16v4h16v-4"/></svg>
@@ -80,11 +91,18 @@ ${asset('app.css')}
       <input id="file-input" class="sr-only" type="file" accept=".json,.zip,application/json,application/zip" multiple>
     </label>
     <ul class="files" id="file-list" aria-label="Chosen files"></ul>
-    <button class="primary" id="convert" type="button" disabled><span class="label">Convert to IBM RPA</span><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16M14 6l6 6-6 6"/></svg></button>
-    <div id="error" hidden></div>
+  </section>
+  </div>
+
+  <div class="actionbar">
+    <p class="actionhint" id="action-hint">Add at least one file to convert.</p>
+    <button class="primary" id="convert" type="button" disabled><span class="label">Convert to IBM RPA</span>${icon('M4 12h16M14 6l6 6-6 6', 20)}</button>
+  </div>
+  <div id="error" hidden></div>
   </section>
 
-  <section class="card" id="result" hidden aria-live="polite"></section>
+  <section id="view-results" role="tabpanel" aria-labelledby="tab-results" class="view" hidden aria-live="polite"></section>
+  <section id="view-report" role="tabpanel" aria-labelledby="tab-report" class="view" hidden></section>
 
   <footer>RPA Rosetta · Valleysoft Center of Excellence. Converted bots are drafts until run on the target platform.</footer>
 </div></main>
