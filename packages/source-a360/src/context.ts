@@ -18,6 +18,7 @@ export const LiftCode = {
   VariableType: 'A360-VARIABLE-TYPE',
   Structure: 'A360-STRUCTURE',
   Zip: 'A360-ZIP',
+  NotBot: 'A360-NOT-BOT',
 } as const;
 export type LiftCode = (typeof LiftCode)[keyof typeof LiftCode];
 
@@ -33,6 +34,7 @@ export const liftMessageIds: Readonly<Record<LiftCode, string>> = {
   'A360-VARIABLE-TYPE': 'lift.variableType',
   'A360-STRUCTURE': 'lift.structure',
   'A360-ZIP': 'lift.zip',
+  'A360-NOT-BOT': 'lift.notBot',
 };
 
 /** Collects diagnostics while lifting one bot file. */
@@ -65,7 +67,10 @@ export class LiftContext {
     const category =
       code === LiftCode.Semantic
         ? 'semantic-difference'
-        : code === LiftCode.Json || code === LiftCode.Schema || code === LiftCode.Zip
+        : code === LiftCode.Json ||
+            code === LiftCode.Schema ||
+            code === LiftCode.Zip ||
+            code === LiftCode.NotBot
           ? 'parse'
           : 'unmapped';
     // Findings without a node (e.g. a variable) still name the file.

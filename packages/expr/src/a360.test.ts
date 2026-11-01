@@ -73,6 +73,12 @@ describe('parseA360', () => {
       kind: 'call',
       fn: 'a360:Datetime:toString',
     });
+    // with parentheses, as in a Bot Store export (A-25)
+    expect(parseA360('$tbl.LegacyAutomation:tableToString()$')).toEqual({
+      kind: 'call',
+      fn: 'a360:LegacyAutomation:tableToString',
+      args: [v('tbl')],
+    });
   });
 
   it('parses system variables', () => {

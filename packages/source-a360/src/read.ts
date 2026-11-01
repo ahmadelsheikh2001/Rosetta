@@ -39,6 +39,12 @@ export function readBotJson(text: string, options: ReadOptions): ReadResult {
     return { diagnostics: ctx.diagnostics };
   }
 
+  // Forms, AI agents and processes in an export are JSON too, but have no `nodes` (A-25)
+  if (data && typeof data === 'object' && !Array.isArray(data) && !('nodes' in data)) {
+    ctx.report(LiftCode.NotBot, 'warning', { file: options.file }, at);
+    return { diagnostics: ctx.diagnostics };
+  }
+
   const parsed = sourceBot.safeParse(data);
   if (!parsed.success) {
     const first = parsed.error.issues[0];

@@ -8,7 +8,7 @@ import type { AccessStep, Expr } from '@rosetta/ir';
  *   ref        := 'System:' name | name access* conversion?
  *   access     := '[' inner ']' | '{' inner '}'
  *   inner      := '$' ref '$' | digits | key text
- *   conversion := '.' Package ':' function        e.g. $vNum.Number:toString$
+ *   conversion := '.' Package ':' function '()'?  e.g. $vNum.Number:toString$
  *
  * `$…$` nests inside brackets (`$vDict{$vKey$}$`), so the scanner tracks depth.
  * Escaping of a literal `$` is not known yet (A-07): such input becomes `raw`.
@@ -96,7 +96,8 @@ function parseRef(body: string): Expr {
   const ref: Expr = { kind: 'var', name: head, path };
   if (i === body.length) return ref;
 
-  const conversion = /^\.([A-Za-z]+):([A-Za-z]+)$/.exec(body.slice(i));
+  // `()` after the function: `$tbl.LegacyAutomation:tableToString()$` (A-25, Bot Store export)
+  const conversion = /^\.([A-Za-z]+):([A-Za-z]+)(?:\(\))?$/.exec(body.slice(i));
   if (!conversion) throw new ExprError(`unexpected "${body.slice(i)}" after ${head}`);
   const key = `${conversion[1] ?? ''}:${conversion[2] ?? ''}`;
   return { kind: 'call', fn: conversions[key] ?? `a360:${key}`, args: [ref] };

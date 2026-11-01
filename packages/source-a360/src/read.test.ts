@@ -18,8 +18,14 @@ describe('readBotJson', () => {
     expect(r.diagnostics[0]).toMatchObject({ code: 'A360-JSON', severity: 'error' });
   });
 
-  it('reports JSON that is not a bot', () => {
+  it('reports JSON without actions as not a task bot (forms, AI agents, processes)', () => {
     const r = readBotJson('{"hello": 1}', opts);
+    expect(r.bot).toBeUndefined();
+    expect(r.diagnostics[0]).toMatchObject({ code: 'A360-NOT-BOT', severity: 'warning' });
+  });
+
+  it('reports a bot file whose actions are not valid', () => {
+    const r = readBotJson('{"nodes": 1}', opts);
     expect(r.bot).toBeUndefined();
     expect(r.diagnostics[0]).toMatchObject({ code: 'A360-SCHEMA', params: { path: 'nodes' } });
   });

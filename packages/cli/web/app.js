@@ -194,6 +194,10 @@ $('convert').addEventListener('click', async () => {
     const files = (
       await Promise.all(
         [...chosen.values()].map(async (f) => {
+          if (NOT_BOTS.test(f.name)) {
+            notes.push({ file: f.name, severity: 'warning', text: 'not a bot file, skipped' });
+            return [];
+          }
           if (!/\.zip$/i.test(f.name)) return [{ name: f.name, text: await f.text() }];
           const zip = await botsFromZip(f);
           notes.push(...zip.problems.map((p) => ({ file: f.name, severity: 'warning', text: p })));
@@ -526,6 +530,9 @@ function downloadAll() {
 // ---- Export zips (read in the browser; the zip itself is never uploaded) ----
 
 const BOT_TYPES = ['application/vnd.aa.taskbot', 'application/vnd.aa.headlessbot'];
+/** Data and package files that come with an export; never bots. */
+const NOT_BOTS =
+  /\.(txt|csv|tsv|xlsx?|xlsm|py|js|vbs|jar|dll|png|jpe?g|gif|pdf|docx?|xml|html?|md)$/i;
 
 /**
  * Task bots of a Control Room export zip, as listed in its manifest.json (same rules as
