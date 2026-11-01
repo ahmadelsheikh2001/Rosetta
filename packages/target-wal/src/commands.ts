@@ -15,6 +15,12 @@ export interface LowerState {
   readonly vaultCredentials: ReadonlyMap<string, string>;
   /** Browser instances started with webStart; each needs a webClose (Studio round 10). */
   readonly browsers: Set<string>;
+  /** JSON session name → the JSON text it was started with (A-25). */
+  readonly jsonSessions: Map<string, string>;
+  /** Email session name → EmailConnection variable (A-25). */
+  readonly emailSessions: Map<string, string>;
+  /** Per-kind counters, for helpers that need one variable per command (e.g. HTTP headers). */
+  readonly counts: Map<string, number>;
   /** Declares a helper variable once per key and returns its name. */
   readonly helper: (key: string, defVar: (name: string) => string) => string;
 }
@@ -149,6 +155,115 @@ const browserTypes: Readonly<Record<string, string>> = {
   FIREFOX: 'Firefox',
 };
 
+/** A360 content type of a REST body → httpRequest `--formatter` (documented options). */
+const formatters: Readonly<Record<string, string>> = {
+  'application/json': 'Json',
+  'text/plain': 'Text',
+  'application/xml': 'XML',
+  'text/xml': 'XML',
+  'application/x-www-form-urlencoded': 'FormUrlEncoded',
+};
+
+/**
+ * REST Web Service GET / POST (A-25) → httpRequest. Custom headers go into a StringDictionary
+ * helper (Content-Type is a content header: it becomes the formatter); the response body goes to
+ * the variable A360 maps to `Body`, or into the `Body` key of the dictionary A360 returns.
+ */
+function httpRequest(verb: 'Get' | 'Post', a: ActionStmt, w: WalWriter, s: LowerState): void {
+  const h = helpers(a, w);
+  const auth = h.str('authenticationMode');
+  if (auth && auth !== 'NoAuthentication') {
+    manual(
+      a,
+      w,
+      `authentication "${auth}" not converted; read the secret with getVaultItem and add it`,
+    );
+    return;
+  }
+  if (h.str('uriOption') !== 'text') {
+    manual(a, w, `URI option "${h.str('uriOption') ?? '?'}" not supported (only text)`);
+    return;
+  }
+  const n = (s.counts.get('http') ?? 0) + 1;
+  s.counts.set('http', n);
+  const notes: NoteInput[] = [doc('httpRequest (HTTP Request)')];
+  let line = `httpRequest --verb "${verb}" --url ${h.text('uri')}`;
+
+  const headers = a.args.customHeaders;
+  const entries =
+    headers?.kind === 'call' && headers.fn === 'list.of'
+      ? headers.args.flatMap((d) => {
+          if (d.kind !== 'call' || d.fn !== 'dict.of') return [];
+          const field = (key: string) => {
+            const i = d.args.findIndex((x) => x.kind === 'literal' && x.value === key);
+            return i >= 0 ? d.args[i + 1] : undefined;
+          };
+          const enabled = field('enabled');
+          const name = field('name');
+          const value = field('value');
+          if (enabled?.kind === 'literal' && enabled.value === false) return [];
+          if (name?.kind !== 'literal' || typeof name.value !== 'string' || !value) return [];
+          return [{ name: name.value, value }];
+        })
+      : [];
+  const sent = entries.filter((e) => e.name.toLowerCase() !== 'content-type');
+  if (sent.length) {
+    const dict = s.helper(
+      `httpHeaders${String(n)}`,
+      (x) => `defVar --name ${x} --type StringDictionary --innertype String`,
+    );
+    for (const e of sent)
+      w.line(
+        `strDictAdd --key ${quote(e.name)} --value ${quote(textOf(e.value, h.sink))} --dictionary ${ref(dict)}`,
+      );
+    line += ` --headers ${ref(dict)}`;
+  }
+
+  if (verb === 'Post') {
+    const type =
+      h.str('headerContentType') ??
+      entries.find((e) => e.name.toLowerCase() === 'content-type')?.value;
+    const typeText =
+      typeof type === 'string' ? type : type?.kind === 'literal' ? String(type.value) : undefined;
+    const formatter = typeText
+      ? formatters[typeText.split(';')[0]?.trim().toLowerCase() ?? '']
+      : undefined;
+    if (h.str('parameterOption') !== 'text') {
+      manual(
+        a,
+        w,
+        `POST body option "${h.str('parameterOption') ?? '?'}" not supported (only text)`,
+      );
+      return;
+    }
+    line += ` --formatter "${formatter ?? 'Text'}" --source ${h.text('jsonPostParameters')}`;
+    if (!formatter)
+      notes.push(
+        semantic(`A360 sends the body as ${typeText ?? 'an unknown type'}; WAL sends it as text.`),
+      );
+  }
+
+  const ms = Number(h.str('timeOut'));
+  if (Number.isFinite(ms) && ms > 0) line += ` --timeout "${timeSpan(Math.ceil(ms / 1000))}"`;
+  if (h.flag('allowInsecureConnection'))
+    notes.push(semantic('A360 accepts any server certificate here; WAL httpRequest checks it.'));
+
+  const body = a.outputs.Body?.name;
+  const dict = a.outputs.result?.name;
+  if (body) line += ` ${body}=value`;
+  else if (dict) {
+    const v = s.helper(`httpBody${String(n)}`, (x) => `defVar --name ${x} --type String`);
+    line += ` ${v}=value`;
+    h.emit(line, ...notes);
+    w.line(`strDictAdd --key "Body" --value "${ref(v)}" --dictionary ${ref(dict)}`, {
+      kind: 'semantic',
+      text: 'A360 returns the whole response as a dictionary; WAL keeps only its Body here.',
+    });
+    return;
+  }
+  h.emit(line, ...notes);
+}
+
 /** Seconds → TimeSpan text `hh:mm:ss` (documented `--timeout "00:00:05"`). */
 const timeSpan = (seconds: number): string =>
   [Math.floor(seconds / 3600), Math.floor((seconds % 3600) / 60), Math.floor(seconds % 60)]
@@ -228,6 +343,128 @@ export const lowerers: Readonly<Record<string, Lowerer>> = {
     const pad = (n: number, size = 2) => String(n).padStart(size, '0');
     const span = `${pad(Math.floor(total / 3600000))}:${pad(Math.floor(total / 60000) % 60)}:${pad(Math.floor(total / 1000) % 60)}${total % 1000 ? `.${pad(total % 1000, 3)}` : ''}`;
     h.emit(`delay --timeout ${span}`, doc('delay'));
+  },
+  // A-25: REST Web Service GET / POST → httpRequest (documented)
+  'http.get': (a, w, s) => {
+    httpRequest('Get', a, w, s);
+  },
+  'http.post': (a, w, s) => {
+    httpRequest('Post', a, w, s);
+  },
+  // A-25: JSON package sessions. WAL reads values straight from the text with mapJson.
+  'json.start': (a, w, s) => {
+    const h = helpers(a, w);
+    if (h.str('inputType') !== 'text') {
+      manual(a, w, `JSON source "${h.str('inputType') ?? '?'}" not supported (only text)`);
+      return;
+    }
+    s.jsonSessions.set(sessionName(a), h.text('data'));
+    w.comment(`A360 JSON session "${sessionName(a)}": WAL reads its values with mapJson`);
+  },
+  'json.getValue': (a, w, s) => {
+    const h = helpers(a, w);
+    const json = s.jsonSessions.get(sessionName(a));
+    const out = a.outputs.result?.name;
+    const path = h.str('nodePath');
+    if (!json || !out || path === undefined) {
+      manual(
+        a,
+        w,
+        json
+          ? 'node path or result variable not understood'
+          : `JSON session "${sessionName(a)}" was not started in this bot`,
+      );
+      return;
+    }
+    // A360 node paths are dotted (`data.name`); mapJson takes a JSONPath
+    h.emit(
+      `mapJson --json ${json} --mappings ${quote(`$.${path}=${ref(out)}`)}`,
+      doc('mapJson (Map to JSON)'),
+    );
+  },
+  'json.end': (a, _w, s) => {
+    s.jsonSessions.delete(sessionName(a));
+  },
+  // A-25: Email (Outlook). WAL keeps the connection in an EmailConnection variable.
+  'email.connect': (a, w, s) => {
+    const h = helpers(a, w);
+    if (h.str('serverType') !== 'OUTLOOK') {
+      manual(a, w, `email server ${h.str('serverType') ?? '?'} not supported yet (only Outlook)`);
+      return;
+    }
+    const session = sessionName(a);
+    const conn = s.helper(
+      `email${session.replace(/\W/g, '')}`,
+      (n) => `defVar --name ${n} --type EmailConnection`,
+    );
+    s.emailSessions.set(session, conn);
+    const account =
+      h.str('select') === 'VARIABLE' && a.args.emailIDVar ? h.text('emailIDVar') : undefined;
+    h.emit(
+      `outlookConnect --mailusername ${account ?? '"TODO_MAILBOX"'} ${conn}=value`,
+      doc('outlookConnect (Connect to Outlook Desktop Application)'),
+      ...(account
+        ? []
+        : [
+            {
+              kind: 'manual' as const,
+              text: `A360 uses the Outlook mailbox "${h.str('mailbox') ?? 'default'}"; write its email address in --mailusername.`,
+            },
+          ]),
+    );
+  },
+  'email.send': (a, w, s) => {
+    const h = helpers(a, w);
+    if (h.str('serverType') !== 'OUTLOOK') {
+      manual(a, w, `email server ${h.str('serverType') ?? '?'} not supported yet (only Outlook)`);
+      return;
+    }
+    // Send email names no session; it uses the Outlook connection opened before, else a new one
+    let conn = [...s.emailSessions.values()].at(-1);
+    if (!conn) {
+      conn = s.helper('emailOutlook', (n) => `defVar --name ${n} --type EmailConnection`);
+      s.emailSessions.set('(send)', conn);
+      w.line(`outlookConnect --mailusername "TODO_MAILBOX" ${conn}=value`, doc('outlookConnect'), {
+        kind: 'manual',
+        text: 'A360 sends from the default Outlook account; write its email address in --mailusername.',
+      });
+    }
+    const list = (name: string) => {
+      const value = a.args[name];
+      if (!value || (value.kind === 'literal' && value.value === '')) return undefined;
+      const n = (s.counts.get('emailList') ?? 0) + 1;
+      s.counts.set('emailList', n);
+      const v = s.helper(
+        `email${name.charAt(0).toUpperCase()}${name.slice(1)}${String(n)}`,
+        (x) => `defVar --name ${x} --type List --innertype String`,
+      );
+      h.emit(
+        `splitString --text ${h.text(name)} --delimiteroption "CustomDelimiter" --customdelimiter ";" ${v}=value`,
+        semantic(
+          'A360 addresses are one text; WAL takes a list, split at ";". Check the separator the bot uses.',
+        ),
+      );
+      return ref(v);
+    };
+    const to = list('toAddress');
+    const cc = list('cc');
+    const bcc = list('bcc');
+    h.emit(
+      `emailSend --connection ${ref(conn)} --to ${to ?? '""'}${cc ? ` --cc ${cc}` : ''}${bcc ? ` --bcc ${bcc}` : ''} --subject ${h.text('subject')} --bodytype ${h.str('bodyFormat') === 'HTML' ? '"Html"' : '"Text"'} --body ${h.text('message')}`,
+      doc('emailSend (Send Email)'),
+      ...(a.args.attachment
+        ? [semantic('A360 attachments are not converted yet; add --attachments.')]
+        : []),
+    );
+  },
+  'email.close': (a, w, s) => {
+    const conn = s.emailSessions.get(sessionName(a));
+    if (!conn) {
+      manual(a, w, `email session "${sessionName(a)}" was not opened in this bot`);
+      return;
+    }
+    s.emailSessions.delete(sessionName(a));
+    w.line(`emailDisconnect --connection ${ref(conn)}`, doc('emailDisconnect'));
   },
   // A-25: Folder / File create (documented createDir; writeToFile creates a missing file)
   'folder.create': (a, w) => {

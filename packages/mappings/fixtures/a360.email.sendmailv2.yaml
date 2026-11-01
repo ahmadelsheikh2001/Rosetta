@@ -1,0 +1,50 @@
+id: a360.email.sendmailv2
+from: external A360 exports (Bot Store, GitHub), not stored, see A-25
+node:
+  uid: '00000000-0000-4000-a000-000000000022'
+  commandName: 'SendMailV2'
+  packageName: 'Email'
+  disabled: false
+  attributes:
+    - name: 'toAddress'
+      value:
+        type: 'STRING'
+        expression: '$vTo$'
+    - name: 'cc'
+      value:
+        type: 'STRING'
+        string: ''
+    - name: 'bcc'
+      value:
+        type: 'STRING'
+        string: ''
+    - name: 'invalidAddress'
+      value:
+        type: 'BOOLEAN'
+        boolean: false
+    - name: 'subject'
+      value:
+        type: 'STRING'
+        string: 'Daily report'
+    - name: 'ensureAttachmentsExist'
+      value:
+        type: 'BOOLEAN'
+        boolean: false
+    - name: 'bodyFormat'
+      value:
+        type: 'STRING'
+        string: 'HTML'
+    - name: 'message'
+      value:
+        type: 'STRING'
+        string: '<p>Done</p>'
+    - name: 'goGreen'
+      value:
+        type: 'BOOLEAN'
+        boolean: false
+    - name: 'serverType'
+      value:
+        type: 'STRING'
+        string: 'OUTLOOK'
+expect:
+  op: email.send

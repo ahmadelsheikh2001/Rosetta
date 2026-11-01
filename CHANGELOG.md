@@ -185,6 +185,12 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: Se
   commands name the sheet with `--sheet`), Delay (`delay --timeout` time span), Number decrement
   (`evaluate`), create folder (`createDir`) and create file (`writeToFile` with empty content).
   Manual places on the same bots: 38.
+- REST, JSON and email (A-25): REST Web Service GET / POST → `httpRequest` (custom headers in a
+  StringDictionary helper, Content-Type as `--formatter`, timeout, Body output or the Body key of
+  the response dictionary); JSON StartSession / GetNodeValue → `mapJson` with a JSONPath from the
+  dotted node path; Email connect (Outlook) / send / close → `outlookConnect`, `emailSend`
+  (addresses split into a list at ";"), `emailDisconnect`. Generic A360 lifting now keeps outputs
+  returned as a dictionary by key. Manual places on the 11 external bots: 27.
 - Control Room export zips are read: `readExportZip` (source-a360) takes the task bots and API task
   bots listed in `manifest.json` and leaves packages, forms, AI agents and workflows unread (they
   are reported). `rosetta convert` / `assess` read zips in the input folder; the web UI opens a

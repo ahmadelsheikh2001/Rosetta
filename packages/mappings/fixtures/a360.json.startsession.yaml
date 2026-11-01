@@ -1,0 +1,24 @@
+id: a360.json.startsession
+from: external A360 exports (Bot Store, GitHub), not stored, see A-25
+node:
+  uid: '00000000-0000-4000-a000-000000000018'
+  commandName: 'StartSession'
+  packageName: 'Json'
+  disabled: false
+  attributes:
+    - name: 'inputType'
+      value:
+        type: 'STRING'
+        string: 'text'
+    - name: 'data'
+      value:
+        type: 'STRING'
+        expression: '$vResponse{Body}$'
+  returnTo:
+    type: 'SESSION'
+    sessionName:
+      type: 'STRING'
+      string: 'Default'
+    sessionTarget: 'LOCAL'
+expect:
+  op: json.start

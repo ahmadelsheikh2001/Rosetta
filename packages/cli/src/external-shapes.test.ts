@@ -30,15 +30,12 @@ const setCell = (cell: string, value: string) => ({
   ],
 });
 
-function lower(nodes: unknown[]) {
-  const { bot } = readBotJson(
-    JSON.stringify({ nodes, variables: [{ name: 'vRow', type: 'NUMBER' }] }),
-    {
-      file: 'x.json',
-      name: 'x',
-      lookup: lookupFrom(loadRegistry(registryDir).entries.map((e) => e.entry)),
-    },
-  );
+function lower(nodes: unknown[], variables: unknown[] = [{ name: 'vRow', type: 'NUMBER' }]) {
+  const { bot } = readBotJson(JSON.stringify({ nodes, variables }), {
+    file: 'x.json',
+    name: 'x',
+    lookup: lookupFrom(loadRegistry(registryDir).entries.map((e) => e.entry)),
+  });
   if (!bot) throw new Error('not read');
   const script = lowerBot(bot, { profile: defaultProfile, generatedAt: 'x', rosettaVersion: 'x' });
   const body = script.text
@@ -62,6 +59,43 @@ describe('commands from external A360 exports (A-25)', () => {
       'excelSet --value "Name" --file ${rosettaExcelDefault} --sheet "Main" --usingcell --cell "A1"',
       'excelSet --value "" --file ${rosettaExcelDefault} --sheet "Excluded" --usingcell --cell "A1"',
       'excelSet --value "x" --file ${rosettaExcelDefault} --sheet "Main" --usingcell --cell "B1"',
+    ]);
+  });
+
+  it('writes REST calls, JSON values and Outlook email', () => {
+    const { body, problems } = lower(
+      [
+        'a360.rest.restget',
+        'a360.rest.restpost',
+        'a360.json.startsession',
+        'a360.json.getnodevalue',
+        'a360.json.endsession',
+        'a360.email.emailconnect',
+        'a360.email.sendmailv2',
+        'a360.email.closeemail',
+      ].map(node),
+      [
+        ...['vBody', 'vName', 'vToken', 'vMailbox', 'vTo', 'vId'].map((name) => ({
+          name,
+          type: 'STRING',
+        })),
+        { name: 'vResponse', type: 'DICTIONARY', subtype: 'STRING' },
+      ],
+    );
+    expect(problems).toEqual([]);
+    expect(body).toEqual([
+      'strDictAdd --key "Accept" --value "application/json" --dictionary ${rosettaHttpHeaders1}',
+      'httpRequest --verb "Get" --url "https://api.example.test/items/${vId}" --headers ${rosettaHttpHeaders1} --timeout "00:01:00" vBody=value',
+      // Content-Type becomes the formatter; the response dictionary gets the Body key
+      'strDictAdd --key "Authorization" --value "Bearer ${vToken}" --dictionary ${rosettaHttpHeaders2}',
+      'httpRequest --verb "Post" --url "https://api.example.test/items" --headers ${rosettaHttpHeaders2} --formatter "Json" --source "{\\"name\\": \\"${vName}\\"}" --timeout "00:01:00" rosettaHttpBody2=value',
+      'strDictAdd --key "Body" --value "${rosettaHttpBody2}" --dictionary ${vResponse}',
+      'strDictGet --key "Body" --dictionary ${vResponse} rosettaItem1=value',
+      'mapJson --json "${rosettaItem1}" --mappings "$.data.name=${vName}"',
+      'outlookConnect --mailusername "${vMailbox}" rosettaEmailEmailSession=value',
+      'splitString --text "${vTo}" --delimiteroption "CustomDelimiter" --customdelimiter ";" rosettaEmailToAddress1=value',
+      'emailSend --connection ${rosettaEmailEmailSession} --to ${rosettaEmailToAddress1} --subject "Daily report" --bodytype "Html" --body "<p>Done</p>"',
+      'emailDisconnect --connection ${rosettaEmailEmailSession}',
     ]);
   });
 

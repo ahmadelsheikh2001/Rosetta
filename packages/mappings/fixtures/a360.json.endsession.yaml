@@ -1,0 +1,16 @@
+id: a360.json.endsession
+from: external A360 exports (Bot Store, GitHub), not stored, see A-25
+node:
+  uid: '00000000-0000-4000-a000-000000000020'
+  commandName: 'EndSession'
+  packageName: 'Json'
+  disabled: false
+  attributes:
+    - name: 'session'
+      value:
+        type: 'SESSION'
+        sessionName:
+          type: 'STRING'
+          string: 'Default'
+expect:
+  op: json.end

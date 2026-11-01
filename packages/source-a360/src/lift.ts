@@ -417,6 +417,12 @@ function liftAction(
     const ref = varRefOf(value);
     if (ref) outputs[key] = ref;
   }
+  // REST Web Service returns parts of the response into variables by key, e.g. Body (A-25)
+  if (node.returnTo?.type === 'DICTIONARY')
+    for (const e of node.returnTo.dictionary ?? []) {
+      const ref = varRefOf(e.value);
+      if (ref) outputs[e.key] = ref;
+    }
 
   const mapping = ctx.lookup(node.packageName, node.commandName);
   const op = (mapping?.irOp ?? `vendor:a360/${node.packageName}/${node.commandName}`) as OpName;

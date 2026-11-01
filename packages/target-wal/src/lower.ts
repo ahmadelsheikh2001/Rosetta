@@ -84,6 +84,9 @@ class Lowerer {
     varTypes: new Map(),
     vaultCredentials: new Map(),
     browsers: new Set(),
+    jsonSessions: new Map(),
+    emailSessions: new Map(),
+    counts: new Map(),
     helper: (key, defVar) => {
       const known = this.sharedHelpers.get(key);
       if (known) return known;

@@ -1,0 +1,23 @@
+id: a360.json.getnodevalue
+from: external A360 exports (Bot Store, GitHub), not stored, see A-25
+node:
+  uid: '00000000-0000-4000-a000-000000000019'
+  commandName: 'GetNodeValue'
+  packageName: 'Json'
+  disabled: false
+  attributes:
+    - name: 'nodePath'
+      value:
+        type: 'STRING'
+        string: 'data.name'
+    - name: 'session'
+      value:
+        type: 'SESSION'
+        sessionName:
+          type: 'STRING'
+          string: 'Default'
+  returnTo:
+    type: 'VARIABLE'
+    variableName: 'vName'
+expect:
+  op: json.getValue

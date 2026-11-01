@@ -1,0 +1,71 @@
+id: a360.rest.restget
+from: external A360 exports (Bot Store, GitHub), not stored, see A-25
+node:
+  uid: '00000000-0000-4000-a000-000000000016'
+  commandName: 'restGet'
+  packageName: 'Rest'
+  disabled: false
+  attributes:
+    - name: 'uriOption'
+      value:
+        type: 'STRING'
+        string: 'text'
+    - name: 'uri'
+      value:
+        type: 'STRING'
+        expression: 'https://api.example.test/items/$vId$'
+    - name: 'proxyType'
+      value:
+        type: 'STRING'
+        string: 'SYSTEM'
+    - name: 'authenticationMode'
+      value:
+        type: 'STRING'
+        string: 'NoAuthentication'
+    - name: 'customHeaders'
+      value:
+        type: 'LIST'
+        list:
+          - type: 'DICTIONARY'
+            dictionary:
+              - key: 'enabled'
+                value:
+                  type: 'BOOLEAN'
+                  boolean: true
+              - key: 'name'
+                value:
+                  type: 'STRING'
+                  string: 'Accept'
+              - key: 'value'
+                value:
+                  type: 'STRING'
+                  string: 'application/json'
+    - name: 'captureFailureResponse'
+      value:
+        type: 'BOOLEAN'
+        boolean: false
+    - name: 'allowInsecureConnection'
+      value:
+        type: 'BOOLEAN'
+        boolean: false
+    - name: 'acceptCookies'
+      value:
+        type: 'BOOLEAN'
+        boolean: false
+    - name: 'downloadFile'
+      value:
+        type: 'BOOLEAN'
+        boolean: false
+    - name: 'timeOut'
+      value:
+        type: 'NUMBER'
+        number: '60000'
+  returnTo:
+    type: 'DICTIONARY'
+    dictionary:
+      - key: 'Body'
+        value:
+          type: 'VARIABLE'
+          variableName: 'vBody'
+expect:
+  op: http.get

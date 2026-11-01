@@ -1,0 +1,14 @@
+id: a360.email.closeemail
+from: external A360 exports (Bot Store, GitHub), not stored, see A-25
+node:
+  uid: '00000000-0000-4000-a000-000000000023'
+  commandName: 'closeEmail'
+  packageName: 'Email'
+  disabled: false
+  attributes:
+    - name: 'session'
+      value:
+        type: 'STRING'
+        string: 'EmailSession'
+expect:
+  op: email.close

@@ -1,0 +1,89 @@
+id: a360.rest.restpost
+from: external A360 exports (Bot Store, GitHub), not stored, see A-25
+node:
+  uid: '00000000-0000-4000-a000-000000000017'
+  commandName: 'restPost'
+  packageName: 'Rest'
+  disabled: false
+  attributes:
+    - name: 'uriOption'
+      value:
+        type: 'STRING'
+        string: 'text'
+    - name: 'uri'
+      value:
+        type: 'STRING'
+        string: 'https://api.example.test/items'
+    - name: 'proxyType'
+      value:
+        type: 'STRING'
+        string: 'SYSTEM'
+    - name: 'authenticationMode'
+      value:
+        type: 'STRING'
+        string: 'NoAuthentication'
+    - name: 'customHeaders'
+      value:
+        type: 'LIST'
+        list:
+          - type: 'DICTIONARY'
+            dictionary:
+              - key: 'enabled'
+                value:
+                  type: 'BOOLEAN'
+                  boolean: true
+              - key: 'name'
+                value:
+                  type: 'STRING'
+                  string: 'Content-Type'
+              - key: 'value'
+                value:
+                  type: 'STRING'
+                  string: 'application/json'
+          - type: 'DICTIONARY'
+            dictionary:
+              - key: 'enabled'
+                value:
+                  type: 'BOOLEAN'
+                  boolean: true
+              - key: 'name'
+                value:
+                  type: 'STRING'
+                  string: 'Authorization'
+              - key: 'value'
+                value:
+                  type: 'STRING'
+                  expression: 'Bearer $vToken$'
+    - name: 'headerContentType'
+      value:
+        type: 'STRING'
+        string: 'application/json'
+    - name: 'parameterOption'
+      value:
+        type: 'STRING'
+        string: 'text'
+    - name: 'jsonPostParameters'
+      value:
+        type: 'STRING'
+        expression: '{"name": "$vName$"}'
+    - name: 'captureFailureResponse'
+      value:
+        type: 'BOOLEAN'
+        boolean: false
+    - name: 'allowInsecureConnection'
+      value:
+        type: 'BOOLEAN'
+        boolean: false
+    - name: 'acceptCookies'
+      value:
+        type: 'BOOLEAN'
+        boolean: false
+    - name: 'timeOut'
+      value:
+        type: 'NUMBER'
+        number: '60000'
+  returnTo:
+    type: 'VARIABLE'
+    variableName: 'vResponse'
+expect:
+  op: http.post

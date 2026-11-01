@@ -1,7 +1,7 @@
 id: a360.file.createfile
 from: external A360 exports (Bot Store, GitHub), not stored, see A-25
 node:
-  uid: '00000000-0000-4000-a000-000000000016'
+  uid: '00000000-0000-4000-a000-000000000024'
   commandName: 'createFile'
   packageName: 'File'
   disabled: false

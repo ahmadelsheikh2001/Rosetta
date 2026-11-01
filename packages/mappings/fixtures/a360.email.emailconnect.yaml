@@ -1,0 +1,26 @@
+id: a360.email.emailconnect
+from: external A360 exports (Bot Store, GitHub), not stored, see A-25
+node:
+  uid: '00000000-0000-4000-a000-000000000021'
+  commandName: 'emailConnect'
+  packageName: 'Email'
+  disabled: false
+  attributes:
+    - name: 'session'
+      value:
+        type: 'STRING'
+        string: 'EmailSession'
+    - name: 'serverType'
+      value:
+        type: 'STRING'
+        string: 'OUTLOOK'
+    - name: 'select'
+      value:
+        type: 'STRING'
+        string: 'VARIABLE'
+    - name: 'emailIDVar'
+      value:
+        type: 'STRING'
+        expression: '$vMailbox$'
+expect:
+  op: email.connect
