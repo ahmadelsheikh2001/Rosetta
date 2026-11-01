@@ -562,14 +562,20 @@ class Generator {
       if (isHelper(v.name)) return [];
       if (v.type.kind === 'handle') return []; // Excel / browser instances are sessions in A360
       const list = v.type.kind === 'list' || v.type.kind === 'dict';
-      const type = list
+      let type = list
         ? v.type.kind === 'list'
           ? 'LIST'
           : 'DICTIONARY'
         : variableTypes[v.type.kind];
       if (!type) {
-        this.note('manual', `Variable ${v.name}: type ${v.type.kind} has no A360 equivalent yet.`);
-        return [];
+        // declared all the same: a command that is converted may still use it ("Variable not
+        // found" otherwise, as checkA360 reports)
+        const name = v.type.kind === 'unknown' ? v.type.sourceType : v.type.kind;
+        this.note(
+          'manual',
+          `Variable ${v.name}: type ${name} has no A360 equivalent; declared as STRING. Check the commands that use it.`,
+        );
+        type = 'STRING';
       }
       const node: Node = {
         name: v.name,

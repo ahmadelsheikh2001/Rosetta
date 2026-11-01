@@ -259,6 +259,36 @@ describe('readWal', () => {
     ]);
   });
 
+  it("reads the script's own onError handler as a Try around the rest, with the handler as Catch", () => {
+    const { bot, diagnostics } = read(
+      [
+        'logMessage --message "start" --type "Info"',
+        'onError --label HandleError',
+        'logMessage --message "work" --type "Info"',
+        'beginSub --name HandleError',
+        'logMessage --message "failed" --type "Error"',
+        'recover',
+        'endSub',
+      ].join('\n'),
+    );
+    expect(diagnostics).toEqual([]);
+    expect(bot.body).toMatchObject([
+      { kind: 'action', args: { message: lit('start') } },
+      {
+        kind: 'try',
+        body: [{ kind: 'action', args: { message: lit('work') } }],
+        catches: [
+          {
+            body: [
+              { kind: 'comment', text: expect.stringContaining('recover') as unknown },
+              { kind: 'action', args: { message: lit('failed') } },
+            ],
+          },
+        ],
+      },
+    ]);
+  });
+
   it('reports what it cannot read instead of failing', () => {
     const { bot, diagnostics } = read('setVar --name "x --value 1\nonError --label Catch1');
     expect(bot.body.map((s) => s.kind)).toEqual(['unknown', 'unknown']);

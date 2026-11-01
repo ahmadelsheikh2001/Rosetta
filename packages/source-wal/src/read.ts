@@ -190,6 +190,43 @@ class Reader {
     }
   }
 
+  hasSub(name: string): boolean {
+    return this.subs.has(name);
+  }
+
+  /**
+   * `onError --label H` set by the script: the statements after it in the same block, guarded by
+   * the subroutine H. A trailing `recover` means "go on after the failing command", which A360
+   * cannot do: the Catch ends the Try instead, and a comment says so.
+   */
+  handlerTry(name: string, body: Statement[], n: number): Statement {
+    const lines = this.subs.get(name) ?? [];
+    const recovers = lines.at(-1)?.text === 'recover';
+    this.inlining.push(name);
+    try {
+      const handler = new Parser(this, recovers ? lines.slice(0, -1) : lines).parse(
+        new Set(),
+      ).block;
+      const note: Statement = {
+        id: `L${String(n)}c`,
+        source: this.ref(n, `onError ${name}`),
+        kind: 'comment',
+        text: recovers
+          ? `WAL error handler ${name}: WAL went on after the failing command (recover); A360 leaves the Try here`
+          : `WAL error handler ${name}`,
+      };
+      return {
+        id: `L${String(n)}`,
+        source: this.ref(n, `onError ${name}`),
+        kind: 'try',
+        body,
+        catches: [{ body: [note, ...handler] }],
+      };
+    } finally {
+      this.inlining.pop();
+    }
+  }
+
   /** True for a Catch subroutine written by target-wal: it sets a `rosettaTryNFailed` flag. */
   isCatch(name: string): boolean {
     return (this.subs.get(name) ?? []).some((l) =>
@@ -391,6 +428,14 @@ class Parser {
         continue;
       }
       if (stop.has(cmd.verb)) return { block, end: { verb: cmd.verb, line } };
+      // A handler the script sets itself watches the rest of the block: a Try around it whose
+      // Catch is the handler subroutine (the reverse of ADR-020)
+      const handler = cmd.verb === 'onError' ? unquote(String(cmd.params.get('label') ?? '')) : '';
+      if (handler && !this.r.isCatch(handler) && this.r.hasSub(handler)) {
+        const rest = this.parse(stop, inFinally);
+        block.push(this.r.handlerTry(handler, rest.block, n));
+        return rest.end ? { block, end: rest.end } : { block };
+      }
       const s = this.statement(cmd, line);
       if (s?.kind === 'try') {
         // a nested Try restores the enclosing handler right after its goSub

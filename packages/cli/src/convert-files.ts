@@ -69,9 +69,22 @@ export interface A360File {
   readonly fileName: string;
   /** The task bot JSON, as written back to the Control Room (A-24). */
   readonly text: string;
-  readonly notes: readonly A360Note[];
+  /** Notes, each once; `count` is how often it came up (subroutines are inlined at each goSub). */
+  readonly notes: readonly (A360Note & { readonly count: number })[];
   /** What the A360 editor or compiler would reject; the upload API checks nothing (A-24). */
   readonly problems: readonly A360Problem[];
+}
+
+/** The same note from the same source line, once, with how often it came up. */
+function grouped(notes: readonly A360Note[]): (A360Note & { count: number })[] {
+  const byKey = new Map<string, A360Note & { count: number }>();
+  for (const n of notes) {
+    const key = `${n.kind}\u0000${n.text}\u0000${n.source ?? ''}`;
+    const seen = byKey.get(key);
+    if (seen) seen.count++;
+    else byKey.set(key, { ...n, count: 1 });
+  }
+  return [...byKey.values()];
 }
 
 /**
@@ -96,7 +109,7 @@ export function convertWalFiles(
       name,
       fileName: `${name}.json`,
       text: `${JSON.stringify(json, null, 2)}\n`,
-      notes,
+      notes: grouped(notes),
       problems: checkA360(json),
     });
   }
@@ -128,7 +141,10 @@ export function renderA360Notes(bot: A360File): string {
   ] as const) {
     if (list.length === 0) continue;
     out.push(`## ${title}`, '', '| Note | Source |', '| --- | --- |');
-    for (const n of list) out.push(`| ${cell(n.text)} | ${n.source ?? ''} |`);
+    for (const n of list)
+      out.push(
+        `| ${cell(n.text)}${n.count > 1 ? ` (×${String(n.count)})` : ''} | ${n.source ?? ''} |`,
+      );
     out.push('');
   }
   return out.join('\n');

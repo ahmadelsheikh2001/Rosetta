@@ -199,6 +199,11 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: Se
   `C:\Logs\<bot>.log` with a note); `replaceText` with a real regex → String replace with the
   regular-expression option and a note on Java vs .NET rules. Still manual: `getRegex` (no A360
   shape seen yet), a cell whose column is a variable, PDF / OCR.
+- A script's own `onError --label H` becomes a Try around the rest of its block with H as the
+  Catch (a trailing `recover` is noted: A360 leaves the Try). Variables of a type A360 lacks
+  (TimeSpan, Pdf) are declared as STRING with a note, so converted commands that use them do not
+  fail with "Variable not found". Notes repeated by inlined subroutines are shown once with a
+  count (ABE OCR: 235 → 60 lines, A360 check problems 2 → 0).
 - `.wal` files saved by Studio 30.0.2 are read: they are a protobuf envelope around the script
   (W-19). `readWalFile` (source-wal) and the web UI take the script out; before, the header bytes
   became an unknown command and the footer broke the last `endSub`.

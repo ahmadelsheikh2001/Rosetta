@@ -531,6 +531,9 @@ function renderBot(bot, index) {
           'span',
           {},
           n.text,
+          n.count > 1
+            ? el('span', { class: 'times', title: 'Comes up this many times' }, '×' + n.count)
+            : null,
           n.source ? el('span', { class: 'src' }, to.sourceLabel + n.source) : null,
         ),
       ),

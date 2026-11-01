@@ -801,6 +801,14 @@ details.alert li + li {
   font-size: 0.8rem;
   display: block;
 }
+.notes .times {
+  margin-left: 8px;
+  padding: 0 7px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--vs-white) 12%, transparent);
+  font-size: 0.78rem;
+  font-weight: 600;
+}
 .notes .empty {
   display: block;
   color: var(--muted);
