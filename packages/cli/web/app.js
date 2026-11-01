@@ -231,6 +231,7 @@ $('convert').addEventListener('click', async () => {
             notes.push({ file: f.name, severity: 'warning', text: 'not a bot file, skipped' });
             return [];
           }
+          if (/\.wal$/i.test(f.name)) return [{ name: f.name, text: await walText(f) }];
           if (!/\.zip$/i.test(f.name)) return [{ name: f.name, text: await f.text() }];
           const zip = await botsFromZip(f);
           notes.push(...zip.problems.map((p) => ({ file: f.name, severity: 'warning', text: p })));
@@ -675,6 +676,46 @@ function downloadAll() {
   }
   if (last.reportHtml) files.push(['report.html', last.reportHtml]);
   save(lastRoute.zip, zip(files), 'application/zip');
+}
+
+// ---- IBM RPA Studio files ----
+
+/**
+ * Script of a .wal file. Studio 30.0.2 saves it inside a protobuf envelope (field 2 is the
+ * script); a script saved as text has none. Same rules as readWalFile in source-wal.
+ */
+async function walText(file) {
+  const b = new Uint8Array(await file.arrayBuffer());
+  const utf8 = new TextDecoder();
+  if (b[0] !== 0x0a || b[1] === 0x0a || b[1] === 0x0d) return utf8.decode(b);
+  const varint = (at) => {
+    let value = 0;
+    let shift = 0;
+    let i = at;
+    for (;;) {
+      if (i >= b.length || shift > 35) throw new Error('truncated');
+      const c = b[i++];
+      value += (c & 0x7f) * 2 ** shift;
+      shift += 7;
+      if (c < 0x80) return [value, i];
+    }
+  };
+  try {
+    let i = 0;
+    while (i < b.length) {
+      const [key, next] = varint(i);
+      i = next;
+      if ((key & 7) === 0) i = varint(i)[1];
+      else if ((key & 7) === 2) {
+        const [length, start] = varint(i);
+        if (key >> 3 === 2) return utf8.decode(b.subarray(start, start + length));
+        i = start + length;
+      } else break;
+    }
+  } catch {
+    // not an envelope after all
+  }
+  return utf8.decode(b);
 }
 
 // ---- Export zips (read in the browser; the zip itself is never uploaded) ----

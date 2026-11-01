@@ -191,6 +191,9 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: Se
   dotted node path; Email connect (Outlook) / send / close → `outlookConnect`, `emailSend`
   (addresses split into a list at ";"), `emailDisconnect`. Generic A360 lifting now keeps outputs
   returned as a dictionary by key. Manual places on the 11 external bots: 27.
+- `.wal` files saved by Studio 30.0.2 are read: they are a protobuf envelope around the script
+  (W-19). `readWalFile` (source-wal) and the web UI take the script out; before, the header bytes
+  became an unknown command and the footer broke the last `endSub`.
 - Web UI redesigned with tabs: Convert (direction and files side by side, action bar), Results
   (summary, messages folded, list of bots on the left and the chosen bot on the right) and
   Assessment report (shown in the page, with open and download). Sizes in MB; phone layout
