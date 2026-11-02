@@ -1,0 +1,12 @@
+id: a360.screen.capturedesktop
+source:
+  platform: a360
+  package: Screen
+  command: captureDesktop
+status: planned
+evidence:
+  - external A360 exports (Agentic App Store, 2026-11-02), not stored, see A-27
+notes:
+  'Seen in 9 of 27 top-downloaded Bot Store A360 bots (12 uses). Dictionary v2 proposal: NATIVE ->
+  printScreen. Corrected 2026-11-02: verb "interface-take-screenshot" does not exist in 30.0.x. Unverified
+  in Studio (ADR-017): promote to partial with a fixture after a probe.'

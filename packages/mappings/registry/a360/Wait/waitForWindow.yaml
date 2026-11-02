@@ -1,0 +1,12 @@
+id: a360.wait.waitforwindow
+source:
+  platform: a360
+  package: Wait
+  command: waitForWindow
+status: planned
+evidence:
+  - external A360 exports (Agentic App Store, 2026-11-02), not stored, see A-27
+notes:
+  'Seen in 2 of 27 top-downloaded Bot Store A360 bots (2 uses). Dictionary v2 proposal: NATIVE ->
+  waitWindow / waitWindowClose. Unverified in Studio (ADR-017): promote to partial with a fixture after
+  a probe.'

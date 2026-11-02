@@ -1,0 +1,13 @@
+id: a360.regex-tools.replace-based-on-regex
+source:
+  platform: a360
+  package: REGEX Tools
+  command: Replace based on Regex
+status: planned
+evidence:
+  - package.json of Bot Store package "a2019-regular-expression-tools-package" (2026-11-02), not stored,
+    see A-27
+notes:
+  'Declared by package jar of Bot Store listing a2019-regular-expression-tools-package. Dictionary
+  v2 proposal: NATIVE -> getRegex / getRegexTable / replaceText --useregex / isMatch / countTextOccurrences.
+  Unverified in Studio (ADR-017): promote to partial with a fixture after a probe.'

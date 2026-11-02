@@ -1,0 +1,12 @@
+id: a360.htmlparser.simplesearch
+source:
+  platform: a360
+  package: HTMLParser
+  command: simplesearch
+status: planned
+evidence:
+  - package.json of Bot Store package "a2019-html-parser-package" (2026-11-02), not stored, see A-27
+notes:
+  'Declared by package jar of Bot Store listing a2019-html-parser-package. Dictionary v2 proposal:
+  NATIVE -> mapHTML / getTablesFromHtml / htmlToText / getRegex. Unverified in Studio (ADR-017): promote
+  to partial with a fixture after a probe.'

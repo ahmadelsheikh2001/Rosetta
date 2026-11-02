@@ -1,0 +1,13 @@
+id: a360.a2019demopackage.convert-characode
+source:
+  platform: a360
+  package: A2019DemoPackage
+  command: Convert_characode
+status: planned
+evidence:
+  - package.json of Bot Store package "a2019-characode-converter-package" (2026-11-02), not stored, see
+    A-27
+notes:
+  'Declared by package jar of Bot Store listing a2019-characode-converter-package. Dictionary v2
+  proposal: WORKAROUND -> runCSharpCode (Encoding.Convert). Unverified in Studio (ADR-017): promote to
+  partial with a fixture after a probe.'

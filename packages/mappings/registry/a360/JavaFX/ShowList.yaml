@@ -1,0 +1,12 @@
+id: a360.javafx.showlist
+source:
+  platform: a360
+  package: JavaFX
+  command: ShowList
+status: planned
+evidence:
+  - package.json of Bot Store package "java-fx-package" (2026-11-02), not stored, see A-27
+notes:
+  'Declared by package jar of Bot Store listing java-fx-package. Dictionary v2 proposal: NATIVE ->
+  messageBox / inputBox / selectFile / selectFolder; tables via showProgress n/a. Unverified in Studio
+  (ADR-017): promote to partial with a fixture after a probe.'

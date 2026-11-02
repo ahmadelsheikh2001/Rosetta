@@ -1,0 +1,12 @@
+id: a360.aws-comprehend-nlp.getnamedentitiescomprehend
+source:
+  platform: a360
+  package: AWS Comprehend NLP
+  command: getNamedEntitiesComprehend
+status: planned
+evidence:
+  - package.json of Bot Store package "a2019-amazon-comprehend" (2026-11-02), not stored, see A-27
+notes:
+  'Declared by package jar of Bot Store listing a2019-amazon-comprehend. Dictionary v2 proposal:
+  PATTERN -> httpRequest -> Comprehend (SigV4: script). Unverified in Studio (ADR-017): promote to partial
+  with a fixture after a probe.'

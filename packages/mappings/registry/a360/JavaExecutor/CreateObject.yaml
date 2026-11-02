@@ -1,0 +1,12 @@
+id: a360.javaexecutor.createobject
+source:
+  platform: a360
+  package: JavaExecutor
+  command: CreateObject
+status: planned
+evidence:
+  - package.json of Bot Store package "java-executor-package" (2026-11-02), not stored, see A-27
+notes:
+  'Declared by package jar of Bot Store listing java-executor-package. Dictionary v2 proposal: WORKAROUND
+  -> runDOSCommand (java -jar) / no in-process JVM. Unverified in Studio (ADR-017): promote to partial
+  with a fixture after a probe.'

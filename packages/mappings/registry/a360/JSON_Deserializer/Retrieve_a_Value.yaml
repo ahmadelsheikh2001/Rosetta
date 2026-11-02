@@ -1,0 +1,11 @@
+id: a360.json-deserializer.retrieve-a-value
+source:
+  platform: a360
+  package: JSON Deserializer
+  command: Retrieve a Value
+status: planned
+evidence:
+  - external A360 exports (Agentic App Store, 2026-11-02), not stored, see A-27
+notes:
+  'Seen in 1 of 27 top-downloaded Bot Store A360 bots (2 uses). Dictionary v2 proposal: REVIEW ->
+  (none). Unverified in Studio (ADR-017): promote to partial with a fixture after a probe.'

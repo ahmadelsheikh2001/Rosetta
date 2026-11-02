@@ -1,0 +1,12 @@
+id: a360.microsoftluisnlp.getkeyphrasesluis
+source:
+  platform: a360
+  package: MicrosoftLUISNLP
+  command: getKeyPhrasesLuis
+status: planned
+evidence:
+  - package.json of Bot Store package "a2019-microsoft-luis-nlp" (2026-11-02), not stored, see A-27
+notes:
+  'Declared by package jar of Bot Store listing a2019-microsoft-luis-nlp. Dictionary v2 proposal:
+  PATTERN -> httpRequest -> Azure CLU/LUIS REST. Unverified in Studio (ADR-017): promote to partial with
+  a fixture after a probe.'

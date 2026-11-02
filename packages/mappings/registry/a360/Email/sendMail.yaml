@@ -1,0 +1,12 @@
+id: a360.email.sendmail
+source:
+  platform: a360
+  package: Email
+  command: sendMail
+status: planned
+evidence:
+  - external A360 exports (Agentic App Store, 2026-11-02), not stored, see A-27
+notes:
+  'Seen in 2 of 27 top-downloaded Bot Store A360 bots (8 uses). Dictionary v2 proposal: NATIVE ->
+  emailSend (+ smtpConnect | exchangeConnect | outlookConnect per serverType). Unverified in Studio (ADR-017):
+  promote to partial with a fixture after a probe.'

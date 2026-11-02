@@ -1,0 +1,11 @@
+id: a360.python.python-commands-closescript
+source:
+  platform: a360
+  package: Python
+  command: python.commands.closeScript
+status: planned
+evidence:
+  - external A360 exports (Agentic App Store, 2026-11-02), not stored, see A-27
+notes:
+  'Seen in 5 of 27 top-downloaded Bot Store A360 bots (6 uses). Dictionary v2 proposal: DROP -> n/a.
+  Unverified in Studio (ADR-017): promote to partial with a fixture after a probe.'

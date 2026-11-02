@@ -7,6 +7,9 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: Se
 
 ### Added
 
+- `@rosetta/mappings`: 624 `planned` registry entries (100 packages) from real Agentic App Store
+  exports (top-30 A360 bots, 72 Automation Anywhere package jars), each with the mapping-dictionary
+  v2 IBM RPA 30.0.2 proposal in its notes (A-27). Coverage is unchanged: `planned` counts as manual.
 - Monorepo foundation: pnpm workspaces, TypeScript 6 strict with project references, ESLint
   (type-checked) + Prettier, Vitest, commitlint + husky.
 - `@rosetta/ir`: IR v0 types (bots, variables, statements, expressions, UI targets, diagnostics)

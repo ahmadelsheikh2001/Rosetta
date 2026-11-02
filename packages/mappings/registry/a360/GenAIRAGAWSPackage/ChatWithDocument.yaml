@@ -1,0 +1,13 @@
+id: a360.genairagawspackage.chatwithdocument
+source:
+  platform: a360
+  package: GenAIRAGAWSPackage
+  command: ChatWithDocument
+status: planned
+evidence:
+  - package.json of Bot Store package "aws-knowledge-retrieval-conversation-rag" (2026-11-02), not stored,
+    see A-27
+notes:
+  'Declared by package jar of Bot Store listing aws-knowledge-retrieval-conversation-rag. Dictionary
+  v2 proposal: PATTERN -> httpRequest -> AWS Bedrock KB REST (SigV4: script). Unverified in Studio (ADR-017):
+  promote to partial with a fixture after a probe.'

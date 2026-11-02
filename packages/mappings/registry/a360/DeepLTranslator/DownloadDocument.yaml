@@ -1,0 +1,12 @@
+id: a360.deepltranslator.downloaddocument
+source:
+  platform: a360
+  package: DeepLTranslator
+  command: DownloadDocument
+status: planned
+evidence:
+  - package.json of Bot Store package "deepl-translator-package" (2026-11-02), not stored, see A-27
+notes:
+  'Declared by package jar of Bot Store listing deepl-translator-package. Dictionary v2 proposal:
+  PATTERN -> httpRequest -> DeepL REST. Unverified in Studio (ADR-017): promote to partial with a fixture
+  after a probe.'

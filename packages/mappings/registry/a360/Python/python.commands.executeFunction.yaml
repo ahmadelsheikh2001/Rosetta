@@ -1,0 +1,11 @@
+id: a360.python.python-commands-executefunction
+source:
+  platform: a360
+  package: Python
+  command: python.commands.executeFunction
+status: planned
+evidence:
+  - external A360 exports (Agentic App Store, 2026-11-02), not stored, see A-27
+notes:
+  'Seen in 5 of 27 top-downloaded Bot Store A360 bots (10 uses). Dictionary v2 proposal: NATIVE ->
+  runDOSCommand. Unverified in Studio (ADR-017): promote to partial with a fixture after a probe.'

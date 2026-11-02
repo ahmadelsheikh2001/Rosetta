@@ -1,0 +1,12 @@
+id: a360.screen.capturewindow
+source:
+  platform: a360
+  package: Screen
+  command: captureWindow
+status: planned
+evidence:
+  - package.json of Bot Store package "openai-chatgpt-package" (2026-11-02), not stored, see A-27
+notes:
+  'Declared by package jar of Bot Store listing openai-chatgpt-package. Dictionary v2 proposal: COMPOSITE
+  -> printWindow + saveImage. Corrected 2026-11-02: verb "interface-take-screenshot" does not exist in
+  30.0.x. Unverified in Studio (ADR-017): promote to partial with a fixture after a probe.'

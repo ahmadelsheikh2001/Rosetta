@@ -1,0 +1,12 @@
+id: a360.iqbot-additional.iqbotgroup
+source:
+  platform: a360
+  package: IQBot Additional
+  command: IQBotGroup
+status: planned
+evidence:
+  - package.json of Bot Store package "iq-bot-additional" (2026-11-02), not stored, see A-27
+notes:
+  'Declared by package jar of Bot Store listing iq-bot-additional. Dictionary v2 proposal: PLATFORM
+  -> IBM Datacap / watsonx document understanding. Unverified in Studio (ADR-017): promote to partial
+  with a fixture after a probe.'

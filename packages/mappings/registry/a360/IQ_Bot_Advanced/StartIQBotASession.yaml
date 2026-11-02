@@ -1,0 +1,12 @@
+id: a360.iq-bot-advanced.startiqbotasession
+source:
+  platform: a360
+  package: IQ Bot Advanced
+  command: StartIQBotASession
+status: planned
+evidence:
+  - package.json of Bot Store package "iq-bot-advanced-package" (2026-11-02), not stored, see A-27
+notes:
+  'Declared by package jar of Bot Store listing iq-bot-advanced-package. Dictionary v2 proposal:
+  PLATFORM -> IBM Datacap / document processing API. Unverified in Studio (ADR-017): promote to partial
+  with a fixture after a probe.'
