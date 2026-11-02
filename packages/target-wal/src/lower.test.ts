@@ -160,7 +160,8 @@ describe('lowerBot', () => {
       '// ---- Step ----',
       '// hello',
       'if --left "${n}" --operator "Greater_Than" --right 5',
-      '// TODO [ROSETTA] vendor:a360/X/y: no conversion for this command yet',
+      '// A360 X/y (not converted; inputs below):',
+      'goSub --label Rosetta_X_y',
       'else',
       'endIf',
       'for --variable ${rosettaIndex1} --from 1 --to 3 --step 1',
@@ -177,6 +178,11 @@ describe('lowerBot', () => {
       'setVar --name "${rosettaTry1Failed}" --value True',
       'setVar --name "${err}" --value "${rpa:errorMessage}"',
       'recover',
+      'endSub',
+      '// ---- Stub subroutines: A360 commands with no IBM RPA conversion yet ----',
+      'beginSub --name Rosetta_X_y',
+      '// A360 X/y: no IBM RPA conversion yet. Replace this body.',
+      'failTest --message "Not converted: A360 X/y (Rosetta stub Rosetta_X_y)"',
       'endSub',
     ]);
   });
@@ -336,9 +342,12 @@ describe('lowerBot', () => {
     const script = lowerBot(b, opts);
     const all = script.text.split('\r\n');
     // notes written inside subroutines are shifted when the subroutines are appended
-    for (const op of ['vendor:a360/X/y', 'vendor:a360/X/z']) {
-      const note = script.notes.find((n) => n.kind === 'manual' && n.text.startsWith(op));
-      expect(all[(note?.line ?? 0) - 1]).toContain(`TODO [ROSETTA] ${op}`);
+    // commands with no conversion become a call to a stub subroutine (A-27)
+    for (const key of ['X/y', 'X/z']) {
+      const note = script.notes.find((n) => n.kind === 'manual' && n.text.startsWith(`${key}:`));
+      expect(all[(note?.line ?? 0) - 1]).toContain(
+        `goSub --label Rosetta_${key.replace('/', '_')}`,
+      );
     }
   });
 });

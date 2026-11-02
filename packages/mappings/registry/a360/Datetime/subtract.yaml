@@ -3,9 +3,11 @@ source:
   platform: a360
   package: Datetime
   command: subtract
-status: planned
+status: partial
+irOp: datetime.subtract
 evidence:
   - external A360 exports (Agentic App Store, 2026-11-02), not stored, see A-27
 notes:
-  'Seen in 7 of 27 top-downloaded Bot Store A360 bots (7 uses). Dictionary v2 proposal: NATIVE ->
-  addToDateTime. Unverified in Studio (ADR-017): promote to partial with a fixture after a probe.'
+  Seen in 7 of 27 top-downloaded Bot Store A360 bots. Attributes (source, val, unit) from the A360
+  package metadata, as Datetime/add. WAL addToDateTime with a negative value; draft until verified in
+  IBM RPA Studio (ADR-017).

@@ -3,9 +3,10 @@ source:
   platform: a360
   package: Excel_MS
   command: GetSingleCell
-status: planned
+status: partial
+irOp: excel.getCell
 evidence:
   - external A360 exports (Agentic App Store, 2026-11-02), not stored, see A-27
-notes:
-  'Seen in 5 of 27 top-downloaded Bot Store A360 bots (59 uses). Dictionary v2 proposal: NATIVE ->
-  excelGet. Unverified in Studio (ADR-017): promote to partial with a fixture after a probe.'
+notes: Seen in 5 of 27 top-downloaded Bot Store A360 bots (59 uses). Attributes (activeCell, cell,
+  readOption, session) from the A360 package metadata. WAL excelGet on a specific cell; the active cell
+  has no IBM equivalent. Draft until verified in IBM RPA Studio (ADR-017).

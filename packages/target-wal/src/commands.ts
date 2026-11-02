@@ -548,6 +548,32 @@ export const lowerers: Readonly<Record<string, Lowerer>> = {
       doc('addToDateTime'),
     );
   },
+  // Datetime: Subtract (A-27; same attributes as Add per the A360 package metadata): addToDateTime
+  // with the amount negated
+  'datetime.subtract': (a, w, s) => {
+    const h = helpers(a, w);
+    const unit = dateUnits[h.str('unit') ?? ''];
+    if (!unit) {
+      manual(a, w, `date unit ${h.str('unit') ?? '?'} not supported`);
+      return;
+    }
+    const v = a.args.val;
+    let amount: string;
+    if (v?.kind === 'literal' && v.value !== null && Number.isFinite(Number(v.value)))
+      amount = String(-Number(v.value));
+    else {
+      const neg = s.helper('dateSubtractBy', (n) => `defVar --name ${n} --type Numeric`);
+      h.emit(
+        `evaluate --expression ${quote(`0 - ${textOf(v ?? { kind: 'literal', value: 0 }, h.sink)}`)} ${neg}=value`,
+        doc('evaluate'),
+      );
+      amount = ref(neg);
+    }
+    h.emit(
+      `addToDateTime --date ${h.val('source')} --value ${amount} --type "${unit}" ${h.out()}=value`,
+      doc('addToDateTime with a negative value'),
+    );
+  },
   'datetime.format': (a, w) => {
     const h = helpers(a, w);
     if (h.str('selectPattern') !== 'CUSTOM') {
@@ -858,6 +884,30 @@ export const lowerers: Readonly<Record<string, Lowerer>> = {
       ...(session.sheet
         ? []
         : [semantic('A360 writes to the active sheet; WAL writes to the first sheet.')]),
+    );
+  },
+  // Get single cell (A-27; attributes per the A360 package metadata): excelGet on a specific cell
+  'excel.getCell': (a, w, s) => {
+    const h = helpers(a, w);
+    const session = excelSession(a, w, s);
+    if (!session) return;
+    if (h.str('activeCell') !== 'false' || !a.args.cell) {
+      manual(a, w, 'reading the active cell is not supported (IBM RPA has no active-cell notion)');
+      return;
+    }
+    h.emit(
+      `excelGet --file ${ref(session.handle)} ${sheetArg(session)} --usingcell --cell ${h.text('cell')} ${h.out()}=value`,
+      doc('excelGet (Get Value from Excel)'),
+      ...(session.sheet
+        ? []
+        : [semantic('A360 reads the active sheet; WAL reads the first sheet.')]),
+      ...(h.str('readOption') === 'READ_CELL_VALUE'
+        ? [
+            semantic(
+              'A360 "cell value" returns the raw value; WAL excelGet returns the cell value as stored.',
+            ),
+          ]
+        : []),
     );
   },
   // Create workbook (A-25): excelOpen on a path that does not exist creates the file (documented)

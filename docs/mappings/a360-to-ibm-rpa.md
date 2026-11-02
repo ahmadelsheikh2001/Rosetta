@@ -133,6 +133,16 @@ rest of the Try block. The flag check returns from the protected subroutine inst
 | WINDOW (browser)               | Not declared: the browser is the one started by `webStart --name browser`                                                                         | Documented                                                 |
 | input / output                 | `--parameter` / `--output`                                                                                                                        | Verified                                                   |
 
+## Commands without a hand-written conversion (ADR-023)
+
+Every other A360 command (1,943 known, A-27) converts through the tiered fallback in
+`packages/target-wal/src/generic.ts`: a **draft** generated from the mapping dictionary rules, a REST
+**template**, a **script/state** conversion, or a typed **stub** subroutine. Measured 2026-11-02 over
+all 1,943: draft 502 (220 complete, 282 with a `{{ROSETTA: …}}` placeholder), template 730, script /
+state 85, stub 602, hand-written 24; 0 static-checker errors. Weighted by use in the 27 top Bot Store
+A360 bots: 78% verified (core + hand-written), 15% draft/state/template, 7% stub. Studio round 11
+(`corpus/ibm/probe-30.0.2/round-11`) verifies the drafts.
+
 ## Not covered yet
 
 Commands from samples not built yet (browser, email, database, terminal, other Excel commands).

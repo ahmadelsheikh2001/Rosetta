@@ -4,3 +4,4 @@ pnpm-lock.yaml
 corpus/
 CHANGELOG.md
 **/golden/
+packages/target-wal/data/

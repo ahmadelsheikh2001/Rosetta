@@ -1,0 +1,228 @@
+// Rosetta probe round 11 - drafts-05.wal: open in IBM RPA Studio 30.0.2, do NOT run.
+// Record the Error List (line + message). Each command follows its "// PROBE <A360 command>" line.
+defVar --name vOut --type String
+defVar --name rosettaChainDataTablesnowflakebulkexport --type DataTable
+defVar --name rosettaChainDataTablesnowflakebulkload --type DataTable
+defVar --name rosettaSessionSnowflakeProbeSession --type String
+defVar --name rosettaSessionSnowflakeProbeSession --type DataTable
+defVar --name rosettaChainDateTimeSystemDay --type DateTime
+defVar --name rosettaChainDateTimeSystemHour --type DateTime
+defVar --name rosettaChainDateTimeSystemMillisecond --type DateTime
+defVar --name rosettaChainDateTimeSystemMinute --type DateTime
+defVar --name rosettaChainDateTimeSystemMonth --type DateTime
+defVar --name rosettaChainDateTimeSystemSecond --type DateTime
+defVar --name rosettaChainDateTimeSystemYear --type DateTime
+defVar --name rosettaChainSmsProviderTwilioMakeCall --type SmsProvider
+defVar --name rosettaChainSmsProviderTwilioSMS --type SmsProvider
+// PROBE Service/pauseService  (used 0x in top-30 Bot Store bots)
+pauseService --name "probe_serviceNameBySelection" vOut=value
+// PROBE Service/resumeService  (used 0x in top-30 Bot Store bots)
+resumeService --name "probe_serviceNameBySelection" vOut=value
+// PROBE Service/startService  (used 0x in top-30 Bot Store bots)
+startService --name "probe_serviceNameBySelection" vOut=value
+// PROBE Service/stopService  (used 0x in top-30 Bot Store bots)
+stopService --name "probe_serviceNameBySelection" vOut=value
+// PROBE snowflake/bulkexport  (used 0x in top-30 Bot Store bots)
+sqlExecuteReader --connection "{{ROSETTA: connection}}" --statement "{{ROSETTA: statement}}" rosettaChainDataTablesnowflakebulkexport=value
+writeTableToFile --delimiter "{{ROSETTA: delimiter}}" --dataTable ${rosettaChainDataTablesnowflakebulkexport} vOut=value
+// PROBE snowflake/bulkload  (used 0x in top-30 Bot Store bots)
+readCSV --filepath "{{ROSETTA: filepath}}" --delimiter "{{ROSETTA: delimiter}}" rosettaChainDataTablesnowflakebulkload=value
+sqlBulkInsert --connection ${rosettaSessionSnowflakeProbeSession} --dataTable ${rosettaChainDataTablesnowflakebulkload} --tablename "{{ROSETTA: tablename}}" vOut=value
+// PROBE snowflake/connect  (used 0x in top-30 Bot Store bots)
+odbcConnect --connectionstring "{{ROSETTA: connectionstring}}"
+// PROBE snowflake/createrow  (used 0x in top-30 Bot Store bots)
+sqlExecute --connection ${rosettaSessionSnowflakeProbeSession} --statement "{{ROSETTA: statement}}" vOut=value
+// PROBE snowflake/deleterows  (used 0x in top-30 Bot Store bots)
+sqlExecute --connection ${rosettaSessionSnowflakeProbeSession} --statement "{{ROSETTA: statement}}" vOut=value
+// PROBE snowflake/disconnect  (used 0x in top-30 Bot Store bots)
+sqlDisconnect --connection ${rosettaSessionSnowflakeProbeSession}
+// PROBE snowflake/executeddl  (used 0x in top-30 Bot Store bots)
+sqlExecute --connection ${rosettaSessionSnowflakeProbeSession} --statement "{{ROSETTA: statement}}" vOut=value
+// PROBE snowflake/executestoredprocedure  (used 0x in top-30 Bot Store bots)
+sqlExecute --connection ${rosettaSessionSnowflakeProbeSession} --statement "{{ROSETTA: statement}}" vOut=value
+// PROBE snowflake/selectrow  (used 0x in top-30 Bot Store bots)
+sqlExecuteReader --connection "{{ROSETTA: connection}}" --statement "{{ROSETTA: statement}}" rosettaSessionSnowflakeProbeSession=value
+// PROBE snowflake/updaterows  (used 0x in top-30 Bot Store bots)
+sqlExecute --connection ${rosettaSessionSnowflakeProbeSession} --statement "{{ROSETTA: statement}}" vOut=value
+// PROBE SoapWebService/soapCommand  (used 0x in top-30 Bot Store bots)
+soapRequest --action "probe_operation" --url "{{ROSETTA: url}}" --source "{{ROSETTA: source}}" vOut=value
+// PROBE String/asListProperty  (used 0x in top-30 Bot Store bots)
+setVar --name "${vOut}" --value "probe_sourceString" --name "{{ROSETTA: name}}"
+// PROBE String/evaluate  (used 0x in top-30 Bot Store bots)
+setVar --name "${vOut}" --value "probe_sourceMap" --name "{{ROSETTA: name}}"
+// PROBE String/ImportStringFromTextFile  (used 0x in top-30 Bot Store bots)
+readAllText --filepath "probe_filePath" vOut=value
+// PROBE String/randomString  (used 0x in top-30 Bot Store bots)
+createRandomText --minimumlength "probe_randomStringLength" --maximumlength "{{ROSETTA: maximumlength}}" vOut=value
+// PROBE String/toBoolean  (used 0x in top-30 Bot Store bots)
+setVar --name "${vOut}" --value "probe_sourceString" --name "{{ROSETTA: name}}"
+// PROBE String/toBooleanProperty  (used 0x in top-30 Bot Store bots)
+setVar --name "${vOut}" --value "probe_sourceString" --name "{{ROSETTA: name}}"
+// PROBE String/toDatetimeProperty  (used 0x in top-30 Bot Store bots)
+textToDateTime --text "probe_sourceString" vOut=value
+// PROBE String/toFileProperty  (used 0x in top-30 Bot Store bots)
+setVar --name "${vOut}" --value "probe_sourceString" --name "{{ROSETTA: name}}"
+// PROBE String/toLocaleNumber  (used 0x in top-30 Bot Store bots)
+convertStringToNumber --culture "probe_localeFormat" --text "probe_sourceString" vOut=value
+// PROBE String/toNumberProperty  (used 0x in top-30 Bot Store bots)
+convertStringToNumber --text "probe_sourceString" --culture "{{ROSETTA: culture}}" vOut=value
+// PROBE System/AATaskExecutor  (used 0x in top-30 Bot Store bots)
+getEnvVar --name "{{ROSETTA: name}}" --target "Process" vOut=value
+// PROBE System/CPUUsage  (used 0x in top-30 Bot Store bots)
+runDOSCommand --command "{{ROSETTA: command}}" vOut=output
+// PROBE System/Date  (used 0x in top-30 Bot Store bots)
+getCurrentDateAndTime --localorutc "LocalTime" vOut=value
+// PROBE System/Day  (used 0x in top-30 Bot Store bots)
+getCurrentDateAndTime --localorutc "LocalTime" rosettaChainDateTimeSystemDay=value
+getDatePart --date ${rosettaChainDateTimeSystemDay} --type "{{ROSETTA: type}}" vOut=value
+// PROBE System/Hour  (used 0x in top-30 Bot Store bots)
+getCurrentDateAndTime --localorutc "LocalTime" rosettaChainDateTimeSystemHour=value
+getDatePart --date ${rosettaChainDateTimeSystemHour} --type "{{ROSETTA: type}}" vOut=value
+// PROBE System/lock  (used 0x in top-30 Bot Store bots)
+lockWorkStation
+// PROBE System/logoff  (used 0x in top-30 Bot Store bots)
+logoff
+// PROBE System/Machine  (used 0x in top-30 Bot Store bots)
+getEnvVar --name "{{ROSETTA: name}}" --target "Process" vOut=value
+// PROBE System/Millisecond  (used 0x in top-30 Bot Store bots)
+getCurrentDateAndTime --localorutc "LocalTime" rosettaChainDateTimeSystemMillisecond=value
+getDatePart --date ${rosettaChainDateTimeSystemMillisecond} --type "{{ROSETTA: type}}" vOut=value
+// PROBE System/Minute  (used 0x in top-30 Bot Store bots)
+getCurrentDateAndTime --localorutc "LocalTime" rosettaChainDateTimeSystemMinute=value
+getDatePart --date ${rosettaChainDateTimeSystemMinute} --type "{{ROSETTA: type}}" vOut=value
+// PROBE System/Month  (used 0x in top-30 Bot Store bots)
+getCurrentDateAndTime --localorutc "LocalTime" rosettaChainDateTimeSystemMonth=value
+getDatePart --date ${rosettaChainDateTimeSystemMonth} --type "{{ROSETTA: type}}" vOut=value
+// PROBE System/OSName  (used 0x in top-30 Bot Store bots)
+getEnvVar --name "{{ROSETTA: name}}" --target "Process" vOut=value
+// PROBE System/RAMUsage  (used 0x in top-30 Bot Store bots)
+runDOSCommand --command "{{ROSETTA: command}}" vOut=output
+// PROBE System/restart  (used 0x in top-30 Bot Store bots)
+shutdown
+// PROBE System/Second  (used 0x in top-30 Bot Store bots)
+getCurrentDateAndTime --localorutc "LocalTime" rosettaChainDateTimeSystemSecond=value
+getDatePart --date ${rosettaChainDateTimeSystemSecond} --type "{{ROSETTA: type}}" vOut=value
+// PROBE System/shutdown  (used 0x in top-30 Bot Store bots)
+shutdown
+// PROBE System/systemInformation  (used 0x in top-30 Bot Store bots)
+getEnvVar --name "probe_systemNameBySelection" --target "Process" vOut=value
+// PROBE System/TotalRAM  (used 0x in top-30 Bot Store bots)
+runDOSCommand --command "{{ROSETTA: command}}" vOut=output
+// PROBE System/Year  (used 0x in top-30 Bot Store bots)
+getCurrentDateAndTime --localorutc "LocalTime" rosettaChainDateTimeSystemYear=value
+getDatePart --date ${rosettaChainDateTimeSystemYear} --type "{{ROSETTA: type}}" vOut=value
+// PROBE SystemVariablesPackage/GetSystemVariables  (used 0x in top-30 Bot Store bots)
+getEnvVar --name "{{ROSETTA: name}}" --target "Process" vOut=value
+// PROBE TableAnalytics/AddComputedCol  (used 0x in top-30 Bot Store bots)
+addColumn --dataTable "{{ROSETTA: dataTable}}" --columnname "{{ROSETTA: columnname}}" --type "{{ROSETTA: type}}"
+// PROBE TableAnalytics/AddFieldToRecord  (used 0x in top-30 Bot Store bots)
+addColumn --dataTable "{{ROSETTA: dataTable}}" --columnname "{{ROSETTA: columnname}}" --type "{{ROSETTA: type}}"
+// PROBE TableAnalytics/diff  (used 0x in top-30 Bot Store bots)
+addColumn --dataTable "{{ROSETTA: dataTable}}" --columnname "{{ROSETTA: columnname}}" --type "{{ROSETTA: type}}"
+// PROBE TableAnalytics/numbervalidator  (used 0x in top-30 Bot Store bots)
+addColumn --dataTable "{{ROSETTA: dataTable}}" --columnname "{{ROSETTA: columnname}}" --type "{{ROSETTA: type}}"
+// PROBE TableAnalytics/stringvalidator  (used 0x in top-30 Bot Store bots)
+addColumn --dataTable "{{ROSETTA: dataTable}}" --columnname "{{ROSETTA: columnname}}" --type "{{ROSETTA: type}}"
+// PROBE TerminalEmulator/clearTerminal  (used 0x in top-30 Bot Store bots)
+terminalSendKey --key "{{ROSETTA: key}}" vOut=value
+// PROBE TerminalEmulator/disconnect  (used 0x in top-30 Bot Store bots)
+terminalDisconnect --name "{{ROSETTA: name}}" vOut=value
+// PROBE TerminalEmulator/getAllFields  (used 0x in top-30 Bot Store bots)
+terminalDumpScreen vOut=value
+// PROBE TerminalEmulator/getField  (used 0x in top-30 Bot Store bots)
+terminalGetField --index 5 vOut=value
+// PROBE TerminalEmulator/getText  (used 0x in top-30 Bot Store bots)
+terminalGetText --column 5 --line "probe_endLineNo" --length "{{ROSETTA: length}}" vOut=value
+// PROBE TerminalEmulator/searchField  (used 0x in top-30 Bot Store bots)
+terminalFindText --text "probe_fieldText" vOut=value
+// PROBE TerminalEmulator/sendKey  (used 0x in top-30 Bot Store bots)
+terminalSendKey --key "probe_keyToBeSend" --timeout "00:00:05" vOut=value
+// PROBE TerminalEmulator/sendText  (used 0x in top-30 Bot Store bots)
+terminalSendText --timeout "00:00:05" --text "{{ROSETTA: text}}" vOut=value
+// PROBE TerminalEmulator/setCursorPosition  (used 0x in top-30 Bot Store bots)
+terminalSetCursor --column 5 --line 5 vOut=value
+// PROBE TerminalEmulator/setField  (used 0x in top-30 Bot Store bots)
+terminalSetField --index 5 --value "{{ROSETTA: value}}" vOut=value
+// PROBE TerminalEmulator/wait  (used 0x in top-30 Bot Store bots)
+terminalWaitFor --timeout "00:00:00" --patterns "{{ROSETTA: patterns}}" vOut=value
+// PROBE TextFile/ReadFile  (used 0x in top-30 Bot Store bots)
+readAllText --encoding "probe_encoding" --filepath "probe_filePath" vOut=value
+// PROBE Twilio/MakeCall  (used 0x in top-30 Bot Store bots)
+twilioConnect rosettaChainSmsProviderTwilioMakeCall=value
+smsSend
+// PROBE Twilio/SMS  (used 0x in top-30 Bot Store bots)
+twilioConnect rosettaChainSmsProviderTwilioSMS=value
+smsSend
+// PROBE Wait/waitForScreenChange  (used 0x in top-30 Bot Store bots)
+waitImageChange --timeout "00:00:05" --similarity "{{ROSETTA: similarity}}" --interval "{{ROSETTA: interval}}" --selector "Id" --id "{{ROSETTA: id}}" vOut=value
+// PROBE Wait/waitForScreenChange_V1  (used 0x in top-30 Bot Store bots)
+waitImageChange --timeout "00:00:05" --similarity "{{ROSETTA: similarity}}" --interval "{{ROSETTA: interval}}" --selector "Id" --id "{{ROSETTA: id}}" vOut=value
+// PROBE WebAutomation/checkelement  (used 0x in top-30 Bot Store bots)
+webClick --selector "Id" --id "{{ROSETTA: id}}" vOut=value
+// PROBE WebAutomation/clearinput  (used 0x in top-30 Bot Store bots)
+webSet --value "" --selector "Id" --id "{{ROSETTA: id}}" vOut=value
+// PROBE WebAutomation/clickelement  (used 0x in top-30 Bot Store bots)
+webClick --selector "Id" --id "{{ROSETTA: id}}" vOut=value
+// PROBE WebAutomation/elementdetails  (used 0x in top-30 Bot Store bots)
+webGetFieldHTML --selector "Id" --id "{{ROSETTA: id}}" vOut=value
+// PROBE WebAutomation/elementloaded  (used 0x in top-30 Bot Store bots)
+webWaitElement --selector "Id" --id "{{ROSETTA: id}}" vOut=value
+// PROBE WebAutomation/EndSessionWebAutomation  (used 0x in top-30 Bot Store bots)
+webClose --name "{{ROSETTA: name}}"
+// PROBE WebAutomation/executejs  (used 0x in top-30 Bot Store bots)
+webExecuteJavaScript --script "{{ROSETTA: script}}" vOut=value
+// PROBE WebAutomation/focuselement  (used 0x in top-30 Bot Store bots)
+webFocus --selector "Id" --id "{{ROSETTA: id}}" vOut=value
+// PROBE WebAutomation/getcurrenturl  (used 0x in top-30 Bot Store bots)
+webExecuteJavaScript --script "return document.location.href;" vOut=value
+// PROBE WebAutomation/gettablecontent  (used 0x in top-30 Bot Store bots)
+webGetTable --selector "Id" --id "{{ROSETTA: id}}" vOut=value
+// PROBE WebAutomation/gettextelement  (used 0x in top-30 Bot Store bots)
+webGet --selector "Id" --id "{{ROSETTA: id}}" vOut=value
+// PROBE WebAutomation/getvalueelement  (used 0x in top-30 Bot Store bots)
+webGet --selector "Id" --id "{{ROSETTA: id}}" vOut=value
+// PROBE WebAutomation/getvalueselement  (used 0x in top-30 Bot Store bots)
+webGetComboBox --selector "Id" --id "{{ROSETTA: id}}" vOut=value
+// PROBE WebAutomation/isloaded  (used 0x in top-30 Bot Store bots)
+webWait
+// PROBE WebAutomation/openpage  (used 0x in top-30 Bot Store bots)
+webNavigate --url "{{ROSETTA: url}}"
+// PROBE WebAutomation/pageloaded  (used 0x in top-30 Bot Store bots)
+webWait
+// PROBE WebAutomation/pagesource  (used 0x in top-30 Bot Store bots)
+webGetHtmlSource vOut=value
+// PROBE WebAutomation/selectelement  (used 0x in top-30 Bot Store bots)
+webSetComboBox --selectoptionby "{{ROSETTA: selectoptionby}}" --selector "Id" --id "{{ROSETTA: id}}" vOut=value
+// PROBE WebAutomation/sendkeys  (used 0x in top-30 Bot Store bots)
+webSendKeys --selector "Id" --id "{{ROSETTA: id}}" vOut=value
+// PROBE WebAutomation/setvalueelement  (used 0x in top-30 Bot Store bots)
+webSet --value "{{ROSETTA: value}}" --selector "Id" --id "{{ROSETTA: id}}" vOut=value
+// PROBE WebAutomation/setvalueselement  (used 0x in top-30 Bot Store bots)
+webSetComboBox --selectoptionby "{{ROSETTA: selectoptionby}}" --selector "Id" --id "{{ROSETTA: id}}" vOut=value
+// PROBE WebAutomation/submitelement  (used 0x in top-30 Bot Store bots)
+webClick --selector "Id" --id "{{ROSETTA: id}}" vOut=value
+// PROBE Window/assign  (used 0x in top-30 Bot Store bots)
+setVar --name "${vOut}" --name "{{ROSETTA: name}}" --value "{{ROSETTA: value}}"
+// PROBE Window/restoreWindow  (used 0x in top-30 Bot Store bots)
+attachWindow --window "{{ROSETTA: window}}"
+showWindow
+// PROBE Window/windowExists  (used 0x in top-30 Bot Store bots)
+waitWindow --timeout "00:00:05" --title "probe_window" vOut=value
+// PROBE Window/windowNotExists  (used 0x in top-30 Bot Store bots)
+findWindow --title "probe_window" vOut=value
+// PROBE Window/windowTitleDoesNotExists  (used 0x in top-30 Bot Store bots)
+findWindow --title "probe_window" vOut=value
+// PROBE Window/windowTitleExists  (used 0x in top-30 Bot Store bots)
+waitWindow --timeout "00:00:05" --title "probe_window" vOut=value
+// PROBE WorkdaySOAP/EIB  (used 0x in top-30 Bot Store bots)
+soapRequest --url "{{ROSETTA: url}}" --action "{{ROSETTA: action}}" --source "{{ROSETTA: source}}" vOut=value
+// PROBE WorkdaySOAP/Get_Safety_Incident  (used 0x in top-30 Bot Store bots)
+soapRequest --url "{{ROSETTA: url}}" --action "{{ROSETTA: action}}" --source "{{ROSETTA: source}}" vOut=value
+// PROBE WorkdaySOAP/Get_Workers  (used 0x in top-30 Bot Store bots)
+soapRequest --url "{{ROSETTA: url}}" --action "{{ROSETTA: action}}" --source "{{ROSETTA: source}}" vOut=value
+// PROBE XML/executeXPath  (used 0x in top-30 Bot Store bots)
+getXmlData --data "probe_sessionName" --xpath "probe_xPath" --mode "{{ROSETTA: mode}}" vOut=value
+// PROBE XML/GetMultipleNodesLegacyMigration  (used 0x in top-30 Bot Store bots)
+getXmlData --data "probe_sessionName" --xpath "probe_xPath" --mode "{{ROSETTA: mode}}" vOut=value
+// PROBE XML/getMultipleNodeV2  (used 0x in top-30 Bot Store bots)
+getXmlData --data "probe_sessionName" --xpath "probe_xPath" --mode "{{ROSETTA: mode}}" vOut=value

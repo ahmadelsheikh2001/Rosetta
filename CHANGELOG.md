@@ -7,6 +7,12 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: Se
 
 ### Added
 
+- `@rosetta/target-wal`: tiered fallback conversion (ADR-023) so every A360 command converts: drafts
+  generated from the mapping dictionary v2 (multi-command sequences with chained outputs, required
+  parameters with defaults or `{{ROSETTA: …}}` placeholders, `file://` paths), REST templates,
+  script/state conversions and typed stub subroutines; static checker extended to the IBM RPA 30.0.x
+  reference catalog. Hand-written `datetime.subtract` and `excel.getCell`. Studio probe round 11
+  (502 generated commands) prepared.
 - `@rosetta/mappings`: 624 `planned` registry entries (100 packages) from real Agentic App Store
   exports (top-30 A360 bots, 72 Automation Anywhere package jars), each with the mapping-dictionary
   v2 IBM RPA 30.0.2 proposal in its notes (A-27). Coverage is unchanged: `planned` counts as manual.

@@ -1,0 +1,218 @@
+// Rosetta probe round 11 - drafts-01.wal: open in IBM RPA Studio 30.0.2, do NOT run.
+// Record the Error List (line + message). Each command follows its "// PROBE <A360 command>" line.
+defVar --name vOut --type String
+defVar --name rosettaSessionDatabaseProbeSession --type String
+defVar --name rosettaChainWindowWindowcloseWindow --type Window
+defVar --name rosettaSessionExcelMSProbeSession --type String
+defVar --name rosettaChainWindowWindowactivateWindow --type Window
+defVar --name rosettaChainDataTableDatabasebatchInsert --type DataTable
+defVar --name rosettaChainDataTableDatabaseexportToFileStream --type DataTable
+defVar --name rosettaSessionDatabricksProbeSession --type String
+defVar --name rosettaChainTimeSpanDatetimedifferenceBetweenDates --type TimeSpan
+// PROBE TaskBot/runTask  (used 23x in top-30 Bot Store bots)
+executeScript --handleError "probe_continueOnError" --name "probe_taskbot" vOut=value
+// PROBE File/deleteFiles  (used 16x in top-30 Bot Store bots)
+fileDelete --file "probe_filePath"
+// PROBE Prompt/ForValue  (used 15x in top-30 Bot Store bots)
+inputBox --prompt "probe_promptMessage" --title "probe_windowCaption" vOut=value
+// PROBE Screen/captureDesktop  (used 12x in top-30 Bot Store bots)
+printScreen vOut=value
+// PROBE Application/runApp  (used 9x in top-30 Bot Store bots)
+launchWindow --executablepath "probe_filePath" --parameters "probe_parameters" --timeout "00:00:05" vOut=value
+// PROBE Database/exportToDataTable  (used 8x in top-30 Bot Store bots)
+sqlExecuteReader --statement "probe_query" --timeout "00:00:05" --connection ${rosettaSessionDatabaseProbeSession} vOut=value
+// PROBE Email/sendMail  (used 8x in top-30 Bot Store bots)
+emailSend --attachments "probe_attachmentsFilePath" --bcc "probe_bcc" --bodytype "probe_bodyFormat" --body "probe_message" --cc "probe_cc" --from "probe_fromAddress" --subject "probe_subject" --to "probe_toAddress" --connection "{{ROSETTA: connection}}"
+// PROBE Dictionary/assign  (used 7x in top-30 Bot Store bots)
+setVar --name "${vOut}" --value "probe_sourceDictionary" --name "{{ROSETTA: name}}"
+// PROBE XML/getSingleNode  (used 4x in top-30 Bot Store bots)
+getXmlData --data "probe_sessionName" --xpath "probe_xPath" --mode "{{ROSETTA: mode}}" vOut=value
+// PROBE Database/connect  (used 3x in top-30 Bot Store bots)
+sqlServerConnect
+// PROBE Database/disconnect  (used 3x in top-30 Bot Store bots)
+sqlDisconnect --connection ${rosettaSessionDatabaseProbeSession}
+// PROBE Keystrokes/Keystrokes  (used 3x in top-30 Bot Store bots)
+attachWindow --window "probe_windowValue"
+sendKeys --keys "{{ROSETTA: keys}}"
+// PROBE Prompt/forFolder  (used 2x in top-30 Bot Store bots)
+selectFolder --text "probe_promptMessage" vOut=value
+// PROBE String/beforeAfter  (used 2x in top-30 Bot Store bots)
+getRegex --text "probe_sourceString" --regexPattern "{{ROSETTA: regexPattern}}" vOut=value
+// PROBE Wait/waitForWindow  (used 2x in top-30 Bot Store bots)
+waitWindow --timeout "00:00:05" --title "probe_window" vOut=value
+// PROBE Window/closeWindow  (used 2x in top-30 Bot Store bots)
+findWindow --title "probe_window" rosettaChainWindowWindowcloseWindow=value
+closeWindow --window ${rosettaChainWindowWindowcloseWindow}
+// PROBE Window/maximizeWindow  (used 2x in top-30 Bot Store bots)
+attachWindow --window "probe_window"
+showWindow
+// PROBE Email/saveAttachment  (used 1x in top-30 Bot Store bots)
+emailGetAttachment --outputpath "probe_folderPath" --message "{{ROSETTA: message}}" vOut=value
+// PROBE Excel_MS/getNumberOfRows  (used 1x in top-30 Bot Store bots)
+excelGetTable --sheet "probe_sheetOption" --file ${rosettaSessionExcelMSProbeSession} vOut=value
+// PROBE Excel_MS/ReadExcelColumn  (used 1x in top-30 Bot Store bots)
+excelGetTable --file ${rosettaSessionExcelMSProbeSession} --getfirstsheet vOut=value
+// PROBE File/assign  (used 1x in top-30 Bot Store bots)
+setVar --name "${vOut}" --value "probe_sourceFile" --name "{{ROSETTA: name}}"
+// PROBE List/listSize  (used 1x in top-30 Bot Store bots)
+count --collection "probe_sourceList" vOut=value
+// PROBE Prompt/ForFile  (used 1x in top-30 Bot Store bots)
+selectFile --title "probe_promptCaption" --filter "{{ROSETTA: filter}}"
+// PROBE Prompt/ForYesNo  (used 1x in top-30 Bot Store bots)
+messageBox --text "probe_promptMessage" --title "probe_promptWindowCaption" --icon "Information" --buttons "OK" --defaultbutton "FirstButton" vOut=value
+// PROBE REGEX Tools/Extract a Regex Match  (used 1x in top-30 Bot Store bots)
+getRegex --text "{{ROSETTA: text}}" --regexPattern "{{ROSETTA: regexPattern}}" vOut=value
+// PROBE Window/activateWindow  (used 1x in top-30 Bot Store bots)
+findWindow --title "probe_window" rosettaChainWindowWindowactivateWindow=value
+focusWindow --window ${rosettaChainWindowWindowactivateWindow}
+// PROBE XML/getMultipleNode  (used 1x in top-30 Bot Store bots)
+getXmlData --data "probe_sessionName" --xpath "probe_xPath" --mode "{{ROSETTA: mode}}" vOut=value
+// PROBE XML/startSession  (used 1x in top-30 Bot Store bots)
+readAllText --filepath "probe_filePath" vOut=value
+// PROBE ActiveDirectory/getComputerProperty  (used 0x in top-30 Bot Store bots)
+setVar --name "${vOut}" --value "probe_computerName" --name "{{ROSETTA: name}}"
+// PROBE ActiveDirectory/getGroupProperty  (used 0x in top-30 Bot Store bots)
+setVar --name "${vOut}" --value "probe_groupName" --name "{{ROSETTA: name}}"
+// PROBE ActiveDirectory/getOrganizationalUnitProperty  (used 0x in top-30 Bot Store bots)
+setVar --name "${vOut}" --value "probe_organizationalUnitName" --name "{{ROSETTA: name}}"
+// PROBE ActiveDirectory/getUserProperty  (used 0x in top-30 Bot Store bots)
+setVar --name "${vOut}" --value "probe_propertyName" --name "{{ROSETTA: name}}"
+// PROBE ActiveDirectory/setComputerProperty  (used 0x in top-30 Bot Store bots)
+setVar --name "${vOut}" --value "probe_computerName" --name "{{ROSETTA: name}}"
+// PROBE ActiveDirectory/setGroupProperty  (used 0x in top-30 Bot Store bots)
+setVar --name "${vOut}" --value "probe_groupName" --name "{{ROSETTA: name}}"
+// PROBE ActiveDirectory/setOrganizationalUnitProperty  (used 0x in top-30 Bot Store bots)
+setVar --name "${vOut}" --value "probe_organizationalUnitName" --name "{{ROSETTA: name}}"
+// PROBE ActiveDirectory/setUserProperty  (used 0x in top-30 Bot Store bots)
+setVar --name "${vOut}" --value "probe_propertyName" --name "{{ROSETTA: name}}"
+// PROBE Application/applicationDoesNotRunning  (used 0x in top-30 Bot Store bots)
+ifProcess --name "probe_applicationPath" --by "{{ROSETTA: by}}" vOut=value
+// PROBE Application/applicationRunningExists  (used 0x in top-30 Bot Store bots)
+ifProcess --name "probe_applicationPath" --by "{{ROSETTA: by}}" vOut=value
+// PROBE Boolean/invert  (used 0x in top-30 Bot Store bots)
+setVar --name "${vOut}" --value "probe_source" --name "{{ROSETTA: name}}"
+// PROBE Boolean/processAsListProperty  (used 0x in top-30 Bot Store bots)
+setVar --name "${vOut}" --value "probe_source" --name "{{ROSETTA: name}}"
+// PROBE Boolean/toNumber  (used 0x in top-30 Bot Store bots)
+setVar --name "${vOut}" --value "probe_source" --name "{{ROSETTA: name}}"
+// PROBE Boolean/toString  (used 0x in top-30 Bot Store bots)
+setVar --name "${vOut}" --value "probe_source" --name "{{ROSETTA: name}}"
+// PROBE Boolean/toStringProperty  (used 0x in top-30 Bot Store bots)
+setVar --name "${vOut}" --value "probe_source" --name "{{ROSETTA: name}}"
+// PROBE Browser/CallJavaScript  (used 0x in top-30 Bot Store bots)
+webExecuteJavaScript --script "probe_functionName" vOut=value
+// PROBE Browser/close  (used 0x in top-30 Bot Store bots)
+webClose --name "{{ROSETTA: name}}"
+// PROBE Browser/downloadFile  (used 0x in top-30 Bot Store bots)
+httpStreamToFile --url "probe_url" vOut=value
+// PROBE Browser/Extractsource  (used 0x in top-30 Bot Store bots)
+webGetHtmlSource vOut=value
+// PROBE Browser/Goback  (used 0x in top-30 Bot Store bots)
+webExecuteJavaScript --script "probe_noOfSteps" vOut=value
+// PROBE Browser/RunJavaScript  (used 0x in top-30 Bot Store bots)
+webExecuteJavaScript --script "probe_script" vOut=value
+// PROBE Clipboard/assignFromClipboard  (used 0x in top-30 Bot Store bots)
+getClipboardContent vOut=value
+// PROBE Clipboard/assignToClipboard  (used 0x in top-30 Bot Store bots)
+setClipboard --text "probe_value" --mode "{{ROSETTA: mode}}" vOut=value
+// PROBE Clipboard/clearClipboard  (used 0x in top-30 Bot Store bots)
+clearClipboard
+// PROBE Clipboard/Clipboard  (used 0x in top-30 Bot Store bots)
+getClipboardContent vOut=value
+// PROBE Credential/assign  (used 0x in top-30 Bot Store bots)
+getVaultItem --name "probe_credentialVariable"
+// PROBE Database/batchInsert  (used 0x in top-30 Bot Store bots)
+readCSV --filepath "probe_csvFilePath" --delimiter "probe_delimiter" rosettaChainDataTableDatabasebatchInsert=value
+sqlBulkInsert --batchsize "probe_batchSize" --tablename "probe_tableName" --timeout "00:00:05" --connection ${rosettaSessionDatabaseProbeSession} --dataTable ${rosettaChainDataTableDatabasebatchInsert} vOut=value
+// PROBE Database/begin  (used 0x in top-30 Bot Store bots)
+sqlExecute --connection ${rosettaSessionDatabaseProbeSession} --statement "{{ROSETTA: statement}}" vOut=value
+// PROBE Database/commit  (used 0x in top-30 Bot Store bots)
+sqlExecute --connection ${rosettaSessionDatabaseProbeSession} --statement "{{ROSETTA: statement}}" vOut=value
+// PROBE Database/createUpdateDelete  (used 0x in top-30 Bot Store bots)
+sqlExecute --statement "probe_query" --timeout "00:00:05" --connection ${rosettaSessionDatabaseProbeSession} vOut=value
+// PROBE Database/exportToFileStream  (used 0x in top-30 Bot Store bots)
+sqlExecuteReader --statement "probe_selectStatement" --timeout "00:00:05" --connection ${rosettaSessionDatabaseProbeSession} rosettaChainDataTableDatabaseexportToFileStream=value
+writeTableToFile --path "probe_fileName" --addHeaders "probe_includeHeaders" --characters "probe_parameters" --delimiter "{{ROSETTA: delimiter}}" --dataTable ${rosettaChainDataTableDatabaseexportToFileStream} vOut=value
+// PROBE Database/insertUpdateDelete  (used 0x in top-30 Bot Store bots)
+sqlExecute --statement "probe_query" --timeout "00:00:05" --connection ${rosettaSessionDatabaseProbeSession} vOut=value
+// PROBE Database/sqlQuery  (used 0x in top-30 Bot Store bots)
+sqlExecuteReader --statement "probe_query" --timeout "00:00:05" --connection ${rosettaSessionDatabaseProbeSession} vOut=value
+// PROBE Database/store  (used 0x in top-30 Bot Store bots)
+sqlProcedure --parameters "probe_entryList" --name "probe_parametername" --timeout "00:00:05" --connection ${rosettaSessionDatabaseProbeSession} vOut=value
+// PROBE databricks/cancelJobRun  (used 0x in top-30 Bot Store bots)
+sqlExecute --connection ${rosettaSessionDatabricksProbeSession} --statement "{{ROSETTA: statement}}" vOut=value
+// PROBE databricks/cancelSqlStatement  (used 0x in top-30 Bot Store bots)
+sqlExecute --connection ${rosettaSessionDatabricksProbeSession} --statement "{{ROSETTA: statement}}" vOut=value
+// PROBE databricks/connect  (used 0x in top-30 Bot Store bots)
+odbcConnect --connectionstring "{{ROSETTA: connectionstring}}"
+// PROBE databricks/deleteFile  (used 0x in top-30 Bot Store bots)
+sqlExecute --connection ${rosettaSessionDatabricksProbeSession} --statement "{{ROSETTA: statement}}" vOut=value
+// PROBE databricks/disconnect  (used 0x in top-30 Bot Store bots)
+sqlDisconnect --connection ${rosettaSessionDatabricksProbeSession}
+// PROBE databricks/downloadFile  (used 0x in top-30 Bot Store bots)
+sqlExecute --connection ${rosettaSessionDatabricksProbeSession} --statement "{{ROSETTA: statement}}" vOut=value
+// PROBE databricks/executeSqlStatement  (used 0x in top-30 Bot Store bots)
+sqlExecute --connection ${rosettaSessionDatabricksProbeSession} --statement "{{ROSETTA: statement}}" vOut=value
+// PROBE databricks/getJobRunOutput  (used 0x in top-30 Bot Store bots)
+sqlExecute --connection ${rosettaSessionDatabricksProbeSession} --statement "{{ROSETTA: statement}}" vOut=value
+// PROBE databricks/getJobRunStatus  (used 0x in top-30 Bot Store bots)
+sqlExecute --connection ${rosettaSessionDatabricksProbeSession} --statement "{{ROSETTA: statement}}" vOut=value
+// PROBE databricks/getSqlStatementResult  (used 0x in top-30 Bot Store bots)
+sqlExecute --connection ${rosettaSessionDatabricksProbeSession} --statement "{{ROSETTA: statement}}" vOut=value
+// PROBE databricks/listJobs  (used 0x in top-30 Bot Store bots)
+sqlExecute --connection ${rosettaSessionDatabricksProbeSession} --statement "{{ROSETTA: statement}}" vOut=value
+// PROBE databricks/runJob  (used 0x in top-30 Bot Store bots)
+sqlExecute --connection ${rosettaSessionDatabricksProbeSession} --statement "{{ROSETTA: statement}}" vOut=value
+// PROBE databricks/uploadFile  (used 0x in top-30 Bot Store bots)
+sqlExecute --connection ${rosettaSessionDatabricksProbeSession} --statement "{{ROSETTA: statement}}" vOut=value
+// PROBE DataTable/assign  (used 0x in top-30 Bot Store bots)
+setVar --name "${vOut}" --value "probe_option" --name "{{ROSETTA: name}}"
+// PROBE DataTable/clearContent  (used 0x in top-30 Bot Store bots)
+copyTable --dataTable "probe_table" vOut=value
+// PROBE DataTable/deleteColumn  (used 0x in top-30 Bot Store bots)
+deleteColumn --column "5" --dataTable "probe_table"
+// PROBE DataTable/deleteRow  (used 0x in top-30 Bot Store bots)
+deleteRows --indexes "probe_inputPosition" --dataTable "probe_table"
+// PROBE DataTable/getColumnName  (used 0x in top-30 Bot Store bots)
+getColumnName --index 5 --dataTable "probe_table" vOut=value
+// PROBE DataTable/getNumberOfColumns  (used 0x in top-30 Bot Store bots)
+filterTable --dataTable "probe_table" vOut=value
+// PROBE DataTable/getNumberOfRows  (used 0x in top-30 Bot Store bots)
+filterTable --dataTable "probe_table" vOut=value
+// PROBE DataTable/insertColumn  (used 0x in top-30 Bot Store bots)
+addColumn --type "5" --columnname "5" --dataTable "probe_toTable"
+// PROBE DataTable/insertRow  (used 0x in top-30 Bot Store bots)
+addRow --valueset 5 --dataTable "probe_table"
+// PROBE DataTable/merge  (used 0x in top-30 Bot Store bots)
+copyRows --target "probe_firstDataTable" --dataTable "probe_secondDataTable"
+// PROBE DataTable/setCellValue  (used 0x in top-30 Bot Store bots)
+updateRow --index 5 --dataTable "probe_table" --valuesmapping "probe_value"
+// PROBE DataTable/sort  (used 0x in top-30 Bot Store bots)
+sortTable --orderby "probe_sortType" --dataTable "probe_table" vOut=value
+// PROBE DataTable/ToStringProperty  (used 0x in top-30 Bot Store bots)
+setVar --name "${vOut}" --value "probe_input" --name "{{ROSETTA: name}}"
+// PROBE DataTable/writeToFile  (used 0x in top-30 Bot Store bots)
+writeTableToFile --characters "5" --delimiter "5" --path "probe_filePath" --dataTable "probe_sourceTable" vOut=value
+// PROBE DataTable/writeToFileStream  (used 0x in top-30 Bot Store bots)
+writeTableToFile --delimiter "5" --dataTable "probe_sourceTable" vOut=value
+// PROBE Datetime/asListProperty  (used 0x in top-30 Bot Store bots)
+setVar --name "${vOut}" --value "probe_source" --name "{{ROSETTA: name}}"
+// PROBE Datetime/differenceBetweenDates  (used 0x in top-30 Bot Store bots)
+dateDifference --subtractdate "probe_source" --fromdate "probe_target" rosettaChainTimeSpanDatetimedifferenceBetweenDates=value
+getTimePart --type "probe_unit" --time ${rosettaChainTimeSpanDatetimedifferenceBetweenDates} vOut=value
+// PROBE Datetime/get  (used 0x in top-30 Bot Store bots)
+getDatePart --type "probe_getOptions" --date "probe_source" vOut=value
+// PROBE Datetime/toStringProperty  (used 0x in top-30 Bot Store bots)
+dateTimeToText --date "probe_source" --customformat "{{ROSETTA: customformat}}" vOut=value
+// PROBE Dictionary/asListProperty  (used 0x in top-30 Bot Store bots)
+setVar --name "${vOut}" --value "probe_input" --name "{{ROSETTA: name}}"
+// PROBE Dictionary/get  (used 0x in top-30 Bot Store bots)
+strDictGet --key "probe_key" --dictionary "probe_sourceMap" vOut=value
+// PROBE Dictionary/keyExists  (used 0x in top-30 Bot Store bots)
+strDictContains --key "probe_key" --dictionary "probe_variable" vOut=value
+// PROBE Dictionary/keysProperty  (used 0x in top-30 Bot Store bots)
+setVar --name "${vOut}" --value "probe_input" --name "{{ROSETTA: name}}"
+// PROBE Dictionary/remove  (used 0x in top-30 Bot Store bots)
+strDictRemove --key "probe_key" --dictionary "probe_sourceMap" vOut=value
+// PROBE Dictionary/size  (used 0x in top-30 Bot Store bots)
+count --collection "probe_sourceMap" vOut=value

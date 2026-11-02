@@ -4,7 +4,7 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { defaultProfile } from '@rosetta/standards';
 import { afterAll, describe, expect, it } from 'vitest';
-import { checkWal } from '@rosetta/target-wal';
+import { checkWal, ibmCatalog } from '@rosetta/target-wal';
 import { convertFolder } from './convert.js';
 import { ExitCode } from './exit-codes.js';
 import { run } from './run.js';
@@ -92,7 +92,10 @@ describe('conversion of the real corpus', () => {
     for (const b of bots) {
       for (const line of b.script.text.split('\r\n')) {
         if (line === '' || line.startsWith('//')) continue;
-        expect(known, `${b.name}: ${line}`).toContain(line.split(' ')[0]);
+        // Generated fallback lines (A-27) may use any command of the IBM RPA 30.0.x reference.
+        const verb = line.split(' ')[0] ?? '';
+        if (!known.has(verb))
+          expect(Object.keys(ibmCatalog()), `${b.name}: ${line}`).toContain(verb);
       }
     }
   });

@@ -12,7 +12,8 @@
     }
   },
   "files": [
-    "dist"
+    "dist",
+    "data"
   ],
   "dependencies": {
     "@rosetta/ir": "workspace:*",

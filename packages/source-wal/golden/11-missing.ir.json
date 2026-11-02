@@ -256,9 +256,10 @@
       }
     },
     {
-      "name": "rosettaItem1",
+      "name": "rosettaChainPdfPDFextractText",
       "type": {
-        "kind": "string"
+        "kind": "handle",
+        "resource": "file"
       },
       "direction": "local",
       "sensitive": false,
@@ -273,9 +274,10 @@
       }
     },
     {
-      "name": "rosettaIndex2",
+      "name": "rosettaChainImageOCRcaptureImagebyPath",
       "type": {
-        "kind": "number"
+        "kind": "unknown",
+        "sourceType": "Image"
       },
       "direction": "local",
       "sensitive": false,
@@ -288,12 +290,31 @@
         "nodeId": "L24",
         "label": "defVar"
       }
-    }
-  ],
-  "packages": [],
-  "body": [
+    },
     {
-      "id": "L26",
+      "name": "rosettaItem1",
+      "type": {
+        "kind": "string"
+      },
+      "direction": "local",
+      "sensitive": false,
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "11-missing.wal",
+        "nodePath": [
+          24
+        ],
+        "nodeId": "L25",
+        "label": "defVar"
+      }
+    },
+    {
+      "name": "rosettaIndex2",
+      "type": {
+        "kind": "number"
+      },
+      "direction": "local",
+      "sensitive": false,
       "source": {
         "platform": "ibm-rpa",
         "file": "11-missing.wal",
@@ -301,49 +322,12 @@
           25
         ],
         "nodeId": "L26",
-        "label": "add @ line 26"
-      },
-      "kind": "action",
-      "op": "vendor:ibm-rpa/add",
-      "args": {
-        "collection": {
-          "kind": "var",
-          "name": "vJsArgs",
-          "path": []
-        },
-        "value": {
-          "kind": "literal",
-          "value": "Invoice INV-2026-0042 total 300"
-        }
-      },
-      "outputs": {}
-    },
-    {
-      "id": "L27",
-      "source": {
-        "platform": "ibm-rpa",
-        "file": "11-missing.wal",
-        "nodePath": [
-          26
-        ],
-        "nodeId": "L27",
-        "label": "add @ line 27"
-      },
-      "kind": "action",
-      "op": "vendor:ibm-rpa/add",
-      "args": {
-        "collection": {
-          "kind": "var",
-          "name": "vJsArgs",
-          "path": []
-        },
-        "value": {
-          "kind": "literal",
-          "value": "INV-(\\d+)-(\\d+)"
-        }
-      },
-      "outputs": {}
-    },
+        "label": "defVar"
+      }
+    }
+  ],
+  "packages": [],
+  "body": [
     {
       "id": "L28",
       "source": {
@@ -365,7 +349,7 @@
         },
         "value": {
           "kind": "literal",
-          "value": "2"
+          "value": "Invoice INV-2026-0042 total 300"
         }
       },
       "outputs": {}
@@ -379,7 +363,59 @@
           28
         ],
         "nodeId": "L29",
-        "label": "fileCopy @ line 29"
+        "label": "add @ line 29"
+      },
+      "kind": "action",
+      "op": "vendor:ibm-rpa/add",
+      "args": {
+        "collection": {
+          "kind": "var",
+          "name": "vJsArgs",
+          "path": []
+        },
+        "value": {
+          "kind": "literal",
+          "value": "INV-(\\d+)-(\\d+)"
+        }
+      },
+      "outputs": {}
+    },
+    {
+      "id": "L30",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "11-missing.wal",
+        "nodePath": [
+          29
+        ],
+        "nodeId": "L30",
+        "label": "add @ line 30"
+      },
+      "kind": "action",
+      "op": "vendor:ibm-rpa/add",
+      "args": {
+        "collection": {
+          "kind": "var",
+          "name": "vJsArgs",
+          "path": []
+        },
+        "value": {
+          "kind": "literal",
+          "value": "2"
+        }
+      },
+      "outputs": {}
+    },
+    {
+      "id": "L31",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "11-missing.wal",
+        "nodePath": [
+          30
+        ],
+        "nodeId": "L31",
+        "label": "fileCopy @ line 31"
       },
       "kind": "action",
       "op": "vendor:ibm-rpa/fileCopy",
@@ -396,15 +432,15 @@
       "outputs": {}
     },
     {
-      "id": "L30",
+      "id": "L32",
       "source": {
         "platform": "ibm-rpa",
         "file": "11-missing.wal",
         "nodePath": [
-          29
+          31
         ],
-        "nodeId": "L30",
-        "label": "parseText @ line 30"
+        "nodeId": "L32",
+        "label": "parseText @ line 32"
       },
       "kind": "action",
       "op": "vendor:ibm-rpa/parseText",
@@ -439,15 +475,15 @@
       }
     },
     {
-      "id": "L31",
+      "id": "L33",
       "source": {
         "platform": "ibm-rpa",
         "file": "11-missing.wal",
         "nodePath": [
-          30
+          32
         ],
-        "nodeId": "L31",
-        "label": "parseText @ line 31"
+        "nodeId": "L33",
+        "label": "parseText @ line 33"
       },
       "kind": "action",
       "op": "vendor:ibm-rpa/parseText",
@@ -482,32 +518,6 @@
       }
     },
     {
-      "id": "L32",
-      "source": {
-        "platform": "ibm-rpa",
-        "file": "11-missing.wal",
-        "nodePath": [
-          31
-        ],
-        "nodeId": "L32"
-      },
-      "kind": "comment",
-      "text": "TODO [ROSETTA] javascript.open: no conversion for this command yet"
-    },
-    {
-      "id": "L33",
-      "source": {
-        "platform": "ibm-rpa",
-        "file": "11-missing.wal",
-        "nodePath": [
-          32
-        ],
-        "nodeId": "L33"
-      },
-      "kind": "comment",
-      "text": "TODO [ROSETTA] javascript.run: no conversion for this command yet"
-    },
-    {
       "id": "L34",
       "source": {
         "platform": "ibm-rpa",
@@ -518,7 +528,7 @@
         "nodeId": "L34"
       },
       "kind": "comment",
-      "text": "TODO [ROSETTA] javascript.close: no conversion for this command yet"
+      "text": "A360 JavaScript/javascript.commands.openScript: JavaScript script kept for session \"Default\" (inline)"
     },
     {
       "id": "L35",
@@ -528,10 +538,37 @@
         "nodePath": [
           34
         ],
-        "nodeId": "L35"
+        "nodeId": "L35",
+        "label": "runWindowsScript @ line 35"
       },
-      "kind": "comment",
-      "text": "TODO [ROSETTA] pdf.extractText: no conversion for this command yet"
+      "kind": "action",
+      "op": "vendor:ibm-rpa/runWindowsScript",
+      "args": {
+        "scripttype": {
+          "kind": "literal",
+          "value": "JavaScript"
+        },
+        "source": {
+          "kind": "literal",
+          "value": "Script"
+        },
+        "script": {
+          "kind": "literal",
+          "value": "function getRegex(text, pattern, group) { var m = new RegExp(pattern).exec(text); return m ? m[group] : \"\"; }\nvar rosettaArgs=[];for(var i=0;i<WScript.Arguments.length;i++)rosettaArgs.push(WScript.Arguments(i));WScript.StdOut.Write(getRegex.apply(null,rosettaArgs));"
+        },
+        "arguments": {
+          "kind": "var",
+          "name": "vJsArgs",
+          "path": []
+        }
+      },
+      "outputs": {
+        "output": {
+          "kind": "var",
+          "name": "vMatch",
+          "path": []
+        }
+      }
     },
     {
       "id": "L36",
@@ -544,7 +581,7 @@
         "nodeId": "L36"
       },
       "kind": "comment",
-      "text": "TODO [ROSETTA] ocr.captureByPath: no conversion for this command yet"
+      "text": "A360 JavaScript/javascript.commands.closeScript: nothing to close in IBM RPA"
     },
     {
       "id": "L37",
@@ -555,7 +592,119 @@
           36
         ],
         "nodeId": "L37",
-        "label": "evaluate @ line 37"
+        "label": "pdfOpen @ line 37"
+      },
+      "kind": "action",
+      "op": "vendor:ibm-rpa/pdfOpen",
+      "args": {
+        "file": {
+          "kind": "literal",
+          "value": "C:\\RosettaTest\\sample.pdf"
+        }
+      },
+      "outputs": {
+        "value": {
+          "kind": "var",
+          "name": "rosettaChainPdfPDFextractText",
+          "path": []
+        }
+      }
+    },
+    {
+      "id": "L38",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "11-missing.wal",
+        "nodePath": [
+          37
+        ],
+        "nodeId": "L38",
+        "label": "pdfText @ line 38"
+      },
+      "kind": "action",
+      "op": "vendor:ibm-rpa/pdfText",
+      "args": {
+        "file": {
+          "kind": "var",
+          "name": "rosettaChainPdfPDFextractText",
+          "path": []
+        }
+      },
+      "outputs": {}
+    },
+    {
+      "id": "L39",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "11-missing.wal",
+        "nodePath": [
+          38
+        ],
+        "nodeId": "L39",
+        "label": "loadImage @ line 39"
+      },
+      "kind": "action",
+      "op": "vendor:ibm-rpa/loadImage",
+      "args": {
+        "file": {
+          "kind": "literal",
+          "value": "C:\\RosettaTest\\sample.png"
+        }
+      },
+      "outputs": {
+        "value": {
+          "kind": "var",
+          "name": "rosettaChainImageOCRcaptureImagebyPath",
+          "path": []
+        }
+      }
+    },
+    {
+      "id": "L40",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "11-missing.wal",
+        "nodePath": [
+          39
+        ],
+        "nodeId": "L40",
+        "label": "recognizeText @ line 40"
+      },
+      "kind": "action",
+      "op": "vendor:ibm-rpa/recognizeText",
+      "args": {
+        "language": {
+          "kind": "literal",
+          "value": "Based on Locale"
+        },
+        "source": {
+          "kind": "var",
+          "name": "rosettaChainImageOCRcaptureImagebyPath",
+          "path": []
+        },
+        "method": {
+          "kind": "literal",
+          "value": "{{ROSETTA: method}}"
+        }
+      },
+      "outputs": {
+        "value": {
+          "kind": "var",
+          "name": "vOcrText",
+          "path": []
+        }
+      }
+    },
+    {
+      "id": "L41",
+      "source": {
+        "platform": "ibm-rpa",
+        "file": "11-missing.wal",
+        "nodePath": [
+          40
+        ],
+        "nodeId": "L41",
+        "label": "evaluate @ line 41"
       },
       "kind": "action",
       "op": "vendor:ibm-rpa/evaluate",
@@ -584,15 +733,15 @@
       }
     },
     {
-      "id": "L38",
+      "id": "L42",
       "source": {
         "platform": "ibm-rpa",
         "file": "11-missing.wal",
         "nodePath": [
-          37
+          41
         ],
-        "nodeId": "L38",
-        "label": "evaluate @ line 38"
+        "nodeId": "L42",
+        "label": "evaluate @ line 42"
       },
       "kind": "action",
       "op": "vendor:ibm-rpa/evaluate",
@@ -621,15 +770,15 @@
       }
     },
     {
-      "id": "L39",
+      "id": "L43",
       "source": {
         "platform": "ibm-rpa",
         "file": "11-missing.wal",
         "nodePath": [
-          38
+          42
         ],
-        "nodeId": "L39",
-        "label": "get @ line 39"
+        "nodeId": "L43",
+        "label": "get @ line 43"
       },
       "kind": "action",
       "op": "vendor:ibm-rpa/get",
@@ -654,15 +803,15 @@
       }
     },
     {
-      "id": "L40",
+      "id": "L44",
       "source": {
         "platform": "ibm-rpa",
         "file": "11-missing.wal",
         "nodePath": [
-          39
+          43
         ],
-        "nodeId": "L40",
-        "label": "setVar @ line 40"
+        "nodeId": "L44",
+        "label": "setVar @ line 44"
       },
       "kind": "action",
       "op": "vendor:ibm-rpa/setVar",
@@ -691,15 +840,15 @@
       "outputs": {}
     },
     {
-      "id": "L41",
+      "id": "L45",
       "source": {
         "platform": "ibm-rpa",
         "file": "11-missing.wal",
         "nodePath": [
-          40
+          44
         ],
-        "nodeId": "L41",
-        "label": "messageBox @ line 41"
+        "nodeId": "L45",
+        "label": "messageBox @ line 45"
       },
       "kind": "action",
       "op": "vendor:ibm-rpa/messageBox",
@@ -774,15 +923,15 @@
       "outputs": {}
     },
     {
-      "id": "L42",
+      "id": "L46",
       "source": {
         "platform": "ibm-rpa",
         "file": "11-missing.wal",
         "nodePath": [
-          41
+          45
         ],
-        "nodeId": "L42",
-        "label": "stopExecution @ line 42"
+        "nodeId": "L46",
+        "label": "stopExecution @ line 46"
       },
       "kind": "action",
       "op": "vendor:ibm-rpa/stopExecution",

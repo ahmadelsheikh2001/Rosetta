@@ -1,0 +1,207 @@
+// Rosetta probe round 11 - drafts-03.wal: open in IBM RPA Studio 30.0.2, do NOT run.
+// Record the Error List (line + message). Each command follows its "// PROBE <A360 command>" line.
+defVar --name vOut --type String
+defVar --name rosettaSessionJsonProbeSession --type DataTable
+defVar --name rosettaSessionJsonProbeSession --type String
+defVar --name rosettaSessionLegacyAutomationProbeSession --type DataTable
+// PROBE HTTPFileRequest/POSTFile  (used 0x in top-30 Bot Store bots)
+httpStreamToFile --url "{{ROSETTA: url}}" vOut=value
+// PROBE ImageRecognition/fileImageExistInFileImage  (used 0x in top-30 Bot Store bots)
+findImage
+// PROBE ImageRecognition/fileImageExistInWindowImage  (used 0x in top-30 Bot Store bots)
+findImage
+// PROBE ImageRecognition/fileImageNotExistInFileImage  (used 0x in top-30 Bot Store bots)
+findImage
+// PROBE ImageRecognition/fileImageNotExistInWindowImage  (used 0x in top-30 Bot Store bots)
+findImage
+// PROBE ImageRecognition/findFileImageInWindowImage  (used 0x in top-30 Bot Store bots)
+findImage
+// PROBE ImageRecognition/findWindowImageInWindowImage  (used 0x in top-30 Bot Store bots)
+findImage
+// PROBE ImageRecognition/windowImageExistInFileImage  (used 0x in top-30 Bot Store bots)
+findImage
+// PROBE ImageRecognition/windowImageExistInWindowImage  (used 0x in top-30 Bot Store bots)
+findImage
+// PROBE ImageRecognition/windowImageNotExistInFileImage  (used 0x in top-30 Bot Store bots)
+findImage
+// PROBE ImageRecognition/windowImageNotExistInWindowImage  (used 0x in top-30 Bot Store bots)
+findImage
+// PROBE JavaFX/Alert  (used 0x in top-30 Bot Store bots)
+messageBox --title "{{ROSETTA: title}}" --text "{{ROSETTA: text}}" --icon "Information" --buttons "OK" --defaultbutton "FirstButton" vOut=value
+// PROBE JavaFX/Chart  (used 0x in top-30 Bot Store bots)
+messageBox --title "{{ROSETTA: title}}" --text "{{ROSETTA: text}}" --icon "Information" --buttons "OK" --defaultbutton "FirstButton" vOut=value
+// PROBE JavaFX/DirChooser  (used 0x in top-30 Bot Store bots)
+messageBox --title "{{ROSETTA: title}}" --text "{{ROSETTA: text}}" --icon "Information" --buttons "OK" --defaultbutton "FirstButton" vOut=value
+// PROBE JavaFX/FileChooser  (used 0x in top-30 Bot Store bots)
+messageBox --title "{{ROSETTA: title}}" --text "{{ROSETTA: text}}" --icon "Information" --buttons "OK" --defaultbutton "FirstButton" vOut=value
+// PROBE JavaFX/ImageViewer  (used 0x in top-30 Bot Store bots)
+messageBox --title "{{ROSETTA: title}}" --text "{{ROSETTA: text}}" --icon "Information" --buttons "OK" --defaultbutton "FirstButton" vOut=value
+// PROBE JavaFX/ShowDictionary  (used 0x in top-30 Bot Store bots)
+messageBox --title "{{ROSETTA: title}}" --text "{{ROSETTA: text}}" --icon "Information" --buttons "OK" --defaultbutton "FirstButton" vOut=value
+// PROBE JavaFX/ShowList  (used 0x in top-30 Bot Store bots)
+messageBox --title "{{ROSETTA: title}}" --text "{{ROSETTA: text}}" --icon "Information" --buttons "OK" --defaultbutton "FirstButton" vOut=value
+// PROBE JavaFX/ShowRecord  (used 0x in top-30 Bot Store bots)
+messageBox --title "{{ROSETTA: title}}" --text "{{ROSETTA: text}}" --icon "Information" --buttons "OK" --defaultbutton "FirstButton" vOut=value
+// PROBE JavaFX/ShowTable  (used 0x in top-30 Bot Store bots)
+messageBox --title "{{ROSETTA: title}}" --text "{{ROSETTA: text}}" --icon "Information" --buttons "OK" --defaultbutton "FirstButton" vOut=value
+// PROBE JavaFX/TwoButtons  (used 0x in top-30 Bot Store bots)
+messageBox --title "{{ROSETTA: title}}" --text "{{ROSETTA: text}}" --icon "Information" --buttons "OK" --defaultbutton "FirstButton" vOut=value
+// PROBE JavaFX/ValuePrompt  (used 0x in top-30 Bot Store bots)
+messageBox --title "{{ROSETTA: title}}" --text "{{ROSETTA: text}}" --icon "Information" --buttons "OK" --defaultbutton "FirstButton" vOut=value
+// PROBE JMSMessaging/ConsumeMessageQueue  (used 0x in top-30 Bot Store bots)
+connectJmsMQ vOut=value
+// PROBE JMSMessaging/ConsumeMessageTopic  (used 0x in top-30 Bot Store bots)
+connectJmsMQ vOut=value
+// PROBE JMSMessaging/CreateDurableSunscription  (used 0x in top-30 Bot Store bots)
+connectJmsMQ vOut=value
+// PROBE JMSMessaging/EndSession  (used 0x in top-30 Bot Store bots)
+connectJmsMQ vOut=value
+// PROBE JMSMessaging/GetJMSClientID  (used 0x in top-30 Bot Store bots)
+connectJmsMQ vOut=value
+// PROBE JMSMessaging/iteratormessagequeue  (used 0x in top-30 Bot Store bots)
+connectJmsMQ vOut=value
+// PROBE JMSMessaging/iteratormessagetopic  (used 0x in top-30 Bot Store bots)
+connectJmsMQ vOut=value
+// PROBE JMSMessaging/NoMessageCode  (used 0x in top-30 Bot Store bots)
+connectJmsMQ vOut=value
+// PROBE JMSMessaging/PurgeQueue  (used 0x in top-30 Bot Store bots)
+connectJmsMQ vOut=value
+// PROBE JMSMessaging/ReceivcRequestQueue  (used 0x in top-30 Bot Store bots)
+connectJmsMQ vOut=value
+// PROBE JMSMessaging/ReplyRequestQueue  (used 0x in top-30 Bot Store bots)
+connectJmsMQ vOut=value
+// PROBE JMSMessaging/SendMessageQueue  (used 0x in top-30 Bot Store bots)
+connectJmsMQ vOut=value
+// PROBE JMSMessaging/SendMessageTopic  (used 0x in top-30 Bot Store bots)
+connectJmsMQ vOut=value
+// PROBE JMSMessaging/SendRequestQueue  (used 0x in top-30 Bot Store bots)
+connectJmsMQ vOut=value
+// PROBE JMSMessaging/StartAMQSession  (used 0x in top-30 Bot Store bots)
+connectJmsMQ vOut=value
+// PROBE JMSMessaging/StartIMQSession  (used 0x in top-30 Bot Store bots)
+connectJmsMQ vOut=value
+// PROBE JMSMessaging/UnsubscribeTopic  (used 0x in top-30 Bot Store bots)
+connectJmsMQ vOut=value
+// PROBE Json/ConvertJsonToTable  (used 0x in top-30 Bot Store bots)
+jsonToTable --json "{{ROSETTA: json}}" --jsonPath "{{ROSETTA: jsonPath}}" rosettaSessionJsonProbeSession=value
+// PROBE Json/GetNodeList  (used 0x in top-30 Bot Store bots)
+jsonToTable --jsonPath "probe_nodePath" --json "{{ROSETTA: json}}" rosettaSessionJsonProbeSession=value
+// PROBE Json/GetNodes  (used 0x in top-30 Bot Store bots)
+mapJson --mappings "probe_nodePath" --json "{{ROSETTA: json}}" vOut=value
+// PROBE Json/JSONToDictionary  (used 0x in top-30 Bot Store bots)
+mapJson --json ${rosettaSessionJsonProbeSession} --mappings "{{ROSETTA: mappings}}" vOut=value
+// PROBE JSONHandler/Initialize  (used 0x in top-30 Bot Store bots)
+mapJson --json "{{ROSETTA: json}}" --mappings "{{ROSETTA: mappings}}" vOut=value
+// PROBE JSONHandler/Query  (used 0x in top-30 Bot Store bots)
+mapJson --json "{{ROSETTA: json}}" --mappings "{{ROSETTA: mappings}}" vOut=value
+// PROBE JSONHandler/Set  (used 0x in top-30 Bot Store bots)
+mapJson --json "{{ROSETTA: json}}" --mappings "{{ROSETTA: mappings}}" vOut=value
+// PROBE JSONParser/dicttojson  (used 0x in top-30 Bot Store bots)
+mapJson --json "{{ROSETTA: json}}" --mappings "{{ROSETTA: mappings}}" vOut=value
+// PROBE JSONParser/jsonitemtodict  (used 0x in top-30 Bot Store bots)
+mapJson --json "{{ROSETTA: json}}" --mappings "{{ROSETTA: mappings}}" vOut=value
+// PROBE JSONParser/jsontodict  (used 0x in top-30 Bot Store bots)
+mapJson --json "{{ROSETTA: json}}" --mappings "{{ROSETTA: mappings}}" vOut=value
+// PROBE JSONParser/jsonvalidate  (used 0x in top-30 Bot Store bots)
+mapJson --json "{{ROSETTA: json}}" --mappings "{{ROSETTA: mappings}}" vOut=value
+// PROBE LegacyAutomation/appendSAPSession  (used 0x in top-30 Bot Store bots)
+attachSAPSession --sessionid "probe_sessionId" vOut=value
+// PROBE LegacyAutomation/close  (used 0x in top-30 Bot Store bots)
+webClose --name "{{ROSETTA: name}}"
+// PROBE LegacyAutomation/convertToWindowTitle  (used 0x in top-30 Bot Store bots)
+findWindow --window "probe_ieWindowBound" --title "probe_newTitle" vOut=value
+// PROBE LegacyAutomation/dictionaryToString  (used 0x in top-30 Bot Store bots)
+setVar --name "${vOut}" --name "{{ROSETTA: name}}" --value "{{ROSETTA: value}}"
+// PROBE LegacyAutomation/executeJavaScriptFunction  (used 0x in top-30 Bot Store bots)
+webExecuteJavaScript --script "{{ROSETTA: script}}" vOut=value
+// PROBE LegacyAutomation/extractData  (used 0x in top-30 Bot Store bots)
+webGet --name "probe_ControlName" --selector "Name" vOut=value
+// PROBE LegacyAutomation/extractPatternData  (used 0x in top-30 Bot Store bots)
+getRegex --regexOptions "probe_logOption" --text "{{ROSETTA: text}}" --regexPattern "{{ROSETTA: regexPattern}}" vOut=value
+// PROBE LegacyAutomation/extractSource  (used 0x in top-30 Bot Store bots)
+webExecuteJavaScript --script "{{ROSETTA: script}}" vOut=value
+// PROBE LegacyAutomation/extractTable  (used 0x in top-30 Bot Store bots)
+webGetTable --name "probe_frameName" --selector "Name" rosettaSessionLegacyAutomationProbeSession=value
+// PROBE LegacyAutomation/getAbsolutePath  (used 0x in top-30 Bot Store bots)
+getFileInfo --path "probe_basePath"
+// PROBE LegacyAutomation/getDecrementedNumber  (used 0x in top-30 Bot Store bots)
+decrementVar --number "{{ROSETTA: number}}"
+// PROBE LegacyAutomation/getIncrementedNumber  (used 0x in top-30 Bot Store bots)
+incrementVar --number "{{ROSETTA: number}}"
+// PROBE LegacyAutomation/getVariableLength  (used 0x in top-30 Bot Store bots)
+getStringLength --text "{{ROSETTA: text}}" vOut=value
+// PROBE LegacyAutomation/goBack  (used 0x in top-30 Bot Store bots)
+webExecuteJavaScript --script "{{ROSETTA: script}}" vOut=value
+// PROBE LegacyAutomation/ifWindowControlActive  (used 0x in top-30 Bot Store bots)
+waitControl --selector "Id" --id "{{ROSETTA: id}}" vOut=value
+// PROBE LegacyAutomation/ifWindowControlDoesNotExist  (used 0x in top-30 Bot Store bots)
+waitControl --selector "Id" --id "{{ROSETTA: id}}" vOut=value
+// PROBE LegacyAutomation/ifWindowControlExists  (used 0x in top-30 Bot Store bots)
+waitControl --selector "Id" --id "{{ROSETTA: id}}" vOut=value
+// PROBE LegacyAutomation/ifWindowControlNotActive  (used 0x in top-30 Bot Store bots)
+waitControl --selector "Id" --id "{{ROSETTA: id}}" vOut=value
+// PROBE LegacyAutomation/ImportListFromTextFile  (used 0x in top-30 Bot Store bots)
+readAllText --filepath "probe_filePath" vOut=value
+// PROBE LegacyAutomation/listGet  (used 0x in top-30 Bot Store bots)
+get --index "probe_itemPosition" --collection "{{ROSETTA: collection}}" vOut=value
+// PROBE LegacyAutomation/listToString  (used 0x in top-30 Bot Store bots)
+joinText --list "probe_sourceList" --delimiter "{{ROSETTA: delimiter}}" vOut=value
+// PROBE LegacyAutomation/listToTable  (used 0x in top-30 Bot Store bots)
+addRow --dataTable "{{ROSETTA: dataTable}}"
+// PROBE LegacyAutomation/navigate  (used 0x in top-30 Bot Store bots)
+webNavigate --url "probe_url"
+// PROBE LegacyAutomation/recordGet  (used 0x in top-30 Bot Store bots)
+strDictGet --key "{{ROSETTA: key}}" --dictionary "{{ROSETTA: dictionary}}" vOut=value
+// PROBE LegacyAutomation/RunScript  (used 0x in top-30 Bot Store bots)
+runWindowsScript --arguments "probe_argument" --script "probe_scriptInText" --source "{{ROSETTA: source}}" vOut=output
+// PROBE LegacyAutomation/searchByCaption  (used 0x in top-30 Bot Store bots)
+findWindow vOut=value
+// PROBE LegacyAutomation/stringToTable  (used 0x in top-30 Bot Store bots)
+readCSV --filepath "{{ROSETTA: filepath}}" --delimiter "{{ROSETTA: delimiter}}" vOut=value
+// PROBE LegacyAutomation/tableToList  (used 0x in top-30 Bot Store bots)
+getColumns
+// PROBE LegacyAutomation/tableToString  (used 0x in top-30 Bot Store bots)
+writeTableToFile --delimiter "probe_deliminator" --dataTable "{{ROSETTA: dataTable}}" vOut=value
+// PROBE LegacyAutomation/toShortDate  (used 0x in top-30 Bot Store bots)
+dateTimeToText --date "probe_originalDate" --customformat "{{ROSETTA: customformat}}" vOut=value
+// PROBE LegacyAutomation/webControlExists  (used 0x in top-30 Bot Store bots)
+webWaitElement --name "probe_controlDetailsName" --timeout "00:00:05" --selector "Name" vOut=value
+// PROBE LegacyAutomation/webControlNotExists  (used 0x in top-30 Bot Store bots)
+webWaitElement --name "probe_controlDetailsName" --timeout "00:00:05" --selector "Name" vOut=value
+// PROBE LegacyAutomation/windowDoesNotExists  (used 0x in top-30 Bot Store bots)
+findWindow vOut=value
+// PROBE LegacyAutomation/windowExists  (used 0x in top-30 Bot Store bots)
+findWindow vOut=value
+// PROBE List/assign  (used 0x in top-30 Bot Store bots)
+setVar --name "${vOut}" --value "probe_sourceList" --name "{{ROSETTA: name}}"
+// PROBE List/assignToDataTable  (used 0x in top-30 Bot Store bots)
+addRow --dataTable "probe_toTable"
+// PROBE List/clear  (used 0x in top-30 Bot Store bots)
+clear --collection "probe_sourceList"
+// PROBE List/get  (used 0x in top-30 Bot Store bots)
+get --index 5 --collection "probe_sourceList" vOut=value
+// PROBE List/joinList  (used 0x in top-30 Bot Store bots)
+joinText --customDelimiter "probe_delimiter" --list "probe_sourceList" --delimiter "{{ROSETTA: delimiter}}" vOut=value
+// PROBE List/listRemove  (used 0x in top-30 Bot Store bots)
+removeAt --index 5 --collection "probe_sourceList"
+// PROBE List/listSet  (used 0x in top-30 Bot Store bots)
+removeAt --index 5 --collection "probe_sourceList"
+insert --value "probe_replaceWith" --index "{{ROSETTA: index}}" --collection "{{ROSETTA: collection}}"
+// PROBE List/toStringProperty  (used 0x in top-30 Bot Store bots)
+setVar --name "${vOut}" --value "probe_input" --name "{{ROSETTA: name}}"
+// PROBE Locale/changedate  (used 0x in top-30 Bot Store bots)
+convertNumberToText --number "{{ROSETTA: number}}" --conversiontype "SimpleNumber" vOut=value
+// PROBE Locale/datetostring  (used 0x in top-30 Bot Store bots)
+convertNumberToText --number "{{ROSETTA: number}}" --conversiontype "SimpleNumber" vOut=value
+// PROBE Locale/numbertostring  (used 0x in top-30 Bot Store bots)
+convertNumberToText --number "{{ROSETTA: number}}" --conversiontype "SimpleNumber" vOut=value
+// PROBE Locale/stringtodate  (used 0x in top-30 Bot Store bots)
+convertNumberToText --number "{{ROSETTA: number}}" --conversiontype "SimpleNumber" vOut=value
+// PROBE Locale/stringtonumber  (used 0x in top-30 Bot Store bots)
+convertNumberToText --number "{{ROSETTA: number}}" --conversiontype "SimpleNumber" vOut=value
+// PROBE Locale/valuetype  (used 0x in top-30 Bot Store bots)
+convertNumberToText --number "{{ROSETTA: number}}" --conversiontype "SimpleNumber" vOut=value
+// PROBE LogToFile/logToServer  (used 0x in top-30 Bot Store bots)
+logMessage --type "probe_logLevel" --message "probe_textToLog"
+// PROBE Math/mathevaluate  (used 0x in top-30 Bot Store bots)
+evaluate --expression "{{ROSETTA: expression}}" vOut=value

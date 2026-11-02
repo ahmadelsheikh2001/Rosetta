@@ -1,0 +1,7 @@
+// Rosetta probe round 11 - drafts-06.wal: open in IBM RPA Studio 30.0.2, do NOT run.
+// Record the Error List (line + message). Each command follows its "// PROBE <A360 command>" line.
+defVar --name vOut --type String
+// PROBE XML/getSingleNodeV2  (used 0x in top-30 Bot Store bots)
+getXmlData --data "probe_sessionName" --xpath "probe_xPath" --mode "{{ROSETTA: mode}}" vOut=value
+// PROBE XML/saveXML  (used 0x in top-30 Bot Store bots)
+writeToFile --file "probe_writeToFile" --overwrite "probe_overwrite" --value "{{ROSETTA: value}}" --encoding "{{ROSETTA: encoding}}" vOut=value

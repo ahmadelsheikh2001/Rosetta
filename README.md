@@ -5,8 +5,10 @@ vendor-neutral Intermediate Representation, with a migration and quality report 
 
 **First direction:** Automation Anywhere A360 → IBM RPA (Studio 30.0.2).
 
-> Status: **Phase 1, Assessment.** `rosetta assess` reads real A360 bot files and writes the
-> assessment report. Nothing converts to WAL yet. See [Roadmap](#roadmap).
+> Status: **Phase 2–3.** `rosetta assess` writes the assessment report; `rosetta convert` writes
+> DRAFT IBM RPA WAL for any A360 bot: Studio-verified conversions where they exist, and a tiered
+> fallback (generated draft, REST template, stub subroutine) for every other command (ADR-023).
+> See [Roadmap](#roadmap).
 
 ## How it works
 

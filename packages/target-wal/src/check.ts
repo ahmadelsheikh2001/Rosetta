@@ -1,4 +1,5 @@
 import { walCommands } from './catalog.js';
+import { ibmCatalog } from './generic.js';
 
 /** A problem found in a WAL script before it reaches Studio. */
 export interface WalProblem {
@@ -186,11 +187,28 @@ export function checkWal(text: string): WalProblem[] {
     // command catalog
     const spec = walCommands[verb];
     if (!spec) {
-      add(
-        n,
-        'error',
-        `Unknown command "${verb}" (not in the catalog of verified/documented commands).`,
-      );
+      // Not used by the hand-written generator: check against the IBM RPA 30.0.x reference
+      // catalog (A-27). Parameter names only; the reference's required flags are not reliable
+      // (round 2: splitString without --limit was accepted).
+      const ref = ibmCatalog()[verb];
+      if (!ref) {
+        add(
+          n,
+          'error',
+          `Unknown command "${verb}" (not in the catalog of verified/documented commands).`,
+        );
+        return;
+      }
+      for (const name of params.keys()) {
+        if (name.startsWith('?'))
+          add(n, 'error', `Value "${String(params.get(name))}" has no parameter name.`);
+        else if (ref.p && !(name in ref.p))
+          add(
+            n,
+            'error',
+            `Parameter --${name} does not exist for ${verb} (IBM RPA 30.0.x reference).`,
+          );
+      }
       return;
     }
     for (const name of params.keys()) {

@@ -22,6 +22,15 @@ import {
   walOperators,
   walTypes,
 } from './syntax.js';
+import {
+  callStub,
+  lowerDraft,
+  lowerScript,
+  lowerState,
+  lowerTemplate,
+  sourceKey,
+  stubFor,
+} from './generic.js';
 import { WalWriter, type NoteInput, type WalNote } from './writer.js';
 
 export interface LowerOptions {
@@ -71,6 +80,9 @@ const canFail = (s: Statement): boolean =>
   s.kind === 'try';
 
 class Lowerer {
+  /** Stub subroutines for unconverted commands, one per A360 command (A-27). */
+  readonly stubs = new Set<string>();
+  readonly stubSubs: WalWriter[] = [];
   /** Writer for the main flow; subroutines are written separately and appended at the end. */
   w = new WalWriter();
   readonly subs: WalWriter[] = [];
@@ -235,6 +247,32 @@ class Lowerer {
     return undefined;
   }
 
+  /**
+   * Commands without a hand-written lowerer (A-27): a command generated from the mapping
+   * dictionary (draft), a REST template, or a stub subroutine that fails on purpose.
+   */
+  private fallback(s: Extract<Statement, { kind: 'action' }>): void {
+    if (
+      lowerScript(s, this.w, this.state) ||
+      lowerDraft(s, this.w, this.state) ||
+      lowerTemplate(s, this.w) ||
+      lowerState(s, this.w, this.state)
+    )
+      return;
+    const key = sourceKey(s);
+    if (!key) {
+      manual(s, this.w, 'no conversion for this command yet');
+      return;
+    }
+    if (!this.stubs.has(key)) {
+      this.stubs.add(key);
+      const sw = new WalWriter();
+      stubFor(key, sw);
+      this.stubSubs.push(sw);
+    }
+    callStub(s, key, this.w);
+  }
+
   private statementBody(s: Statement): void {
     const w = this.w;
     switch (s.kind) {
@@ -248,7 +286,7 @@ class Lowerer {
       case 'action': {
         const lower = lowerers[s.op];
         if (lower) lower(s, w, this.state);
-        else manual(s, w, 'no conversion for this command yet');
+        else this.fallback(s);
         return;
       }
       case 'if':
@@ -853,6 +891,10 @@ export function lowerBot(bot: Bot, options: LowerOptions): WalScript {
   if (l.subs.length) {
     out.comment('---- Subroutines added by the conversion (A360 Try/Catch) ----');
     for (const s of l.subs) out.append(s);
+  }
+  if (l.stubSubs.length) {
+    out.comment('---- Stub subroutines: A360 commands with no IBM RPA conversion yet ----');
+    for (const s of l.stubSubs) out.append(s);
   }
   return { fileName: `${bot.name}.wal`, text: out.toString(), notes: out.notes };
 }

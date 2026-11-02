@@ -20,6 +20,8 @@ defVar --name vRow --type Numeric --value 7
 defVar --name vCols --type List --innertype String --value "[,A,B,C]"
 defVar --name vCell --type String
 // ---- Helper variables added by the conversion ----
+defVar --name rosettaChainPdfPDFextractText --type Pdf
+defVar --name rosettaChainImageOCRcaptureImagebyPath --type Image
 defVar --name rosettaItem1 --type String
 defVar --name rosettaIndex2 --type Numeric
 // ---- Initial values ----
@@ -29,11 +31,13 @@ add --collection "${vJsArgs}" --value "2"
 fileCopy --from "C:\\RosettaTest\\out10\\note.txt" --to "C:\\RosettaTest\\note-copy.txt"
 parseText --text "Invoice INV-2026-0042 total 300" --useRegex --regexPattern "INV-\\\\d\\+" --regexOptions "IgnoreCase" --startindex 1 vPos=value
 parseText --text "Invoice INV-2026-0042 total 300" --useRegex --regexPattern "XYZ\\\\d\\+" --regexOptions "IgnoreCase" --startindex 1 vPos2=value
-// TODO [ROSETTA] javascript.open: no conversion for this command yet
-// TODO [ROSETTA] javascript.run: no conversion for this command yet
-// TODO [ROSETTA] javascript.close: no conversion for this command yet
-// TODO [ROSETTA] pdf.extractText: no conversion for this command yet
-// TODO [ROSETTA] ocr.captureByPath: no conversion for this command yet
+// A360 JavaScript/javascript.commands.openScript: JavaScript script kept for session "Default" (inline)
+runWindowsScript --scripttype "JavaScript" --source "Script" --script "function getRegex(text, pattern, group) { var m = new RegExp(pattern).exec(text); return m ? m[group] : \"\"; }\nvar rosettaArgs=[];for(var i=0;i<WScript.Arguments.length;i++)rosettaArgs.push(WScript.Arguments(i));WScript.StdOut.Write(getRegex.apply(null,rosettaArgs));" --arguments "${vJsArgs}" vMatch=output
+// A360 JavaScript/javascript.commands.closeScript: nothing to close in IBM RPA
+pdfOpen --file "C:\\RosettaTest\\sample.pdf" rosettaChainPdfPDFextractText=value
+pdfText --file ${rosettaChainPdfPDFextractText}
+loadImage --file "C:\\RosettaTest\\sample.png" rosettaChainImageOCRcaptureImagebyPath=value
+recognizeText --language "Based on Locale" --source ${rosettaChainImageOCRcaptureImagebyPath} --method "{{ROSETTA: method}}" vOcrText=value
 evaluate --expression "${vPos} * 10 / 2" vCalc=value
 evaluate --expression "${vCol} + 1" rosettaIndex2=value
 get --collection "${vCols}" --index ${rosettaIndex2} rosettaItem1=value

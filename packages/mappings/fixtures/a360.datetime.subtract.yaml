@@ -1,0 +1,25 @@
+id: a360.datetime.subtract
+from: synthetic, same attribute shape as the A360 package metadata (A-27)
+node:
+  uid: 00000000-0000-4000-8000-000000000271
+  commandName: subtract
+  packageName: Datetime
+  disabled: false
+  attributes:
+    - name: source
+      value:
+        type: DATETIME
+        expression: $vDate$
+    - name: val
+      value:
+        type: NUMBER
+        number: '3'
+    - name: unit
+      value:
+        type: STRING
+        string: DAYS
+  returnTo:
+    type: VARIABLE
+    variableName: vDate
+expect:
+  op: datetime.subtract

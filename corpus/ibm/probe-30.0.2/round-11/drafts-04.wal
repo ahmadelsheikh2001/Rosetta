@@ -1,0 +1,228 @@
+// Rosetta probe round 11 - drafts-04.wal: open in IBM RPA Studio 30.0.2, do NOT run.
+// Record the Error List (line + message). Each command follows its "// PROBE <A360 command>" line.
+defVar --name vOut --type String
+defVar --name rosettaSessionMspowerpointProbeSession --type String
+defVar --name rosettaSessionMswordProbeSession --type String
+defVar --name rosettaChainImageOCRcaptureImagebyURL --type Image
+defVar --name rosettaChainFileSystemOffice365OneDrivedownloadDriveItem --type FileSystem
+defVar --name rosettaChainFileSystemOffice365OneDriveuploadFileOnDrive --type FileSystem
+defVar --name rosettaChainPdfPDFextractField --type Pdf
+defVar --name rosettaChainPdfPDFextractImage --type Pdf
+defVar --name rosettaChainImagePDFextractImage --type Image
+defVar --name rosettaChainPdfPDFgetProperty --type Pdf
+defVar --name rosettaChainPdfPDFsplitDocument --type Pdf
+defVar --name rosettaChainImageScreencaptureArea --type Image
+defVar --name rosettaChainImageScreencaptureWindow --type Image
+// PROBE Microsoft 365 Outlook/AssignAttachments  (used 0x in top-30 Bot Store bots)
+emailGetAttachment --message "{{ROSETTA: message}}" --outputpath "{{ROSETTA: outputpath}}" vOut=value
+// PROBE Microsoft 365 Outlook/ChangeStatus  (used 0x in top-30 Bot Store bots)
+emailUpdate --message "{{ROSETTA: message}}"
+// PROBE Microsoft 365 Outlook/Connect  (used 0x in top-30 Bot Store bots)
+microsoftMailConnect
+// PROBE Microsoft 365 Outlook/Delete  (used 0x in top-30 Bot Store bots)
+emailDelete --message "{{ROSETTA: message}}"
+// PROBE Microsoft 365 Outlook/Disconnect  (used 0x in top-30 Bot Store bots)
+emailDisconnect --connection "{{ROSETTA: connection}}"
+// PROBE Microsoft 365 Outlook/Forward  (used 0x in top-30 Bot Store bots)
+emailSend --bcc "probe_bccRecipients" --body "probe_bodyFormat" --cc "probe_ccRecipients" --attachments "probe_fileList" --from "probe_from" --to "probe_toRecipients" --connection "{{ROSETTA: connection}}"
+emailGetAttachment --message "probe_message" --outputpath "{{ROSETTA: outputpath}}" vOut=value
+// PROBE Microsoft 365 Outlook/Move  (used 0x in top-30 Bot Store bots)
+emailMove --folder "probe_destinationFolder" --message "{{ROSETTA: message}}"
+// PROBE Microsoft 365 Outlook/Reply  (used 0x in top-30 Bot Store bots)
+emailReply --bcc "probe_bccRecipients" --bodytype "probe_bodyFormat" --message "probe_message" --cc "probe_ccRecipients" --attachments "probe_fileList" --from "probe_from" --body "{{ROSETTA: body}}"
+// PROBE Microsoft 365 Outlook/ReplyAll  (used 0x in top-30 Bot Store bots)
+emailReply --bcc "probe_bccRecipients" --bodytype "probe_bodyFormat" --message "probe_message" --cc "probe_ccRecipients" --attachments "probe_fileList" --from "probe_from" --body "{{ROSETTA: body}}"
+// PROBE Microsoft 365 Outlook/SaveAttachments  (used 0x in top-30 Bot Store bots)
+emailGetAttachment --outputpath "probe_localFolderPath" --message "{{ROSETTA: message}}" vOut=value
+// PROBE Microsoft 365 Outlook/Send  (used 0x in top-30 Bot Store bots)
+emailSend --bcc "probe_bccRecipients" --bodytype "probe_bodyFormat" --cc "probe_ccRecipients" --from "probe_from" --attachments "probe_listOfAttachments" --subject "probe_subject" --to "probe_toRecipients" --connection "{{ROSETTA: connection}}" --body "{{ROSETTA: body}}"
+// PROBE Mouse/mouseClick  (used 0x in top-30 Bot Store bots)
+mouse --mode "probe_mouseButton" --point "probe_coordinateTo" --resolution "{{ROSETTA: resolution}}"
+// PROBE Mouse/mouseMove  (used 0x in top-30 Bot Store bots)
+mouse --point "probe_coordinateTo" --delta 5 --mode "{{ROSETTA: mode}}" --resolution "{{ROSETTA: resolution}}"
+// PROBE Mouse/mouseScroll  (used 0x in top-30 Bot Store bots)
+mouse --delta 5 --mode "{{ROSETTA: mode}}" --resolution "{{ROSETTA: resolution}}"
+// PROBE mspowerpoint/close  (used 0x in top-30 Bot Store bots)
+officeClose --officeapplication ${rosettaSessionMspowerpointProbeSession}
+// PROBE mspowerpoint/createPresentation  (used 0x in top-30 Bot Store bots)
+officeCreate --path "probe_filePath" --type "{{ROSETTA: type}}"
+// PROBE mspowerpoint/insertText  (used 0x in top-30 Bot Store bots)
+officeSet --officeapplication ${rosettaSessionMspowerpointProbeSession} --location "{{ROSETTA: location}}" --value "{{ROSETTA: value}}"
+// PROBE mspowerpoint/open  (used 0x in top-30 Bot Store bots)
+officeOpen --path "probe_filePath" --type "{{ROSETTA: type}}"
+// PROBE mspowerpoint/save  (used 0x in top-30 Bot Store bots)
+officeSave --officeapplication ${rosettaSessionMspowerpointProbeSession} --fileformat "{{ROSETTA: fileformat}}" vOut=value
+// PROBE mspowerpoint/saveAs  (used 0x in top-30 Bot Store bots)
+officeSaveAs --filepath "probe_filePath" --officeapplication ${rosettaSessionMspowerpointProbeSession} --filename "{{ROSETTA: filename}}" --fileformat "{{ROSETTA: fileformat}}" vOut=value
+// PROBE msword/closeDocument  (used 0x in top-30 Bot Store bots)
+officeClose --officeapplication ${rosettaSessionMswordProbeSession}
+// PROBE msword/createDocument  (used 0x in top-30 Bot Store bots)
+officeCreate --path "probe_filePath" --type "{{ROSETTA: type}}"
+// PROBE msword/insertText  (used 0x in top-30 Bot Store bots)
+officeSet --location "probe_position" --officeapplication ${rosettaSessionMswordProbeSession} --value "{{ROSETTA: value}}"
+// PROBE msword/openDocument  (used 0x in top-30 Bot Store bots)
+officeOpen --path "probe_filePath" --type "{{ROSETTA: type}}"
+// PROBE msword/ReadTable  (used 0x in top-30 Bot Store bots)
+officeGet --firstrowhasheaders "probe_includeHeaders" --location "probe_tableName" --officeapplication ${rosettaSessionMswordProbeSession} vOut=text
+// PROBE msword/readText  (used 0x in top-30 Bot Store bots)
+officeGetText --location "probe_range" --officeapplication ${rosettaSessionMswordProbeSession} vOut=value
+// PROBE msword/saveDocument  (used 0x in top-30 Bot Store bots)
+officeSave --officeapplication ${rosettaSessionMswordProbeSession} --fileformat "{{ROSETTA: fileformat}}" vOut=value
+// PROBE msword/saveDocumentAs  (used 0x in top-30 Bot Store bots)
+officeSaveAs --filepath "probe_filePath" --officeapplication ${rosettaSessionMswordProbeSession} --filename "{{ROSETTA: filename}}" --fileformat "{{ROSETTA: fileformat}}" vOut=value
+// PROBE NaturalLanguageProcessing/NamedEntityRecognition  (used 0x in top-30 Bot Store bots)
+extractNamedEntities
+// PROBE NaturalLanguageProcessing/PartsOfSpeech  (used 0x in top-30 Bot Store bots)
+extractNamedEntities
+// PROBE NaturalLanguageProcessing/SentimentAnalysis  (used 0x in top-30 Bot Store bots)
+extractNamedEntities
+// PROBE Number/asListProperty  (used 0x in top-30 Bot Store bots)
+setVar --name "${vOut}" --value "probe_input" --name "{{ROSETTA: name}}"
+// PROBE Number/randomNumber  (used 0x in top-30 Bot Store bots)
+generateRandomNumber --minimum "probe_fromVal" --usedecimal "probe_isRequiredPrecision" --maximum "probe_toVal" vOut=value
+// PROBE Number/toStringProperty  (used 0x in top-30 Bot Store bots)
+convertNumberToText --number "probe_input" --decimals "probe_numFormatDigits" --conversiontype "SimpleNumber" vOut=value
+// PROBE OCR/captureImagebyURL  (used 0x in top-30 Bot Store bots)
+httpStreamToFile --url "probe_pdfURL"
+loadImage --file "{{ROSETTA: file}}" rosettaChainImageOCRcaptureImagebyURL=value
+recognizeText --language "probe_ocrLocale" --source ${rosettaChainImageOCRcaptureImagebyURL} --method "{{ROSETTA: method}}" vOut=value
+// PROBE OCR/captureWindow  (used 0x in top-30 Bot Store bots)
+ocr --language "probe_ocrLocale" --selector "Id" --id "{{ROSETTA: id}}" --ocrprovider "{{ROSETTA: ocrprovider}}" --similarity "{{ROSETTA: similarity}}" vOut=value
+// PROBE OCR/captureWindowArea  (used 0x in top-30 Bot Store bots)
+ocr --language "probe_ocrLocale" --region "probe_windowArea" --selector "Id" --id "{{ROSETTA: id}}" --ocrprovider "{{ROSETTA: ocrprovider}}" --similarity "{{ROSETTA: similarity}}" vOut=value
+// PROBE Office 365 OneDrive/downloadDriveItem  (used 0x in top-30 Bot Store bots)
+oneDriveConnect --name "probe_fileNameWithPath" rosettaChainFileSystemOffice365OneDrivedownloadDriveItem=value
+downloadStorage --fileSystem ${rosettaChainFileSystemOffice365OneDrivedownloadDriveItem} --source "{{ROSETTA: source}}" --target "{{ROSETTA: target}}"
+// PROBE Office 365 OneDrive/uploadFileOnDrive  (used 0x in top-30 Bot Store bots)
+oneDriveConnect --name "probe_fileNameWithPath" rosettaChainFileSystemOffice365OneDriveuploadFileOnDrive=value
+uploadStorage --fileSystem ${rosettaChainFileSystemOffice365OneDriveuploadFileOnDrive} --source "{{ROSETTA: source}}" --target "{{ROSETTA: target}}"
+// PROBE PDF/decryptDocument  (used 0x in top-30 Bot Store bots)
+decryptPdf --file "probe_filePath" --ownerpassword "{{ROSETTA: ownerpassword}}" vOut=value
+// PROBE PDF/encryptDocument  (used 0x in top-30 Bot Store bots)
+encryptPdf --method "probe_encryptionLevel" --file "probe_filePath" --ownerpassword "{{ROSETTA: ownerpassword}}" --printing "{{ROSETTA: printing}}" --dataextraction "{{ROSETTA: dataextraction}}" --modification "{{ROSETTA: modification}}" --interactivity "{{ROSETTA: interactivity}}" vOut=value
+// PROBE PDF/extractField  (used 0x in top-30 Bot Store bots)
+pdfOpen --file "probe_filePath" rosettaChainPdfPDFextractField=value
+pdfGetValue --field "probe_pdfFieldList" --file ${rosettaChainPdfPDFextractField} vOut=value
+// PROBE PDF/extractImage  (used 0x in top-30 Bot Store bots)
+pdfOpen --file "probe_filePath" rosettaChainPdfPDFextractImage=value
+pdfImage --page "probe_pageOption" --dpix "{{ROSETTA: dpix}}" --dpiy "{{ROSETTA: dpiy}}" --file ${rosettaChainPdfPDFextractImage} rosettaChainImagePDFextractImage=value
+saveImage --image "probe_imageColorType" --directory "probe_outputDirectory" --format "{{ROSETTA: format}}" vOut=value
+// PROBE PDF/getProperty  (used 0x in top-30 Bot Store bots)
+pdfOpen --file "probe_filePath" rosettaChainPdfPDFgetProperty=value
+pdfCount --file ${rosettaChainPdfPDFgetProperty} vOut=value
+// PROBE PDF/mergeDocument  (used 0x in top-30 Bot Store bots)
+pdfMerge --outputpath "probe_outputFile" --files "probe_pdfDocumentList" vOut=value
+// PROBE PDF/splitDocument  (used 0x in top-30 Bot Store bots)
+pdfOpen --file "probe_filePath" rosettaChainPdfPDFsplitDocument=value
+pdfExtract --outputpath "probe_outputDirectory" --range "{{ROSETTA: range}}" --file ${rosettaChainPdfPDFsplitDocument} vOut=value
+// PROBE PDFUtils/detectwordspdf  (used 0x in top-30 Bot Store bots)
+pdfText --file "{{ROSETTA: file}}" vOut=value
+// PROBE PDFUtils/gettext  (used 0x in top-30 Bot Store bots)
+pdfText --file "{{ROSETTA: file}}" vOut=value
+// PROBE PDFUtils/htmltopdf  (used 0x in top-30 Bot Store bots)
+pdfText --file "{{ROSETTA: file}}" vOut=value
+// PROBE PDFUtils/mergedirpdf  (used 0x in top-30 Bot Store bots)
+pdfText --file "{{ROSETTA: file}}" vOut=value
+// PROBE PDFUtils/mergepdf  (used 0x in top-30 Bot Store bots)
+pdfText --file "{{ROSETTA: file}}" vOut=value
+// PROBE PDFUtils/readform  (used 0x in top-30 Bot Store bots)
+pdfText --file "{{ROSETTA: file}}" vOut=value
+// PROBE PDFUtils/setform  (used 0x in top-30 Bot Store bots)
+pdfText --file "{{ROSETTA: file}}" vOut=value
+// PROBE Ping/pingSuccessful  (used 0x in top-30 Bot Store bots)
+ping --host "probe_machineAddress" --timeout "00:00:05" vOut=value
+// PROBE Ping/pingUnsuccessful  (used 0x in top-30 Bot Store bots)
+ping --host "probe_machineAddress" --timeout "00:00:05" vOut=value
+// PROBE PlaySound/playBeep  (used 0x in top-30 Bot Store bots)
+playSound --method "{{ROSETTA: method}}"
+// PROBE PlaySound/playMediaFile  (used 0x in top-30 Bot Store bots)
+playSound --method "{{ROSETTA: method}}"
+// PROBE Printer/getDefaultPrinter  (used 0x in top-30 Bot Store bots)
+getDefaultPrinter vOut=value
+// PROBE Printer/setDefaultPrinter  (used 0x in top-30 Bot Store bots)
+setDefaultPrinter --name "probe_printerName"
+// PROBE QR Code/QR Code Generator  (used 0x in top-30 Bot Store bots)
+getBarcode
+// PROBE QR Code/QR Code Reader  (used 0x in top-30 Bot Store bots)
+getBarcode
+// PROBE RandomPassword/generatePassword  (used 0x in top-30 Bot Store bots)
+createRandomText --minimumlength "{{ROSETTA: minimumlength}}" --maximumlength "{{ROSETTA: maximumlength}}" vOut=value
+// PROBE Recorder/captureObjectNotExist  (used 0x in top-30 Bot Store bots)
+webWaitElement --selector "Id" --id "{{ROSETTA: id}}" vOut=value
+// PROBE Recorder/StructuredDataExtraction  (used 0x in top-30 Bot Store bots)
+webGetTable --name "5" --xpath "5" --timeout 5 --selector "Name" vOut=value
+// PROBE REGEX Tools/Extract All Regex Matches  (used 0x in top-30 Bot Store bots)
+getRegex --text "{{ROSETTA: text}}" --regexPattern "{{ROSETTA: regexPattern}}" vOut=value
+// PROBE REGEX Tools/Get Number of Matches  (used 0x in top-30 Bot Store bots)
+getRegex --text "{{ROSETTA: text}}" --regexPattern "{{ROSETTA: regexPattern}}" vOut=value
+// PROBE REGEX Tools/regexmatchisfound  (used 0x in top-30 Bot Store bots)
+getRegex --text "{{ROSETTA: text}}" --regexPattern "{{ROSETTA: regexPattern}}" vOut=value
+// PROBE REGEX Tools/Replace based on Regex  (used 0x in top-30 Bot Store bots)
+getRegex --text "{{ROSETTA: text}}" --regexPattern "{{ROSETTA: regexPattern}}" vOut=value
+// PROBE REGEX Tools/String is Empty  (used 0x in top-30 Bot Store bots)
+getRegex --text "{{ROSETTA: text}}" --regexPattern "{{ROSETTA: regexPattern}}" vOut=value
+// PROBE Rest/restGetFileStream  (used 0x in top-30 Bot Store bots)
+httpStreamToFile --timeout "00:00:00" --url "probe_uriOption" vOut=value
+// PROBE Run Scripts Synchronously/Run Script Synchronously  (used 0x in top-30 Bot Store bots)
+runWindowsScript --source "{{ROSETTA: source}}" vOut=output
+// PROBE SAP/checkboxActions  (used 0x in top-30 Bot Store bots)
+setValue --id "probe_fieldPath" --value "{{ROSETTA: value}}" --selector "Id"
+// PROBE SAP/click  (used 0x in top-30 Bot Store bots)
+click --id "probe_fieldPath" --selector "Id"
+// PROBE SAP/clickMenu  (used 0x in top-30 Bot Store bots)
+clickOnMenu --menupath "probe_selectMenuPath"
+// PROBE SAP/connect  (used 0x in top-30 Bot Store bots)
+startSAPSession --clientid "probe_clientID" --language "probe_language" --connectionstring "{{ROSETTA: connectionstring}}" --password "{{ROSETTA: password}}" vOut=value
+// PROBE SAP/disconnect  (used 0x in top-30 Bot Store bots)
+closeSAPSession --sessionid "probe_sessionName" vOut=value
+// PROBE SAP/doubleClick  (used 0x in top-30 Bot Store bots)
+click --id "probe_fieldPath" --selector "Id"
+// PROBE SAP/expand  (used 0x in top-30 Bot Store bots)
+expandTree --id "probe_fieldPath" --index 5 --path "{{ROSETTA: path}}" --selector "Id"
+// PROBE SAP/exportTable  (used 0x in top-30 Bot Store bots)
+getTable --usetable 5 --id "probe_fieldPath" --selector "Id" vOut=value
+// PROBE SAP/getCell  (used 0x in top-30 Bot Store bots)
+getTable --id "probe_fieldPath" --selector "Id" vOut=value
+// PROBE SAP/getChildrenNames  (used 0x in top-30 Bot Store bots)
+getTable --id "probe_fieldPath" --selector "Id" vOut=value
+// PROBE SAP/getChildrenText  (used 0x in top-30 Bot Store bots)
+getTable --id "probe_fieldPath" --selector "Id" vOut=value
+// PROBE SAP/getColumn  (used 0x in top-30 Bot Store bots)
+getTable --id "probe_fieldPath" --selector "Id" vOut=value
+// PROBE SAP/getItemCountAction  (used 0x in top-30 Bot Store bots)
+getTable --id "probe_fieldPath" --selector "Id" vOut=value
+// PROBE SAP/getRow  (used 0x in top-30 Bot Store bots)
+getTable --id "probe_fieldPath" --selector "Id" vOut=value
+// PROBE SAP/getSelectedItemAction  (used 0x in top-30 Bot Store bots)
+getTable --id "probe_fieldPath" --selector "Id" vOut=value
+// PROBE SAP/getStatusAction  (used 0x in top-30 Bot Store bots)
+getTable --id "probe_fieldPath" --selector "Id" vOut=value
+// PROBE SAP/getTableCellIndexByTextAction  (used 0x in top-30 Bot Store bots)
+getTable --id "probe_fieldPath" --searchvalue "probe_searchText" --selector "Id" vOut=value
+// PROBE SAP/getTableCellTextByIndexAction  (used 0x in top-30 Bot Store bots)
+getTable --searchbycolumn 5 --id "probe_fieldPath" --row 5 --selector "Id" vOut=value
+// PROBE SAP/getText  (used 0x in top-30 Bot Store bots)
+getValue --id "probe_fieldPath" --selector "Id" vOut=value
+// PROBE SAP/leftClick  (used 0x in top-30 Bot Store bots)
+click --id "probe_fieldPath" --selector "Id"
+// PROBE SAP/rightClick  (used 0x in top-30 Bot Store bots)
+click --id "probe_fieldPath" --selector "Id"
+// PROBE SAP/selectItem  (used 0x in top-30 Bot Store bots)
+setValue --id "probe_fieldPath" --index 5 --value "{{ROSETTA: value}}" --selector "Id"
+// PROBE SAP/selectRadioOption  (used 0x in top-30 Bot Store bots)
+click --id "probe_fieldPath" --selector "Id"
+// PROBE SAP/sendVirtualkey  (used 0x in top-30 Bot Store bots)
+sendKeys --keys "probe_virtualKeyToSend"
+// PROBE SAP/setTableCellText  (used 0x in top-30 Bot Store bots)
+getTable --id "probe_fieldPath" --searchbycolumn 5 --index "probe_findText" --row 5 --selector "Id" vOut=value
+// PROBE SAP/setText  (used 0x in top-30 Bot Store bots)
+setValue --id "probe_fieldPath" --value "probe_fieldValue" --selector "Id"
+// PROBE Screen/captureArea  (used 0x in top-30 Bot Store bots)
+printScreen rosettaChainImageScreencaptureArea=value
+cropImage rosettaChainImageScreencaptureArea=value
+saveImage --file "probe_filePath" --image ${rosettaChainImageScreencaptureArea} --directory "{{ROSETTA: directory}}" --format "{{ROSETTA: format}}" vOut=value
+// PROBE Screen/captureWindow  (used 0x in top-30 Bot Store bots)
+printWindow rosettaChainImageScreencaptureWindow=value
+saveImage --file "probe_filePath" --image ${rosettaChainImageScreencaptureWindow} --directory "{{ROSETTA: directory}}" --format "{{ROSETTA: format}}" vOut=value
+// PROBE Service/getServiceStatus  (used 0x in top-30 Bot Store bots)
+getServiceState --name "probe_serviceNameBySelection"

@@ -1,0 +1,29 @@
+id: a360.excel-ms.getsinglecell
+from: synthetic, same attribute shape as the A360 package metadata (A-27)
+node:
+  uid: 00000000-0000-4000-8000-000000000272
+  commandName: GetSingleCell
+  packageName: Excel_MS
+  disabled: false
+  attributes:
+    - name: session
+      value:
+        type: STRING
+        string: Default
+    - name: activeCell
+      value:
+        type: STRING
+        string: 'false'
+    - name: cell
+      value:
+        type: STRING
+        string: B2
+    - name: readOption
+      value:
+        type: STRING
+        string: READ_CELL_TEXT
+  returnTo:
+    type: VARIABLE
+    variableName: vCell
+expect:
+  op: excel.getCell

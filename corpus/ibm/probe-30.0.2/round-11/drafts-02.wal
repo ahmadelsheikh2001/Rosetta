@@ -1,0 +1,248 @@
+// Rosetta probe round 11 - drafts-02.wal: open in IBM RPA Studio 30.0.2, do NOT run.
+// Record the Error List (line + message). Each command follows its "// PROBE <A360 command>" line.
+defVar --name vOut --type String
+defVar --name rosettaSessionExcelMSProbeSession --type String
+defVar --name rosettaChainDataTableExcel_MSappendWorkbook --type DataTable
+defVar --name rosettaChainDataTableExcel_MSappendWorksheet --type DataTable
+defVar --name rosettaChainDataTableExcel_MSFilterTable --type DataTable
+defVar --name rosettaSessionExcelMSProbeSession --type DataTable
+defVar --name rosettaChainDataTableExcel_MSFilterTableV2 --type DataTable
+defVar --name rosettaChainDataTableExcel_MSremoveBlankRows --type DataTable
+defVar --name rosettaChainDataTableExcel_MSReplace --type DataTable
+defVar --name rosettaChainDataTableExcel_MSSortTable --type DataTable
+defVar --name rosettaChainDataTableExcel_MSSortTableV2 --type DataTable
+defVar --name rosettaSessionExcelProbeSession --type String
+defVar --name rosettaChainDataTableExcelReplace --type DataTable
+defVar --name rosettaSessionFtpDefault --type String
+defVar --name rosettaChainFileSystemGoogleDriveDownloadFile --type FileSystem
+defVar --name rosettaChainFileSystemGoogleDriveUploadFile --type FileSystem
+// PROBE Dictionary/toRecordProperty  (used 0x in top-30 Bot Store bots)
+setVar --name "${vOut}" --value "probe_input" --name "{{ROSETTA: name}}"
+// PROBE Dictionary/toStringProperty  (used 0x in top-30 Bot Store bots)
+setVar --name "${vOut}" --value "probe_input" --name "{{ROSETTA: name}}"
+// PROBE Dictionary/toTableProperty  (used 0x in top-30 Bot Store bots)
+setVar --name "${vOut}" --value "probe_input" --name "{{ROSETTA: name}}"
+// PROBE Dictionary/valueExistsForKey  (used 0x in top-30 Bot Store bots)
+strDictContains --dictionary "probe_dictionary" --key "probe_key" vOut=value
+// PROBE Dictionary/valuesProperty  (used 0x in top-30 Bot Store bots)
+setVar --name "${vOut}" --value "probe_input" --name "{{ROSETTA: name}}"
+// PROBE Email/changeStatus  (used 0x in top-30 Bot Store bots)
+emailUpdate --message "{{ROSETTA: message}}"
+// PROBE Email/deleteMessage  (used 0x in top-30 Bot Store bots)
+emailDelete --message "{{ROSETTA: message}}"
+// PROBE Email/ForwardEmail  (used 0x in top-30 Bot Store bots)
+emailSend --attachments "probe_attachmentsFilePath" --bcc "probe_bcc" --bodytype "probe_bodyFormat" --body "probe_message" --cc "probe_cc" --to "probe_toAddress" --connection "{{ROSETTA: connection}}"
+emailGetAttachment --message "{{ROSETTA: message}}" --outputpath "{{ROSETTA: outputpath}}" vOut=value
+// PROBE Email/ForwardEmailV2  (used 0x in top-30 Bot Store bots)
+emailSend --bcc "probe_bcc" --bodytype "probe_bodyFormat" --body "probe_message" --cc "probe_cc" --attachments "probe_ensureAttachmentsExist" --to "probe_toAddress" --connection "{{ROSETTA: connection}}"
+emailGetAttachment --message "{{ROSETTA: message}}" --outputpath "{{ROSETTA: outputpath}}" vOut=value
+// PROBE Email/move  (used 0x in top-30 Bot Store bots)
+emailMove --folder "probe_folderPath" --message "{{ROSETTA: message}}"
+// PROBE Email/ReplyAllEmail  (used 0x in top-30 Bot Store bots)
+emailReply --bcc "probe_bcc" --bodytype "probe_bodyFormat" --body "probe_message" --cc "probe_cc" --attachments "probe_fileList" --subject "probe_subject" --message "{{ROSETTA: message}}"
+// PROBE Email/ReplyEmail  (used 0x in top-30 Bot Store bots)
+emailReply --attachments "probe_attachmentsFilePath" --bcc "probe_bcc" --bodytype "probe_bodyFormat" --body "probe_message" --cc "probe_cc" --message "{{ROSETTA: message}}"
+// PROBE Email/ReplyEmailV2  (used 0x in top-30 Bot Store bots)
+emailReply --bcc "probe_bcc" --bodytype "probe_bodyFormat" --body "probe_message" --cc "probe_cc" --attachments "probe_fileList" --message "{{ROSETTA: message}}"
+// PROBE Excel_MS/appendWorkbook  (used 0x in top-30 Bot Store bots)
+excelGetTable --file ${rosettaSessionExcelMSProbeSession} --getfirstsheet rosettaChainDataTableExcel_MSappendWorkbook=value
+excelSetTable --dataTable ${rosettaChainDataTableExcel_MSappendWorkbook} --file "{{ROSETTA: file}}" vOut=value
+// PROBE Excel_MS/appendWorksheet  (used 0x in top-30 Bot Store bots)
+excelGetTable --file "probe_filePath" --sheet "probe_sheetOption" rosettaChainDataTableExcel_MSappendWorksheet=value
+excelSetTable --dataTable ${rosettaChainDataTableExcel_MSappendWorksheet} --file "{{ROSETTA: file}}" vOut=value
+// PROBE Excel_MS/ConvertToPDF  (used 0x in top-30 Bot Store bots)
+officeOpen --type "probe_convertSheetType" --path ${rosettaSessionExcelMSProbeSession}
+officeExportAs --filepath "probe_fileStorageLocation" --filename "probe_pdfFileName" --fileformat ${rosettaSessionExcelMSProbeSession} --quality "{{ROSETTA: quality}}" --officeapplication "{{ROSETTA: officeapplication}}" vOut=value
+// PROBE Excel_MS/FilterTable  (used 0x in top-30 Bot Store bots)
+excelGetTable --file "{{ROSETTA: file}}" --getfirstsheet rosettaChainDataTableExcel_MSFilterTable=value
+filterTable --dataTable ${rosettaChainDataTableExcel_MSFilterTable} rosettaSessionExcelMSProbeSession=value
+// PROBE Excel_MS/FilterTableV2  (used 0x in top-30 Bot Store bots)
+excelGetTable --file "{{ROSETTA: file}}" --getfirstsheet rosettaChainDataTableExcel_MSFilterTableV2=value
+filterTable --dataTable ${rosettaChainDataTableExcel_MSFilterTableV2} rosettaSessionExcelMSProbeSession=value
+// PROBE Excel_MS/GetMultipleCells  (used 0x in top-30 Bot Store bots)
+excelGetTable --file ${rosettaSessionExcelMSProbeSession} --getfirstsheet vOut=value
+// PROBE Excel_MS/GetSingleCellAddress  (used 0x in top-30 Bot Store bots)
+evaluate --expression "{{ROSETTA: expression}}" vOut=value
+// PROBE Excel_MS/GetSingleColumnName  (used 0x in top-30 Bot Store bots)
+evaluate --expression "{{ROSETTA: expression}}" vOut=value
+// PROBE Excel_MS/GetSingleRowNumber  (used 0x in top-30 Bot Store bots)
+evaluate --expression "{{ROSETTA: expression}}" vOut=value
+// PROBE Excel_MS/getWorksheetAsDataTable  (used 0x in top-30 Bot Store bots)
+excelGetTable --hasheaders "probe_containsHeader" --file ${rosettaSessionExcelMSProbeSession} --getfirstsheet vOut=value
+// PROBE Excel_MS/ProtectWorkbook  (used 0x in top-30 Bot Store bots)
+protectExcel --file ${rosettaSessionExcelMSProbeSession} vOut=value
+// PROBE Excel_MS/readExcelRow  (used 0x in top-30 Bot Store bots)
+excelGetTable --file ${rosettaSessionExcelMSProbeSession} --getfirstsheet vOut=value
+// PROBE Excel_MS/removeBlankRows  (used 0x in top-30 Bot Store bots)
+excelGetTable --sheet "probe_fromBeginningOfTheSheet" --file ${rosettaSessionExcelMSProbeSession} rosettaChainDataTableExcel_MSremoveBlankRows=value
+deleteRows --dataTable ${rosettaChainDataTableExcel_MSremoveBlankRows}
+excelSetTable --cell "5" --dataTable ${rosettaChainDataTableExcel_MSremoveBlankRows} --file "{{ROSETTA: file}}" vOut=value
+// PROBE Excel_MS/renameWorksheet  (used 0x in top-30 Bot Store bots)
+excelRenameWorksheet --newname "probe_newSheetName" --index 5 --name "probe_sheetName" --file ${rosettaSessionExcelMSProbeSession}
+// PROBE Excel_MS/Replace  (used 0x in top-30 Bot Store bots)
+excelGetTable --file ${rosettaSessionExcelMSProbeSession} --getfirstsheet rosettaChainDataTableExcel_MSReplace=value
+replaceText --textpattern "probe_findText" --replacement "probe_replaceText" --texttoparse "{{ROSETTA: texttoparse}}"
+excelSetTable --cell "probe_fromSpecificCellText" --dataTable ${rosettaChainDataTableExcel_MSReplace} --file "{{ROSETTA: file}}" vOut=value
+// PROBE Excel_MS/SaveAs  (used 0x in top-30 Bot Store bots)
+excelSaveAs --filename "probe_filePath" --fileformat ${rosettaSessionExcelMSProbeSession}
+// PROBE Excel_MS/SetCellFormula  (used 0x in top-30 Bot Store bots)
+excelSet --cell "probe_activeCell" --value "probe_cellFormulaToApply" --file ${rosettaSessionExcelMSProbeSession} --getfirstsheet
+// PROBE Excel_MS/SortTable  (used 0x in top-30 Bot Store bots)
+excelGetTable --file "{{ROSETTA: file}}" --getfirstsheet rosettaChainDataTableExcel_MSSortTable=value
+sortTable --orderby "{{ROSETTA: orderby}}" --dataTable ${rosettaChainDataTableExcel_MSSortTable} rosettaChainDataTableExcel_MSSortTable=value
+excelSetTable --dataTable ${rosettaChainDataTableExcel_MSSortTable} --file "{{ROSETTA: file}}" vOut=value
+// PROBE Excel_MS/SortTableV2  (used 0x in top-30 Bot Store bots)
+excelGetTable --file "{{ROSETTA: file}}" --getfirstsheet rosettaChainDataTableExcel_MSSortTableV2=value
+sortTable --orderby "{{ROSETTA: orderby}}" --dataTable ${rosettaChainDataTableExcel_MSSortTableV2} rosettaChainDataTableExcel_MSSortTableV2=value
+excelSetTable --dataTable ${rosettaChainDataTableExcel_MSSortTableV2} --file "{{ROSETTA: file}}" vOut=value
+// PROBE Excel_MS/UnprotectWorkbook  (used 0x in top-30 Bot Store bots)
+unprotectExcel --file ${rosettaSessionExcelMSProbeSession} vOut=value
+// PROBE Excel_MS/Unprotectworksheet  (used 0x in top-30 Bot Store bots)
+unprotectExcel --file ${rosettaSessionExcelMSProbeSession} vOut=value
+// PROBE Excel_MS/writeDataTableToWorksheet  (used 0x in top-30 Bot Store bots)
+excelSetTable --cell "probe_firstCellAddress" --dataTable "probe_tableObj" --file ${rosettaSessionExcelMSProbeSession} vOut=value
+// PROBE Excel/CloseSpreadsheet  (used 0x in top-30 Bot Store bots)
+excelClose --save "probe_isSave" --file ${rosettaSessionExcelProbeSession}
+// PROBE Excel/GetMultipleCells  (used 0x in top-30 Bot Store bots)
+excelGetTable --file ${rosettaSessionExcelProbeSession} --getfirstsheet vOut=value
+// PROBE Excel/GetSingleCell  (used 0x in top-30 Bot Store bots)
+excelGet --file ${rosettaSessionExcelProbeSession} vOut=value
+// PROBE Excel/GetSingleCellAddress  (used 0x in top-30 Bot Store bots)
+evaluate --expression "{{ROSETTA: expression}}" vOut=value
+// PROBE Excel/GetSingleColumnName  (used 0x in top-30 Bot Store bots)
+evaluate --expression "{{ROSETTA: expression}}" vOut=value
+// PROBE Excel/GetSingleRowNumber  (used 0x in top-30 Bot Store bots)
+evaluate --expression "{{ROSETTA: expression}}" vOut=value
+// PROBE Excel/OpenSpreadsheet  (used 0x in top-30 Bot Store bots)
+excelOpen --file "probe_filePath" vOut=value
+// PROBE Excel/Replace  (used 0x in top-30 Bot Store bots)
+excelGetTable --file ${rosettaSessionExcelProbeSession} --getfirstsheet rosettaChainDataTableExcelReplace=value
+replaceText --textpattern "probe_findText" --replacement "probe_replaceWith" --texttoparse "{{ROSETTA: texttoparse}}"
+excelSetTable --cell "probe_fromSpecificCellText" --dataTable ${rosettaChainDataTableExcelReplace} --file "{{ROSETTA: file}}" vOut=value
+// PROBE Excel/SaveSpreadSheet  (used 0x in top-30 Bot Store bots)
+excelSaveAs --fileformat ${rosettaSessionExcelProbeSession} --filename "{{ROSETTA: filename}}"
+// PROBE Excel/SetCell  (used 0x in top-30 Bot Store bots)
+excelSet --value "probe_value" --file ${rosettaSessionExcelProbeSession} --getfirstsheet --cell "{{ROSETTA: cell}}"
+// PROBE File/asListProperty  (used 0x in top-30 Bot Store bots)
+setVar --name "${vOut}" --value "probe_input" --name "{{ROSETTA: name}}"
+// PROBE File/fileExists  (used 0x in top-30 Bot Store bots)
+ifFile --file "probe_sourceFilePath" vOut=value
+// PROBE File/fileNotExists  (used 0x in top-30 Bot Store bots)
+ifFile --file "probe_sourceFilePath" vOut=value
+// PROBE File/getName  (used 0x in top-30 Bot Store bots)
+getFileInfo --path "probe_sourceFile"
+// PROBE File/getPath  (used 0x in top-30 Bot Store bots)
+getFileInfo --path "probe_sourceFile"
+// PROBE File/openFile  (used 0x in top-30 Bot Store bots)
+openFile --file "probe_filePath" vOut=value
+// PROBE File/printFile  (used 0x in top-30 Bot Store bots)
+printDocument --file "probe_filePath" vOut=value
+// PROBE File/renameFiles  (used 0x in top-30 Bot Store bots)
+fileRename --file "probe_filePath" --newname "probe_newFileName" vOut=value
+// PROBE File/toRepositoryPathProperty  (used 0x in top-30 Bot Store bots)
+setVar --name "${vOut}" --value "probe_input" --name "{{ROSETTA: name}}"
+// PROBE FileConversion/CSVtoXLSX  (used 0x in top-30 Bot Store bots)
+officeOpen --path "{{ROSETTA: path}}" --type "{{ROSETTA: type}}"
+officeExportAs --filepath "{{ROSETTA: filepath}}" --filename "{{ROSETTA: filename}}" --fileformat "{{ROSETTA: fileformat}}" --quality "{{ROSETTA: quality}}" --officeapplication "{{ROSETTA: officeapplication}}" vOut=value
+// PROBE FileConversion/DOCXtoPDF  (used 0x in top-30 Bot Store bots)
+officeOpen --path "{{ROSETTA: path}}" --type "{{ROSETTA: type}}"
+officeExportAs --filepath "{{ROSETTA: filepath}}" --filename "{{ROSETTA: filename}}" --fileformat "{{ROSETTA: fileformat}}" --quality "{{ROSETTA: quality}}" --officeapplication "{{ROSETTA: officeapplication}}" vOut=value
+// PROBE FileConversion/ImagetoImage  (used 0x in top-30 Bot Store bots)
+officeOpen --path "{{ROSETTA: path}}" --type "{{ROSETTA: type}}"
+officeExportAs --filepath "{{ROSETTA: filepath}}" --filename "{{ROSETTA: filename}}" --fileformat "{{ROSETTA: fileformat}}" --quality "{{ROSETTA: quality}}" --officeapplication "{{ROSETTA: officeapplication}}" vOut=value
+// PROBE FileConversion/IMAGEtoPDF  (used 0x in top-30 Bot Store bots)
+officeOpen --path "{{ROSETTA: path}}" --type "{{ROSETTA: type}}"
+officeExportAs --filepath "{{ROSETTA: filepath}}" --filename "{{ROSETTA: filename}}" --fileformat "{{ROSETTA: fileformat}}" --quality "{{ROSETTA: quality}}" --officeapplication "{{ROSETTA: officeapplication}}" vOut=value
+// PROBE FileConversion/PDFtoDOCX  (used 0x in top-30 Bot Store bots)
+officeOpen --path "{{ROSETTA: path}}" --type "{{ROSETTA: type}}"
+officeExportAs --filepath "{{ROSETTA: filepath}}" --filename "{{ROSETTA: filename}}" --fileformat "{{ROSETTA: fileformat}}" --quality "{{ROSETTA: quality}}" --officeapplication "{{ROSETTA: officeapplication}}" vOut=value
+// PROBE FileConversion/PDFtoHTML  (used 0x in top-30 Bot Store bots)
+officeOpen --path "{{ROSETTA: path}}" --type "{{ROSETTA: type}}"
+officeExportAs --filepath "{{ROSETTA: filepath}}" --filename "{{ROSETTA: filename}}" --fileformat "{{ROSETTA: fileformat}}" --quality "{{ROSETTA: quality}}" --officeapplication "{{ROSETTA: officeapplication}}" vOut=value
+// PROBE FileConversion/PDFtoImage  (used 0x in top-30 Bot Store bots)
+officeOpen --path "{{ROSETTA: path}}" --type "{{ROSETTA: type}}"
+officeExportAs --filepath "{{ROSETTA: filepath}}" --filename "{{ROSETTA: filename}}" --fileformat "{{ROSETTA: fileformat}}" --quality "{{ROSETTA: quality}}" --officeapplication "{{ROSETTA: officeapplication}}" vOut=value
+// PROBE FileConversion/PDFtoPPTX  (used 0x in top-30 Bot Store bots)
+officeOpen --path "{{ROSETTA: path}}" --type "{{ROSETTA: type}}"
+officeExportAs --filepath "{{ROSETTA: filepath}}" --filename "{{ROSETTA: filename}}" --fileformat "{{ROSETTA: fileformat}}" --quality "{{ROSETTA: quality}}" --officeapplication "{{ROSETTA: officeapplication}}" vOut=value
+// PROBE FileConversion/PPTXtoImage  (used 0x in top-30 Bot Store bots)
+officeOpen --path "{{ROSETTA: path}}" --type "{{ROSETTA: type}}"
+officeExportAs --filepath "{{ROSETTA: filepath}}" --filename "{{ROSETTA: filename}}" --fileformat "{{ROSETTA: fileformat}}" --quality "{{ROSETTA: quality}}" --officeapplication "{{ROSETTA: officeapplication}}" vOut=value
+// PROBE FileConversion/PPTXtoPDF  (used 0x in top-30 Bot Store bots)
+officeOpen --path "{{ROSETTA: path}}" --type "{{ROSETTA: type}}"
+officeExportAs --filepath "{{ROSETTA: filepath}}" --filename "{{ROSETTA: filename}}" --fileformat "{{ROSETTA: fileformat}}" --quality "{{ROSETTA: quality}}" --officeapplication "{{ROSETTA: officeapplication}}" vOut=value
+// PROBE FileConversion/XLSXtoCSV  (used 0x in top-30 Bot Store bots)
+officeOpen --path "{{ROSETTA: path}}" --type "{{ROSETTA: type}}"
+officeExportAs --filepath "{{ROSETTA: filepath}}" --filename "{{ROSETTA: filename}}" --fileformat "{{ROSETTA: fileformat}}" --quality "{{ROSETTA: quality}}" --officeapplication "{{ROSETTA: officeapplication}}" vOut=value
+// PROBE Folder/deleteFolder  (used 0x in top-30 Bot Store bots)
+deleteDir --directoryname "probe_folderPath" vOut=value
+// PROBE Folder/folderDoesNotExists  (used 0x in top-30 Bot Store bots)
+ifFolder --path "probe_folderPath" vOut=value
+// PROBE Folder/folderExists  (used 0x in top-30 Bot Store bots)
+ifFolder --path "probe_folderPath" vOut=value
+// PROBE Folder/openFolder  (used 0x in top-30 Bot Store bots)
+openFile --file "probe_folderPath" vOut=value
+// PROBE Folder/unzipFiles  (used 0x in top-30 Bot Store bots)
+unzip --file "probe_sourcePath" --destinationfolder "probe_targetPath"
+// PROBE Folder/zipFiles  (used 0x in top-30 Bot Store bots)
+zip --directorylocation "probe_sourcePath" --destinationfolder "probe_targetPath" --filename "{{ROSETTA: filename}}"
+// PROBE Ftp/connect  (used 0x in top-30 Bot Store bots)
+setVar --name "${rosettaSessionFtpDefault}" --value "probe_keyfile"
+// PROBE Ftp/ConnectV2  (used 0x in top-30 Bot Store bots)
+setVar --name "${rosettaSessionFtpDefault}" --value "probe_keyfile1"
+// PROBE Ftp/createFolder  (used 0x in top-30 Bot Store bots)
+ftpCreateDir
+// PROBE Ftp/deleteFiles  (used 0x in top-30 Bot Store bots)
+ftpDelete --remotepath "probe_remoteFiles" --type "{{ROSETTA: type}}" --host "{{ROSETTA: host}}" vOut=value
+// PROBE Ftp/deleteFolder  (used 0x in top-30 Bot Store bots)
+ftpDeleteDir --remotepath "probe_remoteFolder" --type "{{ROSETTA: type}}" --host "{{ROSETTA: host}}" vOut=value
+// PROBE Ftp/getFiles  (used 0x in top-30 Bot Store bots)
+ftpDownload --type "probe_dateFilterType" --file "probe_localDirectory" --remotepath "probe_remoteFiles" --host "{{ROSETTA: host}}" vOut=value
+// PROBE Ftp/putFiles  (used 0x in top-30 Bot Store bots)
+ftpUpload --file "probe_files" --type "{{ROSETTA: type}}" --host "{{ROSETTA: host}}" --remotepath "{{ROSETTA: remotepath}}" vOut=value
+// PROBE FuzzyAdvanced/basictokenizer  (used 0x in top-30 Bot Store bots)
+approximatelyEquals vOut=value
+// PROBE FuzzyAdvanced/containsnumeric  (used 0x in top-30 Bot Store bots)
+approximatelyEquals vOut=value
+// PROBE FuzzyAdvanced/containstokens  (used 0x in top-30 Bot Store bots)
+approximatelyEquals vOut=value
+// PROBE FuzzyAdvanced/intokens  (used 0x in top-30 Bot Store bots)
+approximatelyEquals vOut=value
+// PROBE FuzzyAdvanced/numericaltokens  (used 0x in top-30 Bot Store bots)
+approximatelyEquals vOut=value
+// PROBE FuzzyAdvanced/PartialRatioMatch  (used 0x in top-30 Bot Store bots)
+approximatelyEquals vOut=value
+// PROBE FuzzyAdvanced/SimpleRatioMatch  (used 0x in top-30 Bot Store bots)
+approximatelyEquals vOut=value
+// PROBE FuzzyAdvanced/tokensequal  (used 0x in top-30 Bot Store bots)
+approximatelyEquals vOut=value
+// PROBE FuzzyAdvanced/TokenSortRatioMatch  (used 0x in top-30 Bot Store bots)
+approximatelyEquals vOut=value
+// PROBE FuzzyAdvanced/WeightRatioMatch  (used 0x in top-30 Bot Store bots)
+approximatelyEquals vOut=value
+// PROBE FuzzyAdvanced/wordpiecetokenizer  (used 0x in top-30 Bot Store bots)
+approximatelyEquals vOut=value
+// PROBE Google Drive/DownloadFile  (used 0x in top-30 Bot Store bots)
+googleDriveConnect --name "probe_fileName" rosettaChainFileSystemGoogleDriveDownloadFile=value
+downloadStorage --fileSystem ${rosettaChainFileSystemGoogleDriveDownloadFile} --source "{{ROSETTA: source}}" --target "{{ROSETTA: target}}"
+// PROBE Google Drive/UploadFile  (used 0x in top-30 Bot Store bots)
+googleDriveConnect --name "probe_fileName" rosettaChainFileSystemGoogleDriveUploadFile=value
+uploadStorage --fileSystem ${rosettaChainFileSystemGoogleDriveUploadFile} --source "{{ROSETTA: source}}" --target "{{ROSETTA: target}}"
+// PROBE GUID Tools/generate guid  (used 0x in top-30 Bot Store bots)
+newGuid vOut=value
+// PROBE GUID Tools/get GUID variant  (used 0x in top-30 Bot Store bots)
+newGuid vOut=value
+// PROBE GUID Tools/get GUID version  (used 0x in top-30 Bot Store bots)
+newGuid vOut=value
+// PROBE HTMLParser/htmlcontent  (used 0x in top-30 Bot Store bots)
+mapHTML
+// PROBE HTMLParser/htmltoxml  (used 0x in top-30 Bot Store bots)
+mapHTML
+// PROBE HTMLParser/regexsearch  (used 0x in top-30 Bot Store bots)
+mapHTML
+// PROBE HTMLParser/searchwithselector  (used 0x in top-30 Bot Store bots)
+mapHTML
+// PROBE HTMLParser/simplesearch  (used 0x in top-30 Bot Store bots)
+mapHTML
+// PROBE HTTPFileRequest/GETFile  (used 0x in top-30 Bot Store bots)
+httpStreamToFile --url "{{ROSETTA: url}}" vOut=value
