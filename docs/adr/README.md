@@ -27,3 +27,4 @@ New decision: copy [`000-template.md`](000-template.md), take the next number, a
 | [021](021-local-web-ui.md)                     | Local web UI (`rosetta serve`)                            | Accepted                              |
 | [022](022-bidirectional-ibm-to-a360.md)        | Both directions: IBM RPA → A360 as well                   | Accepted                              |
 | [023](023-tiered-fallback-conversion.md)       | Tiered fallback: every A360 command converts              | Accepted                              |
+| [024](024-connector-packages.md)               | ServiceNow, SAP GUI, SAP BAPI (SAP NCo) by hand           | Accepted                              |

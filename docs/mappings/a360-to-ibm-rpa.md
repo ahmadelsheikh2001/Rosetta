@@ -143,6 +143,18 @@ state 85, stub 602, hand-written 24; 0 static-checker errors. Weighted by use in
 A360 bots: 78% verified (core + hand-written), 15% draft/state/template, 7% stub. Studio round 11
 (`corpus/ibm/probe-30.0.2/round-11`) verifies the drafts.
 
+## Connectors (ADR-024)
+
+| A360 package                                            | IBM RPA                                                                                                                                                                             | Evidence          |
+| ------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------- |
+| ServiceNow Authentication / Revoke                      | `httpRequest` POST `/oauth_token.do`, `mapJson` token, `strDictAdd` Authorization header; POST `/oauth_revoke_token.do`                                                             | Documented (A-28) |
+| ServiceNow Create / Get / Update / Delete / List record | `httpRequest` POST / GET / PATCH / DELETE `/api/now/table/{table}`; body from the dictionary via `runCSharpCode`; `mapJson` sys_id, record → StringDictionary, list → `jsonToTable` | Documented (A-28) |
+| ServiceNow attachments                                  | POST `/api/now/attachment/file` (`--file`), `httpStreamToFile` `/attachment/{id}/file`, DELETE `/attachment/{id}`                                                                   | Documented (A-28) |
+| ServiceNow triggers                                     | Scheduling note: Control Center bot that polls the Table API                                                                                                                        | Manual            |
+| SAP connect / double / right click / virtual key        | `startSAPSession`, `click --doubleclick` / `--rightbutton`, `sendKeys "{ENTER}"`                                                                                                    | Documented        |
+| SAP BAPI connect … run function, workflows              | One `runCSharpCode` with SAP NCo 3.x at Run function (+ BAPI_TRANSACTION_COMMIT); result JSON                                                                                       | Documented (A-28) |
+| SAP BAPI get field / table / structure                  | `mapJson` / `jsonToTable` on the result JSON                                                                                                                                        | Documented        |
+
 ## Not covered yet
 
 Commands from samples not built yet (browser, email, database, terminal, other Excel commands).

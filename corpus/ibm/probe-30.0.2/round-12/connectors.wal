@@ -1,0 +1,59 @@
+// ======================================================================
+// Bot:         connectors-probe
+// Source:      bots/connectors-probe (Automation Anywhere A360)
+// Converted:   2026-11-02
+// Generator:   RPA Rosetta 0.0.0
+// Inputs:      none
+// Outputs:     none
+// Status:      DRAFT - syntax from the IBM RPA 30.0.x reference, being verified in Studio 30.0.2
+// ======================================================================
+defVar --name vSysId --type String
+defVar --name vRecord --type StringDictionary --innertype String
+defVar --name vList --type DataTable
+defVar --name vAttId --type String
+defVar --name vStatus --type String
+defVar --name vCompany --type String
+defVar --name vAddress --type DataTable
+defVar --name vFields --type StringDictionary --innertype String
+// ---- Helper variables added by the conversion ----
+defVar --name rosettaSnBaseSN --type String
+defVar --name rosettaSnHeadersSN --type StringDictionary --innertype String
+defVar --name rosettaSnTokenSN --type String
+defVar --name rosettaSnResponse --type String
+defVar --name rosettaSnBody --type String
+defVar --name rosettaSnFile --type String
+defVar --name rosettaBapiResultF1 --type String
+setVar --name "${rosettaSnBaseSN}" --value "https://YOUR-INSTANCE.service-now.com"
+httpRequest --verb "Post" --url "${rosettaSnBaseSN}/oauth_token.do" --formatter "Text" --mediatype "application/x-www-form-urlencoded" --source "grant_type=password&client_id=CLIENT_ID&client_secret=CLIENT_SECRET&username=USER&password=PASSWORD" rosettaSnResponse=value
+mapJson --json "${rosettaSnResponse}" --mappings "$.access_token=${rosettaSnTokenSN}"
+strDictAdd --key "Authorization" --value "Bearer ${rosettaSnTokenSN}" --dictionary ${rosettaSnHeadersSN}
+strDictAdd --key "Accept" --value "application/json" --dictionary ${rosettaSnHeadersSN}
+runCSharpCode --input "[{\"name\":\"fields\",\"type\":\"StringDictionary<String>\",\"value\":\"${vFields}\"}]" --output "[{\"name\":\"json\",\"type\":\"String\",\"value\":\"${rosettaSnBody}\"}]" --code "var parts = new List<string>();\r\nFunc<string,string> q = x => \"\\\"\" + (x ?? \"\").Replace(\"\\\\\",\"\\\\\\\\\").Replace(\"\\\"\",\"\\\\\\\"\").Replace(\"\\r\",\"\\\\r\").Replace(\"\\n\",\"\\\\n\") + \"\\\"\";\r\nforeach (var kv in fields) parts.Add(q(kv.Key) + \":\" + q(Convert.ToString(kv.Value)));\r\njson = \"{\" + string.Join(\",\", parts) + \"}\";"
+httpRequest --verb "Post" --url "${rosettaSnBaseSN}/api/now/table/incident" --headers ${rosettaSnHeadersSN} --formatter "Json" --mediatype "application/json" --source "${rosettaSnBody}" rosettaSnResponse=value
+mapJson --json "${rosettaSnResponse}" --mappings "$.result.sys_id=${vSysId}"
+httpRequest --verb "Get" --url "${rosettaSnBaseSN}/api/now/table/incident/${vSysId}" --headers ${rosettaSnHeadersSN} rosettaSnResponse=value
+runCSharpCode --input "[{\"name\":\"json\",\"type\":\"String\",\"value\":\"${rosettaSnResponse}\"}]" --output "[{\"name\":\"fieldMap\",\"type\":\"StringDictionary<String>\",\"value\":\"${vRecord}\"}]" --code "fieldMap = new Dictionary<string, string>();\r\nvar body = json.Substring(json.IndexOf(\"\\\"result\\\"\") + 8);\r\nforeach (System.Text.RegularExpressions.Match m in System.Text.RegularExpressions.Regex.Matches(body, \"\\\"([^\\\"]+)\\\"\\\\s*:\\\\s*\\\"((?:\\\\\\\\.|[^\\\"\\\\\\\\])*)\\\"\"))\r\n  if (!fieldMap.ContainsKey(m.Groups[1].Value)) fieldMap[m.Groups[1].Value] = System.Text.RegularExpressions.Regex.Unescape(m.Groups[2].Value);"
+runCSharpCode --input "[{\"name\":\"fields\",\"type\":\"StringDictionary<String>\",\"value\":\"${vFields}\"}]" --output "[{\"name\":\"json\",\"type\":\"String\",\"value\":\"${rosettaSnBody}\"}]" --code "var parts = new List<string>();\r\nFunc<string,string> q = x => \"\\\"\" + (x ?? \"\").Replace(\"\\\\\",\"\\\\\\\\\").Replace(\"\\\"\",\"\\\\\\\"\").Replace(\"\\r\",\"\\\\r\").Replace(\"\\n\",\"\\\\n\") + \"\\\"\";\r\nforeach (var kv in fields) parts.Add(q(kv.Key) + \":\" + q(Convert.ToString(kv.Value)));\r\njson = \"{\" + string.Join(\",\", parts) + \"}\";"
+httpRequest --verb "Patch" --url "${rosettaSnBaseSN}/api/now/table/incident/${vSysId}" --headers ${rosettaSnHeadersSN} --formatter "Json" --mediatype "application/json" --source "${rosettaSnBody}" rosettaSnResponse=value
+httpRequest --verb "Get" --url "${rosettaSnBaseSN}/api/now/table/incident?sysparm_query=active=true&sysparm_limit=10" --headers ${rosettaSnHeadersSN} rosettaSnResponse=value
+jsonToTable --json "${rosettaSnResponse}" --jsonPath "$.result" vList=value
+httpRequest --verb "Post" --url "${rosettaSnBaseSN}/api/now/attachment/file?table_name=incident&table_sys_id=${vSysId}&file_name=note.txt" --headers ${rosettaSnHeadersSN} --formatter "Bytes" --mediatype "application/octet-stream" --file "C:\\RosettaTest\\note.txt" rosettaSnResponse=value
+mapJson --json "${rosettaSnResponse}" --mappings "$.result.sys_id=${vAttId}"
+httpStreamToFile --url "${rosettaSnBaseSN}/api/now/attachment/${vAttId}/file" --headers ${rosettaSnHeadersSN} rosettaSnFile=value
+fileCopy --from "${rosettaSnFile}" --to "C:\\RosettaTest\\"
+httpRequest --verb "Delete" --url "${rosettaSnBaseSN}/api/now/attachment/${vAttId}" --headers ${rosettaSnHeadersSN}
+httpRequest --verb "Delete" --url "${rosettaSnBaseSN}/api/now/table/incident/${vSysId}" --headers ${rosettaSnHeadersSN}
+httpRequest --verb "Post" --url "${rosettaSnBaseSN}/oauth_revoke_token.do" --formatter "Text" --mediatype "application/x-www-form-urlencoded" --source "token=${rosettaSnTokenSN}"
+startSAPSession --connectionstring "YOUR SAP LOGON ENTRY" --clientid "100" --password "PASSWORD" --language "EN"
+setValue --id "wnd[0]/tbar[0]/okcd" --value "/nVA03" --selector "Id"
+sendKeys --keys "{ENTER}"
+click --selector "Id" --id "wnd[0]/usr/ctxtVBAK-VBELN" --doubleclick
+click --selector "Id" --id "wnd[0]/usr/ctxtVBAK-VBELN" --rightbutton
+getValue --id "wnd[0]/sbar" --selector "Id" vStatus=value
+closeSAPSession --sessionid "GUI"
+// A360 SAP BAPI connect, session "BAPI": used by the SAP .NET Connector call at "Run function"
+// A360 SAP BAPI create function F1 = BAPI_COMPANYCODE_GETDETAIL
+// A360 SAP BAPI set F1.COMPANYCODEID
+runCSharpCode --assemblies "[{\"assembly\":\"C:\\\\Program Files\\\\SAP\\\\SAP_DotNetConnector3_Net40_x64\\\\sapnco.dll\"},{\"assembly\":\"C:\\\\Program Files\\\\SAP\\\\SAP_DotNetConnector3_Net40_x64\\\\sapnco_utils.dll\"}]" --input "[{\"name\":\"host\",\"type\":\"String\",\"value\":\"YOUR-SAP-HOST\"},{\"name\":\"msHost\",\"type\":\"String\",\"value\":\"\"},{\"name\":\"group\",\"type\":\"String\",\"value\":\"\"},{\"name\":\"sysId\",\"type\":\"String\",\"value\":\"\"},{\"name\":\"sysNr\",\"type\":\"String\",\"value\":\"00\"},{\"name\":\"client\",\"type\":\"String\",\"value\":\"100\"},{\"name\":\"lang\",\"type\":\"String\",\"value\":\"EN\"},{\"name\":\"router\",\"type\":\"String\",\"value\":\"\"},{\"name\":\"user\",\"type\":\"String\",\"value\":\"RFC_USER\"},{\"name\":\"pwd\",\"type\":\"String\",\"value\":\"PASSWORD\"},{\"name\":\"sncName\",\"type\":\"String\",\"value\":\"\"},{\"name\":\"sncQop\",\"type\":\"String\",\"value\":\"\"},{\"name\":\"sncLib\",\"type\":\"String\",\"value\":\"\"},{\"name\":\"v0\",\"type\":\"String\",\"value\":\"1000\"}]" --output "[{\"name\":\"result\",\"type\":\"String\",\"value\":\"${rosettaBapiResultF1}\"}]" --code "using SAP.Middleware.Connector;\r\nvar cfg = new RfcConfigParameters();\r\ncfg.Add(RfcConfigParameters.Name, \"ROSETTA_BAPI\");\r\nif (!string.IsNullOrEmpty(host)) cfg.Add(RfcConfigParameters.AppServerHost, host);\r\nif (!string.IsNullOrEmpty(msHost)) { cfg.Add(RfcConfigParameters.MessageServerHost, msHost); cfg.Add(RfcConfigParameters.LogonGroup, group); cfg.Add(RfcConfigParameters.SystemID, sysId); }\r\ncfg.Add(RfcConfigParameters.SystemNumber, sysNr); cfg.Add(RfcConfigParameters.Client, client);\r\ncfg.Add(RfcConfigParameters.User, user); cfg.Add(RfcConfigParameters.Password, pwd); cfg.Add(RfcConfigParameters.Language, lang);\r\nif (!string.IsNullOrEmpty(router)) cfg.Add(RfcConfigParameters.SAPRouter, router);\r\nif (!string.IsNullOrEmpty(sncName)) { cfg.Add(RfcConfigParameters.SncMode, \"1\"); cfg.Add(RfcConfigParameters.SncPartnerName, sncName); if (!string.IsNullOrEmpty(sncQop)) cfg.Add(RfcConfigParameters.SncQOP, sncQop); if (!string.IsNullOrEmpty(sncLib)) cfg.Add(RfcConfigParameters.SncLibraryPath, sncLib); }\r\nvar dest = RfcDestinationManager.GetDestination(cfg);\r\nvar fn = dest.Repository.CreateFunction(\"BAPI_COMPANYCODE_GETDETAIL\");\r\nfn.SetValue(\"COMPANYCODEID\", v0);\r\nRfcSessionManager.BeginContext(dest);\r\nfn.Invoke(dest);\r\nRfcSessionManager.EndContext(dest);\r\nFunc<string,string> q = x => \"\\\"\" + (x ?? \"\").Replace(\"\\\\\",\"\\\\\\\\\").Replace(\"\\\"\",\"\\\\\\\"\").Replace(\"\\r\",\"\\\\r\").Replace(\"\\n\",\"\\\\n\") + \"\\\"\";\r\nFunc<IRfcStructure,string> st = s => { var p = new List<string>(); for (int i = 0; i < s.Metadata.FieldCount; i++) { var f = s.Metadata[i].Name; p.Add(q(f) + \":\" + q(s.GetString(f))); } return \"{\" + string.Join(\",\", p) + \"}\"; };\r\nvar ex = new List<string>(); var ss = new List<string>(); var ts = new List<string>();\r\nfor (int i = 0; i < fn.Metadata.ParameterCount; i++) {\r\n  var m = fn.Metadata[i];\r\n  if (m.Direction == RfcDirection.IMPORT) continue;\r\n  if (m.DataType == RfcDataType.TABLE) { var rows = new List<string>(); foreach (IRfcStructure r in fn.GetTable(m.Name)) rows.Add(st(r)); ts.Add(q(m.Name) + \":[\" + string.Join(\",\", rows) + \"]\"); }\r\n  else if (m.DataType == RfcDataType.STRUCTURE) ss.Add(q(m.Name) + \":\" + st(fn.GetStructure(m.Name)));\r\n  else ex.Add(q(m.Name) + \":\" + q(fn.GetString(m.Name)));\r\n}\r\nresult = \"{\\\"exports\\\":{\" + string.Join(\",\", ex) + \"},\\\"structures\\\":{\" + string.Join(\",\", ss) + \"},\\\"tables\\\":{\" + string.Join(\",\", ts) + \"}}\";"
+mapJson --json "${rosettaBapiResultF1}" --mappings "$.structures.COMPANYCODE_DETAIL.COMP_NAME=${vCompany}"
+jsonToTable --json "${rosettaBapiResultF1}" --jsonPath "$.structures.COMPANYCODE_ADDRESS" vAddress=value

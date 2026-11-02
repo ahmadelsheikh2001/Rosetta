@@ -11,6 +11,7 @@ import {
 } from '@rosetta/ir';
 import type { StandardsProfile } from '@rosetta/standards';
 import { lowerers, manual, sheetArg, type LowerState } from './commands.js';
+import { lowerConnector } from './connectors.js';
 import { accessKey, pathOf, textOf, valueOf, withAccesses, type NoteSink } from './expr.js';
 import {
   errorLineRef,
@@ -253,6 +254,7 @@ class Lowerer {
    */
   private fallback(s: Extract<Statement, { kind: 'action' }>): void {
     if (
+      lowerConnector(s, sourceKey(s), this.w, this.state) ||
       lowerScript(s, this.w, this.state) ||
       lowerDraft(s, this.w, this.state) ||
       lowerTemplate(s, this.w) ||

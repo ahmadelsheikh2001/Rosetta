@@ -7,6 +7,9 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: Se
 
 ### Added
 
+- `@rosetta/target-wal`: ServiceNow (OAuth + Table / Attachment REST API), SAP GUI (session, clicks,
+  virtual keys) and SAP BAPI (SAP .NET Connector through `runCSharpCode`, one call per function with
+  JSON results) converted by hand (ADR-024, A-28). Studio probe round 12 prepared.
 - `@rosetta/target-wal`: tiered fallback conversion (ADR-023) so every A360 command converts: drafts
   generated from the mapping dictionary v2 (multi-command sequences with chained outputs, required
   parameters with defaults or `{{ROSETTA: …}}` placeholders, `file://` paths), REST templates,
