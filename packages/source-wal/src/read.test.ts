@@ -171,6 +171,40 @@ describe('readWal', () => {
     expect(bot.body[1]).toMatchObject({ label: 'Subroutine Greet', body: [{ kind: 'action' }] });
   });
 
+  it('sets the --assignments of goSub before the call and reads gosubIf as an If', () => {
+    const { bot } = read(
+      [
+        'defVar --name step --type String',
+        'defVar --name other --type String',
+        'defVar --name ok --type Boolean',
+        'goSub --label Run --assignments "{\\"${step}\\":\\"BMSOD\\",\\"${other}\\":null}"',
+        'gosubIf --label Run --assignments "{\\"${step}\\":\\"${other}\\"}" --left "${ok}" --operator "Is_True"',
+        ...['beginSub --name Run', 'logMessage --message "${step}"', 'endSub'],
+      ].join('\n'),
+    );
+    expect(bot.body.map((s) => s.kind)).toEqual(['action', 'action', 'group', 'if']);
+    expect(bot.body[0]).toMatchObject({
+      op: 'vendor:ibm-rpa/setVar',
+      args: {
+        name: { kind: 'var', name: 'step' },
+        value: { kind: 'literal', value: 'BMSOD' },
+      },
+    });
+    expect(bot.body[1]).toMatchObject({ args: { name: { kind: 'var', name: 'other' } } });
+    expect((bot.body[1] as { args: Record<string, unknown> }).args.value).toBeUndefined();
+    expect(bot.body[3]).toMatchObject({
+      branches: [
+        {
+          condition: { kind: 'binary', op: 'eq', right: { kind: 'literal', value: true } },
+          body: [
+            { kind: 'action', args: { value: { kind: 'var', name: 'other' } } },
+            { kind: 'group', label: 'Subroutine Run' },
+          ],
+        },
+      ],
+    });
+  });
+
   it('writes a long subroutine once, counting the copies its inlined callers would make', () => {
     // Fail is called from one line of Step, but Step is called 40 times: inlining both writes
     // Fail 40 times (RPA.wal: ErrorHandel 105 times, a 19 MB A360 bot). Small Log stays inline.

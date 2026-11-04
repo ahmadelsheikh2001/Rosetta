@@ -95,6 +95,9 @@ const DISABLED = '// [DISABLED] ';
 /** Inlined lines one subroutine may add over all its calls before it is written once only. */
 const SHARED_SUBROUTINE_LINES = 2000;
 
+/** A line that runs a subroutine: goSub, or gosubIf when its condition holds. */
+const CALL = /^(?:goSub|gosubIf) --label (\S+)/;
+
 /**
  * How target-wal writes an A360 Try (ADR-020): `goSub TryN`, whose subroutine starts with this
  * comment and `onError --label CatchN`; the Catch subroutine sets the `rosettaTryNFailed` flag,
@@ -189,7 +192,7 @@ class Reader {
     let size = 0;
     for (const line of this.subs.get(name) ?? []) {
       size++;
-      const called = /^goSub --label (\S+)/.exec(line.text)?.[1];
+      const called = CALL.exec(line.text)?.[1];
       if (called) size += this.expandedSize(unquote(called), [...stack, name]);
     }
     this.sizes.set(name, size);
@@ -201,7 +204,7 @@ class Reader {
     if (!this.calls) {
       this.calls = new Map();
       for (const line of [...this.mainLines, ...[...this.subs.values()].flat()]) {
-        const called = /^goSub --label (\S+)/.exec(line.text)?.[1];
+        const called = CALL.exec(line.text)?.[1];
         if (called) this.calls.set(unquote(called), (this.calls.get(unquote(called)) ?? 0) + 1);
       }
     }
@@ -221,7 +224,7 @@ class Reader {
     if (stack.includes(name)) return 0;
     let count = 0;
     const calls = (lines: readonly Line[]) =>
-      lines.filter((l) => unquote(/^goSub --label (\S+)/.exec(l.text)?.[1] ?? '') === name).length;
+      lines.filter((l) => unquote(CALL.exec(l.text)?.[1] ?? '') === name).length;
     count += calls(this.mainLines);
     for (const [caller, lines] of this.subs) {
       const n = calls(lines);
@@ -523,6 +526,8 @@ class Parser {
         block.push(this.r.handlerTry(handler, rest.block, n));
         return rest.end ? { block, end: rest.end } : { block };
       }
+      if (cmd.verb === 'goSub')
+        block.push(...this.assignments(cmd, { id: `L${n}`, source: this.r.ref(n) }));
       const s = this.statement(cmd, line);
       if (s?.kind === 'try') {
         // a nested Try restores the enclosing handler right after its goSub
@@ -727,7 +732,23 @@ class Parser {
           category: 'system',
         };
       case 'goSub':
+        // its --assignments are set just before it, in the same block (see parse)
         return this.r.subroutine(unquote(String(cmd.params.get('label') ?? '')), n);
+      case 'gosubIf':
+        // `goSub` when the condition holds (Studio 30.0.2): an If around the call
+        return {
+          ...base,
+          kind: 'if',
+          branches: [
+            {
+              condition: condition(cmd),
+              body: [
+                ...this.assignments(cmd, base),
+                this.r.subroutine(unquote(String(cmd.params.get('label') ?? '')), n),
+              ],
+            },
+          ],
+        };
       case 'onError':
         // setting or restoring the handler of a Try (ADR-020) is part of the Try
         if (this.r.isCatch(unquote(String(cmd.params.get('label') ?? '')))) return undefined;
@@ -750,6 +771,43 @@ class Parser {
   private notHere(cmd: WalCommand, line: Line): Statement {
     this.r.report(WalCode.Unsupported, 'warning', { verb: cmd.verb, detail: line.text }, line.n);
     return unknown(this.r, line.n, line.text, `${cmd.verb} not understood here`);
+  }
+
+  /**
+   * `goSub --assignments "{\"${var}\":\"value\"}"` sets variables just before the subroutine
+   * runs (Studio 30.0.2; RPA.wal passes the EOD step to its subroutines this way). Each pair
+   * becomes a setVar, read like one written in the script; `null` clears the variable.
+   */
+  private assignments(cmd: WalCommand, base: { id: string; source: SourceRef }): Statement[] {
+    const raw = cmd.params.get('assignments');
+    if (raw === undefined) return [];
+    let pairs: Record<string, unknown>;
+    try {
+      const parsed: unknown = JSON.parse(unquote(String(raw)));
+      if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) throw new Error();
+      pairs = parsed as Record<string, unknown>;
+    } catch {
+      return [
+        unknown(
+          this.r,
+          Number(base.id.slice(1)),
+          `${cmd.verb} --assignments`,
+          'its assignments are not a JSON object',
+        ),
+      ];
+    }
+    const quote = (s: string) => `"${s.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"`;
+    return Object.entries(pairs).map(([name, value], i) => {
+      const text =
+        value === null
+          ? `setVar --name ${quote(name)}`
+          : `setVar --name ${quote(name)} --value ${quote(typeof value === 'string' ? value : JSON.stringify(value))}`;
+      const set = parseCommand(text);
+      const at = { ...base, id: `${base.id}.a${String(i)}` };
+      return set
+        ? this.action(set, at)
+        : unknown(this.r, Number(base.id.slice(1)), text, 'assignment');
+    });
   }
 
   private action(cmd: WalCommand, base: { id: string; source: SourceRef }): Statement {
