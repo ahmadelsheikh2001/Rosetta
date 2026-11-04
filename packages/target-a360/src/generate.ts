@@ -505,9 +505,16 @@ class Generator {
         return this.action(s, path);
       case 'try':
         return this.tryNode(s, path);
+      case 'unknown':
+        // the reader says why: an unknown verb, or a shared subroutine written elsewhere
+        return this.todo(
+          path,
+          s.reason
+            ? `${(typeof s.raw === 'string' ? s.raw : 'line').split(' ')[0] ?? 'line'}: ${s.reason}`
+            : 'unknown not converted to A360 yet',
+        );
       case 'callBot':
       case 'stop':
-      case 'unknown':
         return this.todo(path, `${s.kind} not converted to A360 yet`);
     }
   }
@@ -620,6 +627,23 @@ class Generator {
   }
 
   private ifNode(s: Extract<Statement, { kind: 'if' }>, path: string): Node {
+    // An A360 If takes one condition here (corpus 02). "a or b" becomes branches with the same
+    // body (the first that holds runs, as before); "a and b" becomes an If inside an If.
+    const ors = (e: Expr): Expr[] =>
+      e.kind === 'binary' && e.op === 'or' ? [...ors(e.left), ...ors(e.right)] : [e];
+    const split = s.branches.flatMap((b) =>
+      ors(b.condition).map((condition) => ({ ...b, condition })),
+    );
+    const onlyBranch = split.length === 1 ? split[0] : undefined;
+    if (onlyBranch?.condition.kind === 'binary' && onlyBranch.condition.op === 'and') {
+      const { left, right } = onlyBranch.condition;
+      const inner: Extract<Statement, { kind: 'if' }> = {
+        ...s,
+        branches: [{ condition: right, body: onlyBranch.body }],
+      };
+      return this.ifNode({ ...s, branches: [{ condition: left, body: [inner] }] }, path);
+    }
+    if (split.length !== s.branches.length) return this.ifNode({ ...s, branches: split }, path);
     const [first, ...others] = s.branches;
     const branches: Node[] = others.map((b, i) =>
       this.node(`${path}.b${i}`, 'If', 'elseIf', {

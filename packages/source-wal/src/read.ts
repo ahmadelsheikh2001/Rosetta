@@ -92,6 +92,9 @@ const generated =
 
 const DISABLED = '// [DISABLED] ';
 
+/** Inlined lines one subroutine may add over all its calls before it is written once only. */
+const SHARED_SUBROUTINE_LINES = 2000;
+
 /**
  * How target-wal writes an A360 Try (ADR-020): `goSub TryN`, whose subroutine starts with this
  * comment and `onError --label CatchN`; the Catch subroutine sets the `rosettaTryNFailed` flag,
@@ -120,6 +123,11 @@ class Reader {
   readonly walTypes = new Map<string, string>();
   private readonly subs = new Map<string, Line[]>();
   private readonly inlining: string[] = [];
+  private readonly sizes = new Map<string, number>();
+  private calls: Map<string, number> | undefined;
+  private mainLines: Line[] = [];
+  /** Shared subroutines already written at their first call. */
+  private readonly writtenOnce = new Set<string>();
 
   constructor(private readonly options: WalReadOptions) {}
 
@@ -168,7 +176,35 @@ class Reader {
       (sub ? sub.lines : main).push(line);
     });
     if (sub) this.report(WalCode.Structure, 'warning', { line: 0, verb: 'beginSub' });
+    this.mainLines = main;
     return steps(new Parser(this, main).parse(new Set()).block);
+  }
+
+  /** Lines a subroutine becomes when every goSub inside it is inlined too (memoised). */
+  private expandedSize(name: string, stack: string[] = []): number {
+    const known = this.sizes.get(name);
+    if (known !== undefined) return known;
+    if (stack.includes(name)) return 0;
+    let size = 0;
+    for (const line of this.subs.get(name) ?? []) {
+      size++;
+      const called = /^goSub --label (\S+)/.exec(line.text)?.[1];
+      if (called) size += this.expandedSize(unquote(called), [...stack, name]);
+    }
+    this.sizes.set(name, size);
+    return size;
+  }
+
+  /** How often each subroutine is called in the whole script (static count of goSub lines). */
+  private callCount(name: string): number {
+    if (!this.calls) {
+      this.calls = new Map();
+      for (const line of [...this.mainLines, ...[...this.subs.values()].flat()]) {
+        const called = /^goSub --label (\S+)/.exec(line.text)?.[1];
+        if (called) this.calls.set(unquote(called), (this.calls.get(unquote(called)) ?? 0) + 1);
+      }
+    }
+    return this.calls.get(name) ?? 0;
   }
 
   subroutine(name: string, n: number): Statement {
@@ -176,6 +212,23 @@ class Reader {
     if (!lines || this.inlining.includes(name)) {
       this.report(WalCode.Unsupported, 'warning', { verb: 'goSub', detail: name }, n);
       return unknown(this, n, `goSub --label ${name}`, 'subroutine not found or recursive');
+    }
+    // A target without subroutines gets each call's steps in place. A long subroutine called
+    // from many places would multiply the bot (one real script grew past a million lines), so it
+    // is written once, at its first call; the other calls say where it is.
+    const size = this.expandedSize(name);
+    const calls = this.callCount(name);
+    if (calls > 1 && size * calls > SHARED_SUBROUTINE_LINES) {
+      if (this.writtenOnce.has(name)) {
+        return {
+          id: `L${String(n)}`,
+          source: this.ref(n, `goSub ${name}`),
+          kind: 'unknown',
+          raw: `goSub --label ${name}`,
+          reason: `Subroutine ${name} runs here (${String(size)} lines, called ${String(calls)} times): its steps are written once, at its first call. Make it a task bot of its own and run it here with Run Task Bot.`,
+        };
+      }
+      this.writtenOnce.add(name);
     }
     this.inlining.push(name);
     try {
@@ -577,6 +630,41 @@ class Parser {
           },
           body,
         };
+      }
+      case 'case': {
+        // `case --switches Any|All`, then `when` conditions up to `then`, then the body up to
+        // `endCase` (a script saved by Studio 30.0.2): one if whose conditions are joined with
+        // or (Any) / and (All)
+        const conditions: Expr[] = [];
+        while (this.pos < this.lines.length) {
+          const next = this.lines[this.pos];
+          const c = next ? parseCommand(next.text) : undefined;
+          if (next?.text.startsWith('//')) {
+            this.pos++;
+            continue;
+          }
+          if (c?.verb !== 'when') break;
+          conditions.push(condition(c));
+          this.pos++;
+        }
+        if (parseCommand(this.lines[this.pos]?.text ?? '')?.verb === 'then') this.pos++;
+        const body = this.parse(new Set(['endCase'])).block;
+        const join = /All/i.test(unquote(String(cmd.params.get('switches') ?? 'Any')))
+          ? 'and'
+          : 'or';
+        const [first, ...rest] = conditions;
+        if (!first)
+          return {
+            ...base,
+            kind: 'group',
+            label: `case ${unquote(String(cmd.params.get('name') ?? ''))}`,
+            body,
+          };
+        const joined = rest.reduce<Expr>(
+          (left, right) => ({ kind: 'binary', op: join, left, right }),
+          first,
+        );
+        return { ...base, kind: 'if', branches: [{ condition: joined, body }] };
       }
       case 'while': {
         const body = this.parse(new Set(['endWhile'])).block;
