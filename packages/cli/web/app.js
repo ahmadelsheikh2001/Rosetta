@@ -280,6 +280,8 @@ function progressPanel(kb) {
   );
   box.replaceChildren(el('div', { class: 'progress-head' }, status, time), track, steps);
   box.hidden = false;
+  // it sits under the Convert button, often below the fold on a laptop screen
+  box.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
 
   const percent = () => {
     const done = STAGES.slice(0, stage).reduce((a, s) => a + s.share, 0);
