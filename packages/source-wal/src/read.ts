@@ -125,6 +125,7 @@ class Reader {
   private readonly inlining: string[] = [];
   private readonly sizes = new Map<string, number>();
   private calls: Map<string, number> | undefined;
+  private readonly copies = new Map<string, number>();
   private mainLines: Line[] = [];
   /** Shared subroutines already written at their first call. */
   private readonly writtenOnce = new Set<string>();
@@ -207,6 +208,37 @@ class Reader {
     return this.calls.get(name) ?? 0;
   }
 
+  /**
+   * How many copies of a subroutine inlining would write: a call from the main flow is one copy,
+   * a call from another subroutine is one per copy of that subroutine (memoised). Counting only
+   * the goSub lines missed this: RPA.wal calls ErrorHandel from about 20 places, but those sit in
+   * subroutines that are themselves inlined, so it was written 105 times (a 19 MB A360 bot).
+   * A caller that is itself written once (see `isShared`) adds one copy only.
+   */
+  private copyCount(name: string, stack: string[] = []): number {
+    const known = this.copies.get(name);
+    if (known !== undefined) return known;
+    if (stack.includes(name)) return 0;
+    let count = 0;
+    const calls = (lines: readonly Line[]) =>
+      lines.filter((l) => unquote(/^goSub --label (\S+)/.exec(l.text)?.[1] ?? '') === name).length;
+    count += calls(this.mainLines);
+    for (const [caller, lines] of this.subs) {
+      const n = calls(lines);
+      if (n === 0) continue;
+      const inner = [...stack, name];
+      count += n * (this.isShared(caller, inner) ? 1 : this.copyCount(caller, inner));
+    }
+    this.copies.set(name, count);
+    return count;
+  }
+
+  /** Whether a subroutine is written once and its other calls only point to it. */
+  private isShared(name: string, stack: string[] = []): boolean {
+    const copies = this.copyCount(name, stack);
+    return copies > 1 && this.expandedSize(name) * copies > SHARED_SUBROUTINE_LINES;
+  }
+
   subroutine(name: string, n: number): Statement {
     const lines = this.subs.get(name);
     if (!lines || this.inlining.includes(name)) {
@@ -218,7 +250,7 @@ class Reader {
     // is written once, at its first call; the other calls say where it is.
     const size = this.expandedSize(name);
     const calls = this.callCount(name);
-    if (calls > 1 && size * calls > SHARED_SUBROUTINE_LINES) {
+    if (this.isShared(name)) {
       if (this.writtenOnce.has(name)) {
         return {
           id: `L${String(n)}`,

@@ -171,6 +171,30 @@ describe('readWal', () => {
     expect(bot.body[1]).toMatchObject({ label: 'Subroutine Greet', body: [{ kind: 'action' }] });
   });
 
+  it('writes a long subroutine once, counting the copies its inlined callers would make', () => {
+    // Fail is called from one line of Step, but Step is called 40 times: inlining both writes
+    // Fail 40 times (RPA.wal: ErrorHandel 105 times, a 19 MB A360 bot). Small Log stays inline.
+    const sub = (name: string, lines: string[]) => [`beginSub --name ${name}`, ...lines, 'endSub'];
+    const filler = Array.from({ length: 60 }, (_, i) => `logMessage --message "${String(i)}"`);
+    const { bot } = read(
+      [
+        ...Array.from({ length: 40 }, () => 'goSub --label Step'),
+        ...sub('Step', ['goSub --label Fail', 'goSub --label Log']),
+        ...sub('Fail', filler),
+        ...sub('Log', ['logMessage --message "log"']),
+      ].join('\n'),
+    );
+    const kinds: string[] = [];
+    walk(bot.body, (s: Statement) => {
+      if (s.kind === 'group') kinds.push(s.label);
+      if (s.kind === 'unknown') kinds.push('see first call');
+    });
+    // Step itself is 63 lines × 40 copies: written once, so Fail and Log are written once too
+    expect(kinds.filter((k) => k === 'Subroutine Fail')).toHaveLength(1);
+    expect(kinds.filter((k) => k === 'Subroutine Log')).toHaveLength(1);
+    expect(kinds.filter((k) => k === 'see first call')).toHaveLength(39);
+  });
+
   it('reads the onError subroutines of ADR-020 back as Try / Catch / Finally', () => {
     const { bot, diagnostics } = read(
       [
