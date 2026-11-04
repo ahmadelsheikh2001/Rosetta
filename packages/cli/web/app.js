@@ -213,6 +213,154 @@ function showError(text) {
   box.hidden = false;
 }
 
+// ---- Progress: stages, elapsed time and an estimate of the time left ----
+
+/** Stages of a conversion and their share of the bar. Upload and download show real bytes. */
+const STAGES = [
+  { key: 'read', label: 'Reading the files', share: 0.05 },
+  { key: 'send', label: 'Sending them to the converter', share: 0.1 },
+  { key: 'convert', label: 'Converting', share: 0.45 },
+  { key: 'receive', label: 'Receiving the converted bots', share: 0.2 },
+  { key: 'show', label: 'Showing the results', share: 0.2 },
+];
+/**
+ * Milliseconds per KB of input, learnt from the last conversions on this computer (a guess
+ * until then: RPA.wal, 172 KB, takes about 2 s in all once the code view is chunked).
+ */
+const RATE_KEY = 'rosetta.msPerKb';
+function msPerKb() {
+  try {
+    const v = Number(localStorage.getItem(RATE_KEY));
+    return v > 0 ? v : 12;
+  } catch {
+    return 12;
+  }
+}
+function learnRate(ms, kb) {
+  if (kb < 1) return;
+  try {
+    // keep most of what was learnt; small files are dominated by fixed costs, so weigh by size
+    const w = Math.min(0.6, kb / 200);
+    localStorage.setItem(RATE_KEY, String(msPerKb() * (1 - w) + (ms / kb) * w));
+  } catch {
+    /* private window: estimates stay the default */
+  }
+}
+
+const seconds = (ms) => {
+  const s = Math.max(1, Math.round(ms / 1000));
+  return s < 60 ? s + ' s' : Math.floor(s / 60) + ' min ' + (s % 60) + ' s';
+};
+
+function progressPanel(kb) {
+  const box = $('progress');
+  const estimate = Math.max(1500, kb * msPerKb());
+  const start = performance.now();
+  let stage = 0;
+  let within = 0; // 0..1 inside the current stage, when it is measured (bytes)
+  let measured = false;
+  const bar = el('div', { class: 'progress-fill' });
+  const track = el(
+    'div',
+    {
+      class: 'progress-track',
+      role: 'progressbar',
+      'aria-valuemin': '0',
+      'aria-valuemax': '100',
+      'aria-label': 'Conversion progress',
+    },
+    bar,
+  );
+  const status = el('div', { class: 'progress-status' });
+  const time = el('div', { class: 'progress-time' });
+  const steps = el(
+    'ol',
+    { class: 'progress-steps' },
+    STAGES.map((s) => el('li', { 'data-key': s.key }, s.label)),
+  );
+  box.replaceChildren(el('div', { class: 'progress-head' }, status, time), track, steps);
+  box.hidden = false;
+
+  const percent = () => {
+    const done = STAGES.slice(0, stage).reduce((a, s) => a + s.share, 0);
+    const share = STAGES[stage].share;
+    // unmeasured stages creep forward on the estimate but never claim to be finished
+    const elapsed = performance.now() - start;
+    const guess = Math.min(0.9, elapsed / estimate);
+    const inside = measured ? within : Math.min(0.9, Math.max(0, (guess - done) / share));
+    return Math.min(99, (done + share * inside) * 100);
+  };
+  const paint = () => {
+    const elapsed = performance.now() - start;
+    const p = percent();
+    bar.style.width = p.toFixed(1) + '%';
+    track.setAttribute('aria-valuenow', String(Math.round(p)));
+    status.textContent = STAGES[stage].label + '… ' + Math.round(p) + '%';
+    const left = estimate - elapsed;
+    time.textContent =
+      seconds(elapsed) +
+      ' elapsed · ' +
+      (left > 1000 ? 'about ' + seconds(left) + ' left' : 'almost done');
+    steps.querySelectorAll('li').forEach((li, i) => {
+      li.className = i < stage ? 'done' : i === stage ? 'now' : '';
+    });
+  };
+  paint();
+  const timer = setInterval(paint, 250);
+  return {
+    stage(key) {
+      stage = STAGES.findIndex((s) => s.key === key);
+      within = 0;
+      measured = false;
+      paint();
+    },
+    bytes(loaded, total) {
+      if (!total) return;
+      measured = true;
+      within = loaded / total;
+      paint();
+    },
+    finish(ok) {
+      clearInterval(timer);
+      if (ok) learnRate(performance.now() - start, kb);
+      box.hidden = true;
+      box.replaceChildren();
+    },
+  };
+}
+
+/** POST as JSON with upload and download progress (fetch reports neither). */
+function postJson(url, body, progress) {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', url);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.responseType = 'text';
+    xhr.upload.onprogress = (e) => progress.bytes(e.loaded, e.total);
+    xhr.upload.onload = () => progress.stage('convert');
+    xhr.onreadystatechange = () => {
+      if (xhr.readyState === XMLHttpRequest.HEADERS_RECEIVED) progress.stage('receive');
+    };
+    xhr.onprogress = (e) => progress.bytes(e.loaded, e.lengthComputable ? e.total : 0);
+    xhr.onload = () => {
+      let parsed;
+      try {
+        parsed = JSON.parse(xhr.responseText);
+      } catch {
+        reject(new Error('The converter sent an answer that could not be read.'));
+        return;
+      }
+      resolve({ ok: xhr.status >= 200 && xhr.status < 300, body: parsed });
+    };
+    xhr.onerror = () =>
+      reject(new Error('Could not reach the converter. Is rosetta serve running?'));
+    xhr.send(body);
+  });
+}
+
+/** Lets the browser paint (the progress text) before a long synchronous step. */
+const nextPaint = () => new Promise((r) => requestAnimationFrame(() => setTimeout(r, 0)));
+
 $('convert').addEventListener('click', async () => {
   const button = $('convert');
   $('error').hidden = true;
@@ -222,6 +370,9 @@ $('convert').addEventListener('click', async () => {
   label.textContent = 'Converting…';
   const spin = el('span', { class: 'spinner', 'aria-hidden': 'true' });
   button.prepend(spin);
+  const kb = [...chosen.values()].reduce((a, f) => a + f.size, 0) / 1024;
+  const progress = progressPanel(kb);
+  let ok = false;
   try {
     const notes = [];
     const files = (
@@ -240,10 +391,10 @@ $('convert').addEventListener('click', async () => {
       )
     ).flat();
     if (files.length === 0) throw new Error(notes.map((n) => n.file + ': ' + n.text).join(' · '));
-    const res = await fetch('/api/convert', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
+    progress.stage('send');
+    const res = await postJson(
+      '/api/convert',
+      JSON.stringify({
         source: $('source').value,
         target: $('target').value,
         files,
@@ -253,16 +404,21 @@ $('convert').addEventListener('click', async () => {
           logFile: $('log-file').value.trim(),
         },
       }),
-    });
-    const body = await res.json();
+      progress,
+    );
+    const body = res.body;
     if (!res.ok) throw new Error(body.error || 'The conversion failed.');
+    progress.stage('show');
+    await nextPaint();
     body.messages = [...notes, ...body.messages];
     last = body;
     lastRoute = route();
     renderResult(body);
+    ok = true;
   } catch (err) {
     showError(err instanceof Error ? err.message : String(err));
   } finally {
+    progress.finish(ok);
     spin.remove();
     label.textContent = before;
     button.disabled = chosen.size === 0;
@@ -282,6 +438,7 @@ function counts(bot) {
 }
 
 function renderResult(r) {
+  revealLine.clear();
   const section = $('view-results');
   const total = r.bots.map(counts).reduce(
     (a, c) => ({
@@ -480,6 +637,11 @@ function stat(label, value) {
   );
 }
 
+/** Lines of a script shown at a time in its code view. */
+const CHUNK = 2000;
+/** Bot id → shows its code up to a line, for the L123 buttons of the notes. */
+const revealLine = new Map();
+
 function renderBot(bot, index) {
   const c = counts(bot);
   const to = lastRoute;
@@ -490,21 +652,54 @@ function renderBot(bot, index) {
     if (n.line === undefined) continue;
     if (n.kind === 'manual' || !kindOf.has(n.line)) kindOf.set(n.line, n.kind);
   }
-  const code = el(
-    'pre',
-    { class: 'code', tabindex: '0', 'aria-label': to.code + ' ' + bot.fileName },
-    lines.map((text, i) => {
+  const code = el('pre', {
+    class: 'code',
+    tabindex: '0',
+    'aria-label': to.code + ' ' + bot.fileName,
+  });
+  // A big bot (an A360 bot from a long WAL script is tens of thousands of lines) froze the
+  // browser when every line became an element at once: lines are added in chunks, as the
+  // reader scrolls down or jumps to a line.
+  let shown = 0;
+  const more = el('button', { class: 'secondary more', type: 'button' });
+  const moreBar = el('div', { class: 'more-bar' }, more);
+  const showUpTo = (count) => {
+    const end = Math.min(lines.length, count);
+    const frag = document.createDocumentFragment();
+    for (let i = shown; i < end; i++) {
+      const text = lines[i];
       const kind = kindOf.get(i + 1);
-      const classes = ['ln'];
-      if (text.trimStart().startsWith('//')) classes.push('comment');
-      if (kind === 'manual' || kind === 'semantic') classes.push(kind);
-      return el(
-        'span',
-        { class: classes.join(' '), id: id + '-l' + (i + 1) },
-        text === '' ? ' ' : text,
-      );
-    }),
-  );
+      let cls = 'ln';
+      if (text.trimStart().startsWith('//')) cls += ' comment';
+      if (kind === 'manual' || kind === 'semantic') cls += ' ' + kind;
+      const span = document.createElement('span');
+      span.className = cls;
+      span.id = id + '-l' + (i + 1);
+      span.textContent = text === '' ? ' ' : text;
+      frag.append(span);
+    }
+    code.append(frag);
+    shown = end;
+    const left = lines.length - shown;
+    moreBar.hidden = left === 0;
+    more.textContent =
+      'Show ' +
+      Math.min(CHUNK, left).toLocaleString() +
+      ' more lines (' +
+      shown.toLocaleString() +
+      ' of ' +
+      lines.length.toLocaleString() +
+      ' shown; the download has them all)';
+  };
+  more.addEventListener('click', () => showUpTo(shown + CHUNK));
+  code.addEventListener('scroll', () => {
+    if (shown < lines.length && code.scrollTop + code.clientHeight > code.scrollHeight - 400)
+      showUpTo(shown + CHUNK);
+  });
+  showUpTo(CHUNK);
+  revealLine.set(id, (line) => {
+    if (line > shown) showUpTo(line + CHUNK / 2);
+  });
   const notes = el(
     'ul',
     { class: 'notes' },
@@ -542,7 +737,12 @@ function renderBot(bot, index) {
       ? el('li', {}, el('span', { class: 'empty' }, 'No notes.'))
       : null,
   );
-  const codePanel = el('div', { class: 'panel', role: 'tabpanel', id: id + '-code' }, code);
+  const codePanel = el(
+    'div',
+    { class: 'panel', role: 'tabpanel', id: id + '-code' },
+    code,
+    moreBar,
+  );
   const notesPanel = el(
     'div',
     { class: 'panel', role: 'tabpanel', id: id + '-notes', hidden: '' },
@@ -644,6 +844,7 @@ function gotoLine(id, line) {
       onclick: () => {
         const article = $(id);
         selectTab(article.querySelector('.tab'), $(id + '-code'));
+        revealLine.get(id)?.(line);
         const target = $(id + '-l' + line);
         if (!target) return;
         target.scrollIntoView({ block: 'center' });

@@ -99,6 +99,7 @@ ${asset('app.css')}
     <p class="actionhint" id="action-hint">Add at least one file to convert.</p>
     <button class="primary" id="convert" type="button" disabled><span class="label">Convert to IBM RPA</span>${icon('M4 12h16M14 6l6 6-6 6', 20)}</button>
   </div>
+  <div id="progress" class="progress" hidden aria-live="polite"></div>
   <div id="error" hidden></div>
   </section>
 

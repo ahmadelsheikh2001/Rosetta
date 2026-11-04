@@ -9,3 +9,6 @@ Thumbs.db
 
 # Real client material must never be committed (see corpus/README.md)
 corpus/**/private/
+
+# Editor agent settings (local only)
+.continue/

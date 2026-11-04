@@ -769,6 +769,79 @@ details.alert li + li {
   outline-offset: -2px;
 }
 
+.more-bar {
+  display: flex;
+  justify-content: center;
+  padding: 10px 16px;
+  border-top: 1px solid var(--line);
+}
+
+/* Conversion progress: stage, bar, elapsed time and the estimate of the time left */
+.progress {
+  display: grid;
+  gap: 12px;
+  padding: 16px 20px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--panel);
+}
+.progress-head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px 16px;
+}
+.progress-status {
+  color: var(--vs-white);
+  font-weight: 600;
+}
+.progress-time {
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+.progress-track {
+  height: 8px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--vs-anti-flash-white) 12%, transparent);
+}
+.progress-fill {
+  height: 100%;
+  width: 0;
+  border-radius: inherit;
+  background: var(--vs-dodger-blue);
+  transition: width 0.25s linear;
+}
+.progress-steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.86rem;
+  color: var(--muted);
+}
+.progress-steps li::before {
+  content: '○ ';
+}
+.progress-steps li.now {
+  color: var(--vs-white);
+}
+.progress-steps li.now::before {
+  content: '● ';
+  color: var(--vs-dodger-blue);
+}
+.progress-steps li.done::before {
+  content: '✓ ';
+  color: var(--vs-dodger-blue);
+}
+@media (prefers-reduced-motion: reduce) {
+  .progress-fill {
+    transition: none;
+  }
+}
+
 .notes {
   list-style: none;
   margin: 0;

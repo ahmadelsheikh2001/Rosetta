@@ -35,7 +35,12 @@ const securityHeaders = {
 };
 
 function send(res: ServerResponse, status: number, type: string, body: string): void {
-  res.writeHead(status, { ...securityHeaders, 'Content-Type': type });
+  // the length lets the page show how much of a large result has arrived
+  res.writeHead(status, {
+    ...securityHeaders,
+    'Content-Type': type,
+    'Content-Length': Buffer.byteLength(body),
+  });
   res.end(body);
 }
 
