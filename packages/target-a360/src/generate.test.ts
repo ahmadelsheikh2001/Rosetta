@@ -382,6 +382,19 @@ describe('generateA360', () => {
     expect(vars.find((v) => v.name === 'rosettaColumns')?.defaultValue?.list).toHaveLength(105);
   });
 
+  it('writes no node for webAttach, with a note to pick the window in the web actions', () => {
+    const r = generateA360(
+      bot('b', [
+        action('vendor:ibm-rpa/webAttach', {
+          args: { browser: ref('vBrowser'), name: lit('main') },
+        }),
+      ]),
+    );
+    expect(r.json.nodes).toEqual([]);
+    expect(r.notes.map((n) => n.kind)).toEqual(['semantic']);
+    expect(r.notes[0]?.text).toMatch(/^webAttach: A360 has no "attach to browser"/);
+  });
+
   it('never writes a credential value', () => {
     const r = generateA360(
       bot('b', [], {

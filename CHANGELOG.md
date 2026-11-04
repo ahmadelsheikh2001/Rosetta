@@ -7,6 +7,23 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: Se
 
 ### Added
 
+- `@rosetta/cli` web UI: conversion progress with the stage (read, send, convert, receive, show),
+  a bar, the elapsed time and an estimate of the time left, learnt from earlier runs on the same
+  computer; upload and download progress are real bytes (the server sends `Content-Length`). The
+  code view shows 2,000 lines at a time, so a large bot no longer freezes the browser.
+- `@rosetta/source-wal`: `goSub --assignments` become `setVar`s just before the call (they were
+  dropped); `gosubIf` is read as an If around the call; `case --switches Any|All` as one If. A long
+  subroutine whose inlined copies would pass 2,000 lines is written once, at its first call.
+- `@rosetta/target-a360`: `webAttach` writes no node, with a note to pick the browser window in the
+  web actions; "a or b" conditions become branches, "a and b" nested Ifs.
+
+### Fixed
+
+- `@rosetta/source-wal`: subroutine copies are counted through inlined callers. RPA.wal (168 KB)
+  wrote ErrorHandel 105 times and became a 19 MB A360 bot; it is now 5–7 MB and converts in the
+  web UI in about 2 s instead of freezing the browser.
+- Probe files of rounds 11 and 12 keep their CRLF line endings.
+
 - `@rosetta/target-wal`: ServiceNow (OAuth + Table / Attachment REST API), SAP GUI (session, clicks,
   virtual keys) and SAP BAPI (SAP .NET Connector through `runCSharpCode`, one call per function with
   JSON results) converted by hand (ADR-024, A-28). Studio probe round 12 prepared.

@@ -777,6 +777,15 @@ class Generator {
       return this.ocr(a, path, file);
     }
     if (verb === 'pdfClose') return [];
+    if (verb === 'webAttach') {
+      // WAL web commands act on the browser attached last; an A360 Recorder action names its
+      // window itself, so there is nothing to attach (RPA.wal: 91 lines)
+      this.note(
+        'semantic',
+        'webAttach: A360 has no "attach to browser"; each Recorder action picks its browser window. Choose that window in the web actions that follow.',
+      );
+      return [];
+    }
     if (verb === 'stopExecution') return this.node(path, 'TaskBot', 'stopTask', {});
     if (verb === 'logMessage') return this.logMessage(a, path);
     const write = commands[verb];
