@@ -1,5 +1,4 @@
 import {
-  logoClearSpace,
   resolveColor,
   semanticColors,
   statuses,
@@ -8,10 +7,7 @@ import {
   type Status,
 } from '@rosetta/design-tokens';
 
-/** Rendered logo width in the masthead, px. Clear space is derived from it (ADR-018). */
-export const LOGO_WIDTH = 168;
-
-/** Light tints of the status colours for chip backgrounds; tints are allowed by the guidebook. */
+/** Light tints of the status colours for chip backgrounds; tints are allowed (ADR-018). */
 function statusVars(): string {
   return (Object.keys(statuses) as Status[])
     .map((s) => {
@@ -44,11 +40,9 @@ a { color: var(--color-accent); }
 .icon { flex: none; vertical-align: -3px; }
 .sub { font-weight: 600; }
 
-/* Masthead: Oxford Blue takes the white logo (ADR-018) */
+/* Masthead */
 .masthead { background: var(--vs-oxford-blue); color: var(--vs-white); }
-.masthead .wrap { display: flex; align-items: center; gap: 24px; padding-top: 8px; padding-bottom: 8px; flex-wrap: wrap; }
-.logo-space { padding: var(--logo-clear); }
-.logo { display: block; width: var(--logo-width); height: auto; }
+.masthead .wrap { display: flex; align-items: center; gap: 24px; padding-top: 20px; padding-bottom: 20px; flex-wrap: wrap; }
 .masthead .titles { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 .masthead .product { font-family: var(--font-headline); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; font-size: var(--font-size-lg); overflow-wrap: anywhere; }
 .masthead .subtitle { font-size: var(--font-size-xs); opacity: 0.85; }
@@ -158,13 +152,5 @@ export const layoutCss = layout;
 
 /** Full stylesheet: token variables, status tints, layout. */
 export function reportCss(): string {
-  return [
-    toCss(),
-    ':root {',
-    statusVars(),
-    `  --logo-width: ${LOGO_WIDTH}px;`,
-    `  --logo-clear: ${logoClearSpace(LOGO_WIDTH)}px;`,
-    '}',
-    layout,
-  ].join('\n');
+  return [toCss(), ':root {', statusVars(), '}', layout].join('\n');
 }

@@ -1,5 +1,5 @@
 /**
- * Valleysoft typography (ADR-018). Only these two families are allowed; both
+ * RPA Rosetta typography (ADR-018). Only these two families are allowed; both
  * are open-licensed and must be bundled locally (no CDN, no network).
  */
 export const fontFamilies = {

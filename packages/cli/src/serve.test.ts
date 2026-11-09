@@ -65,10 +65,11 @@ describe('rosetta serve', () => {
     expect(running.url).toMatch(/^http:\/\/127\.0\.0\.1:\d+\/$/);
   });
 
-  it('serves the page with the logo, inline assets and a strict content policy', async () => {
+  it('serves the page with the product name, inline assets and a strict content policy', async () => {
     const r = await call('GET', '/');
     expect(r.status).toBe(200);
-    expect(r.body).toContain('alt="Valleysoft"');
+    expect(r.body).toContain('<span class="product">RPA Rosetta</span>');
+    expect(r.body).not.toMatch(/valleysoft/i);
     expect(r.body).toContain('Convert to IBM RPA');
     expect(r.body).toContain('<option value="ibm-rpa">IBM RPA (WAL script)</option>');
     expect(r.body).toContain('Automation Anywhere A360 (task bot)');

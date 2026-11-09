@@ -12,8 +12,7 @@
     }
   },
   "files": [
-    "dist",
-    "assets"
+    "dist"
   ],
   "dependencies": {
     "@fontsource/chakra-petch": "^5.3.0",

@@ -1,4 +1,4 @@
-/* RPA Rosetta web UI. Colours come only from the Valleysoft tokens (--vs-*, ADR-018). */
+/* RPA Rosetta web UI. Colours come only from the design tokens (--vs-*, ADR-018). */
 :root {
   color-scheme: dark;
   --ink: var(--vs-anti-flash-white);
@@ -74,10 +74,6 @@ a {
   gap: 24px;
   padding: 18px 24px;
   flex-wrap: wrap;
-}
-.top .logo {
-  display: block;
-  height: auto;
 }
 .top .titles {
   display: flex;

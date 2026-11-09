@@ -13,4 +13,4 @@ The first interface is a CLI. The tool makes no network requests, and a test enf
 
 ## Consequences
 
-Easy to run inside client environments and in CI. Report assets (fonts, logo) must be bundled locally (ADR-018).
+Easy to run inside client environments and in CI. Report assets (fonts) must be bundled locally (ADR-018).

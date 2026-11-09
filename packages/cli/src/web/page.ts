@@ -1,11 +1,9 @@
 import { readFileSync } from 'node:fs';
 import { toCss } from '@rosetta/design-tokens';
-import { fontFaceCss, logoDataUri, logoHeight } from '@rosetta/report';
+import { fontFaceCss } from '@rosetta/report';
 
 const asset = (name: string): string =>
   readFileSync(new URL(`../../web/${name}`, import.meta.url), 'utf8');
-
-const LOGO_WIDTH = 150;
 
 /** Conversions offered in the UI. Planned ones are listed but cannot be chosen yet. */
 const sources = [
@@ -31,7 +29,7 @@ const options = (list: readonly { value: string; label: string; disabled?: boole
     .join('');
 
 /**
- * The single page of the web UI: fonts, logo, styles and script are all inline, so it
+ * The single page of the web UI: fonts, styles and script are all inline, so it
  * works without network access (ADR-015, ADR-021).
  */
 export function pageHtml(): string {
@@ -49,7 +47,6 @@ ${asset('app.css')}
 </head>
 <body>
 <header class="top"><div class="wrap">
-  <img class="logo" src="${logoDataUri('white')}" alt="Valleysoft" width="${LOGO_WIDTH}" height="${logoHeight(LOGO_WIDTH)}">
   <div class="titles"><span class="product">RPA Rosetta</span><span class="subtitle">Bot migration accelerator</span></div>
   <span class="local"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 11h12v10H6zM8 11V7a4 4 0 018 0v4"/></svg>Runs on this computer · files never leave it</span>
 </div></header>
@@ -106,7 +103,7 @@ ${asset('app.css')}
   <section id="view-results" role="tabpanel" aria-labelledby="tab-results" class="view" hidden aria-live="polite"></section>
   <section id="view-report" role="tabpanel" aria-labelledby="tab-report" class="view" hidden></section>
 
-  <footer>RPA Rosetta · Valleysoft Center of Excellence. Converted bots are drafts until run on the target platform.</footer>
+  <footer>RPA Rosetta. Converted bots are drafts until run on the target platform.</footer>
 </div></main>
 <script>
 ${asset('app.js')}

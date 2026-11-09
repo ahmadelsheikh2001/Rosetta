@@ -1,11 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import { isHex, neutral, palette, primary, secondary, tint } from './colors.js';
 import { toCss } from './css.js';
-import { logoClearSpace, logoFileName, logoVersionFor } from './logo.js';
 import { resolveColor, semanticColors, statuses } from './semantic.js';
 
 describe('brand palette', () => {
-  it('matches the Valleysoft Brand Guidebook 2025 exactly', () => {
+  it('matches the project palette exactly', () => {
     expect(primary).toEqual({
       blackBlue: '#02021E',
       oxfordBlue: '#001944',
@@ -94,29 +93,5 @@ describe('toCss', () => {
 
   it('never references an external resource', () => {
     expect(css).not.toMatch(/https?:|@import|url\(/);
-  });
-});
-
-describe('logo', () => {
-  it('requires clear space of at least one eighth of the width', () => {
-    expect(logoClearSpace(160)).toBe(20);
-    expect(logoClearSpace(100)).toBe(13);
-  });
-
-  it('picks the white logo on dark backgrounds and the dark logo on light ones', () => {
-    expect(logoVersionFor('blackBlue')).toBe('white');
-    expect(logoVersionFor('oxfordBlue')).toBe('white');
-    expect(logoVersionFor('white')).toBe('dark');
-    expect(logoVersionFor('antiFlashWhite')).toBe('dark');
-    expect(logoVersionFor('biceBlue')).toBe('dark');
-  });
-
-  it('refuses backgrounds not approved for the logo', () => {
-    expect(logoVersionFor('spanishOrange')).toBeUndefined();
-    expect(logoVersionFor('charcoal')).toBeUndefined();
-  });
-
-  it('names the official artwork files', () => {
-    expect(logoFileName('icon', 'white')).toBe('valleysoft-icon-white.svg');
   });
 });

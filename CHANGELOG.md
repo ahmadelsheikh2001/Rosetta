@@ -17,6 +17,11 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: Se
 - `@rosetta/target-a360`: `webAttach` writes no node, with a note to pick the browser window in the
   web actions; "a or b" conditions become branches, "a and b" nested Ifs.
 
+### Changed
+
+- The report masthead and the web UI header show only the product name, RPA Rosetta. The company
+  name and logo files are removed; the colours and fonts stay (ADR-018).
+
 ### Fixed
 
 - `@rosetta/source-wal`: subroutine copies are counted through inlined callers. RPA.wal (168 KB)
@@ -42,10 +47,8 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: Se
   and `walk` / `childBlocks` traversal.
 - `@rosetta/mappings`: registry entry schema, loader, and the registry meta-test.
 - `@rosetta/standards`: standards profile schema and built-in defaults.
-- `@rosetta/design-tokens`: Valleysoft Brand Guidebook 2025 palette, tints, typography,
-  logo clear-space rule, CSS custom properties.
-- Brand rules completed (ADR-018): full logo usage rules and variants, logo colour version per
-  background, white allowed, status tokens (auto/review/blocked/info) always with icon + label.
+- `@rosetta/design-tokens`: palette, tints, typography, CSS custom properties.
+- Design rules completed (ADR-018): white allowed, status tokens (auto/review/blocked/info) always with icon + label.
 - Corpus safety scan (`scripts/scan-corpus.mjs`) in the pre-commit hook: IPs, internal-looking
   URLs, network shares, IBAN-like values and long digit runs, including inside zip exports;
   allow-list in `corpus/.scanallow`.
@@ -131,11 +134,6 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: Se
   `excelSet`, `excelClose --save`; the row loop as `excelGetTable` + `for` + `mapTableRow` with one
   variable per column read; Run Task Bot as `executeScript` with JSON inputs/outputs; vault
   credentials read with `getVaultItem`, never written as values.
-
-#### Brand
-
-- Official Valleysoft logo files (transparent PNG, B-05) in `packages/report/assets/logo`; the report
-  masthead shows the white logo, embedded so the report stays offline.
 
 #### Web UI (ADR-021)
 

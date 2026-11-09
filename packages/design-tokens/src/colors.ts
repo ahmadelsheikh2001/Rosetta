@@ -1,6 +1,6 @@
 /**
- * Valleysoft Brand Guidebook 2025 palettes. Exact HEX values; do not edit
- * without brand approval (ADR-018).
+ * RPA Rosetta palettes. Exact HEX values; change them only together with
+ * ADR-018 and the token test.
  */
 export const primary = {
   blackBlue: '#02021E',
@@ -21,7 +21,7 @@ export const secondary = {
   isabelline: '#F0ECEB',
 } as const;
 
-/** White is allowed for page and card backgrounds (B-03: logo and letterhead sit on white). */
+/** White is allowed for page and card backgrounds (B-03). */
 export const neutral = {
   white: '#FFFFFF',
 } as const;

@@ -34,7 +34,7 @@ A360 export → Source Model → IR ─┬─ Source Checker → quality finding
 | `@rosetta/standards`     | Standards profiles, Source/Output checkers, transforms |
 | `@rosetta/assessment`    | Coverage, complexity, sizing, quality score            |
 | `@rosetta/report`        | JSON + HTML report, string catalog                     |
-| `@rosetta/design-tokens` | Valleysoft brand tokens shared by report and future UI |
+| `@rosetta/design-tokens` | Design tokens shared by the report and the web UI      |
 | `@rosetta/cli`           | `rosetta` command                                      |
 
 A package may only depend on packages to its left in the pipeline (ADR-002, enforced by

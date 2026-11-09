@@ -12,7 +12,7 @@
 - **No format guessing.** A360 field names and WAL command names must be Verified in
   [docs/assumptions.md](docs/assumptions.md) before they appear in code (ADR-017).
 - **Offline.** No network calls anywhere in the tool (ADR-015).
-- **Brand.** UI colours, fonts and logo come only from `@rosetta/design-tokens` (ADR-018).
+- **Brand.** UI colours and fonts come only from `@rosetta/design-tokens` (ADR-018).
 
 ## Workflow
 

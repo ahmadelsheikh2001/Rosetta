@@ -21,7 +21,7 @@ New decision: copy [`000-template.md`](000-template.md), take the next number, a
 | [015](015-cli-first-offline.md)                | CLI first, fully offline                                  | Accepted                              |
 | [016](016-tooling-scope.md)                    | Tooling scope for Phase 0 and 1                           | Accepted (partly deferred)            |
 | [017](017-evidence-based-formats.md)           | Evidence-based file formats                               | Accepted                              |
-| [018](018-brand-design-system.md)              | Brand and design system (Valleysoft 2025)                 | Accepted (logo rules incomplete)      |
+| [018](018-brand-design-system.md)              | Brand and design system                                   | Accepted                              |
 | [019](019-draft-and-verify-wal.md)             | Draft-and-verify for WAL syntax                           | Accepted                              |
 | [020](020-try-catch-as-onerror-subroutines.md) | A360 Try/Catch/Finally as onError subroutines             | Accepted                              |
 | [021](021-local-web-ui.md)                     | Local web UI (`rosetta serve`)                            | Accepted                              |

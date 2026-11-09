@@ -8,7 +8,6 @@ import { bot, type Project } from '@rosetta/ir';
 import { defaultProfile, qualityRuleId } from '@rosetta/standards';
 import { describe, expect, it } from 'vitest';
 import { en, translate } from './catalog.js';
-import { logoDataUri } from './logo.js';
 import { renderHtml, renderJson } from './render.js';
 import { layoutCss } from './styles.js';
 
@@ -43,11 +42,8 @@ describe('renderHtml', () => {
   });
 
   it('is fully offline: no external scripts, styles, fonts or images', () => {
-    expect(html).not.toMatch(/<script|<link|@import|<iframe/i);
+    expect(html).not.toMatch(/<script|<link|@import|<iframe|<img/i);
     expect(html).not.toMatch(/(src|href)="https?:/i);
-    // images only as embedded data (the logo)
-    for (const [, src = ''] of html.matchAll(/<img[^>]*\ssrc="([^"]*)"/gi))
-      expect(src.startsWith('data:image/png;base64,')).toBe(true);
     const urls = [...html.matchAll(/url\(([^)]*)\)/g)].map((m) => m[1] ?? '');
     expect(urls.every((u) => u.startsWith('data:font/woff2;base64,'))).toBe(true);
   });
@@ -68,11 +64,10 @@ describe('renderHtml', () => {
     ]);
   });
 
-  it('embeds the official white logo on the Oxford Blue masthead (B-04, B-05)', () => {
+  it('names the product in the masthead, with no logo image', () => {
     const masthead = /<header class="masthead">[\s\S]*?<\/header>/.exec(html)?.[0] ?? '';
-    expect(masthead).toContain(logoDataUri('white'));
-    expect(masthead).toContain('alt="Valleysoft"');
-    expect(masthead).not.toContain(logoDataUri('dark'));
+    expect(masthead).toContain('RPA Rosetta');
+    expect(masthead).not.toContain('<img');
   });
 
   it('never renders a missing string', () => {
